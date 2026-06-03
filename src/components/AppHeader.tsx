@@ -24,6 +24,11 @@ export default function AppHeader({
         <span className="text-signature">Colock&apos;t</span>
       </Link>
       <nav className="flex items-center gap-4 text-sm text-ink/60">
+        {user && (
+          <Link href="/matchs" className="hover:text-ink">
+            Matchs
+          </Link>
+        )}
         {showPreferences && (
           <Link href="/profil" className="hover:text-ink">
             Préférences

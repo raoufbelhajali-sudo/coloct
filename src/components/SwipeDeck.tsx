@@ -352,10 +352,10 @@ export default function SwipeDeck() {
             </p>
             <div className="mt-6 flex flex-col gap-3">
               <button
-                disabled
-                className="bg-signature cursor-not-allowed rounded-full px-6 py-3 font-semibold text-white opacity-60"
+                onClick={() => router.push("/matchs")}
+                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
-                Envoyer un message (bientôt)
+                Envoyer un message
               </button>
               <button
                 onClick={() => setMatch(null)}

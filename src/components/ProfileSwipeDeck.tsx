@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   motion,
   useMotionValue,
@@ -21,6 +22,7 @@ type Direction = "left" | "right";
 
 // Le locataire swipe sur les profils de colocataires intéressés
 export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
+  const router = useRouter();
   const { user } = useAuth();
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
@@ -181,10 +183,10 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
             </p>
             <div className="mt-6 flex flex-col gap-3">
               <button
-                disabled
-                className="bg-signature cursor-not-allowed rounded-full px-6 py-3 font-semibold text-white opacity-60"
+                onClick={() => router.push("/matchs")}
+                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
-                Envoyer un message (bientôt)
+                Envoyer un message
               </button>
               <button
                 onClick={() => setMatch(null)}
