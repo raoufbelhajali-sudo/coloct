@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -8,6 +8,7 @@ import {
   useAnimationControls,
 } from "framer-motion";
 import { listings, type Listing } from "@/data/listings";
+import { loadProfile } from "@/lib/profile";
 import ListingCard from "./ListingCard";
 
 type Direction = "left" | "right";
@@ -27,6 +28,20 @@ export default function SwipeDeck() {
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
   const [quartier, setQuartier] = useState("all");
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
+  const [prenom, setPrenom] = useState("");
+
+  // Au chargement : on pré-remplit les filtres depuis le profil enregistré
+  useEffect(() => {
+    const p = loadProfile();
+    if (!p) return;
+    setPrenom(p.prenom);
+    if (p.budgetMax) {
+      // on garde la valeur dans les bornes du curseur
+      const v = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, p.budgetMax));
+      setBudgetMax(v);
+    }
+    if (p.dateEmmenagement) setDispoAvant(p.dateEmmenagement);
+  }, []);
 
   // Annonces qui passent les filtres
   const filtered = useMemo(() => {
@@ -89,6 +104,13 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center">
+      {/* Message d'accueil personnalisé */}
+      {prenom && (
+        <p className="mb-3 w-full text-left font-display text-xl">
+          Salut {prenom} 👋
+        </p>
+      )}
+
       {/* ---------- Barre de filtres ---------- */}
       <div className="mb-5 w-full rounded-2xl bg-panel p-4">
         {/* Budget max */}
