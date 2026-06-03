@@ -7,14 +7,13 @@ import {
   useTransform,
   useAnimationControls,
 } from "framer-motion";
-import { listings, type Listing } from "@/data/listings";
+import type { Listing } from "@/data/listings";
+import { getListings } from "@/lib/listings";
 import { loadProfile } from "@/lib/profile";
 import ListingCard from "./ListingCard";
 
 type Direction = "left" | "right";
 
-// Liste des quartiers présents dans les annonces (pour le menu déroulant)
-const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 // Bornes de budget pour le curseur
 const BUDGET_MIN = 500;
 const BUDGET_MAX = 900;
@@ -24,11 +23,24 @@ export default function SwipeDeck() {
   const [match, setMatch] = useState<Listing | null>(null);
   const [likes, setLikes] = useState<Listing[]>([]); // annonces aimées
 
+  // Annonces chargées depuis le serveur Supabase
+  const [allListings, setAllListings] = useState<Listing[]>([]);
+  const [chargement, setChargement] = useState(true);
+  const [erreur, setErreur] = useState(false);
+
   // --- Filtres ---
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
   const [quartier, setQuartier] = useState("all");
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
   const [prenom, setPrenom] = useState("");
+
+  // Au chargement : on récupère les annonces depuis Supabase
+  useEffect(() => {
+    getListings()
+      .then((data) => setAllListings(data))
+      .catch(() => setErreur(true))
+      .finally(() => setChargement(false));
+  }, []);
 
   // Au chargement : on pré-remplit les filtres depuis le profil enregistré
   useEffect(() => {
@@ -43,15 +55,21 @@ export default function SwipeDeck() {
     if (p.dateEmmenagement) setDispoAvant(p.dateEmmenagement);
   }, []);
 
+  // Liste des quartiers présents dans les annonces (pour le menu déroulant)
+  const quartiers = useMemo(
+    () => Array.from(new Set(allListings.map((l) => l.quartier))).sort(),
+    [allListings]
+  );
+
   // Annonces qui passent les filtres
   const filtered = useMemo(() => {
-    return listings.filter((l) => {
+    return allListings.filter((l) => {
       if (l.loyer > budgetMax) return false;
       if (quartier !== "all" && l.quartier !== quartier) return false;
       if (dispoAvant && l.dispo > dispoAvant) return false;
       return true;
     });
-  }, [budgetMax, quartier, dispoAvant]);
+  }, [allListings, budgetMax, quartier, dispoAvant]);
 
   // Position horizontale de la carte du dessus (pour le glissement)
   const x = useMotionValue(0);
@@ -100,6 +118,28 @@ export default function SwipeDeck() {
     if (info.offset.x > 120 || info.velocity.x > 600) fly("right");
     else if (info.offset.x < -120 || info.velocity.x < -600) fly("left");
     else controls.start({ x: 0, transition: { type: "spring", stiffness: 300 } });
+  }
+
+  // Pendant le chargement des annonces depuis le serveur
+  if (chargement) {
+    return (
+      <div className="flex h-[480px] items-center justify-center text-ink/60">
+        Chargement des colocations…
+      </div>
+    );
+  }
+
+  // En cas de problème de connexion au serveur
+  if (erreur) {
+    return (
+      <div className="flex h-[480px] flex-col items-center justify-center gap-3 text-center">
+        <p className="font-display text-2xl">Oups…</p>
+        <p className="max-w-xs text-sm text-ink/70">
+          Impossible de charger les annonces depuis le serveur. Vérifie ta
+          connexion et réessaie.
+        </p>
+      </div>
+    );
   }
 
   return (
