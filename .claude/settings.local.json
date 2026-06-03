@@ -21,7 +21,8 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(chmod +x /Users/raoufbelhajali/Documents/coloct/.claude/dev.sh)",
       "Bash(curl -s -o /tmp/swipe.html -w \"%{http_code}\" --max-time 30 http://localhost:3000/swipe)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(curl -s -o /tmp/swipe2.html -w \"%{http_code}\" --max-time 30 http://localhost:3000/swipe)"
     ]
   }
 }

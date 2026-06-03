@@ -17,6 +17,7 @@ export type Listing = {
   quartier: string;
   arrondissement: number; // ex. 11 pour le 11e
   dateDispo: string; // date de disponibilité (texte lisible)
+  dispo: string; // même date au format AAAA-MM-JJ (pour filtrer/comparer)
   surface: number; // surface de la chambre (m²)
   meuble: boolean; // meublé ou non
   etage: string; // ex. "3e étage avec ascenseur"
@@ -38,6 +39,7 @@ export const listings: Listing[] = [
     quartier: "Le Marais",
     arrondissement: 4,
     dateDispo: "1er juillet 2026",
+    dispo: "2026-07-01",
     surface: 14,
     meuble: true,
     etage: "3e étage avec ascenseur",
@@ -56,6 +58,7 @@ export const listings: Listing[] = [
     quartier: "Belleville",
     arrondissement: 20,
     dateDispo: "15 juin 2026",
+    dispo: "2026-06-15",
     surface: 12,
     meuble: true,
     etage: "5e étage sans ascenseur",
@@ -71,6 +74,7 @@ export const listings: Listing[] = [
     quartier: "Montmartre",
     arrondissement: 18,
     dateDispo: "1er septembre 2026",
+    dispo: "2026-09-01",
     surface: 13,
     meuble: false,
     etage: "2e étage sans ascenseur",
@@ -89,6 +93,7 @@ export const listings: Listing[] = [
     quartier: "Bastille",
     arrondissement: 11,
     dateDispo: "1er juillet 2026",
+    dispo: "2026-07-01",
     surface: 16,
     meuble: true,
     etage: "4e étage avec ascenseur",
@@ -104,6 +109,7 @@ export const listings: Listing[] = [
     quartier: "Canal Saint-Martin",
     arrondissement: 10,
     dateDispo: "20 juin 2026",
+    dispo: "2026-06-20",
     surface: 11,
     meuble: true,
     etage: "1er étage sur cour",
@@ -122,6 +128,7 @@ export const listings: Listing[] = [
     quartier: "Quartier Latin",
     arrondissement: 5,
     dateDispo: "1er août 2026",
+    dispo: "2026-08-01",
     surface: 10,
     meuble: true,
     etage: "6e étage avec ascenseur",
@@ -137,6 +144,7 @@ export const listings: Listing[] = [
     quartier: "Batignolles",
     arrondissement: 17,
     dateDispo: "10 juillet 2026",
+    dispo: "2026-07-10",
     surface: 15,
     meuble: false,
     etage: "3e étage avec ascenseur",
@@ -155,6 +163,7 @@ export const listings: Listing[] = [
     quartier: "Oberkampf",
     arrondissement: 11,
     dateDispo: "5 juin 2026",
+    dispo: "2026-06-05",
     surface: 12,
     meuble: true,
     etage: "2e étage sur rue",
@@ -170,6 +179,7 @@ export const listings: Listing[] = [
     quartier: "Buttes-Chaumont",
     arrondissement: 19,
     dateDispo: "1er septembre 2026",
+    dispo: "2026-09-01",
     surface: 14,
     meuble: true,
     etage: "4e étage avec ascenseur",
@@ -188,6 +198,7 @@ export const listings: Listing[] = [
     quartier: "Pernety",
     arrondissement: 14,
     dateDispo: "25 juin 2026",
+    dispo: "2026-06-25",
     surface: 11,
     meuble: true,
     etage: "5e étage avec ascenseur",
