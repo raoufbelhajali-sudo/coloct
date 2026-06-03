@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(git --version)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/raoufbelhajali/**)",
+      "Bash(curl -sI --max-time 10 https://nodejs.org)",
+      "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh)",
+      "Bash(bash)",
+      "Bash(cat > *)",
+      "Bash(ln -sf __TRACKED_VAR__/node /usr/local/bin/node)",
+      "Bash(ln -sf __TRACKED_VAR__/npm /usr/local/bin/npm)",
+      "Bash(ln -sf __TRACKED_VAR__/npx /usr/local/bin/npx)",
+      "Bash([ -w \"$SKILLBIN\" ])"
+    ]
+  }
+}
