@@ -28,9 +28,12 @@ export default function ConnexionPage() {
     setErreur("");
     setEnCours(true);
 
+    // On nettoie l'email (espaces + minuscules) pour éviter les soucis de connexion
+    const emailNorm = email.trim().toLowerCase();
+
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: emailNorm,
         password,
         options: { data: { role, prenom: prenom.trim() } },
       });
@@ -51,7 +54,7 @@ export default function ConnexionPage() {
       setEnCours(false);
     } else {
       const { error } = await supabase.auth.signInWithPassword({
-        email,
+        email: emailNorm,
         password,
       });
       if (error) {
@@ -247,6 +250,9 @@ function Field({
         required={required}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
+        autoCapitalize={type === "text" ? "words" : "none"}
+        autoCorrect="off"
+        spellCheck={false}
         className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
       />
     </div>
@@ -256,6 +262,8 @@ function Field({
 // Traduit en français les messages d'erreur courants de Supabase
 function traduireErreur(msg: string): string {
   if (msg.includes("already registered")) return "Cet email a déjà un compte.";
+  if (msg.includes("not confirmed"))
+    return "Ton email n'est pas encore confirmé. Vérifie ta boîte mail.";
   if (msg.includes("Invalid login")) return "Email ou mot de passe incorrect.";
   if (msg.includes("at least 6")) return "Le mot de passe doit faire au moins 6 caractères.";
   if (msg.includes("valid email")) return "Cet email n'est pas valide.";
