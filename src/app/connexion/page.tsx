@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Telescope, KeyRound } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Role } from "@/lib/auth";
 
@@ -114,14 +115,14 @@ export default function ConnexionPage() {
                 <RoleCard
                   titre="Colocataire"
                   sousTitre="Je cherche une chambre"
-                  emoji="🔎"
+                  icon={<Telescope className="h-7 w-7 text-pink" />}
                   actif={role === "colocataire"}
                   onClick={() => setRole("colocataire")}
                 />
                 <RoleCard
                   titre="Locataire"
                   sousTitre="Je propose mon bien"
-                  emoji="🏠"
+                  icon={<KeyRound className="h-7 w-7 text-violet" />}
                   actif={role === "locataire"}
                   onClick={() => setRole("locataire")}
                 />
@@ -185,13 +186,13 @@ export default function ConnexionPage() {
 function RoleCard({
   titre,
   sousTitre,
-  emoji,
+  icon,
   actif,
   onClick,
 }: {
   titre: string;
   sousTitre: string;
-  emoji: string;
+  icon: ReactNode;
   actif: boolean;
   onClick: () => void;
 }) {
@@ -206,8 +207,8 @@ function RoleCard({
           : "border-ink/10 hover:border-ink/30")
       }
     >
-      <div className="text-2xl">{emoji}</div>
-      <div className="mt-1 font-semibold">{titre}</div>
+      {icon}
+      <div className="mt-2 font-semibold">{titre}</div>
       <div className="text-xs text-ink/60">{sousTitre}</div>
     </button>
   );

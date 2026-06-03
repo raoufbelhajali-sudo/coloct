@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { HeartHandshake } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import { getMyMatches, type MatchSummary } from "@/lib/messages";
@@ -34,8 +35,8 @@ export default function MatchsPage() {
         {chargement ? (
           <p className="text-ink/60">Chargement…</p>
         ) : matches.length === 0 ? (
-          <div className="rounded-2xl bg-panel p-6 text-center text-ink/70">
-            <p className="text-4xl">💘</p>
+          <div className="flex flex-col items-center rounded-2xl bg-panel p-6 text-center text-ink/70">
+            <HeartHandshake className="h-10 w-10 text-pink" />
             <p className="mt-3">
               Pas encore de match. Continue à swiper, ça va arriver !
             </p>

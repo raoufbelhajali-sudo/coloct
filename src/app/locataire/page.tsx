@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Users } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ListingForm from "@/components/ListingForm";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
@@ -66,8 +67,9 @@ export default function LocatairePage() {
               </p>
             </div>
 
-            <p className="mb-3 w-full text-left font-display text-xl">
-              Qui veut emménager ? 👀
+            <p className="mb-3 flex w-full items-center gap-2 text-left font-display text-xl">
+              <Users className="h-5 w-5 text-violet" />
+              Qui veut emménager ?
             </p>
             <ProfileSwipeDeck listingId={listing.id} />
           </div>

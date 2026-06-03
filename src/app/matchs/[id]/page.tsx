@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { ArrowLeft, Send } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import {
   getMessages,
@@ -80,7 +81,7 @@ export default function ConversationPage() {
       {/* En-tête */}
       <header className="flex w-full max-w-sm items-center gap-3 pb-3">
         <Link href="/matchs" className="text-ink/60 hover:text-ink">
-          ←
+          <ArrowLeft className="h-6 w-6" />
         </Link>
         <div className="min-w-0">
           <p className="truncate font-display text-lg font-semibold">{titre}</p>
@@ -124,9 +125,10 @@ export default function ConversationPage() {
         />
         <button
           type="submit"
-          className="bg-signature rounded-full px-5 py-3 font-semibold text-white"
+          aria-label="Envoyer"
+          className="bg-signature flex items-center justify-center rounded-full px-5 py-3 font-semibold text-white"
         >
-          Envoyer
+          <Send className="h-5 w-5" />
         </button>
       </form>
     </main>

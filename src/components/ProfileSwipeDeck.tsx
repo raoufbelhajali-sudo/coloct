@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Heart, X } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -155,16 +156,16 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
             <button
               onClick={() => fly("left")}
               aria-label="Je passe"
-              className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-panel text-2xl transition-transform hover:scale-110"
+              className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-panel text-ink/60 transition-transform hover:scale-110"
             >
-              👋
+              <X className="h-7 w-7" strokeWidth={2.5} />
             </button>
             <button
               onClick={() => fly("right")}
               aria-label="Ça m'intéresse"
-              className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-3xl transition-transform hover:scale-110"
+              className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
             >
-              💗
+              <Heart className="h-9 w-9" fill="currentColor" />
             </button>
           </div>
         </>
