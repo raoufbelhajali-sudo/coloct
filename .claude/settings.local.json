@@ -13,7 +13,13 @@
       "Bash(ln -sf __TRACKED_VAR__/node /usr/local/bin/node)",
       "Bash(ln -sf __TRACKED_VAR__/npm /usr/local/bin/npm)",
       "Bash(ln -sf __TRACKED_VAR__/npx /usr/local/bin/npx)",
-      "Bash([ -w \"$SKILLBIN\" ])"
+      "Bash([ -w \"$SKILLBIN\" ])",
+      "Bash(sleep 6; cat /tmp/coloct-dev.log)",
+      "Bash(curl -s -o /dev/null -w \"Code HTTP: %{http_code}\\\\n\" --max-time 8 http://localhost:3000)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(chmod +x /Users/raoufbelhajali/Documents/coloct/.claude/dev.sh)"
     ]
   }
 }
