@@ -18,7 +18,7 @@ export default function Home() {
 
       {/* Bouton principal */}
       <a
-        href="#"
+        href="/swipe"
         className="bg-signature glow-pink mt-10 inline-block rounded-full px-8 py-4 text-base font-semibold text-white transition-transform hover:scale-105"
       >
         Commencer à swiper
