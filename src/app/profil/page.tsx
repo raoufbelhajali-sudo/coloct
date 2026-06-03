@@ -1,30 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { listings } from "@/data/listings";
-import { saveProfile, loadProfile } from "@/lib/profile";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth";
 
 // Quartiers proposés (ceux des annonces disponibles)
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 
 export default function ProfilPage() {
   const router = useRouter();
-  const existing = typeof window !== "undefined" ? loadProfile() : null;
+  const { user, profile, loading, refreshProfile } = useAuth();
 
-  const [prenom, setPrenom] = useState(existing?.prenom ?? "");
-  const [age, setAge] = useState(existing?.age?.toString() ?? "");
-  const [budgetMax, setBudgetMax] = useState(existing?.budgetMax ?? 700);
-  const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>(
-    existing?.quartiers ?? []
-  );
-  const [dateEmmenagement, setDateEmmenagement] = useState(
-    existing?.dateEmmenagement ?? ""
-  );
-  const [nonFumeur, setNonFumeur] = useState(existing?.nonFumeur ?? false);
-  const [animaux, setAnimaux] = useState(existing?.animaux ?? false);
-  const [teletravail, setTeletravail] = useState(existing?.teletravail ?? false);
+  const [prenom, setPrenom] = useState("");
+  const [age, setAge] = useState("");
+  const [budgetMax, setBudgetMax] = useState(700);
+  const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>([]);
+  const [dateEmmenagement, setDateEmmenagement] = useState("");
+  const [nonFumeur, setNonFumeur] = useState(false);
+  const [animaux, setAnimaux] = useState(false);
+  const [teletravail, setTeletravail] = useState(false);
+  const [enCours, setEnCours] = useState(false);
+
+  // Pas connecté → page de connexion
+  useEffect(() => {
+    if (!loading && !user) router.replace("/connexion");
+  }, [loading, user, router]);
+
+  // Pré-remplit avec le profil du serveur
+  useEffect(() => {
+    if (!profile) return;
+    setPrenom(profile.prenom ?? "");
+    setAge(profile.age ? String(profile.age) : "");
+    if (profile.budget_max) setBudgetMax(profile.budget_max);
+    setQuartiersChoisis(profile.quartiers ?? []);
+    setDateEmmenagement(profile.date_emmenagement ?? "");
+    setNonFumeur(profile.non_fumeur);
+    setAnimaux(profile.animaux);
+    setTeletravail(profile.teletravail);
+  }, [profile]);
 
   function toggleQuartier(q: string) {
     setQuartiersChoisis((prev) =>
@@ -32,30 +48,37 @@ export default function ProfilPage() {
     );
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    saveProfile({
-      prenom: prenom.trim(),
-      age: Number(age) || 0,
-      budgetMax,
-      quartiers: quartiersChoisis,
-      dateEmmenagement,
-      nonFumeur,
-      animaux,
-      teletravail,
-    });
+    if (!user) return;
+    setEnCours(true);
+    await supabase
+      .from("profiles")
+      .update({
+        prenom: prenom.trim(),
+        age: Number(age) || null,
+        budget_max: budgetMax,
+        quartiers: quartiersChoisis,
+        date_emmenagement: dateEmmenagement || null,
+        non_fumeur: nonFumeur,
+        animaux,
+        teletravail,
+      })
+      .eq("id", user.id);
+    await refreshProfile();
+    setEnCours(false);
     router.push("/swipe");
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center px-4 py-8">
       <header className="mb-8 w-full max-w-md">
-        <Link href="/" className="font-display text-2xl font-semibold">
+        <Link href="/swipe" className="font-display text-2xl font-semibold">
           <span className="text-signature">Colock&apos;t</span>
         </Link>
-        <h1 className="mt-6 font-display text-3xl font-semibold">Ton profil</h1>
+        <h1 className="mt-6 font-display text-3xl font-semibold">Mes préférences</h1>
         <p className="mt-1 text-ink/60">
-          Quelques infos pour te proposer les meilleures colocs.
+          Pour te proposer les colocs qui te correspondent.
         </p>
       </header>
 
@@ -85,7 +108,6 @@ export default function ProfilPage() {
               type="number"
               min={18}
               max={99}
-              required
               value={age}
               onChange={(e) => setAge(e.target.value)}
               placeholder="Ex. 25"
@@ -174,9 +196,10 @@ export default function ProfilPage() {
         {/* Bouton de validation */}
         <button
           type="submit"
-          className="bg-signature glow-pink w-full rounded-full px-6 py-4 text-base font-semibold text-white transition-transform hover:scale-[1.02]"
+          disabled={enCours}
+          className="bg-signature glow-pink w-full rounded-full px-6 py-4 text-base font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
         >
-          C&apos;est parti, je swipe !
+          {enCours ? "Enregistrement…" : "Enregistrer et swiper"}
         </button>
       </form>
     </main>

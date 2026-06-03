@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   motion,
   useMotionValue,
@@ -9,7 +10,12 @@ import {
 } from "framer-motion";
 import type { Listing } from "@/data/listings";
 import { getListings } from "@/lib/listings";
-import { loadProfile } from "@/lib/profile";
+import { useAuth } from "@/lib/auth";
+import {
+  getSwipedListingIds,
+  recordListingSwipe,
+  findMatchForListing,
+} from "@/lib/swipes";
 import ListingCard from "./ListingCard";
 
 type Direction = "left" | "right";
@@ -19,9 +25,13 @@ const BUDGET_MIN = 500;
 const BUDGET_MAX = 900;
 
 export default function SwipeDeck() {
-  const [index, setIndex] = useState(0); // carte du dessus
+  const router = useRouter();
+  const { user, profile, loading: authLoading } = useAuth();
+
   const [match, setMatch] = useState<Listing | null>(null);
   const [likes, setLikes] = useState<Listing[]>([]); // annonces aimées
+  // Annonces déjà swipées (on les retire du paquet au fur et à mesure)
+  const [swipedIds, setSwipedIds] = useState<Set<string>>(new Set());
 
   // Annonces chargées depuis le serveur Supabase
   const [allListings, setAllListings] = useState<Listing[]>([]);
@@ -34,26 +44,33 @@ export default function SwipeDeck() {
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
   const [prenom, setPrenom] = useState("");
 
-  // Au chargement : on récupère les annonces depuis Supabase
+  // Pas connecté → direction la page de connexion
   useEffect(() => {
-    getListings()
-      .then((data) => setAllListings(data))
+    if (!authLoading && !user) router.replace("/connexion");
+  }, [authLoading, user, router]);
+
+  // Au chargement : annonces depuis Supabase + annonces déjà swipées par ce compte
+  useEffect(() => {
+    if (!user) return;
+    Promise.all([getListings(), getSwipedListingIds(user.id)])
+      .then(([data, swiped]) => {
+        setAllListings(data);
+        setSwipedIds(swiped);
+      })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
-  }, []);
+  }, [user]);
 
-  // Au chargement : on pré-remplit les filtres depuis le profil enregistré
+  // On pré-remplit les filtres depuis le profil du compte connecté
   useEffect(() => {
-    const p = loadProfile();
-    if (!p) return;
-    setPrenom(p.prenom);
-    if (p.budgetMax) {
-      // on garde la valeur dans les bornes du curseur
-      const v = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, p.budgetMax));
+    if (!profile) return;
+    setPrenom(profile.prenom);
+    if (profile.budget_max) {
+      const v = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, profile.budget_max));
       setBudgetMax(v);
     }
-    if (p.dateEmmenagement) setDispoAvant(p.dateEmmenagement);
-  }, []);
+    if (profile.date_emmenagement) setDispoAvant(profile.date_emmenagement);
+  }, [profile]);
 
   // Liste des quartiers présents dans les annonces (pour le menu déroulant)
   const quartiers = useMemo(
@@ -61,15 +78,16 @@ export default function SwipeDeck() {
     [allListings]
   );
 
-  // Annonces qui passent les filtres
+  // Annonces qui passent les filtres (et pas encore swipées)
   const filtered = useMemo(() => {
     return allListings.filter((l) => {
+      if (swipedIds.has(l.id)) return false;
       if (l.loyer > budgetMax) return false;
       if (quartier !== "all" && l.quartier !== quartier) return false;
       if (dispoAvant && l.dispo > dispoAvant) return false;
       return true;
     });
-  }, [allListings, budgetMax, quartier, dispoAvant]);
+  }, [allListings, swipedIds, budgetMax, quartier, dispoAvant]);
 
   // Position horizontale de la carte du dessus (pour le glissement)
   const x = useMotionValue(0);
@@ -79,20 +97,21 @@ export default function SwipeDeck() {
   const controls = useAnimationControls();
   const animating = useRef(false);
 
-  const current = filtered[index];
-  const next = filtered[index + 1];
+  // La carte du dessus est toujours la première du paquet filtré
+  const current = filtered[0];
+  const next = filtered[1];
 
-  // Quand on change un filtre : on revient à la première carte
+  // Quand on change un filtre : on remet la carte droite
   function resetDeck() {
-    setIndex(0);
     x.set(0);
     controls.set({ x: 0, opacity: 1 });
   }
 
   // Fait voler la carte hors de l'écran puis passe à la suivante
   async function fly(dir: Direction) {
-    if (animating.current || !current) return;
+    if (animating.current || !current || !user) return;
     animating.current = true;
+    const swiped = current; // on retient l'annonce avant d'avancer la pile
 
     await controls.start({
       x: dir === "right" ? 700 : -700,
@@ -100,15 +119,24 @@ export default function SwipeDeck() {
       transition: { duration: 0.35 },
     });
 
-    if (dir === "right") {
-      setLikes((prev) => [...prev, current]);
-      if (Math.random() < 0.5) setMatch(current);
-    }
-
-    setIndex((i) => i + 1);
+    // on retire l'annonce du paquet (la suivante passe devant)
+    setSwipedIds((prev) => new Set(prev).add(swiped.id));
     x.set(0);
     controls.set({ x: 0, opacity: 1 });
     animating.current = false;
+
+    // puis on enregistre le swipe sur le serveur
+    const direction = dir === "right" ? "like" : "pass";
+    try {
+      await recordListingSwipe(user.id, swiped.id, direction);
+      if (direction === "like") {
+        setLikes((prev) => [...prev, swiped]);
+        // match seulement si le locataire t'a aussi liké
+        if (await findMatchForListing(user.id, swiped.id)) setMatch(swiped);
+      }
+    } catch {
+      // souci réseau : on n'interrompt pas le swipe
+    }
   }
 
   function handleDragEnd(
@@ -238,32 +266,18 @@ export default function SwipeDeck() {
 
       {/* ---------- Zone des cartes ---------- */}
       {filtered.length === 0 ? (
-        <div className="flex h-[480px] flex-col items-center justify-center gap-3 text-center">
-          <p className="font-display text-2xl">Aucune annonce</p>
-          <p className="max-w-xs text-sm text-ink/70">
-            Aucune colocation ne correspond à ces filtres. Essaie d&apos;augmenter
-            ton budget ou de changer de quartier.
-          </p>
-        </div>
-      ) : !current ? (
-        <div className="flex h-[480px] flex-col items-center justify-center gap-5 text-center">
+        <div className="flex h-[480px] flex-col items-center justify-center gap-4 text-center">
           <p className="font-display text-3xl">C&apos;est tout pour l&apos;instant !</p>
-          <p className="max-w-xs text-ink/70">
-            Tu as parcouru toutes les colocations correspondant à tes filtres.
+          <p className="max-w-xs text-sm text-ink/70">
+            Tu as parcouru toutes les colocations disponibles. Ajuste tes filtres
+            ou reviens bientôt, de nouvelles annonces arrivent.
           </p>
-          <p className="text-sm text-pink-light">
-            {likes.length} annonce{likes.length > 1 ? "s" : ""} aimée
-            {likes.length > 1 ? "s" : ""} 💗
-          </p>
-          <button
-            onClick={() => {
-              setLikes([]);
-              resetDeck();
-            }}
-            className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
-          >
-            Tout revoir
-          </button>
+          {likes.length > 0 && (
+            <p className="text-sm text-pink-light">
+              {likes.length} annonce{likes.length > 1 ? "s" : ""} aimée
+              {likes.length > 1 ? "s" : ""} 💗
+            </p>
+          )}
         </div>
       ) : (
         <>
