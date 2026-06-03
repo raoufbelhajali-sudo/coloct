@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Telescope, KeyRound } from "lucide-react";
+import { Telescope, KeyRound, Check } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Role } from "@/lib/auth";
 
@@ -201,14 +201,22 @@ function RoleCard({
       type="button"
       onClick={onClick}
       className={
-        "rounded-2xl border p-3 text-left transition-colors " +
+        "relative rounded-2xl border-2 p-3 text-left transition-all " +
         (actif
-          ? "border-pink bg-panel-2"
-          : "border-ink/10 hover:border-ink/30")
+          ? "border-pink bg-pink/10 shadow-md"
+          : "border-ink/10 bg-panel hover:border-ink/30")
       }
     >
+      {/* Pastille de sélection */}
+      {actif && (
+        <span className="bg-signature absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-white">
+          <Check className="h-3.5 w-3.5" strokeWidth={3} />
+        </span>
+      )}
       {icon}
-      <div className="mt-2 font-semibold">{titre}</div>
+      <div className={"mt-2 font-semibold " + (actif ? "text-pink" : "")}>
+        {titre}
+      </div>
       <div className="text-xs text-ink/60">{sousTitre}</div>
     </button>
   );
