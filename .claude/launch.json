@@ -6,7 +6,7 @@
       "runtimeExecutable": "/bin/zsh",
       "runtimeArgs": [
         "-c",
-        "export PATH=\"$HOME/.nvm/versions/node/v24.16.0/bin:$PATH\"; exec npm run dev"
+        "export PATH=\"$HOME/.nvm/versions/node/v24.16.0/bin:$PATH\"; exec npm run start -- -H 0.0.0.0 -p 3000"
       ],
       "port": 3000
     }
