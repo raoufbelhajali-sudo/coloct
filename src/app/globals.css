@@ -2,14 +2,14 @@
 
 /* ===========================================================
    Charte graphique Colock't
-   Thème sombre, ambiance nocturne, accents rose & violet
+   Thème clair, accents rose & violet
    =========================================================== */
 @theme {
   /* Couleurs de la charte */
-  --color-bg: #0c0810; /* Fond */
-  --color-panel: #161020; /* Panneaux */
-  --color-panel-2: #1f1730; /* Panneaux (variante) */
-  --color-ink: #f5f0fa; /* Texte */
+  --color-bg: #ffffff; /* Fond (blanc) */
+  --color-panel: #f4eefb; /* Panneaux (lavande très clair) */
+  --color-panel-2: #e9e1f6; /* Panneaux (variante) */
+  --color-ink: #211a2b; /* Texte (prune foncé) */
   --color-pink: #ff4d8d; /* Rose principal */
   --color-pink-light: #ff7bab; /* Rose clair */
   --color-violet: #8b5cf6; /* Violet */

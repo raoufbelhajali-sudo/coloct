@@ -32,7 +32,7 @@ export default function ListingCard({ listing }: { listing: Listing }) {
         <h2 className="font-display text-3xl font-semibold leading-tight">
           {listing.quartier}
         </h2>
-        <p className="mt-0.5 text-sm font-medium text-pink-light">
+        <p className="mt-0.5 text-sm font-semibold text-pink">
           Paris {listing.arrondissement}
           <sup>e</sup>
         </p>
@@ -67,8 +67,8 @@ export default function ListingCard({ listing }: { listing: Listing }) {
           {listing.criteres.map((crit) => (
             <span
               key={crit}
-              className="rounded-full border border-violet/40 px-3 py-1 text-xs"
-              style={{ color: "#c4b5fd" }}
+              className="rounded-full border border-violet/40 px-3 py-1 text-xs font-medium"
+              style={{ color: "#6d28d9" }}
             >
               {crit}
             </span>

@@ -60,8 +60,8 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
             {modeDeVie.map((m) => (
               <span
                 key={m}
-                className="rounded-full border border-violet/40 px-3 py-1 text-xs"
-                style={{ color: "#c4b5fd" }}
+                className="rounded-full border border-violet/40 px-3 py-1 text-xs font-medium"
+                style={{ color: "#6d28d9" }}
               >
                 {m}
               </span>
