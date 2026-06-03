@@ -1,35 +1,77 @@
 "use client";
 
-import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import AppHeader from "@/components/AppHeader";
+import ListingForm from "@/components/ListingForm";
+import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import { useAuth } from "@/lib/auth";
+import { getMyListing } from "@/lib/locataire";
+import type { Listing } from "@/data/listings";
 
 export default function LocatairePage() {
-  const { profile, loading, signOut } = useAuth();
+  const router = useRouter();
+  const { user, profile, loading } = useAuth();
+
+  const [listing, setListing] = useState<Listing | null>(null);
+  const [chargement, setChargement] = useState(true);
+
+  // Pas connecté → connexion ; colocataire → son espace de swipe
+  useEffect(() => {
+    if (loading) return;
+    if (!user) router.replace("/connexion");
+    else if (profile && profile.role !== "locataire") router.replace("/swipe");
+  }, [loading, user, profile, router]);
+
+  const chargerAnnonce = useCallback(async () => {
+    if (!user) return;
+    setChargement(true);
+    const l = await getMyListing(user.id);
+    setListing(l);
+    setChargement(false);
+  }, [user]);
+
+  useEffect(() => {
+    if (user) chargerAnnonce();
+  }, [user, chargerAnnonce]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-8">
-      <header className="mb-8 flex w-full max-w-md items-center justify-between">
-        <Link href="/" className="font-display text-2xl font-semibold">
-          <span className="text-signature">Colock&apos;t</span>
-        </Link>
-        <button onClick={signOut} className="text-sm text-ink/60 hover:text-ink">
-          Se déconnecter
-        </button>
-      </header>
+    <main className="flex min-h-screen flex-col items-center px-4 py-6">
+      <AppHeader />
 
-      <div className="w-full max-w-md">
-        <h1 className="font-display text-3xl font-semibold">
-          Espace locataire {!loading && profile ? `· ${profile.prenom}` : ""}
-        </h1>
-        <p className="mt-2 text-ink/70">
-          Ici tu pourras bientôt décrire ton bien et swiper sur les profils de
-          colocataires intéressés. 🏠
-        </p>
+      <div className="flex w-full flex-1 flex-col items-center">
+        {chargement ? (
+          <p className="mt-20 text-ink/60">Chargement…</p>
+        ) : !listing ? (
+          // Pas encore d'annonce → on la crée
+          <div className="w-full max-w-md">
+            <h1 className="font-display text-3xl font-semibold">Décris ton bien</h1>
+            <p className="mt-1 mb-6 text-ink/60">
+              Publie ta chambre pour qu&apos;elle apparaisse auprès des
+              colocataires.
+            </p>
+            <ListingForm onCreated={chargerAnnonce} />
+          </div>
+        ) : (
+          // Annonce publiée → on swipe sur les colocataires
+          <div className="flex w-full max-w-sm flex-col items-center">
+            <div className="mb-5 w-full rounded-2xl bg-panel p-4">
+              <p className="text-xs text-ink/50">Ton annonce</p>
+              <p className="font-display text-xl">
+                {listing.quartier} · Paris {listing.arrondissement}
+                <sup>e</sup>
+              </p>
+              <p className="text-sm text-ink/70">
+                {listing.loyer} € / mois · {listing.surface} m²
+              </p>
+            </div>
 
-        <div className="mt-6 rounded-2xl bg-panel p-5 text-sm text-ink/60">
-          🚧 Cette partie (créer son annonce + swiper sur les chercheurs) arrive à
-          la prochaine étape.
-        </div>
+            <p className="mb-3 w-full text-left font-display text-xl">
+              Qui veut emménager ? 👀
+            </p>
+            <ProfileSwipeDeck listingId={listing.id} />
+          </div>
+        )}
       </div>
     </main>
   );

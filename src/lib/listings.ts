@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 import type { Coloc, Listing } from "@/data/listings";
 
 // Forme brute d'une ligne telle que stockée dans Supabase (colonnes en snake_case)
-type ListingRow = {
+export type ListingRow = {
   id: number;
   loyer: number;
   quartier: string;
@@ -18,17 +18,9 @@ type ListingRow = {
   description: string;
 };
 
-// Va chercher toutes les annonces dans la base de données Supabase
-export async function getListings(): Promise<Listing[]> {
-  const { data, error } = await supabase
-    .from("listings")
-    .select("*")
-    .order("id");
-
-  if (error) throw error;
-
-  // On convertit les colonnes du serveur vers le format utilisé par l'app
-  return (data as ListingRow[]).map((r) => ({
+// Convertit une ligne du serveur vers le format utilisé par l'app
+export function mapListingRow(r: ListingRow): Listing {
+  return {
     id: String(r.id),
     loyer: r.loyer,
     quartier: r.quartier,
@@ -38,9 +30,20 @@ export async function getListings(): Promise<Listing[]> {
     surface: r.surface,
     meuble: r.meuble,
     etage: r.etage,
-    colocs: r.colocs,
-    criteres: r.criteres,
-    photos: r.photos,
+    colocs: r.colocs ?? [],
+    criteres: r.criteres ?? [],
+    photos: r.photos ?? [],
     description: r.description,
-  }));
+  };
+}
+
+// Va chercher toutes les annonces dans la base de données Supabase
+export async function getListings(): Promise<Listing[]> {
+  const { data, error } = await supabase
+    .from("listings")
+    .select("*")
+    .order("id");
+
+  if (error) throw error;
+  return (data as ListingRow[]).map(mapListingRow);
 }
