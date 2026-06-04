@@ -7,7 +7,6 @@ import { HeartHandshake } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import { getMyMatches, type MatchSummary } from "@/lib/messages";
-import { marquerMatchsVus } from "@/lib/notifications";
 
 export default function MatchsPage() {
   const router = useRouter();
@@ -24,8 +23,6 @@ export default function MatchsPage() {
     getMyMatches(user.id)
       .then(setMatches)
       .finally(() => setChargement(false));
-    // Ouvrir la liste acquitte les nouveaux matchs
-    marquerMatchsVus();
   }, [user]);
 
   return (

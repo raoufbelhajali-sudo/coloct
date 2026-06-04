@@ -20,7 +20,6 @@ import {
   TYPES_DOCUMENTS,
   type Message,
 } from "@/lib/messages";
-import { marquerMatchLu } from "@/lib/notifications";
 
 export default function ConversationPage() {
   const router = useRouter();
@@ -61,11 +60,6 @@ export default function ConversationPage() {
       if (m) setTitre(`${m.titre} — avec ${m.autrePrenom}`);
     });
   }, [user, matchId]);
-
-  // Consulter la conversation acquitte ses messages (compteur de notifs)
-  useEffect(() => {
-    if (user) marquerMatchLu(matchId);
-  }, [user, matchId, messages]);
 
   // Rôle + documents demandés (checklist)
   useEffect(() => {
