@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Eye } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/lib/auth";
+import { useAuth, type Profile } from "@/lib/auth";
 import Logo from "@/components/Logo";
+import ProfileDetail from "@/components/ProfileDetail";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const INTERETS = [
@@ -46,10 +47,37 @@ export default function ProfilPage() {
   const [photoEnCours, setPhotoEnCours] = useState(false);
   const [enCours, setEnCours] = useState(false);
   const [enregistre, setEnregistre] = useState(false);
+  const [apercu, setApercu] = useState(false);
+
+  const estLocataire = profile?.role === "locataire";
+  const retour = estLocataire ? "/locataire" : "/swipe";
 
   useEffect(() => {
     if (!loading && !user) router.replace("/connexion");
   }, [loading, user, router]);
+
+  // Profil reconstruit à partir des champs en cours (pour l'aperçu)
+  const profilApercu: Profile | null = profile
+    ? {
+        ...profile,
+        prenom: prenom.trim() || profile.prenom,
+        pseudo: pseudo.trim() || null,
+        photo_url: photoUrl || null,
+        age: Number(age) || null,
+        genre: genre || null,
+        profession: profession.trim() || null,
+        bio: bio.trim() || null,
+        interets,
+        ambiance: ambiance || null,
+        rythme: rythme || null,
+        non_fumeur: nonFumeur,
+        animaux,
+        teletravail,
+        budget_max: estLocataire ? null : budgetMax,
+        quartiers: estLocataire ? [] : quartiersChoisis,
+        date_emmenagement: estLocataire ? null : dateEmmenagement || null,
+      }
+    : null;
 
   // Téléverse une nouvelle photo de profil
   async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
@@ -130,12 +158,21 @@ export default function ProfilPage() {
   return (
     <main className="flex min-h-screen flex-col items-center px-4 py-6">
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
-        <Link href="/swipe">
+        <Link href={retour}>
           <Logo markClass="h-7 w-7" textClass="text-xl" />
         </Link>
-        <Link href="/swipe" className="text-sm text-ink/60 hover:text-ink">
-          Retour au swipe
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setApercu(true)}
+            className="flex items-center gap-1.5 rounded-full border border-ink/15 bg-panel px-3 py-1.5 text-sm text-ink/70 hover:border-pink hover:text-pink"
+          >
+            <Eye className="h-4 w-4" /> Voir mon profil
+          </button>
+          <Link href={retour} className="text-sm text-ink/60 hover:text-ink">
+            Retour
+          </Link>
+        </div>
       </header>
 
       <div className="w-full max-w-md">
@@ -212,23 +249,36 @@ export default function ProfilPage() {
             </div>
           </Section>
 
-          {/* ---------- Recherche ---------- */}
-          <Section titre="Ce que je cherche">
-            <div>
-              <div className="flex items-center justify-between text-sm">
-                <label className="text-ink/70">Budget max</label>
-                <span className="font-semibold text-pink">{budgetMax} € / mois</span>
+          {/* ---------- Recherche (colocataire uniquement) ---------- */}
+          {!estLocataire && (
+            <Section titre="Ce que je cherche">
+              <div>
+                <div className="flex items-center justify-between text-sm">
+                  <label className="text-ink/70">Budget max</label>
+                  <span className="font-semibold text-pink">{budgetMax} € / mois</span>
+                </div>
+                <input type="range" min={400} max={1000} step={10} value={budgetMax}
+                  onChange={(e) => setBudgetMax(Number(e.target.value))}
+                  className="accent-pink mt-2 w-full" />
               </div>
-              <input type="range" min={400} max={1000} step={10} value={budgetMax}
-                onChange={(e) => setBudgetMax(Number(e.target.value))}
-                className="accent-pink mt-2 w-full" />
-            </div>
-            <ChoixMultiple label="Quartiers qui m'intéressent" options={quartiers} values={quartiersChoisis} onToggle={(v) => toggle(quartiersChoisis, setQuartiersChoisis, v)} />
-            <div>
-              <label className="text-sm text-ink/70">Emménagement souhaité</label>
-              <input type="date" value={dateEmmenagement} onChange={(e) => setDateEmmenagement(e.target.value)} className={champClasses} />
-            </div>
-          </Section>
+              <ChoixMultiple label="Quartiers qui m'intéressent" options={quartiers} values={quartiersChoisis} onToggle={(v) => toggle(quartiersChoisis, setQuartiersChoisis, v)} />
+              <div>
+                <label className="text-sm text-ink/70">Emménagement souhaité</label>
+                <input type="date" value={dateEmmenagement} onChange={(e) => setDateEmmenagement(e.target.value)} className={champClasses} />
+              </div>
+            </Section>
+          )}
+
+          {/* ---------- Annonce (locataire uniquement) ---------- */}
+          {estLocataire && (
+            <Link
+              href="/locataire"
+              className="flex items-center justify-between rounded-2xl bg-panel px-4 py-4 text-ink/85 hover:bg-panel-2"
+            >
+              <span className="font-medium">Mon annonce (la chambre)</span>
+              <span className="text-sm text-pink">Gérer →</span>
+            </Link>
+          )}
 
           {enregistre && (
             <p className="flex items-center gap-1.5 rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink">
@@ -242,6 +292,15 @@ export default function ProfilPage() {
           </button>
         </form>
       </div>
+
+      {/* Aperçu "Voir mon profil" */}
+      {apercu && profilApercu && (
+        <ProfileDetail
+          profile={profilApercu}
+          preview
+          onClose={() => setApercu(false)}
+        />
+      )}
     </main>
   );
 }

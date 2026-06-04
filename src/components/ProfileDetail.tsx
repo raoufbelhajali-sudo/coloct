@@ -9,11 +9,13 @@ export default function ProfileDetail({
   onClose,
   onLike,
   onPass,
+  preview = false,
 }: {
   profile: Profile;
   onClose: () => void;
-  onLike: () => void;
-  onPass: () => void;
+  onLike?: () => void;
+  onPass?: () => void;
+  preview?: boolean; // aperçu "mon profil" → pas de boutons like/pass
 }) {
   const modeDeVie: string[] = [];
   if (profile.ambiance) modeDeVie.push(profile.ambiance);
@@ -26,7 +28,7 @@ export default function ProfileDetail({
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">
       <div className="relative flex h-full w-full max-w-md flex-col bg-panel">
         {/* Zone défilable */}
-        <div className="flex-1 overflow-y-auto pb-28">
+        <div className={"flex-1 overflow-y-auto " + (preview ? "pb-8" : "pb-28")}>
           {/* Photo / dégradé */}
           <div className="bg-signature relative flex h-72 items-center justify-center overflow-hidden">
             {profile.photo_url ? (
@@ -110,23 +112,25 @@ export default function ProfileDetail({
           </div>
         </div>
 
-        {/* Barre d'actions fixe en bas */}
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-8 bg-gradient-to-t from-panel via-panel to-transparent py-5">
-          <button
-            onClick={onPass}
-            aria-label="Je passe"
-            className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-bg text-ink/60 transition-transform hover:scale-110"
-          >
-            <X className="h-7 w-7" strokeWidth={2.5} />
-          </button>
-          <button
-            onClick={onLike}
-            aria-label="Ça m'intéresse"
-            className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-          >
-            <Heart className="h-9 w-9" fill="currentColor" />
-          </button>
-        </div>
+        {/* Barre d'actions fixe en bas (masquée en mode aperçu) */}
+        {!preview && (
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-8 bg-gradient-to-t from-panel via-panel to-transparent py-5">
+            <button
+              onClick={onPass}
+              aria-label="Je passe"
+              className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-bg text-ink/60 transition-transform hover:scale-110"
+            >
+              <X className="h-7 w-7" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={onLike}
+              aria-label="Ça m'intéresse"
+              className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+            >
+              <Heart className="h-9 w-9" fill="currentColor" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

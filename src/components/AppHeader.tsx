@@ -11,11 +11,7 @@ const iconBtn =
   "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
 
 // En-tête commun aux pages connectées : logo + liens + déconnexion
-export default function AppHeader({
-  showPreferences = false,
-}: {
-  showPreferences?: boolean;
-}) {
+export default function AppHeader() {
   const router = useRouter();
   const { user, signOut } = useAuth();
 
@@ -40,7 +36,7 @@ export default function AppHeader({
             <Zap className="h-[18px] w-[18px]" />
           </Link>
         )}
-        {showPreferences && (
+        {user && (
           <Link href="/profil" aria-label="Profil" title="Profil" className={iconBtn}>
             <UserRound className="h-[18px] w-[18px]" />
           </Link>
