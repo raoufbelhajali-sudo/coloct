@@ -1,82 +1,28 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Link from "next/link";
-import { Telescope, KeyRound, Check } from "lucide-react";
+import { Phone, Mail, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import type { Role } from "@/lib/auth";
+
+type Etape = "choix" | "email" | "emailEnvoye" | "phone" | "phoneCode";
 
 export default function ConnexionPage() {
-  const router = useRouter();
-  const [mode, setMode] = useState<"login" | "signup">("signup");
-
-  const [role, setRole] = useState<Role>("colocataire");
-  const [prenom, setPrenom] = useState("");
+  const [etape, setEtape] = useState<Etape>("choix");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
   const [erreur, setErreur] = useState("");
   const [enCours, setEnCours] = useState(false);
 
-  // Redirige vers le bon espace selon le rôle
-  function redirige(r: Role) {
-    router.push(r === "locataire" ? "/locataire" : "/swipe");
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function reset() {
     setErreur("");
-    setEnCours(true);
-
-    // On nettoie l'email (espaces + minuscules) pour éviter les soucis de connexion
-    const emailNorm = email.trim().toLowerCase();
-
-    if (mode === "signup") {
-      const { data, error } = await supabase.auth.signUp({
-        email: emailNorm,
-        password,
-        options: { data: { role, prenom: prenom.trim() } },
-      });
-      if (error) {
-        setErreur(traduireErreur(error.message));
-        setEnCours(false);
-        return;
-      }
-      // Si la confirmation par email est désactivée, on a une session tout de suite
-      if (data.session) {
-        redirige(role);
-      } else {
-        setErreur(
-          "Compte créé ! Vérifie ta boîte mail pour confirmer, puis connecte-toi."
-        );
-        setMode("login");
-      }
-      setEnCours(false);
-    } else {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: emailNorm,
-        password,
-      });
-      if (error) {
-        setErreur(traduireErreur(error.message));
-        setEnCours(false);
-        return;
-      }
-      // On récupère le rôle pour rediriger au bon endroit
-      const { data: userData } = await supabase.auth.getUser();
-      const { data: prof } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", userData.user!.id)
-        .single();
-      redirige((prof?.role as Role) ?? "colocataire");
-      setEnCours(false);
-    }
+    setEnCours(false);
   }
 
-  // Connexion / inscription via Google
+  // --- Google ---
   async function handleGoogle() {
-    setErreur("");
+    reset();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/bienvenue` },
@@ -84,209 +30,223 @@ export default function ConnexionPage() {
     if (error) setErreur(traduireErreur(error.message));
   }
 
+  // --- Email (lien magique) ---
+  async function envoyerLienEmail(e: React.FormEvent) {
+    e.preventDefault();
+    reset();
+    setEnCours(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim().toLowerCase(),
+      options: { emailRedirectTo: `${window.location.origin}/bienvenue` },
+    });
+    setEnCours(false);
+    if (error) setErreur(traduireErreur(error.message));
+    else setEtape("emailEnvoye");
+  }
+
+  // --- Téléphone (code SMS) ---
+  async function envoyerCodeSms(e: React.FormEvent) {
+    e.preventDefault();
+    reset();
+    setEnCours(true);
+    const { error } = await supabase.auth.signInWithOtp({ phone: phone.trim() });
+    setEnCours(false);
+    if (error) setErreur(traduireErreur(error.message));
+    else setEtape("phoneCode");
+  }
+
+  async function verifierCodeSms(e: React.FormEvent) {
+    e.preventDefault();
+    reset();
+    setEnCours(true);
+    const { error } = await supabase.auth.verifyOtp({
+      phone: phone.trim(),
+      token: code.trim(),
+      type: "sms",
+    });
+    setEnCours(false);
+    if (error) setErreur(traduireErreur(error.message));
+    else window.location.href = "/bienvenue";
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-8">
-      <Link href="/" className="mb-8 font-display text-3xl font-semibold">
+      <Link href="/" className="mb-3 font-display text-3xl font-semibold">
         <span className="text-signature">Colock&apos;t</span>
       </Link>
+      <p className="mb-8 text-center text-ink/60">
+        Connecte-toi ou crée ton compte en un geste.
+      </p>
 
       <div className="w-full max-w-sm rounded-3xl bg-panel p-6">
-        {/* Bascule connexion / inscription */}
-        <div className="mb-6 flex rounded-full bg-panel-2 p-1 text-sm">
-          <button
-            onClick={() => {
-              setMode("signup");
-              setErreur("");
-            }}
-            className={
-              "flex-1 rounded-full py-2 font-medium transition-colors " +
-              (mode === "signup" ? "bg-signature text-white" : "text-ink/60")
-            }
-          >
-            Créer un compte
-          </button>
-          <button
-            onClick={() => {
-              setMode("login");
-              setErreur("");
-            }}
-            className={
-              "flex-1 rounded-full py-2 font-medium transition-colors " +
-              (mode === "login" ? "bg-signature text-white" : "text-ink/60")
-            }
-          >
-            Se connecter
-          </button>
-        </div>
+        {/* ----- Écran de choix ----- */}
+        {etape === "choix" && (
+          <div className="space-y-3">
+            <button
+              onClick={handleGoogle}
+              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-white px-4 py-3.5 font-medium text-[#1f1a2b] transition-colors hover:bg-ink/5"
+            >
+              <GoogleLogo />
+              Continuer avec Google
+            </button>
 
-        {/* Connexion avec un réseau social */}
-        <button
-          type="button"
-          onClick={handleGoogle}
-          className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-white px-4 py-3 font-medium text-[#1f1a2b] transition-colors hover:bg-ink/5"
-        >
-          <GoogleLogo />
-          Continuer avec Google
-        </button>
+            <button
+              onClick={() => {
+                reset();
+                setEtape("phone");
+              }}
+              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-panel-2 px-4 py-3.5 font-medium text-ink transition-colors hover:border-ink/30"
+            >
+              <Phone className="h-5 w-5 text-violet" />
+              Continuer avec un téléphone
+            </button>
 
-        {/* Séparateur */}
-        <div className="my-5 flex items-center gap-3 text-xs text-ink/40">
-          <span className="h-px flex-1 bg-ink/10" />
-          ou avec un email
-          <span className="h-px flex-1 bg-ink/10" />
-        </div>
+            <button
+              onClick={() => {
+                reset();
+                setEtape("email");
+              }}
+              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-panel-2 px-4 py-3.5 font-medium text-ink transition-colors hover:border-ink/30"
+            >
+              <Mail className="h-5 w-5 text-pink" />
+              Continuer avec un email
+            </button>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Choix du rôle (inscription seulement) */}
-          {mode === "signup" && (
+        {/* ----- Email : saisie ----- */}
+        {etape === "email" && (
+          <form onSubmit={envoyerLienEmail} className="space-y-4">
+            <Retour onClick={() => setEtape("choix")} />
             <div>
-              <p className="mb-2 text-sm text-ink/70">Je suis…</p>
-              <div className="grid grid-cols-2 gap-3">
-                <RoleCard
-                  titre="Colocataire"
-                  sousTitre="Je cherche une chambre"
-                  icon={<Telescope className="h-7 w-7 text-pink" />}
-                  actif={role === "colocataire"}
-                  onClick={() => setRole("colocataire")}
-                />
-                <RoleCard
-                  titre="Locataire"
-                  sousTitre="Je propose mon bien"
-                  icon={<KeyRound className="h-7 w-7 text-violet" />}
-                  actif={role === "locataire"}
-                  onClick={() => setRole("locataire")}
-                />
-              </div>
+              <label className="text-sm text-ink/70">Ton email</label>
+              <input
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="toi@email.com"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                className={champClasses}
+              />
             </div>
-          )}
+            <BoutonPrincipal enCours={enCours} label="Recevoir mon lien" />
+          </form>
+        )}
 
-          {/* Prénom (inscription seulement) */}
-          {mode === "signup" && (
-            <Field
-              label="Prénom"
-              type="text"
-              value={prenom}
-              onChange={setPrenom}
-              placeholder="Ex. Camille"
-              required
-            />
-          )}
-
-          <Field
-            label="Email"
-            type="email"
-            value={email}
-            onChange={setEmail}
-            placeholder="toi@email.com"
-            required
-          />
-          <Field
-            label="Mot de passe"
-            type="password"
-            value={password}
-            onChange={setPassword}
-            placeholder="Au moins 6 caractères"
-            required
-          />
-
-          {erreur && (
-            <p className="rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink-light">
-              {erreur}
+        {/* ----- Email : lien envoyé ----- */}
+        {etape === "emailEnvoye" && (
+          <div className="space-y-4 text-center">
+            <Mail className="mx-auto h-12 w-12 text-pink" />
+            <p className="font-display text-xl">Vérifie ta boîte mail !</p>
+            <p className="text-sm text-ink/70">
+              On a envoyé un lien de connexion à{" "}
+              <span className="font-semibold text-ink">{email}</span>. Clique
+              dessus pour entrer (pense à regarder les spams).
             </p>
-          )}
+            <button
+              onClick={() => setEtape("choix")}
+              className="text-sm text-pink-light hover:underline"
+            >
+              Utiliser une autre méthode
+            </button>
+          </div>
+        )}
 
-          <button
-            type="submit"
-            disabled={enCours}
-            className="bg-signature glow-pink w-full rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
-          >
-            {enCours
-              ? "Un instant…"
-              : mode === "signup"
-                ? "Créer mon compte"
-                : "Me connecter"}
-          </button>
-        </form>
+        {/* ----- Téléphone : saisie du numéro ----- */}
+        {etape === "phone" && (
+          <form onSubmit={envoyerCodeSms} className="space-y-4">
+            <Retour onClick={() => setEtape("choix")} />
+            <div>
+              <label className="text-sm text-ink/70">Ton numéro</label>
+              <input
+                type="tel"
+                required
+                autoFocus
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+33 6 12 34 56 78"
+                className={champClasses}
+              />
+              <p className="mt-1 text-xs text-ink/40">
+                Au format international, ex. +33612345678
+              </p>
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Recevoir le code" />
+          </form>
+        )}
+
+        {/* ----- Téléphone : saisie du code ----- */}
+        {etape === "phoneCode" && (
+          <form onSubmit={verifierCodeSms} className="space-y-4">
+            <Retour onClick={() => setEtape("phone")} />
+            <div>
+              <label className="text-sm text-ink/70">Code reçu par SMS</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                required
+                autoFocus
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="123456"
+                className={champClasses + " text-center text-2xl tracking-[0.4em]"}
+              />
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Me connecter" />
+          </form>
+        )}
+
+        {erreur && (
+          <p className="mt-4 rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink-light">
+            {erreur}
+          </p>
+        )}
       </div>
+
+      <p className="mt-6 max-w-xs text-center text-xs text-ink/40">
+        Pas de mot de passe à retenir : on te reconnaît automatiquement.
+      </p>
     </main>
   );
 }
 
-// Carte de choix du rôle
-function RoleCard({
-  titre,
-  sousTitre,
-  icon,
-  actif,
-  onClick,
-}: {
-  titre: string;
-  sousTitre: string;
-  icon: ReactNode;
-  actif: boolean;
-  onClick: () => void;
-}) {
+const champClasses =
+  "mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none";
+
+function Retour({ onClick }: { onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={
-        "relative rounded-2xl border-2 p-3 text-left transition-all " +
-        (actif
-          ? "border-pink bg-pink/10 shadow-md"
-          : "border-ink/10 bg-panel hover:border-ink/30")
-      }
+      className="flex items-center gap-1 text-sm text-ink/60 hover:text-ink"
     >
-      {/* Pastille de sélection */}
-      {actif && (
-        <span className="bg-signature absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full text-white">
-          <Check className="h-3.5 w-3.5" strokeWidth={3} />
-        </span>
-      )}
-      {icon}
-      <div className={"mt-2 font-semibold " + (actif ? "text-pink" : "")}>
-        {titre}
-      </div>
-      <div className="text-xs text-ink/60">{sousTitre}</div>
+      <ArrowLeft className="h-4 w-4" /> Retour
     </button>
   );
 }
 
-// Champ de formulaire stylé
-function Field({
+function BoutonPrincipal({
+  enCours,
   label,
-  type,
-  value,
-  onChange,
-  placeholder,
-  required,
 }: {
+  enCours: boolean;
   label: string;
-  type: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  required?: boolean;
 }) {
   return (
-    <div>
-      <label className="text-sm text-ink/70">{label}</label>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        autoCapitalize={type === "text" ? "words" : "none"}
-        autoCorrect="off"
-        spellCheck={false}
-        className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
-      />
-    </div>
+    <button
+      type="submit"
+      disabled={enCours}
+      className="bg-signature glow-pink w-full rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+    >
+      {enCours ? "Un instant…" : label}
+    </button>
   );
 }
 
-// Petit logo Google officiel (multicolore)
 function GoogleLogo() {
   return (
     <svg className="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
@@ -310,13 +270,12 @@ function GoogleLogo() {
   );
 }
 
-// Traduit en français les messages d'erreur courants de Supabase
 function traduireErreur(msg: string): string {
-  if (msg.includes("already registered")) return "Cet email a déjà un compte.";
-  if (msg.includes("not confirmed"))
-    return "Ton email n'est pas encore confirmé. Vérifie ta boîte mail.";
-  if (msg.includes("Invalid login")) return "Email ou mot de passe incorrect.";
-  if (msg.includes("at least 6")) return "Le mot de passe doit faire au moins 6 caractères.";
-  if (msg.includes("valid email")) return "Cet email n'est pas valide.";
+  if (msg.toLowerCase().includes("sms") || msg.toLowerCase().includes("phone"))
+    return "L'envoi de SMS n'est pas encore activé (service SMS à brancher).";
+  if (msg.includes("Token has expired") || msg.includes("invalid"))
+    return "Code incorrect ou expiré. Réessaie.";
+  if (msg.includes("rate") || msg.includes("limit"))
+    return "Trop d'essais d'un coup, patiente une minute puis réessaie.";
   return "Une erreur est survenue : " + msg;
 }

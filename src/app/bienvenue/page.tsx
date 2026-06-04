@@ -12,6 +12,8 @@ export default function BienvenuePage() {
 
   const [role, setRole] = useState<Role>("colocataire");
   const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  const [besoinEmail, setBesoinEmail] = useState(false); // vrai si connecté par téléphone (pas d'email)
   const [enCours, setEnCours] = useState(false);
   const [pret, setPret] = useState(false);
 
@@ -33,11 +35,13 @@ export default function BienvenuePage() {
       return;
     }
 
-    // Nouveau venu via Google : on pré-remplit le prénom avec son nom Google
+    // Nouveau venu : on pré-remplit le prénom avec son nom (Google) s'il y en a un
     const meta = user.user_metadata as Record<string, string> | undefined;
     const nomGoogle =
       meta?.given_name || meta?.name || meta?.full_name || "";
     setPrenom(nomGoogle.split(" ")[0] || "");
+    // Connecté par téléphone (donc sans email) → on lui demandera son email
+    setBesoinEmail(!user.email);
     setPret(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user, profile]);
@@ -46,6 +50,10 @@ export default function BienvenuePage() {
     e.preventDefault();
     if (!user) return;
     setEnCours(true);
+    // Si connecté par téléphone, on enregistre l'email saisi
+    if (besoinEmail && email.trim()) {
+      await supabase.auth.updateUser({ email: email.trim().toLowerCase() });
+    }
     await supabase
       .from("profiles")
       .update({ role, prenom: prenom.trim() || "Coloc" })
@@ -106,6 +114,26 @@ export default function BienvenuePage() {
             className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
           />
         </div>
+
+        {besoinEmail && (
+          <div>
+            <label htmlFor="email" className="text-sm text-ink/70">
+              Ton email
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="toi@email.com"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+            />
+          </div>
+        )}
 
         <button
           type="submit"
