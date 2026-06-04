@@ -7,7 +7,9 @@ import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
   ListChecks, CheckSquare, Square, ChevronDown,
 } from "lucide-react";
-import { useAuth } from "@/lib/auth";
+import { useAuth, type Profile } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
+import ProfileDetail from "@/components/ProfileDetail";
 import {
   getMessages,
   sendMessage,
@@ -31,6 +33,9 @@ export default function ConversationPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [texte, setTexte] = useState("");
   const [titre, setTitre] = useState("Conversation");
+  const [autrePrenom, setAutrePrenom] = useState("");
+  const [autreProfil, setAutreProfil] = useState<Profile | null>(null);
+  const [voirProfil, setVoirProfil] = useState(false);
   const [envoiDoc, setEnvoiDoc] = useState(false);
   const [docUrls, setDocUrls] = useState<Record<string, string>>({}); // liens des vocaux
   const [recording, setRecording] = useState(false);
@@ -58,7 +63,10 @@ export default function ConversationPage() {
     if (!user) return;
     getMyMatches(user.id).then((ms) => {
       const m = ms.find((x) => x.id === matchId);
-      if (m) setTitre(`${m.titre} — avec ${m.autrePrenom}`);
+      if (m) {
+        setTitre(m.titre);
+        setAutrePrenom(m.autrePrenom);
+      }
     });
   }, [user, matchId]);
 
@@ -70,10 +78,19 @@ export default function ConversationPage() {
   // Rôle + documents demandés (checklist)
   useEffect(() => {
     if (!user) return;
-    getMatchInfo(matchId).then((info) => {
+    getMatchInfo(matchId).then(async (info) => {
       if (!info) return;
-      setEstLocataire(info.locataire_id === user.id);
+      const jeSuisLoca = info.locataire_id === user.id;
+      setEstLocataire(jeSuisLoca);
       setDocsRequis(info.documents_requis);
+      // Profil de l'autre personne (annonceur ↔ colocataire), pour pouvoir l'ouvrir
+      const autreId = jeSuisLoca ? info.colocataire_id : info.locataire_id;
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", autreId)
+        .maybeSingle();
+      setAutreProfil((data as Profile) ?? null);
     });
   }, [user, matchId]);
 
@@ -247,8 +264,26 @@ export default function ConversationPage() {
         </Link>
         <div className="min-w-0">
           <p className="truncate font-display text-lg font-semibold">{titre}</p>
+          {autrePrenom && (
+            <button
+              type="button"
+              onClick={() => autreProfil && setVoirProfil(true)}
+              className="text-sm text-pink hover:underline"
+            >
+              avec {autrePrenom} · voir le profil
+            </button>
+          )}
         </div>
       </header>
+
+      {/* Profil de l'autre personne (clic sur le nom) */}
+      {voirProfil && autreProfil && (
+        <ProfileDetail
+          profile={autreProfil}
+          preview
+          onClose={() => setVoirProfil(false)}
+        />
+      )}
 
       {/* ---------- Checklist des documents ---------- */}
       <div className="mb-2 w-full max-w-sm">
