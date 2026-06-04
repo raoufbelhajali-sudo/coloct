@@ -29,7 +29,7 @@ export default function Home() {
 
       {/* Petit pied de page */}
       <p className="absolute bottom-6 text-sm text-ink/40">
-        Paris · MVP en construction
+        Paris · maintenant en ligne
       </p>
     </main>
   );
