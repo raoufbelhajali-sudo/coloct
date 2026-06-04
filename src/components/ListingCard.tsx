@@ -1,7 +1,14 @@
+import { ChevronDown } from "lucide-react";
 import type { Listing } from "@/data/listings";
 
-// Affiche une carte d'annonce (photo + infos). Composant purement visuel.
-export default function ListingCard({ listing }: { listing: Listing }) {
+// Affiche une carte d'annonce (photo + infos). Détail complet au tap / via le bouton.
+export default function ListingCard({
+  listing,
+  onOpen,
+}: {
+  listing: Listing;
+  onOpen?: () => void;
+}) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-panel shadow-2xl select-none">
       {/* Photo principale en grand */}
@@ -74,6 +81,21 @@ export default function ListingCard({ listing }: { listing: Listing }) {
             </span>
           ))}
         </div>
+
+        {/* Bouton pour voir l'annonce en détail (photos + infos) */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpen?.();
+          }}
+          onPointerDownCapture={(e) => e.stopPropagation()}
+          className="mt-4 flex w-full items-center justify-center gap-1 rounded-full bg-panel-2 py-2 text-xs font-medium text-ink/70 transition-colors hover:text-ink"
+        >
+          <ChevronDown className="h-4 w-4" />
+          Voir l&apos;annonce ({listing.photos.length} photo
+          {listing.photos.length > 1 ? "s" : ""})
+        </button>
       </div>
     </div>
   );

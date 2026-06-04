@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Sparkles, Star, Eye, Rocket } from "lucide-react";
+import { Heart, X, Sparkles, Star, Eye, Rocket, SlidersHorizontal } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -20,6 +20,7 @@ import {
   getLikesToday,
 } from "@/lib/swipes";
 import ListingCard from "./ListingCard";
+import ListingDetail from "./ListingDetail";
 
 type Direction = "left" | "right";
 
@@ -47,6 +48,8 @@ export default function SwipeDeck() {
   // Likes gratuits du jour
   const [likesAujourdhui, setLikesAujourdhui] = useState(0);
   const [paywall, setPaywall] = useState(false); // écran "limite atteinte"
+  const [detail, setDetail] = useState<Listing | null>(null); // annonce ouverte en grand
+  const [filtresOuverts, setFiltresOuverts] = useState(false); // panneau filtres replié par défaut
 
   // Pass Express actif ? (likes illimités), lu depuis le compte
   const premium = estPremium(profile);
@@ -201,13 +204,31 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex w-full max-w-sm flex-col items-center">
-      {/* Message d'accueil personnalisé */}
-      {prenom && (
-        <p className="mb-1 flex w-full items-center gap-2 text-left font-display text-xl">
-          Salut {prenom}
-          <Sparkles className="h-5 w-5 text-pink" />
-        </p>
-      )}
+      {/* Accueil + bouton filtres */}
+      <div className="mb-1 flex w-full items-center justify-between gap-2">
+        {prenom ? (
+          <p className="flex items-center gap-2 font-display text-xl">
+            Salut {prenom}
+            <Sparkles className="h-5 w-5 text-pink" />
+          </p>
+        ) : (
+          <span />
+        )}
+        <button
+          onClick={() => setFiltresOuverts((v) => !v)}
+          aria-label="Filtres"
+          title="Filtres"
+          className={
+            "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-panel " +
+            (filtresOuverts ? "bg-panel text-pink" : "text-ink/60 hover:text-pink")
+          }
+        >
+          <SlidersHorizontal className="h-[18px] w-[18px]" />
+          {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant) && (
+            <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
+          )}
+        </button>
+      </div>
 
       {/* Likes gratuits restants aujourd'hui */}
       <p className="mb-3 w-full text-left text-xs text-ink/50">
@@ -224,7 +245,8 @@ export default function SwipeDeck() {
         )}
       </p>
 
-      {/* ---------- Barre de filtres ---------- */}
+      {/* ---------- Barre de filtres (repliable) ---------- */}
+      {filtresOuverts && (
       <div className="mb-5 w-full rounded-2xl bg-panel p-4">
         {/* Budget max */}
         <div className="flex items-center justify-between text-sm">
@@ -308,6 +330,7 @@ export default function SwipeDeck() {
           )}
         </div>
       </div>
+      )}
 
       {/* ---------- Zone des cartes ---------- */}
       {filtered.length === 0 ? (
@@ -342,6 +365,7 @@ export default function SwipeDeck() {
               dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.6}
               onDragEnd={handleDragEnd}
+              onTap={() => setDetail(current)}
               style={{ x, rotate }}
               animate={controls}
             >
@@ -358,7 +382,7 @@ export default function SwipeDeck() {
                 JE PASSE
               </motion.div>
 
-              <ListingCard listing={current} />
+              <ListingCard listing={current} onOpen={() => setDetail(current)} />
             </motion.div>
           </div>
 
@@ -380,6 +404,22 @@ export default function SwipeDeck() {
             </button>
           </div>
         </>
+      )}
+
+      {/* ---------- Annonce ouverte en grand (photos + détails) ---------- */}
+      {detail && (
+        <ListingDetail
+          listing={detail}
+          onClose={() => setDetail(null)}
+          onLike={() => {
+            setDetail(null);
+            fly("right");
+          }}
+          onPass={() => {
+            setDetail(null);
+            fly("left");
+          }}
+        />
       )}
 
       {/* ---------- Écran Colock't+ (limite de likes atteinte) ---------- */}
