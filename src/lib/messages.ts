@@ -114,6 +114,28 @@ export async function sendDocument(
   return {};
 }
 
+// Envoie un message vocal dans un match (audio enregistré, stockage privé)
+export async function sendVoice(
+  matchId: number,
+  senderId: string,
+  blob: Blob
+): Promise<{ error?: string }> {
+  const ext = blob.type.includes("mp4") ? "m4a" : "webm";
+  const chemin = `${matchId}/voice-${Date.now()}.${ext}`;
+  const { error } = await supabase.storage
+    .from("documents")
+    .upload(chemin, blob, { contentType: blob.type || "audio/webm" });
+  if (error) return { error: error.message };
+  await supabase.from("messages").insert({
+    match_id: matchId,
+    sender_id: senderId,
+    content: "",
+    doc_path: chemin,
+    doc_name: "Message vocal",
+  });
+  return {};
+}
+
 // Génère un lien temporaire (1h) pour télécharger un document privé
 export async function getDocUrl(path: string): Promise<string | null> {
   const { data } = await supabase.storage
