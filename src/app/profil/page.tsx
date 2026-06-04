@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -230,8 +231,8 @@ export default function ProfilPage() {
           </Section>
 
           {enregistre && (
-            <p className="rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink">
-              ✓ Profil enregistré !
+            <p className="flex items-center gap-1.5 rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink">
+              <Check className="h-4 w-4" strokeWidth={3} /> Profil enregistré !
             </p>
           )}
 

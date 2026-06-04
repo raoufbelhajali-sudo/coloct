@@ -80,7 +80,7 @@ export default function LocatairePage() {
               {/* Boost de l'annonce */}
               {boostActif(listing.boosted_until) ? (
                 <p className="mt-3 flex items-center gap-2 rounded-full bg-panel-2 px-4 py-2 text-sm font-semibold text-pink">
-                  <Rocket className="h-4 w-4" /> Annonce mise en avant ✨
+                  <Rocket className="h-4 w-4" /> Annonce mise en avant
                 </p>
               ) : (
                 <button

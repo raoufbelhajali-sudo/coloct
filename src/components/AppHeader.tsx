@@ -6,6 +6,10 @@ import { Heart, UserRound, LogOut, Zap } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import Logo from "@/components/Logo";
 
+// Style commun des boutons-icônes du menu (ronds, survol rose)
+const iconBtn =
+  "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
+
 // En-tête commun aux pages connectées : logo + liens + déconnexion
 export default function AppHeader({
   showPreferences = false,
@@ -25,32 +29,30 @@ export default function AppHeader({
       <Link href="/">
         <Logo markClass="h-7 w-7" textClass="text-xl" />
       </Link>
-      <nav className="flex items-center gap-4 text-sm text-ink/60">
+      <nav className="flex items-center gap-1.5">
         {user && (
-          <Link href="/matchs" className="flex items-center gap-1.5 hover:text-ink">
-            <Heart className="h-4 w-4" />
-            <span className="hidden sm:inline">Matchs</span>
+          <Link href="/matchs" aria-label="Matchs" title="Matchs" className={iconBtn}>
+            <Heart className="h-[18px] w-[18px]" />
           </Link>
         )}
         {user && (
-          <Link href="/boutique" className="flex items-center gap-1.5 hover:text-ink">
-            <Zap className="h-4 w-4" />
-            <span className="hidden sm:inline">Boutique</span>
+          <Link href="/boutique" aria-label="Boutique" title="Boutique" className={iconBtn}>
+            <Zap className="h-[18px] w-[18px]" />
           </Link>
         )}
         {showPreferences && (
-          <Link href="/profil" className="flex items-center gap-1.5 hover:text-ink">
-            <UserRound className="h-4 w-4" />
-            <span className="hidden sm:inline">Profil</span>
+          <Link href="/profil" aria-label="Profil" title="Profil" className={iconBtn}>
+            <UserRound className="h-[18px] w-[18px]" />
           </Link>
         )}
         {user && (
           <button
             onClick={handleSignOut}
-            className="flex items-center gap-1.5 hover:text-ink"
+            aria-label="Déconnexion"
+            title="Déconnexion"
+            className={iconBtn}
           >
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Déconnexion</span>
+            <LogOut className="h-[18px] w-[18px]" />
           </button>
         )}
       </nav>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Zap, Rocket, Check } from "lucide-react";
+import { Zap, Rocket, Check, Lock } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
@@ -88,9 +88,9 @@ export default function BoutiquePage() {
           />
         </div>
 
-        <p className="mt-6 text-center text-xs text-ink/40">
-          🔒 Paiement sécurisé à venir — pour l&apos;instant, activation de démo
-          gratuite pour tester.
+        <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-ink/40">
+          <Lock className="h-3.5 w-3.5" />
+          Paiement sécurisé à venir — activation de démo gratuite pour tester.
         </p>
       </div>
     </main>
@@ -141,8 +141,8 @@ function OffreCard({
       </ul>
 
       {actif ? (
-        <div className="mt-4 rounded-full bg-panel-2 px-6 py-3 text-center text-sm font-semibold text-pink">
-          ✓ {actifTexte}
+        <div className="mt-4 flex items-center justify-center gap-1.5 rounded-full bg-panel-2 px-6 py-3 text-sm font-semibold text-pink">
+          <Check className="h-4 w-4" strokeWidth={3} /> {actifTexte}
         </div>
       ) : (
         <button

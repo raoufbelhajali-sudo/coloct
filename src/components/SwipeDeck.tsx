@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Sparkles } from "lucide-react";
+import { Heart, X, Sparkles, Star, Eye, Rocket } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -212,7 +212,10 @@ export default function SwipeDeck() {
       {/* Likes gratuits restants aujourd'hui */}
       <p className="mb-3 w-full text-left text-xs text-ink/50">
         {premium ? (
-          <span className="font-medium text-pink">Colock&apos;t+ · likes illimités ⭐</span>
+          <span className="inline-flex items-center gap-1 font-medium text-pink">
+            <Star className="h-3.5 w-3.5" fill="currentColor" /> Colock&apos;t+ · likes
+            illimités
+          </span>
         ) : (
           (() => {
             const r = Math.max(0, LIKES_GRATUITS_PAR_JOUR - likesAujourdhui);
@@ -315,9 +318,10 @@ export default function SwipeDeck() {
             ou reviens bientôt, de nouvelles annonces arrivent.
           </p>
           {likes.length > 0 && (
-            <p className="text-sm text-pink-light">
+            <p className="flex items-center justify-center gap-1.5 text-sm text-pink-light">
+              <Heart className="h-4 w-4" fill="currentColor" />
               {likes.length} annonce{likes.length > 1 ? "s" : ""} aimée
-              {likes.length > 1 ? "s" : ""} 💗
+              {likes.length > 1 ? "s" : ""}
             </p>
           )}
         </div>
@@ -383,7 +387,7 @@ export default function SwipeDeck() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
           <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
             <p className="font-display text-3xl font-bold leading-tight">
-              Plus de likes gratuits aujourd&apos;hui 😅
+              Plus de likes gratuits aujourd&apos;hui
             </p>
             <p className="mt-3 text-ink/80">
               Tu as utilisé tes {LIKES_GRATUITS_PAR_JOUR} likes du jour. Reviens
@@ -391,9 +395,17 @@ export default function SwipeDeck() {
               <span className="text-signature font-semibold">Colock&apos;t+</span> :
             </p>
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
-              <li className="flex items-center gap-2">❤️ Likes illimités</li>
-              <li className="flex items-center gap-2">👀 Vois qui t&apos;a déjà liké</li>
-              <li className="flex items-center gap-2">🚀 Ton profil mis en avant (Boost)</li>
+              <li className="flex items-center gap-2">
+                <Heart className="h-4 w-4 text-pink" fill="currentColor" /> Likes
+                illimités
+              </li>
+              <li className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-pink" /> Vois qui t&apos;a déjà liké
+              </li>
+              <li className="flex items-center gap-2">
+                <Rocket className="h-4 w-4 text-pink" /> Ton profil mis en avant
+                (Boost)
+              </li>
             </ul>
             <div className="mt-6 flex flex-col gap-3">
               <button

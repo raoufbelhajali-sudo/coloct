@@ -92,7 +92,7 @@ export default function ConversationPage() {
       <div className="flex w-full max-w-sm flex-1 flex-col gap-2 overflow-y-auto rounded-2xl bg-panel p-4">
         {messages.length === 0 ? (
           <p className="m-auto text-center text-sm text-ink/50">
-            C&apos;est le début de votre conversation. Dis bonjour 👋
+            C&apos;est le début de votre conversation. Dis bonjour !
           </p>
         ) : (
           messages.map((m) => {
