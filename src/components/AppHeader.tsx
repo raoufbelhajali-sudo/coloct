@@ -58,8 +58,8 @@ export default function AppHeader() {
         {user && (
           <Link
             href="/jaime"
-            aria-label="Qui vous aime"
-            title="Qui vous aime"
+            aria-label={estLoca ? "Candidats intéressés" : "Intéressés par toi"}
+            title={estLoca ? "Candidats intéressés" : "Intéressés par toi"}
             className={iconBtn + " relative"}
           >
             <Sparkles className="h-[18px] w-[18px]" />

@@ -53,10 +53,15 @@ export default function JaimePage() {
 
       <div className="w-full max-w-sm">
         <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-semibold">
-          <Sparkles className="h-6 w-6 text-pink" /> Qui vous aime
+          <Sparkles className="h-6 w-6 text-pink" />
+          {profile?.role === "locataire"
+            ? "Candidats intéressés"
+            : "Intéressés par toi"}
         </h1>
         <p className="mb-5 text-ink/60">
-          Ces personnes t&apos;ont liké. Ouvre leur profil et décide !
+          {profile?.role === "locataire"
+            ? "Ces colocataires ont aimé ton annonce. Ouvre leur profil et décide qui pourrait emménager."
+            : "Ces annonceurs aimeraient t'avoir en coloc. Découvre leur logement et décide !"}
         </p>
 
         {chargement ? (
