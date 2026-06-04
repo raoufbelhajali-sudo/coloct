@@ -1,6 +1,32 @@
 import type { Profile } from "./auth";
 import type { Listing } from "@/data/listings";
 
+// Score indicatif du poste occupé (proxy de revenu/stabilité) — pour le tri
+// "meilleurs profils" réservé à l'annonceur boosté. Heuristique sur le métier.
+const POSTES: { mots: string[]; score: number }[] = [
+  { mots: ["médecin", "chirurgien", "avocat", "notaire", "pharmacien", "dentiste", "pilote"], score: 10 },
+  { mots: ["ingénieur", "developpeur", "développeur", "data", "architecte", "consultant", "cadre", "manager", "directeur", "finance", "banque"], score: 8 },
+  { mots: ["infirmier", "professeur", "enseignant", "designer", "comptable", "juriste", "commercial", "chef de projet", "fonctionnaire", "cdi"], score: 6 },
+  { mots: ["technicien", "vendeur", "employé", "assistant", "serveur", "freelance", "indépendant"], score: 4 },
+  { mots: ["stagiaire", "apprenti", "étudiant", "alternance", "sans emploi", "recherche"], score: 2 },
+];
+
+export function scoreProfession(p?: string | null): number {
+  if (!p) return 0;
+  const s = p.toLowerCase();
+  for (const g of POSTES) if (g.mots.some((m) => s.includes(m))) return g.score;
+  return 5; // métier non listé → score moyen
+}
+
+// Score global d'un profil pour le classement "meilleurs profils" de l'annonceur :
+// poste occupé + nombre de points communs avec l'annonceur.
+export function scoreProfilPourAnnonceur(
+  annonceur: Profile | null,
+  p: Profile
+): number {
+  return scoreProfession(p.profession) + compatProfils(annonceur, p).length * 4;
+}
+
 function communs(a?: string[] | null, b?: string[] | null): string[] {
   const sb = new Set(b ?? []);
   return (a ?? []).filter((i) => sb.has(i));

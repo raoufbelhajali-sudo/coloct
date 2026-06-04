@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Zap, Rocket, Check, Lock } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
@@ -10,16 +11,31 @@ import {
   estBooste,
   activerPassExpress,
   activerBoost,
+  activerBoostAnnonceur,
 } from "@/lib/offers";
+import { getMyListing } from "@/lib/locataire";
+import type { Listing } from "@/data/listings";
 
 export default function BoutiquePage() {
   const router = useRouter();
   const { user, profile, loading, refreshProfile } = useAuth();
   const [enCours, setEnCours] = useState<string | null>(null);
+  const [listing, setListing] = useState<Listing | null>(null);
+
+  const estAnnonceur = profile?.role === "locataire";
 
   useEffect(() => {
     if (!loading && !user) router.replace("/connexion");
   }, [loading, user, router]);
+
+  const chargerAnnonce = useCallback(async () => {
+    if (!user || !estAnnonceur) return;
+    setListing(await getMyListing(user.id));
+  }, [user, estAnnonceur]);
+
+  useEffect(() => {
+    chargerAnnonce();
+  }, [chargerAnnonce]);
 
   const premium = estPremium(profile);
   const booste = estBooste(profile);
@@ -32,12 +48,15 @@ export default function BoutiquePage() {
     });
   }
 
-  async function activer(offre: "pass" | "boost") {
+  async function activer(offre: "pass" | "boost" | "annonceur") {
     if (!user) return;
     setEnCours(offre);
     if (offre === "pass") await activerPassExpress(user.id);
-    else await activerBoost(user.id);
+    else if (offre === "boost") await activerBoost(user.id);
+    else if (offre === "annonceur" && listing)
+      await activerBoostAnnonceur(user.id, listing.id);
     await refreshProfile();
+    await chargerAnnonce();
     setEnCours(null);
   }
 
@@ -46,46 +65,83 @@ export default function BoutiquePage() {
       <AppHeader />
 
       <div className="w-full max-w-md">
-        <h1 className="font-display text-3xl font-semibold">Booste ta recherche</h1>
+        <h1 className="font-display text-3xl font-semibold">
+          {estAnnonceur ? "Booste ton annonce" : "Booste ta recherche"}
+        </h1>
         <p className="mt-1 mb-6 text-ink/60">
-          Trouve ta coloc plus vite. Pas d&apos;abonnement : tu paies seulement
-          quand tu en as besoin.
+          {estAnnonceur
+            ? "Trouve le bon coloc plus vite. Pas d'abonnement : tu paies seulement quand tu en as besoin."
+            : "Trouve ta coloc plus vite. Pas d'abonnement : tu paies seulement quand tu en as besoin."}
         </p>
 
         <div className="space-y-4">
-          {/* Pass Express */}
-          <OffreCard
-            icon={<Zap className="h-6 w-6 text-white" />}
-            titre="Pass Express"
-            duree="7 jours"
-            prix="4,99 €"
-            avantages={[
-              "Likes illimités",
-              "Vois qui t'a déjà liké",
-              "Filtres avancés",
-            ]}
-            actif={premium}
-            actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
-            enCours={enCours === "pass"}
-            onActiver={() => activer("pass")}
-          />
-
-          {/* Boost */}
-          <OffreCard
-            icon={<Rocket className="h-6 w-6 text-white" />}
-            titre="Boost"
-            duree="48 heures"
-            prix="2,99 €"
-            avantages={[
-              "Ton profil passe en tête",
-              "Vu par bien plus de monde",
-              "Plus de matchs, plus vite",
-            ]}
-            actif={booste}
-            actifTexte={`Actif jusqu'au ${dateFr(profile?.boosted_until ?? null)}`}
-            enCours={enCours === "boost"}
-            onActiver={() => activer("boost")}
-          />
+          {estAnnonceur ? (
+            // ----- Annonceur : un seul bloc -----
+            !listing ? (
+              <div className="rounded-3xl bg-panel p-6 text-center text-ink/70">
+                <Rocket className="mx-auto h-10 w-10 text-pink" />
+                <p className="mt-3">
+                  Publie d&apos;abord ton annonce pour pouvoir la booster.
+                </p>
+                <Link
+                  href="/locataire"
+                  className="bg-signature mt-4 inline-block rounded-full px-6 py-3 font-semibold text-white"
+                >
+                  Créer mon annonce
+                </Link>
+              </div>
+            ) : (
+              <OffreCard
+                icon={<Rocket className="h-6 w-6 text-white" />}
+                titre="Boost ton annonce"
+                duree="7 jours"
+                prix="5 €"
+                avantages={[
+                  "Ton appartement mis en avant",
+                  "Accède aux meilleurs profils",
+                  "Classés par poste occupé + compatibilité avec ton profil",
+                ]}
+                actif={premium}
+                actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
+                enCours={enCours === "annonceur"}
+                onActiver={() => activer("annonceur")}
+              />
+            )
+          ) : (
+            // ----- Colocataire : Pass Express + Boost -----
+            <>
+              <OffreCard
+                icon={<Zap className="h-6 w-6 text-white" />}
+                titre="Pass Express"
+                duree="7 jours"
+                prix="4,99 €"
+                avantages={[
+                  "Likes illimités",
+                  "Vois qui t'a déjà liké",
+                  "Filtres avancés",
+                ]}
+                actif={premium}
+                actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
+                enCours={enCours === "pass"}
+                onActiver={() => activer("pass")}
+              />
+              <OffreCard
+                icon={<Rocket className="h-6 w-6 text-white" />}
+                titre="Boost"
+                duree="48 heures"
+                prix="2,99 €"
+                avantages={[
+                  "Ton profil passe en tête",
+                  "Vu par bien plus de monde",
+                  "Plus de matchs, plus vite",
+                ]}
+                actif={booste}
+                actifTexte={`Actif jusqu'au ${dateFr(profile?.boosted_until ?? null)}`}
+                enCours={enCours === "boost"}
+                onActiver={() => activer("boost")}
+              />
+            </>
+          )}
         </div>
 
         <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-ink/40">

@@ -17,7 +17,8 @@ import {
   recordProfileSwipe,
   findMatchForColocataire,
 } from "@/lib/locataire";
-import { compatProfils } from "@/lib/compat";
+import { compatProfils, scoreProfilPourAnnonceur } from "@/lib/compat";
+import { estPremium } from "@/lib/offers";
 import ProfileCard from "./ProfileCard";
 import ProfileDetail from "./ProfileDetail";
 
@@ -51,10 +52,18 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
       .finally(() => setChargement(false));
   }, [user, listingId]);
 
-  const remaining = useMemo(
-    () => profiles.filter((p) => !swipedIds.has(p.id)),
-    [profiles, swipedIds]
-  );
+  const remaining = useMemo(() => {
+    const base = profiles.filter((p) => !swipedIds.has(p.id));
+    // Annonceur boosté (premium) → meilleurs profils en tête (poste + compatibilité)
+    if (estPremium(profile)) {
+      return [...base].sort(
+        (a, b) =>
+          scoreProfilPourAnnonceur(profile, b) -
+          scoreProfilPourAnnonceur(profile, a)
+      );
+    }
+    return base;
+  }, [profiles, swipedIds, profile]);
   const current = remaining[0];
   const next = remaining[1];
 
