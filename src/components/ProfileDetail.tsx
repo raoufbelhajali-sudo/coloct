@@ -74,6 +74,11 @@ export default function ProfileDetail({
                   Budget jusqu&apos;à {profile.budget_max} € / mois
                 </p>
               ) : null}
+              {profile.salaire ? (
+                <p className="mt-0.5 text-sm text-ink/70">
+                  Revenu : {profile.salaire}
+                </p>
+              ) : null}
             </div>
 
             {profile.bio ? (

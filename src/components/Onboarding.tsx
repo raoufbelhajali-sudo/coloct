@@ -15,6 +15,7 @@ import {
   ANIMAUX,
   TELETRAVAIL,
   DEPARTEMENTS,
+  SALAIRES,
 } from "@/lib/profilOptions";
 
 const QUARTIERS = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -49,6 +50,7 @@ export default function Onboarding({
   const [age, setAge] = useState("");
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
+  const [salaire, setSalaire] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [photoEnCours, setPhotoEnCours] = useState(false);
   const [bio, setBio] = useState("");
@@ -148,6 +150,7 @@ export default function Onboarding({
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
+        salaire: salaire || null,
         photo_url: photoUrl || null,
         bio: bio.trim() || null,
         interets,
@@ -296,6 +299,23 @@ export default function Onboarding({
                     placeholder="Étudiante, Designer…"
                     className={champ}
                   />
+                </div>
+                <div className="mt-4">
+                  <label className="text-sm text-ink/70">
+                    Tranche de salaire (net / mois)
+                  </label>
+                  <select
+                    value={salaire}
+                    onChange={(e) => setSalaire(e.target.value)}
+                    className={champ}
+                  >
+                    <option value="">Préfère ne pas dire</option>
+                    {SALAIRES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </Etape>
             )}

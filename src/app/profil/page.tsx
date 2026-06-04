@@ -9,7 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
 import Logo from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
-import { INTERETS, AMBIANCES, RYTHMES, DEPARTEMENTS } from "@/lib/profilOptions";
+import { INTERETS, AMBIANCES, RYTHMES, DEPARTEMENTS, SALAIRES } from "@/lib/profilOptions";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -24,6 +24,7 @@ export default function ProfilPage() {
   const [age, setAge] = useState("");
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
+  const [salaire, setSalaire] = useState("");
   // À propos
   const [bio, setBio] = useState("");
   const [interets, setInterets] = useState<string[]>([]);
@@ -65,6 +66,7 @@ export default function ProfilPage() {
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
+        salaire: salaire || null,
         bio: bio.trim() || null,
         interets,
         ambiance: ambiance.length ? ambiance : null,
@@ -108,6 +110,7 @@ export default function ProfilPage() {
     setAge(profile.age ? String(profile.age) : "");
     setGenre(profile.genre ?? "");
     setProfession(profile.profession ?? "");
+    setSalaire(profile.salaire ?? "");
     setBio(profile.bio ?? "");
     setInterets(profile.interets ?? []);
     setAmbiance(profile.ambiance ?? []);
@@ -141,6 +144,7 @@ export default function ProfilPage() {
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
+        salaire: salaire || null,
         bio: bio.trim() || null,
         interets,
         ambiance: ambiance.length ? ambiance : null,
@@ -228,6 +232,15 @@ export default function ProfilPage() {
               <Champ label="Profession / statut" value={profession} onChange={setProfession} placeholder="Étudiante, Designer…" />
             </div>
             <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} />
+            <div>
+              <label className="text-sm text-ink/70">Tranche de salaire (net / mois)</label>
+              <select value={salaire} onChange={(e) => setSalaire(e.target.value)} className={champClasses}>
+                <option value="">Préfère ne pas dire</option>
+                {SALAIRES.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
           </Section>
 
           {/* ---------- À propos ---------- */}

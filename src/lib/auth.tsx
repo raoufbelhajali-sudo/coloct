@@ -22,6 +22,7 @@ export type Profile = {
   age: number | null;
   genre: string | null; // Femme / Homme / Autre
   profession: string | null; // statut ou métier (ex. "Étudiante", "Designer")
+  salaire: string | null; // tranche de salaire net/mois
   bio: string | null; // présentation
   interets: string[] | null; // centres d'intérêt
   ambiance: string[] | null; // Calme / Sociable / Fêtard·e (plusieurs possibles)

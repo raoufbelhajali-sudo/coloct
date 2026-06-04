@@ -18,13 +18,26 @@ export function scoreProfession(p?: string | null): number {
   return 5; // métier non listé → score moyen
 }
 
+// Score selon la tranche de salaire déclarée (plus précis que le métier)
+export function scoreSalaire(s?: string | null): number {
+  switch (s) {
+    case "Moins de 1 500 €": return 2;
+    case "1 500 – 2 500 €": return 4;
+    case "2 500 – 3 500 €": return 6;
+    case "3 500 – 5 000 €": return 8;
+    case "Plus de 5 000 €": return 10;
+    default: return 0;
+  }
+}
+
 // Score global d'un profil pour le classement "meilleurs profils" de l'annonceur :
-// poste occupé + nombre de points communs avec l'annonceur.
+// revenu (tranche de salaire si dispo, sinon poste) + points communs.
 export function scoreProfilPourAnnonceur(
   annonceur: Profile | null,
   p: Profile
 ): number {
-  return scoreProfession(p.profession) + compatProfils(annonceur, p).length * 4;
+  const revenu = p.salaire ? scoreSalaire(p.salaire) : scoreProfession(p.profession);
+  return revenu + compatProfils(annonceur, p).length * 4;
 }
 
 function communs(a?: string[] | null, b?: string[] | null): string[] {
