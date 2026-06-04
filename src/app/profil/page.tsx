@@ -48,6 +48,7 @@ export default function ProfilPage() {
   const [photoEnCours, setPhotoEnCours] = useState(false);
   const [enCours, setEnCours] = useState(false);
   const [enregistre, setEnregistre] = useState(false);
+  const [erreurSave, setErreurSave] = useState("");
   const [apercu, setApercu] = useState(false);
 
   const estLocataire = profile?.role === "locataire";
@@ -137,7 +138,8 @@ export default function ProfilPage() {
     if (!user) return;
     setEnCours(true);
     setEnregistre(false);
-    await supabase
+    setErreurSave("");
+    const { error } = await supabase
       .from("profiles")
       .update({
         prenom: prenom.trim(),
@@ -162,8 +164,12 @@ export default function ProfilPage() {
         date_emmenagement: dateEmmenagement || null,
       })
       .eq("id", user.id);
-    await refreshProfile();
     setEnCours(false);
+    if (error) {
+      setErreurSave("L'enregistrement a échoué : " + error.message);
+      return;
+    }
+    await refreshProfile();
     setEnregistre(true);
   }
 
@@ -338,6 +344,11 @@ export default function ProfilPage() {
           {enregistre && (
             <p className="flex items-center gap-1.5 rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink">
               <Check className="h-4 w-4" strokeWidth={3} /> Profil enregistré !
+            </p>
+          )}
+          {erreurSave && (
+            <p className="rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink-light">
+              {erreurSave}
             </p>
           )}
 

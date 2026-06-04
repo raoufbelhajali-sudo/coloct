@@ -42,6 +42,7 @@ export default function Onboarding({
   const [i, setI] = useState(0);
   const [sens, setSens] = useState(1); // 1 = avance, -1 = recule
   const [enCours, setEnCours] = useState(false);
+  const [erreur, setErreur] = useState("");
 
   // --- Champs du profil ---
   const [role, setRole] = useState<Role>("colocataire");
@@ -140,10 +141,11 @@ export default function Onboarding({
   async function terminer() {
     if (!user) return;
     setEnCours(true);
+    setErreur("");
     if (besoinEmail && email.trim()) {
       await supabase.auth.updateUser({ email: email.trim().toLowerCase() });
     }
-    await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({
         role,
@@ -169,6 +171,11 @@ export default function Onboarding({
         date_emmenagement: dateEmm || null,
       })
       .eq("id", user.id);
+    if (error) {
+      setEnCours(false);
+      setErreur("L'enregistrement a échoué : " + error.message);
+      return;
+    }
     await refreshProfile();
     router.replace(role === "locataire" ? "/locataire" : "/swipe");
   }
@@ -560,6 +567,11 @@ export default function Onboarding({
 
       {/* Bouton continuer */}
       <div className="mx-auto w-full max-w-md">
+        {erreur && (
+          <p className="mb-3 rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink-light">
+            {erreur}
+          </p>
+        )}
         <button
           onClick={suivant}
           disabled={!etapeValide() || enCours}
