@@ -18,8 +18,8 @@ export default function ProfileDetail({
   preview?: boolean; // aperçu "mon profil" → pas de boutons like/pass
 }) {
   const modeDeVie: string[] = [];
-  if (profile.ambiance) modeDeVie.push(profile.ambiance);
-  if (profile.rythme) modeDeVie.push(profile.rythme);
+  (profile.ambiance ?? []).forEach((a) => modeDeVie.push(a));
+  (profile.rythme ?? []).forEach((r) => modeDeVie.push(r));
   if (profile.non_fumeur) modeDeVie.push("Non-fumeur");
   if (profile.animaux) modeDeVie.push("Animaux ok");
   if (profile.teletravail) modeDeVie.push("Télétravail");

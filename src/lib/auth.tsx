@@ -24,8 +24,8 @@ export type Profile = {
   profession: string | null; // statut ou métier (ex. "Étudiante", "Designer")
   bio: string | null; // présentation
   interets: string[] | null; // centres d'intérêt
-  ambiance: string | null; // Calme / Sociable / Fêtard·e
-  rythme: string | null; // Matinal·e / Noctambule / Flexible
+  ambiance: string[] | null; // Calme / Sociable / Fêtard·e (plusieurs possibles)
+  rythme: string[] | null; // Matinal·e / Noctambule / Flexible (plusieurs possibles)
   budget_max: number | null;
   age_min: number | null;
   age_max: number | null;

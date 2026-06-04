@@ -28,8 +28,8 @@ export default function ProfilPage() {
   const [bio, setBio] = useState("");
   const [interets, setInterets] = useState<string[]>([]);
   // Mode de vie
-  const [ambiance, setAmbiance] = useState("");
-  const [rythme, setRythme] = useState("");
+  const [ambiance, setAmbiance] = useState<string[]>([]);
+  const [rythme, setRythme] = useState<string[]>([]);
   const [nonFumeur, setNonFumeur] = useState(false);
   const [animaux, setAnimaux] = useState(false);
   const [teletravail, setTeletravail] = useState(false);
@@ -67,8 +67,8 @@ export default function ProfilPage() {
         profession: profession.trim() || null,
         bio: bio.trim() || null,
         interets,
-        ambiance: ambiance || null,
-        rythme: rythme || null,
+        ambiance: ambiance.length ? ambiance : null,
+        rythme: rythme.length ? rythme : null,
         non_fumeur: nonFumeur,
         animaux,
         teletravail,
@@ -110,8 +110,8 @@ export default function ProfilPage() {
     setProfession(profile.profession ?? "");
     setBio(profile.bio ?? "");
     setInterets(profile.interets ?? []);
-    setAmbiance(profile.ambiance ?? "");
-    setRythme(profile.rythme ?? "");
+    setAmbiance(profile.ambiance ?? []);
+    setRythme(profile.rythme ?? []);
     setNonFumeur(profile.non_fumeur);
     setAnimaux(profile.animaux);
     setTeletravail(profile.teletravail);
@@ -143,8 +143,8 @@ export default function ProfilPage() {
         profession: profession.trim() || null,
         bio: bio.trim() || null,
         interets,
-        ambiance: ambiance || null,
-        rythme: rythme || null,
+        ambiance: ambiance.length ? ambiance : null,
+        rythme: rythme.length ? rythme : null,
         non_fumeur: nonFumeur,
         animaux,
         teletravail,
@@ -247,8 +247,8 @@ export default function ProfilPage() {
 
           {/* ---------- Mode de vie ---------- */}
           <Section titre="Mode de vie">
-            <ChoixUnique label="Ambiance" options={AMBIANCES} value={ambiance} onChange={setAmbiance} />
-            <ChoixUnique label="Rythme" options={RYTHMES} value={rythme} onChange={setRythme} />
+            <ChoixMultiple label="Ambiance" options={AMBIANCES} values={ambiance} onToggle={(v) => toggle(ambiance, setAmbiance, v)} />
+            <ChoixMultiple label="Rythme" options={RYTHMES} values={rythme} onToggle={(v) => toggle(rythme, setRythme, v)} />
             <div className="space-y-2">
               <Checkbox label="Non-fumeur" checked={nonFumeur} onChange={setNonFumeur} />
               <Checkbox label="J'ai / j'aime les animaux" checked={animaux} onChange={setAnimaux} />

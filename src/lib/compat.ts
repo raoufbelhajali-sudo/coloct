@@ -10,8 +10,8 @@ function communs(a?: string[] | null, b?: string[] | null): string[] {
 export function compatProfils(moi: Profile | null, autre: Profile): string[] {
   if (!moi) return [];
   const pts = communs(moi.interets, autre.interets);
-  if (moi.ambiance && moi.ambiance === autre.ambiance) pts.push(moi.ambiance);
-  if (moi.rythme && moi.rythme === autre.rythme) pts.push(moi.rythme);
+  pts.push(...communs(moi.ambiance, autre.ambiance));
+  pts.push(...communs(moi.rythme, autre.rythme));
   // tranche d'âge recherchée
   if ((moi.age_min || moi.age_max) && autre.age) {
     const min = moi.age_min ?? 0;
@@ -32,9 +32,9 @@ export function compatAnnonce(moi: Profile | null, l: Listing): string[] {
   for (const i of moi.interets ?? []) {
     if (txt.includes(i.toLowerCase())) pts.push(i);
   }
-  if (moi.ambiance) {
-    const mot = moi.ambiance.toLowerCase().replace(/·e|·ère/g, "");
-    if (mot && txt.includes(mot)) pts.push(moi.ambiance);
+  for (const amb of moi.ambiance ?? []) {
+    const mot = amb.toLowerCase().replace(/·e|·ère/g, "");
+    if (mot && txt.includes(mot)) pts.push(amb);
   }
   // tranche d'âge recherchée vs âges des colocs déjà sur place
   if (moi.age_min || moi.age_max) {

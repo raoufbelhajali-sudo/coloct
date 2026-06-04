@@ -53,8 +53,8 @@ export default function Onboarding({
   const [photoEnCours, setPhotoEnCours] = useState(false);
   const [bio, setBio] = useState("");
   const [interets, setInterets] = useState<string[]>([]);
-  const [ambiance, setAmbiance] = useState("");
-  const [rythme, setRythme] = useState("");
+  const [ambiance, setAmbiance] = useState<string[]>([]);
+  const [rythme, setRythme] = useState<string[]>([]);
   const [tabac, setTabac] = useState(""); // "Non-fumeur" / "Fumeur" (obligatoire)
   const [animaux, setAnimaux] = useState(""); // ANIMAUX
   const [teletravail, setTeletravail] = useState(""); // TELETRAVAIL
@@ -89,7 +89,13 @@ export default function Onboarding({
     if (etape === "interets" && interets.length === 0) return false;
     if (etape === "modevie") {
       // chaque choix doit être renseigné
-      if (!ambiance || !rythme || !tabac || !animaux || !teletravail)
+      if (
+        ambiance.length === 0 ||
+        rythme.length === 0 ||
+        !tabac ||
+        !animaux ||
+        !teletravail
+      )
         return false;
     }
     return true;
@@ -145,8 +151,8 @@ export default function Onboarding({
         photo_url: photoUrl || null,
         bio: bio.trim() || null,
         interets,
-        ambiance: ambiance || null,
-        rythme: rythme || null,
+        ambiance: ambiance.length ? ambiance : null,
+        rythme: rythme.length ? rythme : null,
         non_fumeur: tabac === "Non-fumeur",
         animaux: animaux === "J'aime les animaux",
         teletravail: teletravail === "Je télétravaille",
@@ -376,22 +382,22 @@ export default function Onboarding({
                 sous="Réponds à tout pour trouver les bons colocs."
               >
                 <p className="text-sm text-ink/70">
-                  Ambiance <span className="text-pink">*</span>
+                  Ambiance <span className="text-pink">*</span>{" "}
+                  <span className="text-ink/40">(plusieurs possibles)</span>
                 </p>
-                <ChoixUnique
+                <ChoixMultiple
                   options={AMBIANCES}
-                  value={ambiance}
-                  onChange={setAmbiance}
-                  obligatoire
+                  values={ambiance}
+                  onToggle={(v) => toggle(ambiance, setAmbiance, v)}
                 />
                 <p className="mt-4 text-sm text-ink/70">
-                  Rythme <span className="text-pink">*</span>
+                  Rythme <span className="text-pink">*</span>{" "}
+                  <span className="text-ink/40">(plusieurs possibles)</span>
                 </p>
-                <ChoixUnique
+                <ChoixMultiple
                   options={RYTHMES}
-                  value={rythme}
-                  onChange={setRythme}
-                  obligatoire
+                  values={rythme}
+                  onToggle={(v) => toggle(rythme, setRythme, v)}
                 />
                 <p className="mt-4 text-sm text-ink/70">
                   Tabac <span className="text-pink">*</span>
