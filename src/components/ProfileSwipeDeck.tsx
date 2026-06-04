@@ -18,6 +18,7 @@ import {
   findMatchForColocataire,
 } from "@/lib/locataire";
 import ProfileCard from "./ProfileCard";
+import ProfileDetail from "./ProfileDetail";
 
 type Direction = "left" | "right";
 
@@ -31,6 +32,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
   const [match, setMatch] = useState<Profile | null>(null);
+  const [detail, setDetail] = useState<Profile | null>(null); // profil ouvert en grand
 
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
@@ -132,6 +134,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
               dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.6}
               onDragEnd={handleDragEnd}
+              onTap={() => setDetail(current)}
               style={{ x, rotate }}
               animate={controls}
             >
@@ -148,7 +151,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
                 JE PASSE
               </motion.div>
 
-              <ProfileCard profile={current} />
+              <ProfileCard profile={current} onOpen={() => setDetail(current)} />
             </motion.div>
           </div>
 
@@ -169,6 +172,22 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
             </button>
           </div>
         </>
+      )}
+
+      {/* Profil ouvert en grand (lecture complète) */}
+      {detail && (
+        <ProfileDetail
+          profile={detail}
+          onClose={() => setDetail(null)}
+          onLike={() => {
+            setDetail(null);
+            fly("right");
+          }}
+          onPass={() => {
+            setDetail(null);
+            fly("left");
+          }}
+        />
       )}
 
       {/* Modale de match */}
