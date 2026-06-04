@@ -143,7 +143,7 @@ export default function Onboarding({
   }
 
   return (
-    <main className="flex h-dvh flex-col px-5 pb-6 pt-5">
+    <main className="flex min-h-dvh flex-col px-5 pb-6 pt-5">
       {/* Barre de progression + retour */}
       <div className="mx-auto flex w-full max-w-md items-center gap-3">
         {i > 0 ? (
@@ -169,7 +169,7 @@ export default function Onboarding({
       </div>
 
       {/* Contenu de l'étape (animé) */}
-      <div className="mx-auto flex w-full max-w-md flex-1 flex-col overflow-y-auto py-6">
+      <div className="mx-auto flex w-full max-w-md flex-1 flex-col py-6">
         <AnimatePresence mode="wait" custom={sens}>
           <motion.div
             key={etape}
