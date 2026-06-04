@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, UserRound, LogOut, Zap, Settings } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { useNonLus } from "@/lib/notifications";
 import Logo from "@/components/Logo";
 
 // Style commun des boutons-icônes du menu (ronds, survol rose)
@@ -14,6 +15,7 @@ const iconBtn =
 export default function AppHeader() {
   const router = useRouter();
   const { user, signOut } = useAuth();
+  const nonLus = useNonLus();
 
   async function handleSignOut() {
     await signOut();
@@ -27,8 +29,18 @@ export default function AppHeader() {
       </Link>
       <nav className="flex items-center gap-1.5">
         {user && (
-          <Link href="/matchs" aria-label="Matchs" title="Matchs" className={iconBtn}>
+          <Link
+            href="/matchs"
+            aria-label="Matchs"
+            title="Matchs"
+            className={iconBtn + " relative"}
+          >
             <Heart className="h-[18px] w-[18px]" />
+            {nonLus > 0 && (
+              <span className="bg-signature absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none text-white">
+                {nonLus > 9 ? "9+" : nonLus}
+              </span>
+            )}
           </Link>
         )}
         {user && (

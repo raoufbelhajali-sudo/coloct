@@ -72,6 +72,46 @@ export async function getMyMatches(
   });
 }
 
+// Activité d'un match pour les notifications (date du match + dernier message reçu)
+export type MatchActivite = {
+  matchId: number;
+  createdAt: string;
+  dernierAutreMsg: string | null; // date du dernier message reçu de l'autre
+};
+
+// Récupère, pour chaque match du compte, sa date et la date du dernier message
+// envoyé par l'AUTRE personne (sert à calculer les notifications non lues).
+export async function getMatchesActivite(
+  userId: string
+): Promise<MatchActivite[]> {
+  const { data: matches } = await supabase
+    .from("matches")
+    .select("id, created_at, colocataire_id, locataire_id")
+    .or(`colocataire_id.eq.${userId},locataire_id.eq.${userId}`);
+  if (!matches || matches.length === 0) return [];
+
+  const ids = matches.map((m) => m.id);
+  const { data: msgs } = await supabase
+    .from("messages")
+    .select("match_id, sender_id, created_at")
+    .in("match_id", ids)
+    .order("created_at", { ascending: false });
+
+  // Dernier message reçu (envoyé par quelqu'un d'autre) par match
+  const dernierAutre = new Map<number, string>();
+  for (const m of msgs ?? []) {
+    if (m.sender_id !== userId && !dernierAutre.has(m.match_id)) {
+      dernierAutre.set(m.match_id, m.created_at);
+    }
+  }
+
+  return matches.map((m) => ({
+    matchId: m.id,
+    createdAt: m.created_at,
+    dernierAutreMsg: dernierAutre.get(m.id) ?? null,
+  }));
+}
+
 // Les messages d'un match, du plus ancien au plus récent
 export async function getMessages(matchId: number): Promise<Message[]> {
   const { data } = await supabase
