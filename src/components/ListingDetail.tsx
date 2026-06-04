@@ -10,17 +10,19 @@ export default function ListingDetail({
   onClose,
   onLike,
   onPass,
+  preview = false,
 }: {
   listing: Listing;
   onClose: () => void;
-  onLike: () => void;
-  onPass: () => void;
+  onLike?: () => void;
+  onPass?: () => void;
+  preview?: boolean; // aperçu "mon annonce" → pas de boutons like/pass
 }) {
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">
       <div className="relative flex h-full w-full max-w-md flex-col bg-panel">
         {/* Zone défilable */}
-        <div className="flex-1 overflow-y-auto pb-28">
+        <div className={"flex-1 overflow-y-auto " + (preview ? "pb-8" : "pb-28")}>
           {/* Galerie de photos (défilement horizontal) */}
           <div className="relative">
             <div className="flex h-80 snap-x snap-mandatory overflow-x-auto">
@@ -64,39 +66,13 @@ export default function ListingDetail({
 
           {/* Infos */}
           <div className="space-y-5 p-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <h2 className="font-display text-3xl font-semibold leading-tight">
-                  {listing.quartier || listing.ville}
-                </h2>
-                <p className="text-sm font-semibold text-pink">
-                  {lieuSous(listing)}
-                </p>
-              </div>
-              {/* Visage de l'annonceur (petit rond) */}
-              {(listing.ownerPhoto || listing.ownerPrenom) && (
-                <div className="flex shrink-0 flex-col items-center">
-                  <div className="bg-signature h-12 w-12 overflow-hidden rounded-full">
-                    {listing.ownerPhoto ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={listing.ownerPhoto}
-                        alt={listing.ownerPrenom ?? "Annonceur"}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center font-display text-lg font-bold text-white">
-                        {listing.ownerPrenom?.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                  </div>
-                  {listing.ownerPrenom && (
-                    <span className="mt-1 text-[11px] text-ink/60">
-                      {listing.ownerPrenom}
-                    </span>
-                  )}
-                </div>
-              )}
+            <div>
+              <h2 className="font-display text-3xl font-semibold leading-tight">
+                {listing.quartier || listing.ville}
+              </h2>
+              <p className="text-sm font-semibold text-pink">
+                {lieuSous(listing)}
+              </p>
             </div>
 
             <div className="space-y-1 text-sm text-ink/80">
@@ -106,6 +82,32 @@ export default function ListingDetail({
               <p>{listing.meuble ? "Meublé" : "Non meublé"}</p>
               <p>Disponible le {listing.dateDispo}</p>
             </div>
+
+            {/* L'annonceur (visage) dans la description */}
+            {(listing.ownerPhoto || listing.ownerPrenom) && (
+              <div className="flex items-center gap-3 rounded-2xl bg-panel-2 p-3">
+                <div className="bg-signature h-12 w-12 shrink-0 overflow-hidden rounded-full">
+                  {listing.ownerPhoto ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={listing.ownerPhoto}
+                      alt={listing.ownerPrenom ?? "Annonceur"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center font-display text-lg font-bold text-white">
+                      {listing.ownerPrenom?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <p className="text-xs text-ink/50">Proposé par</p>
+                  <p className="font-medium">
+                    {listing.ownerPrenom ?? "L'annonceur"}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {listing.description ? (
               <p className="text-ink/85">{listing.description}</p>
@@ -133,23 +135,25 @@ export default function ListingDetail({
           </div>
         </div>
 
-        {/* Barre d'actions fixe */}
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-8 bg-gradient-to-t from-panel via-panel to-transparent py-5">
-          <button
-            onClick={onPass}
-            aria-label="Je passe"
-            className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-bg text-ink/60 transition-transform hover:scale-110"
-          >
-            <X className="h-7 w-7" strokeWidth={2.5} />
-          </button>
-          <button
-            onClick={onLike}
-            aria-label="Ça m'intéresse"
-            className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-          >
-            <Heart className="h-9 w-9" fill="currentColor" />
-          </button>
-        </div>
+        {/* Barre d'actions fixe (masquée en mode aperçu) */}
+        {!preview && (
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-8 bg-gradient-to-t from-panel via-panel to-transparent py-5">
+            <button
+              onClick={onPass}
+              aria-label="Je passe"
+              className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-bg text-ink/60 transition-transform hover:scale-110"
+            >
+              <X className="h-7 w-7" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={onLike}
+              aria-label="Ça m'intéresse"
+              className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
+            >
+              <Heart className="h-9 w-9" fill="currentColor" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

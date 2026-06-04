@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Users, Rocket } from "lucide-react";
+import { Users, Rocket, Eye } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ListingForm from "@/components/ListingForm";
+import ListingDetail from "@/components/ListingDetail";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
@@ -20,6 +21,7 @@ export default function LocatairePage() {
   const [chargement, setChargement] = useState(true);
   const [boostEnCours, setBoostEnCours] = useState(false);
   const [edition, setEdition] = useState(false);
+  const [apercu, setApercu] = useState(false);
 
   // Pas connecté → connexion ; colocataire → son espace de swipe
   useEffect(() => {
@@ -100,12 +102,20 @@ export default function LocatairePage() {
                     {listing.loyer} € / mois · {listing.surface} m²
                   </p>
                 </div>
-                <button
-                  onClick={() => setEdition(true)}
-                  className="shrink-0 text-sm font-medium text-pink hover:underline"
-                >
-                  Modifier
-                </button>
+                <div className="flex shrink-0 flex-col items-end gap-1">
+                  <button
+                    onClick={() => setApercu(true)}
+                    className="flex items-center gap-1 text-sm font-medium text-ink/60 hover:text-ink"
+                  >
+                    <Eye className="h-4 w-4" /> Voir
+                  </button>
+                  <button
+                    onClick={() => setEdition(true)}
+                    className="text-sm font-medium text-pink hover:underline"
+                  >
+                    Modifier
+                  </button>
+                </div>
               </div>
 
               {/* Boost de l'annonce */}
@@ -133,6 +143,15 @@ export default function LocatairePage() {
           </div>
         )}
       </div>
+
+      {/* Aperçu de mon annonce (telle que les colocataires la voient) */}
+      {apercu && listing && (
+        <ListingDetail
+          listing={listing}
+          preview
+          onClose={() => setApercu(false)}
+        />
+      )}
     </main>
   );
 }

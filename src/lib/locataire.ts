@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import type { Listing } from "@/data/listings";
 import type { Profile } from "./auth";
-import { mapListingRow, type ListingRow } from "./listings";
+import { mapListingRow, attacherAnnonceurs, type ListingRow } from "./listings";
 import { estBooste } from "./offers";
 
 // L'annonce (le bien) du locataire connecté — ou null s'il n'en a pas encore
@@ -13,7 +13,9 @@ export async function getMyListing(userId: string): Promise<Listing | null> {
     .order("id")
     .limit(1)
     .maybeSingle();
-  return data ? mapListingRow(data as ListingRow) : null;
+  if (!data) return null;
+  const [l] = await attacherAnnonceurs([data as ListingRow]);
+  return l ?? mapListingRow(data as ListingRow);
 }
 
 // Données d'une nouvelle annonce à créer
