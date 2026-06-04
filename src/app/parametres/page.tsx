@@ -26,9 +26,9 @@ export default function ParametresPage() {
   const [motDePasse, setMotDePasse] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
 
-  // message de retour par section : { cle: "ok" | "texte d'erreur" }
-  const [feedback, setFeedback] = useState<Record<string, string>>({});
-  const [enCours, setEnCours] = useState<string>("");
+  const [enCours, setEnCours] = useState(false);
+  const [message, setMessage] = useState("");
+  const [erreur, setErreur] = useState("");
 
   const retour = profile?.role === "locataire" ? "/locataire" : "/swipe";
 
@@ -47,70 +47,52 @@ export default function ParametresPage() {
     setNotifEmail(meta.notif_email !== false);
   }, [loading, user, profile, router]);
 
-  function dire(cle: string, message: string) {
-    setFeedback((f) => ({ ...f, [cle]: message }));
-    if (message === "ok") {
-      setTimeout(
-        () => setFeedback((f) => ({ ...f, [cle]: "" })),
-        2500
-      );
-    }
-  }
-
-  async function sauverPseudo() {
+  // Un seul enregistrement pour toute la page
+  async function enregistrer() {
     if (!user) return;
-    setEnCours("pseudo");
-    const { error } = await supabase
+    setErreur("");
+    setMessage("");
+
+    if (motDePasse && motDePasse.length < 6) {
+      setErreur("Mot de passe : 6 caractères minimum.");
+      return;
+    }
+
+    setEnCours(true);
+
+    // 1) Pseudo → table profiles
+    await supabase
       .from("profiles")
       .update({ pseudo: pseudo.trim() || null })
       .eq("id", user.id);
+
+    // 2) Email / mot de passe / téléphone-contact / notifs → compte
+    const emailChange =
+      email.trim().toLowerCase() !== (user.email ?? "").toLowerCase();
+    const updates: {
+      email?: string;
+      password?: string;
+      data: Record<string, unknown>;
+    } = {
+      data: { telephone: telephone.trim(), notif_email: notifEmail },
+    };
+    if (emailChange && email.trim()) updates.email = email.trim().toLowerCase();
+    if (motDePasse) updates.password = motDePasse;
+
+    const { error } = await supabase.auth.updateUser(updates);
     await refreshProfile();
-    setEnCours("");
-    dire("pseudo", error ? "Impossible d'enregistrer." : "ok");
-  }
+    setEnCours(false);
 
-  async function sauverEmail() {
-    setEnCours("email");
-    const { error } = await supabase.auth.updateUser({
-      email: email.trim().toLowerCase(),
-    });
-    setEnCours("");
-    dire(
-      "email",
-      error
-        ? traduire(error.message)
-        : "Vérifie ta boîte mail pour confirmer le changement."
-    );
-  }
-
-  async function sauverTelephone() {
-    setEnCours("tel");
-    // On stocke le numéro comme info de contact (pas de SMS requis)
-    const { error } = await supabase.auth.updateUser({
-      data: { telephone: telephone.trim() },
-    });
-    setEnCours("");
-    dire("tel", error ? "Impossible d'enregistrer." : "ok");
-  }
-
-  async function sauverMotDePasse() {
-    if (motDePasse.length < 6) {
-      dire("mdp", "6 caractères minimum.");
+    if (error) {
+      setErreur(traduire(error.message));
       return;
     }
-    setEnCours("mdp");
-    const { error } = await supabase.auth.updateUser({ password: motDePasse });
-    setEnCours("");
-    if (error) dire("mdp", traduire(error.message));
-    else {
-      setMotDePasse("");
-      dire("mdp", "ok");
-    }
-  }
-
-  async function basculerNotif(v: boolean) {
-    setNotifEmail(v);
-    await supabase.auth.updateUser({ data: { notif_email: v } });
+    setMotDePasse("");
+    setMessage(
+      emailChange
+        ? "Modifications enregistrées. Vérifie ta boîte mail pour confirmer ton nouvel email."
+        : "Modifications enregistrées ✓"
+    );
   }
 
   async function deconnexion() {
@@ -152,11 +134,6 @@ export default function ParametresPage() {
               placeholder="cam_paris"
               className={champ}
             />
-            <Action
-              onClick={sauverPseudo}
-              enCours={enCours === "pseudo"}
-              feedback={feedback.pseudo}
-            />
           </Bloc>
 
           {/* Email */}
@@ -174,11 +151,6 @@ export default function ParametresPage() {
               spellCheck={false}
               className={champ}
             />
-            <Action
-              onClick={sauverEmail}
-              enCours={enCours === "email"}
-              feedback={feedback.email}
-            />
           </Bloc>
 
           {/* Téléphone */}
@@ -192,11 +164,6 @@ export default function ParametresPage() {
               onChange={(e) => setTelephone(e.target.value)}
               placeholder="+33 6 12 34 56 78"
               className={champ}
-            />
-            <Action
-              onClick={sauverTelephone}
-              enCours={enCours === "tel"}
-              feedback={feedback.tel}
             />
           </Bloc>
 
@@ -213,13 +180,9 @@ export default function ParametresPage() {
               className={champ}
             />
             <p className="mt-1 text-xs text-ink/40">
-              Tu pourras te connecter avec ton email + ce mot de passe.
+              Laisse vide pour ne pas le changer. Sinon, tu pourras te connecter
+              avec ton email + ce mot de passe.
             </p>
-            <Action
-              onClick={sauverMotDePasse}
-              enCours={enCours === "mdp"}
-              feedback={feedback.mdp}
-            />
           </Bloc>
 
           {/* Notifications */}
@@ -234,11 +197,32 @@ export default function ParametresPage() {
               <input
                 type="checkbox"
                 checked={notifEmail}
-                onChange={(e) => basculerNotif(e.target.checked)}
+                onChange={(e) => setNotifEmail(e.target.checked)}
                 className="accent-pink h-5 w-5"
               />
             </label>
           </Bloc>
+
+          {/* Messages */}
+          {message && (
+            <p className="flex items-center gap-1.5 rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink">
+              <Check className="h-4 w-4" strokeWidth={3} /> {message}
+            </p>
+          )}
+          {erreur && (
+            <p className="flex items-center gap-1.5 rounded-lg bg-panel-2 px-3 py-2 text-sm text-ink/80">
+              <AlertCircle className="h-4 w-4" /> {erreur}
+            </p>
+          )}
+
+          {/* Un seul bouton enregistrer */}
+          <button
+            onClick={enregistrer}
+            disabled={enCours}
+            className="bg-signature glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+          >
+            {enCours ? "Enregistrement…" : "Enregistrer"}
+          </button>
 
           {/* Déconnexion */}
           <button
@@ -272,38 +256,6 @@ function Bloc({
         <h2 className="font-medium">{titre}</h2>
       </div>
       {children}
-    </div>
-  );
-}
-
-function Action({
-  onClick,
-  enCours,
-  feedback,
-}: {
-  onClick: () => void;
-  enCours: boolean;
-  feedback?: string;
-}) {
-  return (
-    <div className="mt-3 flex items-center gap-3">
-      <button
-        onClick={onClick}
-        disabled={enCours}
-        className="bg-signature rounded-full px-5 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
-      >
-        {enCours ? "…" : "Enregistrer"}
-      </button>
-      {feedback === "ok" && (
-        <span className="flex items-center gap-1 text-sm text-pink">
-          <Check className="h-4 w-4" strokeWidth={3} /> Enregistré
-        </span>
-      )}
-      {feedback && feedback !== "ok" && (
-        <span className="flex items-center gap-1 text-sm text-ink/70">
-          <AlertCircle className="h-4 w-4" /> {feedback}
-        </span>
-      )}
     </div>
   );
 }
