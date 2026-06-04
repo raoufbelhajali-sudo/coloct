@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, UserRound, LogOut, Zap } from "lucide-react";
+import { Heart, UserRound, LogOut, Zap, Settings } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import Logo from "@/components/Logo";
 
@@ -39,6 +39,16 @@ export default function AppHeader() {
         {user && (
           <Link href="/profil" aria-label="Profil" title="Profil" className={iconBtn}>
             <UserRound className="h-[18px] w-[18px]" />
+          </Link>
+        )}
+        {user && (
+          <Link
+            href="/parametres"
+            aria-label="Paramètres"
+            title="Paramètres"
+            className={iconBtn}
+          >
+            <Settings className="h-[18px] w-[18px]" />
           </Link>
         )}
         {user && (

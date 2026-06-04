@@ -13,6 +13,7 @@ export default function ConnexionPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
   const [erreur, setErreur] = useState("");
   const [enCours, setEnCours] = useState(false);
 
@@ -31,10 +32,27 @@ export default function ConnexionPage() {
     if (error) setErreur(traduireErreur(error.message));
   }
 
-  // --- Email (lien magique) ---
-  async function envoyerLienEmail(e: React.FormEvent) {
+  // --- Email + mot de passe ---
+  async function connexionMotDePasse(e: React.FormEvent) {
     e.preventDefault();
     reset();
+    setEnCours(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    });
+    setEnCours(false);
+    if (error) setErreur(traduireErreur(error.message));
+    else window.location.href = "/bienvenue";
+  }
+
+  // --- Email (lien magique, sans mot de passe) ---
+  async function envoyerLienEmail() {
+    reset();
+    if (!/^\S+@\S+\.\S+$/.test(email.trim())) {
+      setErreur("Saisis d'abord ton email.");
+      return;
+    }
     setEnCours(true);
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
@@ -117,7 +135,7 @@ export default function ConnexionPage() {
 
         {/* ----- Email : saisie ----- */}
         {etape === "email" && (
-          <form onSubmit={envoyerLienEmail} className="space-y-4">
+          <form onSubmit={connexionMotDePasse} className="space-y-4">
             <Retour onClick={() => setEtape("choix")} />
             <div>
               <label className="text-sm text-ink/70">Ton email</label>
@@ -134,7 +152,24 @@ export default function ConnexionPage() {
                 className={champClasses}
               />
             </div>
-            <BoutonPrincipal enCours={enCours} label="Recevoir mon lien" />
+            <div>
+              <label className="text-sm text-ink/70">Mot de passe</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Ton mot de passe"
+                className={champClasses}
+              />
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Se connecter" />
+            <button
+              type="button"
+              onClick={envoyerLienEmail}
+              className="w-full text-center text-sm text-pink-light hover:underline"
+            >
+              Pas de mot de passe ? Recevoir un lien par email
+            </button>
           </form>
         )}
 
@@ -274,6 +309,8 @@ function GoogleLogo() {
 function traduireErreur(msg: string): string {
   if (msg.toLowerCase().includes("sms") || msg.toLowerCase().includes("phone"))
     return "L'envoi de SMS n'est pas encore activé (service SMS à brancher).";
+  if (msg.includes("Invalid login credentials"))
+    return "Email ou mot de passe incorrect.";
   if (msg.includes("Token has expired") || msg.includes("invalid"))
     return "Code incorrect ou expiré. Réessaie.";
   if (msg.includes("rate") || msg.includes("limit"))
