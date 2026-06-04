@@ -27,7 +27,8 @@
       "Bash(curl -s -w '\\\\n[HTTP %{http_code}]\\\\n' --max-time 15 'https://hmhtgcljqtfdsfiicuha.supabase.co/rest/v1/profiles?select=id&limit=1' -H 'apikey: sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci' -H 'Authorization: Bearer sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci')",
       "Bash(curl -s -w '\\\\n[HTTP %{http_code}]\\\\n' --max-time 15 https://hmhtgcljqtfdsfiicuha.supabase.co/rest/v1/profiles?select=role,prenom -H 'apikey: sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci' -H 'Authorization: Bearer sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci')",
       "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 15 'https://hmhtgcljqtfdsfiicuha.supabase.co/rest/v1/__TRACKED_VAR__?select=id&limit=1' -H 'apikey: sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci' -H 'Authorization: Bearer sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci')",
-      "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 40 http://localhost:3000/__TRACKED_VAR__)"
+      "Bash(curl -s -o /dev/null -w '%{http_code}' --max-time 40 http://localhost:3000/__TRACKED_VAR__)",
+      "Bash(curl -s -w '\\\\n[HTTP %{http_code}]\\\\n' --max-time 25 https://hmhtgcljqtfdsfiicuha.supabase.co/auth/v1/otp -H 'apikey: sb_publishable_kdnoP3O0kO46UpA3x8gtyw_Pk7ZPCci' -H 'Content-Type: application/json' -d '{\"email\":\"colockt.test2.0603@gmail.com\",\"create_user\":true}')"
     ]
   }
 }

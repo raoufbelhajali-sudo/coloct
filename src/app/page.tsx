@@ -1,3 +1,5 @@
+import { LogoMark } from "@/components/Logo";
+
 export default function Home() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
@@ -6,6 +8,7 @@ export default function Home() {
       <div className="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-violet opacity-20 blur-[120px]" />
 
       {/* Logo */}
+      <LogoMark className="mb-4 h-20 w-20 drop-shadow-[0_8px_30px_rgba(255,77,141,0.35)]" />
       <h1 className="font-display text-6xl font-semibold tracking-tight sm:text-7xl">
         <span className="text-signature">Colock&apos;t</span>
       </h1>

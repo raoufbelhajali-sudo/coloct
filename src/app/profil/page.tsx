@@ -6,6 +6,7 @@ import Link from "next/link";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
+import Logo from "@/components/Logo";
 
 // Quartiers proposés (ceux des annonces disponibles)
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -73,8 +74,8 @@ export default function ProfilPage() {
   return (
     <main className="flex min-h-screen flex-col items-center px-4 py-8">
       <header className="mb-8 w-full max-w-md">
-        <Link href="/swipe" className="font-display text-2xl font-semibold">
-          <span className="text-signature">Colock&apos;t</span>
+        <Link href="/swipe">
+          <Logo markClass="h-7 w-7" textClass="text-xl" />
         </Link>
         <h1 className="mt-6 font-display text-3xl font-semibold">Mes préférences</h1>
         <p className="mt-1 text-ink/60">

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, SlidersHorizontal, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import Logo from "@/components/Logo";
 
 // En-tête commun aux pages connectées : logo + liens + déconnexion
 export default function AppHeader({
@@ -21,8 +22,8 @@ export default function AppHeader({
 
   return (
     <header className="mb-6 flex w-full max-w-sm items-center justify-between">
-      <Link href="/" className="font-display text-2xl font-semibold">
-        <span className="text-signature">Colock&apos;t</span>
+      <Link href="/">
+        <Logo markClass="h-7 w-7" textClass="text-xl" />
       </Link>
       <nav className="flex items-center gap-4 text-sm text-ink/60">
         {user && (

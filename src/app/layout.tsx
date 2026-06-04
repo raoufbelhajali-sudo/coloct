@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
@@ -21,6 +21,15 @@ export const metadata: Metadata = {
   title: "Colock't — Trouve ta coloc à Paris",
   description:
     "Swipe les colocations parisiennes disponibles et entre en contact quand il y a un match.",
+  appleWebApp: {
+    capable: true,
+    title: "Colock't",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ff4d8d",
 };
 
 export default function RootLayout({
