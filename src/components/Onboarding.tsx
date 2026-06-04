@@ -7,15 +7,17 @@ import { Telescope, KeyRound, Check, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Role } from "@/lib/auth";
 import { listings } from "@/data/listings";
+import {
+  INTERETS,
+  AMBIANCES,
+  RYTHMES,
+  TABAC,
+  ANIMAUX,
+  TELETRAVAIL,
+} from "@/lib/profilOptions";
 
 const QUARTIERS = Array.from(new Set(listings.map((l) => l.quartier))).sort();
-const INTERETS = [
-  "Sport", "Musique", "Cuisine", "Cinéma", "Jeux vidéo", "Voyages",
-  "Lecture", "Sorties", "Art", "Nature", "Photo", "Yoga",
-];
 const GENRES = ["Femme", "Homme", "Autre"];
-const AMBIANCES = ["Calme", "Sociable", "Fêtard·e"];
-const RYTHMES = ["Matinal·e", "Noctambule", "Flexible"];
 
 // Étapes du parcours selon le rôle
 const ETAPES_COLOC = [
@@ -52,9 +54,9 @@ export default function Onboarding({
   const [interets, setInterets] = useState<string[]>([]);
   const [ambiance, setAmbiance] = useState("");
   const [rythme, setRythme] = useState("");
-  const [nonFumeur, setNonFumeur] = useState(false);
-  const [animaux, setAnimaux] = useState(false);
-  const [teletravail, setTeletravail] = useState(false);
+  const [tabac, setTabac] = useState(""); // "Non-fumeur" / "Fumeur" (obligatoire)
+  const [animaux, setAnimaux] = useState(""); // ANIMAUX
+  const [teletravail, setTeletravail] = useState(""); // TELETRAVAIL
   const [budgetMax, setBudgetMax] = useState(700);
   const [quartiers, setQuartiers] = useState<string[]>([]);
   const [dateEmm, setDateEmm] = useState("");
@@ -75,6 +77,7 @@ export default function Onboarding({
       if (!prenom.trim()) return false;
       if (besoinEmail && !/^\S+@\S+\.\S+$/.test(email.trim())) return false;
     }
+    if (etape === "modevie" && !tabac) return false; // fumeur/non-fumeur obligatoire
     return true;
   }
 
@@ -130,9 +133,9 @@ export default function Onboarding({
         interets,
         ambiance: ambiance || null,
         rythme: rythme || null,
-        non_fumeur: nonFumeur,
-        animaux,
-        teletravail,
+        non_fumeur: tabac === "Non-fumeur",
+        animaux: animaux === "J'aime les animaux",
+        teletravail: teletravail === "Je télétravaille",
         budget_max: budgetMax,
         quartiers,
         date_emmenagement: dateEmm || null,
@@ -349,23 +352,32 @@ export default function Onboarding({
                   value={rythme}
                   onChange={setRythme}
                 />
-                <div className="mt-4 space-y-2">
-                  <Checkbox
-                    label="Non-fumeur"
-                    checked={nonFumeur}
-                    onChange={setNonFumeur}
-                  />
-                  <Checkbox
-                    label="J'ai / j'aime les animaux"
-                    checked={animaux}
-                    onChange={setAnimaux}
-                  />
-                  <Checkbox
-                    label="Je télétravaille"
-                    checked={teletravail}
-                    onChange={setTeletravail}
-                  />
-                </div>
+                <p className="mt-4 text-sm text-ink/70">
+                  Tabac <span className="text-pink">*</span>
+                </p>
+                <ChoixUnique
+                  options={TABAC}
+                  value={tabac}
+                  onChange={setTabac}
+                  obligatoire
+                />
+                <p className="mt-4 text-sm text-ink/70">Animaux</p>
+                <ChoixUnique
+                  options={ANIMAUX}
+                  value={animaux}
+                  onChange={setAnimaux}
+                />
+                <p className="mt-4 text-sm text-ink/70">Travail</p>
+                <ChoixUnique
+                  options={TELETRAVAIL}
+                  value={teletravail}
+                  onChange={setTeletravail}
+                />
+                {!tabac && (
+                  <p className="mt-3 text-xs text-pink">
+                    Merci d&apos;indiquer si tu es fumeur ou non pour continuer.
+                  </p>
+                )}
               </Etape>
             )}
 
@@ -502,10 +514,12 @@ function ChoixUnique({
   options,
   value,
   onChange,
+  obligatoire = false,
 }: {
   options: string[];
   value: string;
   onChange: (v: string) => void;
+  obligatoire?: boolean;
 }) {
   return (
     <div className="mt-2 flex flex-wrap gap-2">
@@ -515,7 +529,7 @@ function ChoixUnique({
           <button
             key={o}
             type="button"
-            onClick={() => onChange(actif ? "" : o)}
+            onClick={() => onChange(actif && !obligatoire ? "" : o)}
             className={
               "rounded-full px-4 py-2 text-sm transition-colors " +
               (actif
@@ -564,24 +578,3 @@ function ChoixMultiple({
   );
 }
 
-function Checkbox({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <label className="flex cursor-pointer items-center gap-3 rounded-lg bg-panel px-3 py-3">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-        className="accent-pink h-5 w-5"
-      />
-      <span className="text-ink/85">{label}</span>
-    </label>
-  );
-}

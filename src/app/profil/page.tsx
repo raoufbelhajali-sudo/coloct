@@ -9,15 +9,10 @@ import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
 import Logo from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
+import { INTERETS, AMBIANCES, RYTHMES } from "@/lib/profilOptions";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
-const INTERETS = [
-  "Sport", "Musique", "Cuisine", "Cinéma", "Jeux vidéo", "Voyages",
-  "Lecture", "Sorties", "Art", "Nature", "Photo", "Yoga",
-];
 const GENRES = ["Femme", "Homme", "Autre"];
-const AMBIANCES = ["Calme", "Sociable", "Fêtard·e"];
-const RYTHMES = ["Matinal·e", "Noctambule", "Flexible"];
 
 export default function ProfilPage() {
   const router = useRouter();
