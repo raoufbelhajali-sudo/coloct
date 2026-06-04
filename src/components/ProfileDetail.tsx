@@ -17,12 +17,13 @@ export default function ProfileDetail({
   onPass?: () => void;
   preview?: boolean; // aperçu "mon profil" → pas de boutons like/pass
 }) {
+  // Mode de vie complet (l'annonceur doit tout voir, pas seulement le positif)
   const modeDeVie: string[] = [];
   (profile.ambiance ?? []).forEach((a) => modeDeVie.push(a));
   (profile.rythme ?? []).forEach((r) => modeDeVie.push(r));
-  if (profile.non_fumeur) modeDeVie.push("Non-fumeur");
-  if (profile.animaux) modeDeVie.push("Animaux ok");
-  if (profile.teletravail) modeDeVie.push("Télétravail");
+  modeDeVie.push(profile.non_fumeur ? "Non-fumeur" : "Fumeur");
+  modeDeVie.push(profile.animaux ? "J'aime les animaux" : "Plutôt sans animaux");
+  modeDeVie.push(profile.teletravail ? "Télétravail" : "Travail sur place");
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">
@@ -85,18 +86,19 @@ export default function ProfileDetail({
               <p className="text-ink/80">{profile.bio}</p>
             ) : null}
 
-            {profile.interets && profile.interets.length > 0 && (
-              <Bloc titre="Centres d'intérêt">
-                {profile.interets.map((i) => (
-                  <Pill key={i} variante="rose">{i}</Pill>
-                ))}
-              </Bloc>
-            )}
-
+            {/* Mode de vie en premier : c'est le plus important pour l'annonceur */}
             {modeDeVie.length > 0 && (
               <Bloc titre="Mode de vie">
                 {modeDeVie.map((m) => (
                   <Pill key={m} variante="violet">{m}</Pill>
+                ))}
+              </Bloc>
+            )}
+
+            {profile.interets && profile.interets.length > 0 && (
+              <Bloc titre="Centres d'intérêt">
+                {profile.interets.map((i) => (
+                  <Pill key={i} variante="rose">{i}</Pill>
                 ))}
               </Bloc>
             )}
