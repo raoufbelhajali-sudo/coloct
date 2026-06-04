@@ -93,11 +93,53 @@ export async function sendMessage(
     .insert({ match_id: matchId, sender_id: senderId, content });
 }
 
-// Envoie un document dans un match (stockage privé + message avec pièce jointe)
+// Types de documents proposés dans la checklist
+export const TYPES_DOCUMENTS = [
+  "Pièce d'identité",
+  "Fiche de paie",
+  "Contrat de travail",
+  "Garant",
+  "Avis d'imposition",
+  "Justificatif de domicile",
+];
+
+// Infos d'un match utiles à la conversation (rôles + documents demandés)
+export async function getMatchInfo(matchId: number): Promise<{
+  colocataire_id: string;
+  locataire_id: string;
+  documents_requis: string[];
+} | null> {
+  const { data } = await supabase
+    .from("matches")
+    .select("colocataire_id, locataire_id, documents_requis")
+    .eq("id", matchId)
+    .maybeSingle();
+  if (!data) return null;
+  return {
+    colocataire_id: data.colocataire_id,
+    locataire_id: data.locataire_id,
+    documents_requis: data.documents_requis ?? [],
+  };
+}
+
+// Le locataire met à jour la liste des documents demandés
+export async function setDocumentsRequis(
+  matchId: number,
+  liste: string[]
+): Promise<void> {
+  await supabase
+    .from("matches")
+    .update({ documents_requis: liste })
+    .eq("id", matchId);
+}
+
+// Envoie un document dans un match (stockage privé + message avec pièce jointe).
+// `label` = type de document (pour la checklist) ; sinon le nom du fichier.
 export async function sendDocument(
   matchId: number,
   senderId: string,
-  file: File
+  file: File,
+  label?: string
 ): Promise<{ error?: string }> {
   const chemin = `${matchId}/${Date.now()}-${file.name}`;
   const { error } = await supabase.storage
@@ -109,7 +151,7 @@ export async function sendDocument(
     sender_id: senderId,
     content: "",
     doc_path: chemin,
-    doc_name: file.name,
+    doc_name: label || file.name,
   });
   return {};
 }
