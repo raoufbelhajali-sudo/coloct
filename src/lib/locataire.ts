@@ -45,6 +45,18 @@ export async function createListing(
   if (error) throw error;
 }
 
+// Met à jour l'annonce du locataire
+export async function updateListing(
+  listingId: string,
+  l: NewListing
+): Promise<void> {
+  const { error } = await supabase
+    .from("listings")
+    .update({ ...l })
+    .eq("id", Number(listingId));
+  if (error) throw error;
+}
+
 // Profils des colocataires déjà swipés par ce locataire (pour cette annonce)
 export async function getSwipedProfileIds(
   userId: string,

@@ -4,8 +4,9 @@ import { useState } from "react";
 import { ImagePlus, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
-import { createListing } from "@/lib/locataire";
+import { createListing, updateListing } from "@/lib/locataire";
 import { DEPARTEMENTS } from "@/lib/profilOptions";
+import type { Listing } from "@/data/listings";
 
 const PHOTO_PAR_DEFAUT =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70";
@@ -18,22 +19,32 @@ const CRITERES_POSSIBLES = [
   "Calme",
 ];
 
-// Formulaire de création de l'annonce (le bien) du locataire
-export default function ListingForm({ onCreated }: { onCreated: () => void }) {
+// Formulaire de création / modification de l'annonce (le bien) du locataire.
+// Si `listing` est fourni → mode modification (champs pré-remplis).
+export default function ListingForm({
+  onCreated,
+  listing,
+}: {
+  onCreated: () => void;
+  listing?: Listing;
+}) {
   const { user, profile } = useAuth();
+  const edition = !!listing;
 
-  const [quartier, setQuartier] = useState("");
-  const [ville, setVille] = useState("Paris");
-  const [departement, setDepartement] = useState("75");
-  const [loyer, setLoyer] = useState("");
-  const [surface, setSurface] = useState("");
-  const [meuble, setMeuble] = useState(true);
-  const [etage, setEtage] = useState("");
-  const [dispo, setDispo] = useState("");
-  const [description, setDescription] = useState("");
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [quartier, setQuartier] = useState(listing?.quartier ?? "");
+  const [ville, setVille] = useState(listing?.ville ?? "Paris");
+  const [departement, setDepartement] = useState(listing?.departement ?? "75");
+  const [loyer, setLoyer] = useState(listing ? String(listing.loyer) : "");
+  const [surface, setSurface] = useState(listing ? String(listing.surface) : "");
+  const [meuble, setMeuble] = useState(listing?.meuble ?? true);
+  const [etage, setEtage] = useState(listing?.etage ?? "");
+  const [dispo, setDispo] = useState(listing?.dispo ?? "");
+  const [description, setDescription] = useState(listing?.description ?? "");
+  const [photos, setPhotos] = useState<string[]>(listing?.photos ?? []);
   const [photoEnCours, setPhotoEnCours] = useState(false);
-  const [criteres, setCriteres] = useState<string[]>(["Non-fumeur"]);
+  const [criteres, setCriteres] = useState<string[]>(
+    listing?.criteres ?? ["Non-fumeur"]
+  );
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
 
@@ -93,7 +104,7 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
       : "Dès que possible";
 
     try {
-      await createListing(user.id, {
+      const donnees = {
         loyer: Number(loyer),
         quartier: quartier.trim(),
         ville: ville.trim() || "Paris",
@@ -117,7 +128,9 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
               },
             ]
           : [],
-      });
+      };
+      if (edition && listing) await updateListing(listing.id, donnees);
+      else await createListing(user.id, donnees);
       onCreated();
     } catch {
       setErreur("Impossible d'enregistrer l'annonce. Réessaie.");
@@ -267,7 +280,11 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
         disabled={enCours}
         className="bg-signature glow-pink w-full rounded-full px-6 py-4 text-base font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
       >
-        {enCours ? "Publication…" : "Publier mon annonce"}
+        {enCours
+          ? "Enregistrement…"
+          : edition
+            ? "Enregistrer les modifications"
+            : "Publier mon annonce"}
       </button>
     </form>
   );

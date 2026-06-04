@@ -19,6 +19,7 @@ export default function LocatairePage() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [chargement, setChargement] = useState(true);
   const [boostEnCours, setBoostEnCours] = useState(false);
+  const [edition, setEdition] = useState(false);
 
   // Pas connecté → connexion ; colocataire → son espace de swipe
   useEffect(() => {
@@ -65,15 +66,47 @@ export default function LocatairePage() {
             </p>
             <ListingForm onCreated={chargerAnnonce} />
           </div>
+        ) : edition ? (
+          // Modification de l'annonce (formulaire pré-rempli)
+          <div className="h-full w-full max-w-md overflow-y-auto pb-8">
+            <div className="mb-4 flex items-center justify-between">
+              <h1 className="font-display text-2xl font-semibold">
+                Modifier ton annonce
+              </h1>
+              <button
+                onClick={() => setEdition(false)}
+                className="text-sm text-ink/60 hover:text-ink"
+              >
+                Annuler
+              </button>
+            </div>
+            <ListingForm
+              listing={listing}
+              onCreated={() => {
+                setEdition(false);
+                chargerAnnonce();
+              }}
+            />
+          </div>
         ) : (
           // Annonce publiée → on swipe sur les colocataires
           <div className="flex h-full w-full max-w-sm flex-col">
             <div className="mb-3 w-full rounded-2xl bg-panel p-4">
-              <p className="text-xs text-ink/50">Ton annonce</p>
-              <p className="font-display text-xl">{lieuComplet(listing)}</p>
-              <p className="text-sm text-ink/70">
-                {listing.loyer} € / mois · {listing.surface} m²
-              </p>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-xs text-ink/50">Ton annonce</p>
+                  <p className="font-display text-xl">{lieuComplet(listing)}</p>
+                  <p className="text-sm text-ink/70">
+                    {listing.loyer} € / mois · {listing.surface} m²
+                  </p>
+                </div>
+                <button
+                  onClick={() => setEdition(true)}
+                  className="shrink-0 text-sm font-medium text-pink hover:underline"
+                >
+                  Modifier
+                </button>
+              </div>
 
               {/* Boost de l'annonce */}
               {boostActif(listing.boosted_until) ? (
