@@ -11,13 +11,15 @@ export type MatchSummary = {
   autrePrenom: string;
 };
 
-// Un message dans une conversation
+// Un message dans une conversation (texte et/ou document joint)
 export type Message = {
   id: number;
   match_id: number;
   sender_id: string;
   content: string;
   created_at: string;
+  doc_path: string | null; // chemin du document joint (stockage privé)
+  doc_name: string | null; // nom lisible du document
 };
 
 // Récupère tous les matchs du compte connecté (quel que soit son rôle)
@@ -89,4 +91,33 @@ export async function sendMessage(
   await supabase
     .from("messages")
     .insert({ match_id: matchId, sender_id: senderId, content });
+}
+
+// Envoie un document dans un match (stockage privé + message avec pièce jointe)
+export async function sendDocument(
+  matchId: number,
+  senderId: string,
+  file: File
+): Promise<{ error?: string }> {
+  const chemin = `${matchId}/${Date.now()}-${file.name}`;
+  const { error } = await supabase.storage
+    .from("documents")
+    .upload(chemin, file);
+  if (error) return { error: error.message };
+  await supabase.from("messages").insert({
+    match_id: matchId,
+    sender_id: senderId,
+    content: "",
+    doc_path: chemin,
+    doc_name: file.name,
+  });
+  return {};
+}
+
+// Génère un lien temporaire (1h) pour télécharger un document privé
+export async function getDocUrl(path: string): Promise<string | null> {
+  const { data } = await supabase.storage
+    .from("documents")
+    .createSignedUrl(path, 3600);
+  return data?.signedUrl ?? null;
 }
