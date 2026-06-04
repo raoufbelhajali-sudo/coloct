@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, UserRound, LogOut, Zap, Settings } from "lucide-react";
+import { Heart, UserRound, LogOut, Zap, Settings, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { useNbMatchs } from "@/lib/notifications";
+import { useNbMatchs, useLikesRecus } from "@/lib/notifications";
 import Logo from "@/components/Logo";
 
 // Style commun des boutons-icônes du menu (ronds, survol rose)
@@ -16,6 +16,7 @@ export default function AppHeader() {
   const router = useRouter();
   const { user, profile, signOut } = useAuth();
   const nbMatchs = useNbMatchs();
+  const nbLikes = useLikesRecus();
 
   // Le logo ramène à l'accueil DANS l'app (selon le rôle), pas à la page publique
   const accueil = !user
@@ -35,6 +36,21 @@ export default function AppHeader() {
         <Logo markClass="h-7 w-7" textClass="text-xl" />
       </Link>
       <nav className="flex items-center gap-1.5">
+        {user && (
+          <Link
+            href="/jaime"
+            aria-label="Qui vous aime"
+            title="Qui vous aime"
+            className={iconBtn + " relative"}
+          >
+            <Sparkles className="h-[18px] w-[18px]" />
+            {nbLikes > 0 && (
+              <span className="bg-signature absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none text-white">
+                {nbLikes > 9 ? "9+" : nbLikes}
+              </span>
+            )}
+          </Link>
+        )}
         {user && (
           <Link
             href="/matchs"
