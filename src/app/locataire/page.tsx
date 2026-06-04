@@ -48,7 +48,7 @@ export default function LocatairePage() {
   }
 
   return (
-    <main className="flex h-screen flex-col items-center overflow-hidden px-4 py-4">
+    <main className="flex h-dvh flex-col items-center overflow-hidden px-4 py-4">
       <AppHeader />
 
       <div className="flex w-full min-h-0 flex-1 flex-col items-center">
