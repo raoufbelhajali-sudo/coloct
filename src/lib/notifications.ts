@@ -5,12 +5,15 @@ import { useAuth } from "./auth";
 import { getMatchesActivite } from "./messages";
 import { getLikesRecus } from "./likes";
 
-const cleMatchLu = (id: number) => `colockt-match-lu-${id}`;
+// Clé propre à CHAQUE compte (sinon, en testant 2 comptes dans le même
+// navigateur, ouvrir une conv effacerait la notif de l'autre compte).
+const cleMatchLu = (userId: string, id: number) =>
+  `colockt-match-lu-${userId}-${id}`;
 
 // À appeler quand on ouvre une conversation → acquitte ses messages
-export function marquerMatchLu(matchId: number) {
+export function marquerMatchLu(userId: string, matchId: number) {
   if (typeof window !== "undefined") {
-    localStorage.setItem(cleMatchLu(matchId), new Date().toISOString());
+    localStorage.setItem(cleMatchLu(userId, matchId), new Date().toISOString());
   }
 }
 
@@ -31,7 +34,7 @@ export function useMessagesNonLus(): number {
       const activite = await getMatchesActivite(user!.id);
       let n = 0;
       for (const a of activite) {
-        const lu = localStorage.getItem(cleMatchLu(a.matchId)) || "";
+        const lu = localStorage.getItem(cleMatchLu(user!.id, a.matchId)) || "";
         // non lu = message reçu plus récent que la dernière ouverture,
         // ou match jamais ouvert (pas encore de message)
         const nonLu = a.dernierAutreMsg ? a.dernierAutreMsg > lu : !lu;

@@ -64,7 +64,7 @@ export default function ConversationPage() {
 
   // Ouvrir / consulter la conversation marque ses messages comme lus
   useEffect(() => {
-    if (user) marquerMatchLu(matchId);
+    if (user) marquerMatchLu(user.id, matchId);
   }, [user, matchId, messages]);
 
   // Rôle + documents demandés (checklist)
