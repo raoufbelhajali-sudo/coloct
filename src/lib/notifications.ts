@@ -5,9 +5,18 @@ import { useAuth } from "./auth";
 import { getMatchesActivite } from "./messages";
 import { getLikesRecus } from "./likes";
 
-// Nombre total de matchs du compte (affiché en pastille sur l'icône cœur).
-// Se met à jour toutes les 5 s pour refléter les nouveaux matchs en direct.
-export function useNbMatchs(): number {
+const cleMatchLu = (id: number) => `colockt-match-lu-${id}`;
+
+// À appeler quand on ouvre une conversation → acquitte ses messages
+export function marquerMatchLu(matchId: number) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(cleMatchLu(matchId), new Date().toISOString());
+  }
+}
+
+// Nombre de conversations avec du non-lu (nouveau message reçu, ou nouveau
+// match jamais ouvert). Disparaît dès que la conversation est ouverte. Poll 5s.
+export function useMessagesNonLus(): number {
   const { user } = useAuth();
   const [nb, setNb] = useState(0);
 
@@ -19,8 +28,16 @@ export function useNbMatchs(): number {
     let actif = true;
 
     async function calculer() {
-      const matchs = await getMatchesActivite(user!.id);
-      if (actif) setNb(matchs.length);
+      const activite = await getMatchesActivite(user!.id);
+      let n = 0;
+      for (const a of activite) {
+        const lu = localStorage.getItem(cleMatchLu(a.matchId)) || "";
+        // non lu = message reçu plus récent que la dernière ouverture,
+        // ou match jamais ouvert (pas encore de message)
+        const nonLu = a.dernierAutreMsg ? a.dernierAutreMsg > lu : !lu;
+        if (nonLu) n++;
+      }
+      if (actif) setNb(n);
     }
 
     calculer();

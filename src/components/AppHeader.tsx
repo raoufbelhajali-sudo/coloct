@@ -11,7 +11,7 @@ import {
   Telescope,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { useNbMatchs, useLikesRecus } from "@/lib/notifications";
+import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 import { LogoMark } from "@/components/Logo";
 
 // Style commun des boutons-icônes du menu (ronds, survol rose)
@@ -25,7 +25,7 @@ const badge =
 // En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
 export default function AppHeader() {
   const { user, profile } = useAuth();
-  const nbMatchs = useNbMatchs();
+  const nbMessages = useMessagesNonLus();
   const nbLikes = useLikesRecus();
 
   // Le logo ramène à l'accueil DANS l'app (selon le rôle), pas à la page publique
@@ -76,8 +76,8 @@ export default function AppHeader() {
             className={iconBtn + " relative"}
           >
             <MessageSquare className="h-[18px] w-[18px]" />
-            {nbMatchs > 0 && (
-              <span className={badge}>{nbMatchs > 9 ? "9+" : nbMatchs}</span>
+            {nbMessages > 0 && (
+              <span className={badge}>{nbMessages > 9 ? "9+" : nbMessages}</span>
             )}
           </Link>
         )}
