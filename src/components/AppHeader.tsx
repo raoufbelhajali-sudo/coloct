@@ -1,14 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, UserRound, Zap, Settings, Sparkles } from "lucide-react";
+import {
+  MessageSquare,
+  UserRound,
+  Zap,
+  Settings,
+  Sparkles,
+  KeyRound,
+  Telescope,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useNbMatchs, useLikesRecus } from "@/lib/notifications";
-import Logo from "@/components/Logo";
+import { LogoMark } from "@/components/Logo";
 
 // Style commun des boutons-icônes du menu (ronds, survol rose)
 const iconBtn =
   "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
+
+// Pastille de notification : noire et vibrante
+const badge =
+  "animate-vibrate absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white";
 
 // En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
 export default function AppHeader() {
@@ -23,11 +35,25 @@ export default function AppHeader() {
       ? "/locataire"
       : "/swipe";
 
+  const estLoca = profile?.role === "locataire";
+
   return (
     <header className="mb-6 flex w-full max-w-sm items-center justify-between">
-      <Link href={accueil}>
-        <Logo markClass="h-7 w-7" textClass="text-xl" />
+      <Link href={accueil} className="flex items-center gap-2">
+        <LogoMark className="h-7 w-7" />
+        {/* Pin du rôle : Annonceur (locataire) ou Colocataire */}
+        {profile && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-panel px-2 py-0.5 text-[11px] font-medium text-ink/70">
+            {estLoca ? (
+              <KeyRound className="h-3 w-3 text-violet" />
+            ) : (
+              <Telescope className="h-3 w-3 text-pink" />
+            )}
+            {estLoca ? "Annonceur" : "Colocataire"}
+          </span>
+        )}
       </Link>
+
       <nav className="flex items-center gap-1.5">
         {user && (
           <Link
@@ -38,24 +64,20 @@ export default function AppHeader() {
           >
             <Sparkles className="h-[18px] w-[18px]" />
             {nbLikes > 0 && (
-              <span className="bg-signature absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none text-white">
-                {nbLikes > 9 ? "9+" : nbLikes}
-              </span>
+              <span className={badge}>{nbLikes > 9 ? "9+" : nbLikes}</span>
             )}
           </Link>
         )}
         {user && (
           <Link
             href="/matchs"
-            aria-label="Matchs"
-            title="Matchs"
+            aria-label="Messages"
+            title="Messages"
             className={iconBtn + " relative"}
           >
-            <Heart className="h-[18px] w-[18px]" />
+            <MessageSquare className="h-[18px] w-[18px]" />
             {nbMatchs > 0 && (
-              <span className="bg-signature absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold leading-none text-white">
-                {nbMatchs > 9 ? "9+" : nbMatchs}
-              </span>
+              <span className={badge}>{nbMatchs > 9 ? "9+" : nbMatchs}</span>
             )}
           </Link>
         )}

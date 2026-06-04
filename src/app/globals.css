@@ -49,3 +49,15 @@ body {
 .glow-pink {
   box-shadow: 0 0 60px -15px rgba(255, 77, 141, 0.5);
 }
+
+/* Pastille de notification : vibration */
+@keyframes vibrate {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-1px, 1px); }
+  40% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+.animate-vibrate {
+  animation: vibrate 0.45s linear infinite;
+}
