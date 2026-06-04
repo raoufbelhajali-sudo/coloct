@@ -64,13 +64,39 @@ export default function ListingDetail({
 
           {/* Infos */}
           <div className="space-y-5 p-5">
-            <div>
-              <h2 className="font-display text-3xl font-semibold leading-tight">
-                {listing.quartier || listing.ville}
-              </h2>
-              <p className="text-sm font-semibold text-pink">
-                {lieuSous(listing)}
-              </p>
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <h2 className="font-display text-3xl font-semibold leading-tight">
+                  {listing.quartier || listing.ville}
+                </h2>
+                <p className="text-sm font-semibold text-pink">
+                  {lieuSous(listing)}
+                </p>
+              </div>
+              {/* Visage de l'annonceur (petit rond) */}
+              {(listing.ownerPhoto || listing.ownerPrenom) && (
+                <div className="flex shrink-0 flex-col items-center">
+                  <div className="bg-signature h-12 w-12 overflow-hidden rounded-full">
+                    {listing.ownerPhoto ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={listing.ownerPhoto}
+                        alt={listing.ownerPrenom ?? "Annonceur"}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center font-display text-lg font-bold text-white">
+                        {listing.ownerPrenom?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  {listing.ownerPrenom && (
+                    <span className="mt-1 text-[11px] text-ink/60">
+                      {listing.ownerPrenom}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="space-y-1 text-sm text-ink/80">

@@ -226,6 +226,12 @@ export default function ProfilPage() {
                 className="hidden"
               />
             </label>
+            {estLocataire && (
+              <p className="max-w-xs text-center text-xs text-ink/40">
+                C&apos;est ta photo de profil (ton visage). Les photos de
+                l&apos;appartement se gèrent dans ton annonce.
+              </p>
+            )}
           </div>
 
           {/* ---------- Identité ---------- */}

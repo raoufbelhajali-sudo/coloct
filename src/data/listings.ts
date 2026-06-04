@@ -28,6 +28,8 @@ export type Listing = {
   photos: string[]; // URLs des photos
   description: string; // courte description
   boosted_until?: string | null; // annonce mise en avant jusqu'à cette date
+  ownerPhoto?: string | null; // photo de profil (visage) de l'annonceur
+  ownerPrenom?: string | null; // prénom de l'annonceur
 };
 
 // Petite fonction utilitaire pour construire l'URL d'une photo Unsplash

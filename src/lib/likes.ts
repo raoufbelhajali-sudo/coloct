@@ -1,7 +1,7 @@
 import { supabase } from "./supabase";
 import type { Profile } from "./auth";
 import type { Listing } from "@/data/listings";
-import { mapListingRow, type ListingRow } from "./listings";
+import { attacherAnnonceurs, type ListingRow } from "./listings";
 
 // Un "j'aime reçu" à afficher dans "Qui vous aime"
 export type LikeRecu =
@@ -62,12 +62,8 @@ export async function getLikesRecus(
       .from("listings")
       .select("*")
       .in("id", ids);
-    const byId = new Map(
-      ((listingsData as ListingRow[]) ?? []).map((l) => [
-        String(l.id),
-        mapListingRow(l),
-      ])
-    );
+    const annonces = await attacherAnnonceurs((listingsData as ListingRow[]) ?? []);
+    const byId = new Map(annonces.map((l) => [l.id, l]));
 
     return pend
       .filter((p) => byId.has(String(p.listing_id)))

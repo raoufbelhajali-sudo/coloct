@@ -39,6 +39,7 @@ export type ListingRow = {
   photos: string[];
   description: string;
   boosted_until: string | null;
+  owner_id: string | null;
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -71,8 +72,32 @@ export async function getListings(): Promise<Listing[]> {
     .order("id");
 
   if (error) throw error;
-  return (data as ListingRow[])
-    .map(mapListingRow)
-    // Les annonces boostées passent en tête
-    .sort((a, b) => (boostActif(b.boosted_until) ? 1 : 0) - (boostActif(a.boosted_until) ? 1 : 0));
+  const listings = await attacherAnnonceurs((data as ListingRow[]) ?? []);
+
+  // Les annonces boostées passent en tête
+  return listings.sort(
+    (a, b) =>
+      (boostActif(b.boosted_until) ? 1 : 0) - (boostActif(a.boosted_until) ? 1 : 0)
+  );
+}
+
+// Convertit des lignes en annonces + rattache la photo/prénom de l'annonceur
+export async function attacherAnnonceurs(
+  rows: ListingRow[]
+): Promise<Listing[]> {
+  const listings = rows.map(mapListingRow);
+  const ownerIds = [...new Set(rows.map((r) => r.owner_id).filter(Boolean))];
+  if (ownerIds.length) {
+    const { data: owners } = await supabase
+      .from("profiles")
+      .select("id, prenom, photo_url")
+      .in("id", ownerIds as string[]);
+    const byId = new Map((owners ?? []).map((o) => [o.id, o]));
+    listings.forEach((l, i) => {
+      const o = rows[i].owner_id ? byId.get(rows[i].owner_id!) : null;
+      l.ownerPhoto = o?.photo_url ?? null;
+      l.ownerPrenom = o?.prenom ?? null;
+    });
+  }
+  return listings;
 }

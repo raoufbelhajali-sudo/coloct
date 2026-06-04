@@ -77,6 +77,10 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
     e.preventDefault();
     if (!user) return;
     setErreur("");
+    if (photos.length === 0) {
+      setErreur("Ajoute au moins une photo de l'appartement.");
+      return;
+    }
     setEnCours(true);
 
     // Transforme la date AAAA-MM-JJ en texte lisible (ex. "1 juillet 2026")
@@ -187,9 +191,11 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
         />
       </div>
 
-      {/* Photos de la chambre (depuis le téléphone) */}
+      {/* Photos de l'appartement (depuis le téléphone) */}
       <div>
-        <label className="text-sm text-ink/70">Photos de la chambre</label>
+        <label className="text-sm text-ink/70">
+          Photos de l&apos;appartement <span className="text-pink">*</span>
+        </label>
         <div className="mt-2 flex flex-wrap gap-3">
           {photos.map((url) => (
             <div
@@ -224,7 +230,8 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
           </label>
         </div>
         <p className="mt-1 text-xs text-ink/40">
-          Prends-les depuis ton téléphone. La première sera la photo principale.
+          Au moins une photo par pièce (chambre, salon, cuisine, salle de
+          bain…). La première sera la photo principale.
         </p>
       </div>
 
