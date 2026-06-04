@@ -301,7 +301,7 @@ export default function ConversationPage() {
               </>
             ) : docsRequis.length === 0 ? (
               <p className="px-1 py-2 text-sm text-ink/60">
-                Le locataire n&apos;a pas (encore) demandé de documents.
+                L&apos;annonceur n&apos;a pas (encore) demandé de documents.
               </p>
             ) : (
               <div className="flex flex-col gap-1">

@@ -223,7 +223,7 @@ export default function Onboarding({
                   />
                   <CarteRole
                     titre="Proposer mon logement"
-                    sous="J'ai une chambre à partager (locataire)"
+                    sous="J'ai une chambre à partager (annonceur)"
                     icon={<KeyRound className="h-7 w-7 text-violet" />}
                     actif={role === "locataire"}
                     onClick={() => setRole("locataire")}
