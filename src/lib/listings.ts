@@ -2,12 +2,33 @@ import { supabase } from "./supabase";
 import type { Coloc, Listing } from "@/data/listings";
 import { boostActif } from "./offers";
 
+// Lieu d'une annonce, sous forme courte ("Paris 11e" ou "Saint-Denis (93)")
+type Lieu = {
+  quartier?: string | null;
+  ville?: string | null;
+  departement?: string | null;
+  arrondissement?: number | null;
+};
+export function lieuSous(l: Lieu): string {
+  if (l.arrondissement) return `Paris ${l.arrondissement}e`;
+  if (l.departement) return `${l.ville ? l.ville + " " : ""}(${l.departement})`;
+  return l.ville ?? "";
+}
+// Lieu complet ("Le Marais · Paris 4e")
+export function lieuComplet(l: Lieu): string {
+  const sous = lieuSous(l);
+  if (l.quartier && sous) return `${l.quartier} · ${sous}`;
+  return l.quartier || sous || "Colocation";
+}
+
 // Forme brute d'une ligne telle que stockée dans Supabase (colonnes en snake_case)
 export type ListingRow = {
   id: number;
   loyer: number;
   quartier: string;
-  arrondissement: number;
+  ville: string | null;
+  departement: string | null;
+  arrondissement: number | null;
   date_dispo: string;
   dispo: string;
   surface: number;
@@ -26,6 +47,8 @@ export function mapListingRow(r: ListingRow): Listing {
     id: String(r.id),
     loyer: r.loyer,
     quartier: r.quartier,
+    ville: r.ville,
+    departement: r.departement,
     arrondissement: r.arrondissement,
     dateDispo: r.date_dispo,
     dispo: r.dispo,

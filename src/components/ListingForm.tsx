@@ -5,6 +5,7 @@ import { ImagePlus, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { createListing } from "@/lib/locataire";
+import { DEPARTEMENTS } from "@/lib/profilOptions";
 
 const PHOTO_PAR_DEFAUT =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70";
@@ -22,7 +23,8 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
   const { user, profile } = useAuth();
 
   const [quartier, setQuartier] = useState("");
-  const [arrondissement, setArrondissement] = useState("");
+  const [ville, setVille] = useState("Paris");
+  const [departement, setDepartement] = useState("75");
   const [loyer, setLoyer] = useState("");
   const [surface, setSurface] = useState("");
   const [meuble, setMeuble] = useState(true);
@@ -90,7 +92,10 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
       await createListing(user.id, {
         loyer: Number(loyer),
         quartier: quartier.trim(),
-        arrondissement: Number(arrondissement),
+        ville: ville.trim() || "Paris",
+        departement,
+        // arrondissement déduit si Paris (75), sinon non utilisé
+        arrondissement: null,
         surface: Number(surface),
         meuble,
         etage: etage.trim() || "—",
@@ -119,9 +124,29 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
       <div className="grid grid-cols-2 gap-4">
-        <Field label="Quartier" value={quartier} onChange={setQuartier} placeholder="Ex. Le Marais" required />
-        <Field label="Arrondissement" type="number" value={arrondissement} onChange={setArrondissement} placeholder="Ex. 4" required />
+        <Field label="Ville" value={ville} onChange={setVille} placeholder="Ex. Paris" required />
+        <div>
+          <label className="text-sm text-ink/70">Département</label>
+          <select
+            value={departement}
+            onChange={(e) => setDepartement(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none"
+          >
+            {DEPARTEMENTS.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      <Field
+        label="Quartier / secteur (optionnel)"
+        value={quartier}
+        onChange={setQuartier}
+        placeholder="Ex. Le Marais"
+      />
 
       <div className="grid grid-cols-2 gap-4">
         <Field label="Loyer (€ / mois CC)" type="number" value={loyer} onChange={setLoyer} placeholder="Ex. 750" required />

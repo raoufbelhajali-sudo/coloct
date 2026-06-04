@@ -38,7 +38,10 @@
       "Bash(git commit -q -m 'Ajout script seed: 30 annonces de test \\(à exécuter dans Supabase\\) *)",
       "Bash(open /Users/raoufbelhajali/Documents/coloct/supabase/seed-30-annonces.sql)",
       "Bash(open -a TextEdit /Users/raoufbelhajali/Documents/coloct/supabase/seed-30-annonces.sql)",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(sed -n '28,40p' src/components/ListingCard.tsx)",
+      "Bash(sed -n '66,76p' src/components/ListingDetail.tsx)",
+      "Bash(sed -n '470,490p' src/components/SwipeDeck.tsx)"
     ]
   }
 }

@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import type { Role } from "./auth";
+import { lieuComplet } from "./listings";
 
 // Résumé d'un match pour la liste "Mes matchs"
 export type MatchSummary = {
@@ -38,7 +39,7 @@ export async function getMyMatches(
   const listingIds = [...new Set(matches.map((m) => m.listing_id))];
   const { data: listings } = await supabase
     .from("listings")
-    .select("id, quartier, arrondissement, loyer, photos")
+    .select("id, quartier, ville, departement, arrondissement, loyer, photos")
     .in("id", listingIds);
   const listingById = new Map((listings ?? []).map((l) => [l.id, l]));
 
@@ -64,7 +65,7 @@ export async function getMyMatches(
     return {
       id: m.id,
       listingId: m.listing_id,
-      titre: l ? `${l.quartier} · Paris ${l.arrondissement}e` : "Colocation",
+      titre: l ? lieuComplet(l) : "Colocation",
       sousTitre: l ? `${l.loyer} € · avec ${autrePrenom}` : `avec ${autrePrenom}`,
       photo: l?.photos?.[0] ?? null,
       autrePrenom,

@@ -27,6 +27,8 @@ export type Profile = {
   ambiance: string | null; // Calme / Sociable / Fêtard·e
   rythme: string | null; // Matinal·e / Noctambule / Flexible
   budget_max: number | null;
+  ville: string | null;
+  departement: string | null;
   quartiers: string[] | null;
   date_emmenagement: string | null;
   non_fumeur: boolean;

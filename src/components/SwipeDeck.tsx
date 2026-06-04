@@ -10,7 +10,7 @@ import {
   useAnimationControls,
 } from "framer-motion";
 import type { Listing } from "@/data/listings";
-import { getListings } from "@/lib/listings";
+import { getListings, lieuComplet } from "@/lib/listings";
 import { useAuth } from "@/lib/auth";
 import { estPremium } from "@/lib/offers";
 import {
@@ -477,10 +477,8 @@ export default function SwipeDeck() {
             </p>
             <p className="mt-3 text-ink/80">
               Toi et la coloc de{" "}
-              <span className="font-semibold">{match.quartier}</span> (Paris{" "}
-              {match.arrondissement}
-              <sup>e</sup>) vous plaisez. Lance la conversation pour organiser une
-              visite.
+              <span className="font-semibold">{lieuComplet(match)}</span> vous
+              plaisez. Lance la conversation pour organiser une visite.
             </p>
             <div className="mt-6 flex flex-col gap-3">
               <button

@@ -2,6 +2,7 @@
 
 import { X, Heart } from "lucide-react";
 import type { Listing } from "@/data/listings";
+import { lieuSous } from "@/lib/listings";
 
 // Vue détaillée d'une annonce (toutes les photos + infos), plein écran défilable.
 export default function ListingDetail({
@@ -65,11 +66,10 @@ export default function ListingDetail({
           <div className="space-y-5 p-5">
             <div>
               <h2 className="font-display text-3xl font-semibold leading-tight">
-                {listing.quartier}
+                {listing.quartier || listing.ville}
               </h2>
               <p className="text-sm font-semibold text-pink">
-                Paris {listing.arrondissement}
-                <sup>e</sup>
+                {lieuSous(listing)}
               </p>
             </div>
 

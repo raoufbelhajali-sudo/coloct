@@ -8,6 +8,7 @@ import AppHeader from "@/components/AppHeader";
 import ListingDetail from "@/components/ListingDetail";
 import ProfileDetail from "@/components/ProfileDetail";
 import { useAuth } from "@/lib/auth";
+import { lieuComplet } from "@/lib/listings";
 import { getLikesRecus, repondreLike, type LikeRecu } from "@/lib/likes";
 
 export default function JaimePage() {
@@ -140,8 +141,7 @@ function Vignette({ item }: { item: LikeRecu }) {
 }
 
 function titre(it: LikeRecu): string {
-  if (it.kind === "listing")
-    return `${it.listing.quartier} · Paris ${it.listing.arrondissement}e`;
+  if (it.kind === "listing") return lieuComplet(it.listing);
   return `${it.profile.prenom}${it.profile.age ? `, ${it.profile.age} ans` : ""}`;
 }
 

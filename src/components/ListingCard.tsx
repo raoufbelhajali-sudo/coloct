@@ -1,4 +1,5 @@
 import type { Listing } from "@/data/listings";
+import { lieuSous } from "@/lib/listings";
 
 // Carte d'annonce (photo en grand + infos clés). Détail complet au tap sur la carte.
 export default function ListingCard({ listing }: { listing: Listing }) {
@@ -28,11 +29,10 @@ export default function ListingCard({ listing }: { listing: Listing }) {
       {/* Infos clés (en laissant la place aux boutons en bas) */}
       <div className="absolute inset-x-0 bottom-0 px-5 pb-24">
         <h2 className="font-display text-3xl font-semibold leading-tight">
-          {listing.quartier}
+          {listing.quartier || listing.ville}
         </h2>
         <p className="mt-0.5 text-sm font-semibold text-pink">
-          Paris {listing.arrondissement}
-          <sup>e</sup>
+          {lieuSous(listing)}
         </p>
         <p className="mt-2 text-sm text-ink/80">
           {listing.surface} m² · {listing.etage}

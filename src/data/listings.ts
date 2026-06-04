@@ -15,7 +15,9 @@ export type Listing = {
   id: string;
   loyer: number; // loyer mensuel charges comprises (€)
   quartier: string;
-  arrondissement: number; // ex. 11 pour le 11e
+  ville?: string | null; // ex. "Paris", "Saint-Denis"
+  departement?: string | null; // numéro, ex. "75", "93"
+  arrondissement: number | null; // ex. 11 pour le 11e (Paris uniquement)
   dateDispo: string; // date de disponibilité (texte lisible)
   dispo: string; // même date au format AAAA-MM-JJ (pour filtrer/comparer)
   surface: number; // surface de la chambre (m²)

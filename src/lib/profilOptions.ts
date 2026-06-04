@@ -26,6 +26,9 @@ export const RYTHMES = [
   "Flexible", "Horaires décalés",
 ];
 
+// Départements d'Île-de-France (numéros uniquement, pas d'option vide)
+export const DEPARTEMENTS = ["75", "77", "78", "91", "92", "93", "94", "95"];
+
 // Choix de mode de vie (stockés en booléens dans le profil)
 export const TABAC = ["Non-fumeur", "Fumeur"];
 export const ANIMAUX = ["J'aime les animaux", "Plutôt sans animaux"];

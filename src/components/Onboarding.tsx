@@ -14,6 +14,7 @@ import {
   TABAC,
   ANIMAUX,
   TELETRAVAIL,
+  DEPARTEMENTS,
 } from "@/lib/profilOptions";
 
 const QUARTIERS = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -58,6 +59,8 @@ export default function Onboarding({
   const [animaux, setAnimaux] = useState(""); // ANIMAUX
   const [teletravail, setTeletravail] = useState(""); // TELETRAVAIL
   const [budgetMax, setBudgetMax] = useState(700);
+  const [ville, setVille] = useState("Paris");
+  const [departement, setDepartement] = useState("75");
   const [quartiers, setQuartiers] = useState<string[]>([]);
   const [dateEmm, setDateEmm] = useState("");
 
@@ -146,6 +149,8 @@ export default function Onboarding({
         animaux: animaux === "J'aime les animaux",
         teletravail: teletravail === "Je télétravaille",
         budget_max: budgetMax,
+        ville: ville.trim() || null,
+        departement,
         quartiers,
         date_emmenagement: dateEmm || null,
       })
@@ -440,6 +445,31 @@ export default function Onboarding({
                   onChange={(e) => setBudgetMax(Number(e.target.value))}
                   className="accent-pink mt-2 w-full"
                 />
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm text-ink/70">Ville</label>
+                    <input
+                      value={ville}
+                      onChange={(e) => setVille(e.target.value)}
+                      placeholder="Ex. Paris"
+                      className={champ}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm text-ink/70">Département</label>
+                    <select
+                      value={departement}
+                      onChange={(e) => setDepartement(e.target.value)}
+                      className={champ}
+                    >
+                      {DEPARTEMENTS.map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
                 <p className="mt-4 text-sm text-ink/70">
                   Quartiers qui m&apos;intéressent
                 </p>

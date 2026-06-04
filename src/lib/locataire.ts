@@ -20,7 +20,9 @@ export async function getMyListing(userId: string): Promise<Listing | null> {
 export type NewListing = {
   loyer: number;
   quartier: string;
-  arrondissement: number;
+  ville: string;
+  departement: string;
+  arrondissement?: number | null;
   surface: number;
   meuble: boolean;
   etage: string;

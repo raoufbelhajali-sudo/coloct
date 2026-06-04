@@ -8,6 +8,7 @@ import ListingForm from "@/components/ListingForm";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
+import { lieuComplet } from "@/lib/listings";
 import { boostActif, activerBoostAnnonce } from "@/lib/offers";
 import type { Listing } from "@/data/listings";
 
@@ -69,10 +70,7 @@ export default function LocatairePage() {
           <div className="flex h-full w-full max-w-sm flex-col">
             <div className="mb-3 w-full rounded-2xl bg-panel p-4">
               <p className="text-xs text-ink/50">Ton annonce</p>
-              <p className="font-display text-xl">
-                {listing.quartier} · Paris {listing.arrondissement}
-                <sup>e</sup>
-              </p>
+              <p className="font-display text-xl">{lieuComplet(listing)}</p>
               <p className="text-sm text-ink/70">
                 {listing.loyer} € / mois · {listing.surface} m²
               </p>
