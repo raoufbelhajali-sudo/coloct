@@ -14,8 +14,15 @@ const iconBtn =
 // En-tête commun aux pages connectées : logo + liens + déconnexion
 export default function AppHeader() {
   const router = useRouter();
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   const nbMatchs = useNbMatchs();
+
+  // Le logo ramène à l'accueil DANS l'app (selon le rôle), pas à la page publique
+  const accueil = !user
+    ? "/"
+    : profile?.role === "locataire"
+      ? "/locataire"
+      : "/swipe";
 
   async function handleSignOut() {
     await signOut();
@@ -24,7 +31,7 @@ export default function AppHeader() {
 
   return (
     <header className="mb-6 flex w-full max-w-sm items-center justify-between">
-      <Link href="/">
+      <Link href={accueil}>
         <Logo markClass="h-7 w-7" textClass="text-xl" />
       </Link>
       <nav className="flex items-center gap-1.5">

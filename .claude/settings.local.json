@@ -32,7 +32,13 @@
       "Bash(git credential-osxkeychain *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(sed -n '40,70p' src/lib/listings.ts)",
+      "Bash(sed -n '1,60p' src/lib/locataire.ts)",
+      "Bash(git commit -q -m 'Ajout script seed: 30 annonces de test \\(à exécuter dans Supabase\\) *)",
+      "Bash(open /Users/raoufbelhajali/Documents/coloct/supabase/seed-30-annonces.sql)",
+      "Bash(open -a TextEdit /Users/raoufbelhajali/Documents/coloct/supabase/seed-30-annonces.sql)",
+      "Bash(git commit -q -m ' *)"
     ]
   }
 }

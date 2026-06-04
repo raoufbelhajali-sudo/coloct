@@ -1,6 +1,20 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
 
 export default function Home() {
+  const router = useRouter();
+  const { user, profile, loading } = useAuth();
+
+  // Déjà connecté → on va directement dans son espace (pas la page "Commencer")
+  useEffect(() => {
+    if (loading || !user || !profile) return;
+    router.replace(profile.role === "locataire" ? "/locataire" : "/swipe");
+  }, [loading, user, profile, router]);
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
       {/* Halos colorés en fond pour l'ambiance nocturne */}
