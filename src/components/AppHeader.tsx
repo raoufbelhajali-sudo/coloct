@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Heart, UserRound, LogOut, Zap, Settings, Sparkles } from "lucide-react";
+import { Heart, UserRound, Zap, Settings, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useNbMatchs, useLikesRecus } from "@/lib/notifications";
 import Logo from "@/components/Logo";
@@ -11,10 +10,9 @@ import Logo from "@/components/Logo";
 const iconBtn =
   "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
 
-// En-tête commun aux pages connectées : logo + liens + déconnexion
+// En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
 export default function AppHeader() {
-  const router = useRouter();
-  const { user, profile, signOut } = useAuth();
+  const { user, profile } = useAuth();
   const nbMatchs = useNbMatchs();
   const nbLikes = useLikesRecus();
 
@@ -24,11 +22,6 @@ export default function AppHeader() {
     : profile?.role === "locataire"
       ? "/locataire"
       : "/swipe";
-
-  async function handleSignOut() {
-    await signOut();
-    router.push("/");
-  }
 
   return (
     <header className="mb-6 flex w-full max-w-sm items-center justify-between">
@@ -85,16 +78,6 @@ export default function AppHeader() {
           >
             <Settings className="h-[18px] w-[18px]" />
           </Link>
-        )}
-        {user && (
-          <button
-            onClick={handleSignOut}
-            aria-label="Déconnexion"
-            title="Déconnexion"
-            className={iconBtn}
-          >
-            <LogOut className="h-[18px] w-[18px]" />
-          </button>
         )}
       </nav>
     </header>

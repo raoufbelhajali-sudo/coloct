@@ -9,6 +9,7 @@ import {
   Lock,
   Bell,
   LogOut,
+  Trash2,
   Check,
   AlertCircle,
 } from "lucide-react";
@@ -29,6 +30,8 @@ export default function ParametresPage() {
   const [enCours, setEnCours] = useState(false);
   const [message, setMessage] = useState("");
   const [erreur, setErreur] = useState("");
+  const [confirmSuppr, setConfirmSuppr] = useState(false);
+  const [supprEnCours, setSupprEnCours] = useState(false);
 
   const retour = profile?.role === "locataire" ? "/locataire" : "/swipe";
 
@@ -96,6 +99,23 @@ export default function ParametresPage() {
   }
 
   async function deconnexion() {
+    await signOut();
+    router.push("/");
+  }
+
+  // Supprime définitivement le compte (via la fonction Supabase delete_my_account)
+  async function supprimerCompte() {
+    setSupprEnCours(true);
+    setErreur("");
+    const { error } = await supabase.rpc("delete_my_account");
+    if (error) {
+      setSupprEnCours(false);
+      setConfirmSuppr(false);
+      setErreur(
+        "Suppression impossible pour le moment. (La fonction de suppression doit être activée côté Supabase.)"
+      );
+      return;
+    }
     await signOut();
     router.push("/");
   }
@@ -224,13 +244,53 @@ export default function ParametresPage() {
             {enCours ? "Enregistrement…" : "Enregistrer"}
           </button>
 
-          {/* Déconnexion */}
-          <button
-            onClick={deconnexion}
-            className="flex w-full items-center justify-center gap-2 rounded-full border border-ink/15 bg-panel px-6 py-3.5 font-medium text-ink/80 hover:border-ink/30"
-          >
-            <LogOut className="h-4 w-4" /> Se déconnecter
-          </button>
+          {/* Mon compte : déconnexion / suppression */}
+          <div className="space-y-3 pt-2">
+            <button
+              onClick={deconnexion}
+              className="flex w-full items-center justify-center gap-2 rounded-full border border-ink/15 bg-panel px-6 py-3.5 font-medium text-ink/80 hover:border-ink/30"
+            >
+              <LogOut className="h-4 w-4" /> Se déconnecter
+            </button>
+
+            {!confirmSuppr ? (
+              <button
+                onClick={() => {
+                  setErreur("");
+                  setConfirmSuppr(true);
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-pink/30 bg-panel px-6 py-3.5 font-medium text-pink hover:bg-pink/5"
+              >
+                <Trash2 className="h-4 w-4" /> Supprimer mon profil
+              </button>
+            ) : (
+              <div className="rounded-2xl border border-pink/30 bg-pink/5 p-4 text-center">
+                <p className="mb-1 font-medium text-ink">
+                  Supprimer définitivement ton profil ?
+                </p>
+                <p className="mb-3 text-sm text-ink/60">
+                  Cette action est irréversible : profil, annonce, matchs et
+                  messages seront effacés.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setConfirmSuppr(false)}
+                    disabled={supprEnCours}
+                    className="flex-1 rounded-full border border-ink/15 bg-panel px-4 py-3 font-medium text-ink/80 hover:border-ink/30"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={supprimerCompte}
+                    disabled={supprEnCours}
+                    className="flex-1 rounded-full bg-pink px-4 py-3 font-semibold text-white hover:opacity-90 disabled:opacity-60"
+                  >
+                    {supprEnCours ? "Suppression…" : "Oui, supprimer"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>
