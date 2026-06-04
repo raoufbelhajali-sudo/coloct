@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import type { Coloc, Listing } from "@/data/listings";
+import { boostActif } from "./offers";
 
 // Forme brute d'une ligne telle que stockée dans Supabase (colonnes en snake_case)
 export type ListingRow = {
@@ -16,6 +17,7 @@ export type ListingRow = {
   criteres: string[];
   photos: string[];
   description: string;
+  boosted_until: string | null;
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -34,6 +36,7 @@ export function mapListingRow(r: ListingRow): Listing {
     criteres: r.criteres ?? [],
     photos: r.photos ?? [],
     description: r.description,
+    boosted_until: r.boosted_until,
   };
 }
 
@@ -45,5 +48,8 @@ export async function getListings(): Promise<Listing[]> {
     .order("id");
 
   if (error) throw error;
-  return (data as ListingRow[]).map(mapListingRow);
+  return (data as ListingRow[])
+    .map(mapListingRow)
+    // Les annonces boostées passent en tête
+    .sort((a, b) => (boostActif(b.boosted_until) ? 1 : 0) - (boostActif(a.boosted_until) ? 1 : 0));
 }

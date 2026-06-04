@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Users } from "lucide-react";
+import { Users, Rocket } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ListingForm from "@/components/ListingForm";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
+import { boostActif, activerBoostAnnonce } from "@/lib/offers";
 import type { Listing } from "@/data/listings";
 
 export default function LocatairePage() {
@@ -16,6 +17,7 @@ export default function LocatairePage() {
 
   const [listing, setListing] = useState<Listing | null>(null);
   const [chargement, setChargement] = useState(true);
+  const [boostEnCours, setBoostEnCours] = useState(false);
 
   // Pas connecté → connexion ; colocataire → son espace de swipe
   useEffect(() => {
@@ -35,6 +37,15 @@ export default function LocatairePage() {
   useEffect(() => {
     if (user) chargerAnnonce();
   }, [user, chargerAnnonce]);
+
+  // Booste l'annonce 48h (démo) puis recharge
+  async function booster() {
+    if (!listing) return;
+    setBoostEnCours(true);
+    await activerBoostAnnonce(listing.id);
+    await chargerAnnonce();
+    setBoostEnCours(false);
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center px-4 py-6">
@@ -65,6 +76,22 @@ export default function LocatairePage() {
               <p className="text-sm text-ink/70">
                 {listing.loyer} € / mois · {listing.surface} m²
               </p>
+
+              {/* Boost de l'annonce */}
+              {boostActif(listing.boosted_until) ? (
+                <p className="mt-3 flex items-center gap-2 rounded-full bg-panel-2 px-4 py-2 text-sm font-semibold text-pink">
+                  <Rocket className="h-4 w-4" /> Annonce mise en avant ✨
+                </p>
+              ) : (
+                <button
+                  onClick={booster}
+                  disabled={boostEnCours}
+                  className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                >
+                  <Rocket className="h-4 w-4" />
+                  {boostEnCours ? "Activation…" : "Booster mon annonce (48h)"}
+                </button>
+              )}
             </div>
 
             <p className="mb-3 flex w-full items-center gap-2 text-left font-display text-xl">

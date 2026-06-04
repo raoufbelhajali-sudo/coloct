@@ -25,6 +25,7 @@ export type Listing = {
   criteres: string[]; // critères de vie commune
   photos: string[]; // URLs des photos
   description: string; // courte description
+  boosted_until?: string | null; // annonce mise en avant jusqu'à cette date
 };
 
 // Petite fonction utilitaire pour construire l'URL d'une photo Unsplash
