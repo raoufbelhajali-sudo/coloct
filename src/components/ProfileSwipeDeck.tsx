@@ -109,9 +109,9 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
   }
 
   return (
-    <div className="flex w-full max-w-sm flex-col items-center">
+    <div className="flex h-full w-full max-w-sm flex-col">
       {remaining.length === 0 ? (
-        <div className="flex h-[480px] flex-col items-center justify-center gap-3 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
           <p className="font-display text-2xl">Aucun profil pour l&apos;instant</p>
           <p className="max-w-xs text-sm text-ink/70">
             Tu as vu tous les colocataires disponibles. Reviens bientôt, de
@@ -120,7 +120,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
         </div>
       ) : (
         <>
-          <div className="relative h-[560px] w-full">
+          <div className="relative w-full flex-1 min-h-0">
             {next && (
               <div className="absolute inset-0 scale-95 opacity-60">
                 <ProfileCard profile={next} />
@@ -151,25 +151,26 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
                 JE PASSE
               </motion.div>
 
-              <ProfileCard profile={current} onOpen={() => setDetail(current)} />
+              <ProfileCard profile={current} />
             </motion.div>
-          </div>
 
-          <div className="mt-6 flex items-center gap-8">
-            <button
-              onClick={() => fly("left")}
-              aria-label="Je passe"
-              className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-panel text-ink/60 transition-transform hover:scale-110"
-            >
-              <X className="h-7 w-7" strokeWidth={2.5} />
-            </button>
-            <button
-              onClick={() => fly("right")}
-              aria-label="Ça m'intéresse"
-              className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-            >
-              <Heart className="h-9 w-9" fill="currentColor" />
-            </button>
+            {/* Boutons posés sur la carte */}
+            <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-6">
+              <button
+                onClick={() => fly("left")}
+                aria-label="Je passe"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110"
+              >
+                <X className="h-6 w-6" strokeWidth={2.5} />
+              </button>
+              <button
+                onClick={() => fly("right")}
+                aria-label="Ça m'intéresse"
+                className="bg-signature glow-pink flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
+              >
+                <Heart className="h-8 w-8" fill="currentColor" />
+              </button>
+            </div>
           </div>
         </>
       )}

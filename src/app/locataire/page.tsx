@@ -48,15 +48,15 @@ export default function LocatairePage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-6">
+    <main className="flex h-screen flex-col items-center overflow-hidden px-4 py-4">
       <AppHeader />
 
-      <div className="flex w-full flex-1 flex-col items-center">
+      <div className="flex w-full min-h-0 flex-1 flex-col items-center">
         {chargement ? (
           <p className="mt-20 text-ink/60">Chargement…</p>
         ) : !listing ? (
-          // Pas encore d'annonce → on la crée
-          <div className="w-full max-w-md">
+          // Pas encore d'annonce → on la crée (formulaire défilable)
+          <div className="w-full max-w-md overflow-y-auto">
             <h1 className="font-display text-3xl font-semibold">Décris ton bien</h1>
             <p className="mt-1 mb-6 text-ink/60">
               Publie ta chambre pour qu&apos;elle apparaisse auprès des
@@ -66,8 +66,8 @@ export default function LocatairePage() {
           </div>
         ) : (
           // Annonce publiée → on swipe sur les colocataires
-          <div className="flex w-full max-w-sm flex-col items-center">
-            <div className="mb-5 w-full rounded-2xl bg-panel p-4">
+          <div className="flex h-full w-full max-w-sm flex-col">
+            <div className="mb-3 w-full rounded-2xl bg-panel p-4">
               <p className="text-xs text-ink/50">Ton annonce</p>
               <p className="font-display text-xl">
                 {listing.quartier} · Paris {listing.arrondissement}
