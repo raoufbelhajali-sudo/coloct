@@ -1,74 +1,117 @@
 import type { Profile } from "@/lib/auth";
 
-// Affiche la carte d'un profil colocataire (vue côté locataire)
+// Carte d'un profil colocataire (vue côté locataire), avec toutes ses infos.
 export default function ProfileCard({ profile }: { profile: Profile }) {
-  // Petits libellés de mode de vie
+  // Étiquettes de mode de vie
   const modeDeVie: string[] = [];
+  if (profile.ambiance) modeDeVie.push(profile.ambiance);
+  if (profile.rythme) modeDeVie.push(profile.rythme);
   if (profile.non_fumeur) modeDeVie.push("Non-fumeur");
-  if (profile.animaux) modeDeVie.push("Animaux");
+  if (profile.animaux) modeDeVie.push("Animaux ok");
   if (profile.teletravail) modeDeVie.push("Télétravail");
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden rounded-3xl bg-panel shadow-2xl select-none">
-      {/* Haut : grand dégradé avec l'initiale */}
-      <div className="bg-signature flex h-2/5 items-center justify-center">
-        <span className="font-display text-7xl font-bold text-white/90">
+      {/* Haut : dégradé + initiale */}
+      <div className="bg-signature flex h-36 shrink-0 items-center justify-center">
+        <span className="font-display text-6xl font-bold text-white/90">
           {profile.prenom?.charAt(0).toUpperCase() || "?"}
         </span>
       </div>
 
-      {/* Bas : informations */}
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      {/* Bas : infos (défilable si besoin) */}
+      <div className="flex-1 space-y-3 overflow-y-auto p-5">
+        {/* Nom + âge + genre */}
         <div>
-          <h2 className="font-display text-3xl font-semibold leading-tight">
+          <h2 className="font-display text-2xl font-semibold leading-tight">
             {profile.prenom}
-            {profile.age ? (
-              <span className="text-ink/60">, {profile.age} ans</span>
-            ) : null}
+            {profile.age ? <span className="text-ink/60">, {profile.age} ans</span> : null}
           </h2>
+          <p className="text-sm text-ink/60">
+            {[profile.pseudo ? `@${profile.pseudo}` : null, profile.genre, profile.profession]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
           {profile.budget_max ? (
-            <p className="mt-0.5 text-sm font-medium text-pink-light">
+            <p className="mt-1 text-sm font-semibold text-pink">
               Budget jusqu&apos;à {profile.budget_max} € / mois
             </p>
           ) : null}
         </div>
 
-        {profile.bio ? (
-          <p className="text-sm text-ink/75">{profile.bio}</p>
-        ) : null}
+        {/* Présentation */}
+        {profile.bio ? <p className="text-sm text-ink/75">{profile.bio}</p> : null}
 
-        {/* Quartiers recherchés */}
-        {profile.quartiers && profile.quartiers.length > 0 && (
-          <div>
-            <p className="text-xs text-ink/50">Cherche dans</p>
-            <div className="mt-1 flex flex-wrap gap-2">
-              {profile.quartiers.map((q) => (
-                <span
-                  key={q}
-                  className="rounded-full bg-panel-2 px-3 py-1 text-xs text-ink/85"
-                >
-                  {q}
-                </span>
-              ))}
-            </div>
-          </div>
+        {/* Centres d'intérêt */}
+        {profile.interets && profile.interets.length > 0 && (
+          <Bloc titre="Centres d'intérêt">
+            {profile.interets.map((i) => (
+              <Pill key={i} variante="rose">{i}</Pill>
+            ))}
+          </Bloc>
         )}
 
         {/* Mode de vie */}
         {modeDeVie.length > 0 && (
-          <div className="mt-auto flex flex-wrap gap-2">
+          <Bloc titre="Mode de vie">
             {modeDeVie.map((m) => (
-              <span
-                key={m}
-                className="rounded-full border border-violet/40 px-3 py-1 text-xs font-medium"
-                style={{ color: "#6d28d9" }}
-              >
-                {m}
-              </span>
+              <Pill key={m} variante="violet">{m}</Pill>
             ))}
-          </div>
+          </Bloc>
+        )}
+
+        {/* Quartiers recherchés */}
+        {profile.quartiers && profile.quartiers.length > 0 && (
+          <Bloc titre="Cherche dans">
+            {profile.quartiers.map((q) => (
+              <Pill key={q} variante="neutre">{q}</Pill>
+            ))}
+          </Bloc>
         )}
       </div>
     </div>
+  );
+}
+
+function Bloc({ titre, children }: { titre: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <p className="text-xs text-ink/50">{titre}</p>
+      <div className="mt-1 flex flex-wrap gap-2">{children}</div>
+    </div>
+  );
+}
+
+function Pill({
+  children,
+  variante,
+}: {
+  children: React.ReactNode;
+  variante: "rose" | "violet" | "neutre";
+}) {
+  if (variante === "violet") {
+    return (
+      <span
+        className="rounded-full border border-violet/40 px-3 py-1 text-xs font-medium"
+        style={{ color: "#6d28d9" }}
+      >
+        {children}
+      </span>
+    );
+  }
+  if (variante === "rose") {
+    return (
+      <span
+        className="rounded-full px-3 py-1 text-xs font-medium"
+        style={{ backgroundColor: "rgba(255,77,141,0.12)", color: "#ff4d8d" }}
+      >
+        {children}
+      </span>
+    );
+  }
+  return (
+    <span className="rounded-full bg-panel-2 px-3 py-1 text-xs text-ink/85">
+      {children}
+    </span>
   );
 }

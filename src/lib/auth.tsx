@@ -17,14 +17,20 @@ export type Profile = {
   id: string;
   role: Role;
   prenom: string;
+  pseudo: string | null;
   age: number | null;
+  genre: string | null; // Femme / Homme / Autre
+  profession: string | null; // statut ou métier (ex. "Étudiante", "Designer")
+  bio: string | null; // présentation
+  interets: string[] | null; // centres d'intérêt
+  ambiance: string | null; // Calme / Sociable / Fêtard·e
+  rythme: string | null; // Matinal·e / Noctambule / Flexible
   budget_max: number | null;
   quartiers: string[] | null;
   date_emmenagement: string | null;
   non_fumeur: boolean;
   animaux: boolean;
   teletravail: boolean;
-  bio: string | null;
 };
 
 type AuthState = {

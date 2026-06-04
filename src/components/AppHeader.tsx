@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, SlidersHorizontal, LogOut } from "lucide-react";
+import { Heart, UserRound, LogOut } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import Logo from "@/components/Logo";
 
@@ -34,8 +34,8 @@ export default function AppHeader({
         )}
         {showPreferences && (
           <Link href="/profil" className="flex items-center gap-1.5 hover:text-ink">
-            <SlidersHorizontal className="h-4 w-4" />
-            <span className="hidden sm:inline">Préférences</span>
+            <UserRound className="h-4 w-4" />
+            <span className="hidden sm:inline">Profil</span>
           </Link>
         )}
         {user && (
