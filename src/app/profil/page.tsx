@@ -230,24 +230,29 @@ export default function ProfilPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Âge" type="number" value={age} onChange={setAge} placeholder="25" />
-              <Champ label="Profession / statut" value={profession} onChange={setProfession} placeholder="Étudiante, Designer…" />
+              {!estLocataire && (
+                <Champ label="Profession / statut" value={profession} onChange={setProfession} placeholder="Étudiante, Designer…" />
+              )}
             </div>
             <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} />
-            <div>
-              <label className="text-sm text-ink/70">Tranche de salaire (net / mois)</label>
-              {!sansSalaire && (
-                <select value={salaire} onChange={(e) => setSalaire(e.target.value)} className={champClasses}>
-                  <option value="">Choisir une tranche…</option>
-                  {SALAIRES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              )}
-              <label className="mt-2 flex cursor-pointer items-center gap-2 text-sm text-ink/70">
-                <input type="checkbox" checked={sansSalaire} onChange={(e) => setSansSalaire(e.target.checked)} className="accent-pink h-4 w-4" />
-                Je préfère ne pas indiquer mon salaire
-              </label>
-            </div>
+            {/* Salaire : colocataire (candidat) uniquement */}
+            {!estLocataire && (
+              <div>
+                <label className="text-sm text-ink/70">Tranche de salaire (net / mois)</label>
+                {!sansSalaire && (
+                  <select value={salaire} onChange={(e) => setSalaire(e.target.value)} className={champClasses}>
+                    <option value="">Choisir une tranche…</option>
+                    {SALAIRES.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
+                )}
+                <label className="mt-2 flex cursor-pointer items-center gap-2 text-sm text-ink/70">
+                  <input type="checkbox" checked={sansSalaire} onChange={(e) => setSansSalaire(e.target.checked)} className="accent-pink h-4 w-4" />
+                  Je préfère ne pas indiquer mon salaire
+                </label>
+              </div>
+            )}
           </Section>
 
           {/* ---------- À propos ---------- */}
