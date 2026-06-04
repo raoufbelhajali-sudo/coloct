@@ -77,7 +77,16 @@ export default function Onboarding({
       if (!prenom.trim()) return false;
       if (besoinEmail && !/^\S+@\S+\.\S+$/.test(email.trim())) return false;
     }
-    if (etape === "modevie" && !tabac) return false; // fumeur/non-fumeur obligatoire
+    if (etape === "toi") {
+      if (!age.trim() || Number(age) <= 0) return false;
+      if (!genre) return false;
+    }
+    if (etape === "interets" && interets.length === 0) return false;
+    if (etape === "modevie") {
+      // chaque choix doit être renseigné
+      if (!ambiance || !rythme || !tabac || !animaux || !teletravail)
+        return false;
+    }
     return true;
   }
 
@@ -242,7 +251,9 @@ export default function Onboarding({
             {/* ---------- Toi en bref ---------- */}
             {etape === "toi" && (
               <Etape titre="Parle-nous de toi" sous="Quelques infos rapides.">
-                <label className="text-sm text-ink/70">Âge</label>
+                <label className="text-sm text-ink/70">
+                  Âge <span className="text-pink">*</span>
+                </label>
                 <input
                   type="number"
                   inputMode="numeric"
@@ -251,8 +262,15 @@ export default function Onboarding({
                   placeholder="25"
                   className={champ}
                 />
-                <p className="mt-4 text-sm text-ink/70">Genre</p>
-                <ChoixUnique options={GENRES} value={genre} onChange={setGenre} />
+                <p className="mt-4 text-sm text-ink/70">
+                  Genre <span className="text-pink">*</span>
+                </p>
+                <ChoixUnique
+                  options={GENRES}
+                  value={genre}
+                  onChange={setGenre}
+                  obligatoire
+                />
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">
                     Profession / statut
@@ -327,30 +345,44 @@ export default function Onboarding({
             {etape === "interets" && (
               <Etape
                 titre="Tes centres d'intérêt"
-                sous="Choisis ce qui te ressemble (autant que tu veux)."
+                sous="Choisis-en au moins un (autant que tu veux)."
               >
                 <ChoixMultiple
                   options={INTERETS}
                   values={interets}
                   onToggle={(v) => toggle(interets, setInterets, v)}
                 />
+                {interets.length === 0 && (
+                  <p className="mt-3 text-xs text-pink">
+                    Sélectionne au moins un centre d&apos;intérêt pour continuer.
+                  </p>
+                )}
               </Etape>
             )}
 
             {/* ---------- Mode de vie ---------- */}
             {etape === "modevie" && (
-              <Etape titre="Ton mode de vie" sous="Pour trouver les bons colocs.">
-                <p className="text-sm text-ink/70">Ambiance</p>
+              <Etape
+                titre="Ton mode de vie"
+                sous="Réponds à tout pour trouver les bons colocs."
+              >
+                <p className="text-sm text-ink/70">
+                  Ambiance <span className="text-pink">*</span>
+                </p>
                 <ChoixUnique
                   options={AMBIANCES}
                   value={ambiance}
                   onChange={setAmbiance}
+                  obligatoire
                 />
-                <p className="mt-4 text-sm text-ink/70">Rythme</p>
+                <p className="mt-4 text-sm text-ink/70">
+                  Rythme <span className="text-pink">*</span>
+                </p>
                 <ChoixUnique
                   options={RYTHMES}
                   value={rythme}
                   onChange={setRythme}
+                  obligatoire
                 />
                 <p className="mt-4 text-sm text-ink/70">
                   Tabac <span className="text-pink">*</span>
@@ -361,21 +393,27 @@ export default function Onboarding({
                   onChange={setTabac}
                   obligatoire
                 />
-                <p className="mt-4 text-sm text-ink/70">Animaux</p>
+                <p className="mt-4 text-sm text-ink/70">
+                  Animaux <span className="text-pink">*</span>
+                </p>
                 <ChoixUnique
                   options={ANIMAUX}
                   value={animaux}
                   onChange={setAnimaux}
+                  obligatoire
                 />
-                <p className="mt-4 text-sm text-ink/70">Travail</p>
+                <p className="mt-4 text-sm text-ink/70">
+                  Travail <span className="text-pink">*</span>
+                </p>
                 <ChoixUnique
                   options={TELETRAVAIL}
                   value={teletravail}
                   onChange={setTeletravail}
+                  obligatoire
                 />
-                {!tabac && (
+                {!etapeValide() && (
                   <p className="mt-3 text-xs text-pink">
-                    Merci d&apos;indiquer si tu es fumeur ou non pour continuer.
+                    Merci de répondre à toutes les questions pour continuer.
                   </p>
                 )}
               </Etape>
