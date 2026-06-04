@@ -18,6 +18,7 @@ export type Profile = {
   role: Role;
   prenom: string;
   pseudo: string | null;
+  photo_url: string | null;
   age: number | null;
   genre: string | null; // Femme / Homme / Autre
   profession: string | null; // statut ou métier (ex. "Étudiante", "Designer")

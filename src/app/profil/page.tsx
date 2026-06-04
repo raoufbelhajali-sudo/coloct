@@ -41,6 +41,8 @@ export default function ProfilPage() {
   const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>([]);
   const [dateEmmenagement, setDateEmmenagement] = useState("");
 
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoEnCours, setPhotoEnCours] = useState(false);
   const [enCours, setEnCours] = useState(false);
   const [enregistre, setEnregistre] = useState(false);
 
@@ -48,10 +50,33 @@ export default function ProfilPage() {
     if (!loading && !user) router.replace("/connexion");
   }, [loading, user, router]);
 
+  // Téléverse une nouvelle photo de profil
+  async function handlePhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setPhotoEnCours(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const chemin = `${user.id}/avatar-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(chemin, file, { upsert: true });
+    if (!error) {
+      const { data } = supabase.storage.from("avatars").getPublicUrl(chemin);
+      setPhotoUrl(data.publicUrl);
+      await supabase
+        .from("profiles")
+        .update({ photo_url: data.publicUrl })
+        .eq("id", user.id);
+      await refreshProfile();
+    }
+    setPhotoEnCours(false);
+  }
+
   useEffect(() => {
     if (!profile) return;
     setPrenom(profile.prenom ?? "");
     setPseudo(profile.pseudo ?? "");
+    setPhotoUrl(profile.photo_url ?? "");
     setAge(profile.age ? String(profile.age) : "");
     setGenre(profile.genre ?? "");
     setProfession(profile.profession ?? "");
@@ -119,6 +144,34 @@ export default function ProfilPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-7">
+          {/* ---------- Photo de profil ---------- */}
+          <div className="flex flex-col items-center gap-3">
+            <div className="bg-signature h-28 w-28 overflow-hidden rounded-full">
+              {photoUrl ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={photoUrl}
+                  alt="Ma photo"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center font-display text-5xl font-bold text-white/90">
+                  {prenom.charAt(0).toUpperCase() || "?"}
+                </div>
+              )}
+            </div>
+            <label className="cursor-pointer rounded-full border border-ink/15 bg-panel px-4 py-2 text-sm font-medium text-ink hover:border-ink/30">
+              {photoEnCours ? "Envoi…" : photoUrl ? "Changer la photo" : "Ajouter une photo"}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhoto}
+                disabled={photoEnCours}
+                className="hidden"
+              />
+            </label>
+          </div>
+
           {/* ---------- Identité ---------- */}
           <Section titre="Identité">
             <div className="grid grid-cols-2 gap-4">

@@ -12,11 +12,21 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
 
   return (
     <div className="relative flex h-full w-full flex-col overflow-hidden rounded-3xl bg-panel shadow-2xl select-none">
-      {/* Haut : dégradé + initiale */}
-      <div className="bg-signature flex h-36 shrink-0 items-center justify-center">
-        <span className="font-display text-6xl font-bold text-white/90">
-          {profile.prenom?.charAt(0).toUpperCase() || "?"}
-        </span>
+      {/* Haut : photo si dispo, sinon dégradé + initiale */}
+      <div className="bg-signature flex h-48 shrink-0 items-center justify-center overflow-hidden">
+        {profile.photo_url ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={profile.photo_url}
+            alt={profile.prenom}
+            className="h-full w-full object-cover"
+            draggable={false}
+          />
+        ) : (
+          <span className="font-display text-6xl font-bold text-white/90">
+            {profile.prenom?.charAt(0).toUpperCase() || "?"}
+          </span>
+        )}
       </div>
 
       {/* Bas : infos (défilable si besoin) */}
