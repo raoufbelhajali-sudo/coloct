@@ -59,6 +59,8 @@ export default function Onboarding({
   const [animaux, setAnimaux] = useState(""); // ANIMAUX
   const [teletravail, setTeletravail] = useState(""); // TELETRAVAIL
   const [budgetMax, setBudgetMax] = useState(700);
+  const [ageMin, setAgeMin] = useState("18");
+  const [ageMax, setAgeMax] = useState("99");
   const [ville, setVille] = useState("Paris");
   const [departement, setDepartement] = useState("75");
   const [quartiers, setQuartiers] = useState<string[]>([]);
@@ -149,6 +151,8 @@ export default function Onboarding({
         animaux: animaux === "J'aime les animaux",
         teletravail: teletravail === "Je télétravaille",
         budget_max: budgetMax,
+        age_min: Number(ageMin) || null,
+        age_max: Number(ageMax) || null,
         ville: ville.trim() || null,
         departement,
         quartiers,
@@ -445,6 +449,27 @@ export default function Onboarding({
                   onChange={(e) => setBudgetMax(Number(e.target.value))}
                   className="accent-pink mt-2 w-full"
                 />
+                <p className="mt-4 text-sm text-ink/70">
+                  Tranche d&apos;âge recherchée
+                </p>
+                <div className="mt-1 flex items-center gap-2">
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={ageMin}
+                    onChange={(e) => setAgeMin(e.target.value)}
+                    className={champ + " w-20"}
+                  />
+                  <span className="text-ink/50">à</span>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={ageMax}
+                    onChange={(e) => setAgeMax(e.target.value)}
+                    className={champ + " w-20"}
+                  />
+                  <span className="text-sm text-ink/50">ans</span>
+                </div>
                 <div className="mt-4 grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm text-ink/70">Ville</label>

@@ -17,6 +17,7 @@ import {
   recordProfileSwipe,
   findMatchForColocataire,
 } from "@/lib/locataire";
+import { compatProfils } from "@/lib/compat";
 import ProfileCard from "./ProfileCard";
 import ProfileDetail from "./ProfileDetail";
 
@@ -25,7 +26,7 @@ type Direction = "left" | "right";
 // Le locataire swipe sur les profils de colocataires intéressés
 export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [swipedIds, setSwipedIds] = useState<Set<string>>(new Set());
@@ -123,7 +124,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
           <div className="relative w-full flex-1 min-h-0">
             {next && (
               <div className="absolute inset-0 scale-95 opacity-60">
-                <ProfileCard profile={next} />
+                <ProfileCard profile={next} compat={compatProfils(profile, next)} />
               </div>
             )}
 
@@ -151,7 +152,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
                 JE PASSE
               </motion.div>
 
-              <ProfileCard profile={current} />
+              <ProfileCard profile={current} compat={compatProfils(profile, current)} />
             </motion.div>
 
             {/* Boutons posés sur la carte */}

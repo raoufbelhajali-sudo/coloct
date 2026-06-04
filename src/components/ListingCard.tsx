@@ -1,10 +1,27 @@
+import { Sparkles } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { lieuSous } from "@/lib/listings";
 
 // Carte d'annonce (photo en grand + infos clés). Détail complet au tap sur la carte.
-export default function ListingCard({ listing }: { listing: Listing }) {
+export default function ListingCard({
+  listing,
+  compat = [],
+}: {
+  listing: Listing;
+  compat?: string[];
+}) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-panel shadow-2xl select-none">
+      {/* Bandeau "ça peut coller" si points communs */}
+      {compat.length > 0 && (
+        <div className="absolute left-3 top-3 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md">
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">
+            Ça peut coller : {compat.slice(0, 3).join(", ")}
+          </span>
+        </div>
+      )}
+
       {/* Photo principale */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img

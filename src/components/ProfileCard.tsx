@@ -1,7 +1,14 @@
+import { Sparkles } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 
 // Carte d'un profil colocataire (photo + infos clés). Détail complet au tap.
-export default function ProfileCard({ profile }: { profile: Profile }) {
+export default function ProfileCard({
+  profile,
+  compat = [],
+}: {
+  profile: Profile;
+  compat?: string[];
+}) {
   const sousTitre = [
     profile.pseudo ? `@${profile.pseudo}` : null,
     profile.genre,
@@ -12,6 +19,16 @@ export default function ProfileCard({ profile }: { profile: Profile }) {
 
   return (
     <div className="bg-signature relative h-full w-full overflow-hidden rounded-3xl shadow-2xl select-none">
+      {/* Bandeau "ça peut coller" si points communs */}
+      {compat.length > 0 && (
+        <div className="absolute left-3 top-3 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md">
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">
+            Ça peut coller : {compat.slice(0, 3).join(", ")}
+          </span>
+        </div>
+      )}
+
       {/* Photo (ou initiale sur dégradé) */}
       {profile.photo_url ? (
         /* eslint-disable-next-line @next/next/no-img-element */

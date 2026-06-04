@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
+import { compatAnnonce } from "@/lib/compat";
 import { useAuth } from "@/lib/auth";
 import { estPremium } from "@/lib/offers";
 import {
@@ -354,7 +355,7 @@ export default function SwipeDeck() {
           <div className="relative w-full flex-1 min-h-0">
             {next && (
               <div className="absolute inset-0 scale-95 opacity-60">
-                <ListingCard listing={next} />
+                <ListingCard listing={next} compat={compatAnnonce(profile, next)} />
               </div>
             )}
 
@@ -382,7 +383,7 @@ export default function SwipeDeck() {
                 JE PASSE
               </motion.div>
 
-              <ListingCard listing={current} />
+              <ListingCard listing={current} compat={compatAnnonce(profile, current)} />
             </motion.div>
 
             {/* Boutons posés sur la carte */}

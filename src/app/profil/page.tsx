@@ -35,6 +35,8 @@ export default function ProfilPage() {
   const [teletravail, setTeletravail] = useState(false);
   // Recherche
   const [budgetMax, setBudgetMax] = useState(700);
+  const [ageMin, setAgeMin] = useState("18");
+  const [ageMax, setAgeMax] = useState("99");
   const [ville, setVille] = useState("Paris");
   const [departement, setDepartement] = useState("75");
   const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>([]);
@@ -114,6 +116,8 @@ export default function ProfilPage() {
     setAnimaux(profile.animaux);
     setTeletravail(profile.teletravail);
     if (profile.budget_max) setBudgetMax(profile.budget_max);
+    setAgeMin(profile.age_min ? String(profile.age_min) : "18");
+    setAgeMax(profile.age_max ? String(profile.age_max) : "99");
     setVille(profile.ville ?? "Paris");
     setDepartement(profile.departement ?? "75");
     setQuartiersChoisis(profile.quartiers ?? []);
@@ -145,6 +149,8 @@ export default function ProfilPage() {
         animaux,
         teletravail,
         budget_max: budgetMax,
+        age_min: Number(ageMin) || null,
+        age_max: Number(ageMax) || null,
         ville: ville.trim() || null,
         departement: departement || null,
         quartiers: quartiersChoisis,
@@ -261,6 +267,15 @@ export default function ProfilPage() {
                 <input type="range" min={400} max={1000} step={10} value={budgetMax}
                   onChange={(e) => setBudgetMax(Number(e.target.value))}
                   className="accent-pink mt-2 w-full" />
+              </div>
+              <div>
+                <label className="text-sm text-ink/70">Tranche d&apos;âge recherchée</label>
+                <div className="mt-1 flex items-center gap-2">
+                  <input type="number" value={ageMin} onChange={(e) => setAgeMin(e.target.value)} className={champClasses + " w-20"} />
+                  <span className="text-ink/50">à</span>
+                  <input type="number" value={ageMax} onChange={(e) => setAgeMax(e.target.value)} className={champClasses + " w-20"} />
+                  <span className="text-sm text-ink/50">ans</span>
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
