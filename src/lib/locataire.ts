@@ -2,6 +2,7 @@ import { supabase } from "./supabase";
 import type { Listing } from "@/data/listings";
 import type { Profile } from "./auth";
 import { mapListingRow, type ListingRow } from "./listings";
+import { estBooste } from "./offers";
 
 // L'annonce (le bien) du locataire connecté — ou null s'il n'en a pas encore
 export async function getMyListing(userId: string): Promise<Listing | null> {
@@ -65,9 +66,10 @@ export async function getColocataireProfiles(
     .from("profiles")
     .select("*")
     .eq("role", "colocataire");
-  return (data as Profile[] | null ?? []).filter(
-    (p) => p.id !== excludeUserId && !swipedIds.has(p.id)
-  );
+  return (data as Profile[] | null ?? [])
+    .filter((p) => p.id !== excludeUserId && !swipedIds.has(p.id))
+    // Les profils boostés passent en tête
+    .sort((a, b) => (estBooste(b) ? 1 : 0) - (estBooste(a) ? 1 : 0));
 }
 
 // Enregistre le swipe d'un locataire sur un profil de colocataire

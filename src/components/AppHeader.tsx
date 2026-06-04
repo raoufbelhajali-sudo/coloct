@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Heart, UserRound, LogOut } from "lucide-react";
+import { Heart, UserRound, LogOut, Zap } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import Logo from "@/components/Logo";
 
@@ -30,6 +30,12 @@ export default function AppHeader({
           <Link href="/matchs" className="flex items-center gap-1.5 hover:text-ink">
             <Heart className="h-4 w-4" />
             <span className="hidden sm:inline">Matchs</span>
+          </Link>
+        )}
+        {user && (
+          <Link href="/boutique" className="flex items-center gap-1.5 hover:text-ink">
+            <Zap className="h-4 w-4" />
+            <span className="hidden sm:inline">Boutique</span>
           </Link>
         )}
         {showPreferences && (

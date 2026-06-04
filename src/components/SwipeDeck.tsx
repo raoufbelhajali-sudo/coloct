@@ -12,6 +12,7 @@ import {
 import type { Listing } from "@/data/listings";
 import { getListings } from "@/lib/listings";
 import { useAuth } from "@/lib/auth";
+import { estPremium } from "@/lib/offers";
 import {
   getSwipedListingIds,
   recordListingSwipe,
@@ -45,8 +46,10 @@ export default function SwipeDeck() {
 
   // Likes gratuits du jour
   const [likesAujourdhui, setLikesAujourdhui] = useState(0);
-  const [premium, setPremium] = useState(false); // débloqué (démo) → likes illimités
   const [paywall, setPaywall] = useState(false); // écran "limite atteinte"
+
+  // Pass Express actif ? (likes illimités), lu depuis le compte
+  const premium = estPremium(profile);
 
   // --- Filtres ---
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
@@ -394,13 +397,10 @@ export default function SwipeDeck() {
             </ul>
             <div className="mt-6 flex flex-col gap-3">
               <button
-                onClick={() => {
-                  setPremium(true);
-                  setPaywall(false);
-                }}
+                onClick={() => router.push("/boutique")}
                 className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
-                Débloquer Colock&apos;t+ (démo)
+                Voir les offres Colock&apos;t+
               </button>
               <button
                 onClick={() => setPaywall(false)}
