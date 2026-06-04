@@ -51,6 +51,7 @@ export default function Onboarding({
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
   const [salaire, setSalaire] = useState("");
+  const [sansSalaire, setSansSalaire] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
   const [photoEnCours, setPhotoEnCours] = useState(false);
   const [bio, setBio] = useState("");
@@ -150,7 +151,7 @@ export default function Onboarding({
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
-        salaire: salaire || null,
+        salaire: sansSalaire ? null : salaire || null,
         photo_url: photoUrl || null,
         bio: bio.trim() || null,
         interets,
@@ -304,18 +305,29 @@ export default function Onboarding({
                   <label className="text-sm text-ink/70">
                     Tranche de salaire (net / mois)
                   </label>
-                  <select
-                    value={salaire}
-                    onChange={(e) => setSalaire(e.target.value)}
-                    className={champ}
-                  >
-                    <option value="">Préfère ne pas dire</option>
-                    {SALAIRES.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
+                  {!sansSalaire && (
+                    <select
+                      value={salaire}
+                      onChange={(e) => setSalaire(e.target.value)}
+                      className={champ}
+                    >
+                      <option value="">Choisir une tranche…</option>
+                      {SALAIRES.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <label className="mt-2 flex cursor-pointer items-center gap-2 text-sm text-ink/70">
+                    <input
+                      type="checkbox"
+                      checked={sansSalaire}
+                      onChange={(e) => setSansSalaire(e.target.checked)}
+                      className="accent-pink h-4 w-4"
+                    />
+                    Je préfère ne pas indiquer mon salaire
+                  </label>
                 </div>
               </Etape>
             )}
