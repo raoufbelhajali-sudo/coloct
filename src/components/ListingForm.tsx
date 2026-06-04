@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { ImagePlus, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import { createListing } from "@/lib/locataire";
 
 const PHOTO_PAR_DEFAUT =
@@ -27,10 +29,41 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
   const [etage, setEtage] = useState("");
   const [dispo, setDispo] = useState("");
   const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState(PHOTO_PAR_DEFAUT);
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [photoEnCours, setPhotoEnCours] = useState(false);
   const [criteres, setCriteres] = useState<string[]>(["Non-fumeur"]);
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
+
+  // Téléverse une ou plusieurs photos depuis le téléphone (bucket avatars,
+  // dossier de l'utilisateur → autorisé par les règles existantes)
+  async function ajouterPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0 || !user) return;
+    setPhotoEnCours(true);
+    setErreur("");
+    for (const file of files) {
+      const ext = file.name.split(".").pop() || "jpg";
+      const chemin = `${user.id}/listing-${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2, 7)}.${ext}`;
+      const { error } = await supabase.storage
+        .from("avatars")
+        .upload(chemin, file, { upsert: true });
+      if (!error) {
+        const { data } = supabase.storage.from("avatars").getPublicUrl(chemin);
+        setPhotos((prev) => [...prev, data.publicUrl]);
+      } else {
+        setErreur("Une photo n'a pas pu être envoyée. Réessaie.");
+      }
+    }
+    setPhotoEnCours(false);
+    e.target.value = ""; // permet de re-sélectionner la même photo
+  }
+
+  function retirerPhoto(url: string) {
+    setPhotos((prev) => prev.filter((p) => p !== url));
+  }
 
   function toggleCritere(c: string) {
     setCriteres((prev) =>
@@ -64,7 +97,7 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
         dispo: dispo || "2026-01-01",
         date_dispo: dateLisible,
         description: description.trim(),
-        photos: [photo.trim() || PHOTO_PAR_DEFAUT],
+        photos: photos.length ? photos : [PHOTO_PAR_DEFAUT],
         criteres,
         colocs: profile
           ? [
@@ -129,7 +162,46 @@ export default function ListingForm({ onCreated }: { onCreated: () => void }) {
         />
       </div>
 
-      <Field label="Lien d'une photo" value={photo} onChange={setPhoto} placeholder="https://…" />
+      {/* Photos de la chambre (depuis le téléphone) */}
+      <div>
+        <label className="text-sm text-ink/70">Photos de la chambre</label>
+        <div className="mt-2 flex flex-wrap gap-3">
+          {photos.map((url) => (
+            <div
+              key={url}
+              className="relative h-24 w-24 overflow-hidden rounded-xl bg-panel"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={url} alt="Photo" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => retirerPhoto(url)}
+                className="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/55 text-white"
+                aria-label="Retirer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          ))}
+          <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-ink/20 text-ink/50 hover:border-pink hover:text-pink">
+            <ImagePlus className="h-6 w-6" />
+            <span className="text-xs">
+              {photoEnCours ? "Envoi…" : "Ajouter"}
+            </span>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={ajouterPhotos}
+              disabled={photoEnCours}
+              className="hidden"
+            />
+          </label>
+        </div>
+        <p className="mt-1 text-xs text-ink/40">
+          Prends-les depuis ton téléphone. La première sera la photo principale.
+        </p>
+      </div>
 
       {/* Critères */}
       <div>

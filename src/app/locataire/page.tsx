@@ -56,7 +56,7 @@ export default function LocatairePage() {
           <p className="mt-20 text-ink/60">Chargement…</p>
         ) : !listing ? (
           // Pas encore d'annonce → on la crée (formulaire défilable)
-          <div className="w-full max-w-md overflow-y-auto">
+          <div className="h-full w-full max-w-md overflow-y-auto pb-8">
             <h1 className="font-display text-3xl font-semibold">Décris ton bien</h1>
             <p className="mt-1 mb-6 text-ink/60">
               Publie ta chambre pour qu&apos;elle apparaisse auprès des
