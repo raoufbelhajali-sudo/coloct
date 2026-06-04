@@ -16,6 +16,7 @@ import {
   getSwipedListingIds,
   recordListingSwipe,
   findMatchForListing,
+  getLikesToday,
 } from "@/lib/swipes";
 import ListingCard from "./ListingCard";
 
@@ -24,6 +25,9 @@ type Direction = "left" | "right";
 // Bornes de budget pour le curseur
 const BUDGET_MIN = 500;
 const BUDGET_MAX = 900;
+
+// Nombre de "j'aime" gratuits par jour
+const LIKES_GRATUITS_PAR_JOUR = 10;
 
 export default function SwipeDeck() {
   const router = useRouter();
@@ -39,6 +43,11 @@ export default function SwipeDeck() {
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
 
+  // Likes gratuits du jour
+  const [likesAujourdhui, setLikesAujourdhui] = useState(0);
+  const [premium, setPremium] = useState(false); // débloqué (démo) → likes illimités
+  const [paywall, setPaywall] = useState(false); // écran "limite atteinte"
+
   // --- Filtres ---
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
   const [quartier, setQuartier] = useState("all");
@@ -53,10 +62,15 @@ export default function SwipeDeck() {
   // Au chargement : annonces depuis Supabase + annonces déjà swipées par ce compte
   useEffect(() => {
     if (!user) return;
-    Promise.all([getListings(), getSwipedListingIds(user.id)])
-      .then(([data, swiped]) => {
+    Promise.all([
+      getListings(),
+      getSwipedListingIds(user.id),
+      getLikesToday(user.id),
+    ])
+      .then(([data, swiped, likes]) => {
         setAllListings(data);
         setSwipedIds(swiped);
+        setLikesAujourdhui(likes);
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
@@ -108,9 +122,19 @@ export default function SwipeDeck() {
     controls.set({ x: 0, opacity: 1 });
   }
 
+  // A-t-on encore des likes gratuits aujourd'hui ?
+  const likesEpuises = !premium && likesAujourdhui >= LIKES_GRATUITS_PAR_JOUR;
+
   // Fait voler la carte hors de l'écran puis passe à la suivante
   async function fly(dir: Direction) {
     if (animating.current || !current || !user) return;
+
+    // Limite de likes gratuits : on bloque le "j'aime" et on propose Colock't+
+    if (dir === "right" && likesEpuises) {
+      setPaywall(true);
+      return;
+    }
+
     animating.current = true;
     const swiped = current; // on retient l'annonce avant d'avancer la pile
 
@@ -132,6 +156,7 @@ export default function SwipeDeck() {
       await recordListingSwipe(user.id, swiped.id, direction);
       if (direction === "like") {
         setLikes((prev) => [...prev, swiped]);
+        setLikesAujourdhui((n) => n + 1);
         // match seulement si le locataire t'a aussi liké
         if (await findMatchForListing(user.id, swiped.id)) setMatch(swiped);
       }
@@ -175,11 +200,23 @@ export default function SwipeDeck() {
     <div className="flex w-full max-w-sm flex-col items-center">
       {/* Message d'accueil personnalisé */}
       {prenom && (
-        <p className="mb-3 flex w-full items-center gap-2 text-left font-display text-xl">
+        <p className="mb-1 flex w-full items-center gap-2 text-left font-display text-xl">
           Salut {prenom}
           <Sparkles className="h-5 w-5 text-pink" />
         </p>
       )}
+
+      {/* Likes gratuits restants aujourd'hui */}
+      <p className="mb-3 w-full text-left text-xs text-ink/50">
+        {premium ? (
+          <span className="font-medium text-pink">Colock&apos;t+ · likes illimités ⭐</span>
+        ) : (
+          (() => {
+            const r = Math.max(0, LIKES_GRATUITS_PAR_JOUR - likesAujourdhui);
+            return `${r} like${r > 1 ? "s" : ""} gratuit${r > 1 ? "s" : ""} aujourd'hui`;
+          })()
+        )}
+      </p>
 
       {/* ---------- Barre de filtres ---------- */}
       <div className="mb-5 w-full rounded-2xl bg-panel p-4">
@@ -336,6 +373,47 @@ export default function SwipeDeck() {
             </button>
           </div>
         </>
+      )}
+
+      {/* ---------- Écran Colock't+ (limite de likes atteinte) ---------- */}
+      {paywall && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
+          <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
+            <p className="font-display text-3xl font-bold leading-tight">
+              Plus de likes gratuits aujourd&apos;hui 😅
+            </p>
+            <p className="mt-3 text-ink/80">
+              Tu as utilisé tes {LIKES_GRATUITS_PAR_JOUR} likes du jour. Reviens
+              demain… ou passe en{" "}
+              <span className="text-signature font-semibold">Colock&apos;t+</span> :
+            </p>
+            <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
+              <li className="flex items-center gap-2">❤️ Likes illimités</li>
+              <li className="flex items-center gap-2">👀 Vois qui t&apos;a déjà liké</li>
+              <li className="flex items-center gap-2">🚀 Ton profil mis en avant (Boost)</li>
+            </ul>
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  setPremium(true);
+                  setPaywall(false);
+                }}
+                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+              >
+                Débloquer Colock&apos;t+ (démo)
+              </button>
+              <button
+                onClick={() => setPaywall(false)}
+                className="rounded-full px-6 py-3 font-medium text-ink/70 hover:text-ink"
+              >
+                Plus tard
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-ink/40">
+              Paiement à venir — déblocage de démo pour l&apos;instant.
+            </p>
+          </div>
+        </div>
       )}
 
       {/* ---------- Modale de match ---------- */}

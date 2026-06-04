@@ -23,6 +23,20 @@ export async function recordListingSwipe(
   });
 }
 
+// Compte les "j'aime" donnés aujourd'hui (depuis minuit) par ce colocataire
+export async function getLikesToday(userId: string): Promise<number> {
+  const minuit = new Date();
+  minuit.setHours(0, 0, 0, 0);
+  const { count } = await supabase
+    .from("swipes")
+    .select("id", { count: "exact", head: true })
+    .eq("swiper_id", userId)
+    .eq("direction", "like")
+    .not("listing_id", "is", null)
+    .gte("created_at", minuit.toISOString());
+  return count ?? 0;
+}
+
 // Vérifie si un match (réciproque) existe pour ce colocataire et cette annonce
 export async function findMatchForListing(
   userId: string,
