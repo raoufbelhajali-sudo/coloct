@@ -7,6 +7,7 @@ import { Telescope, KeyRound, Check, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Role } from "@/lib/auth";
 import { listings } from "@/data/listings";
+import { LogoMark } from "@/components/Logo";
 import {
   INTERETS,
   AMBIANCES,
@@ -43,6 +44,7 @@ export default function Onboarding({
   const [sens, setSens] = useState(1); // 1 = avance, -1 = recule
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
+  const [bienvenue, setBienvenue] = useState(false);
 
   // --- Champs du profil ---
   const [role, setRole] = useState<Role>("colocataire");
@@ -177,7 +179,35 @@ export default function Onboarding({
       return;
     }
     await refreshProfile();
+    setEnCours(false);
+    setBienvenue(true); // écran de bienvenue avant d'entrer dans l'app
+  }
+
+  function entrer() {
     router.replace(role === "locataire" ? "/locataire" : "/swipe");
+  }
+
+  // Écran de bienvenue (fin d'inscription)
+  if (bienvenue) {
+    return (
+      <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
+        <LogoMark className="mb-5 h-16 w-16" />
+        <h1 className="font-display text-3xl font-semibold leading-tight">
+          Bienvenue{prenom.trim() ? ` ${prenom.trim()}` : ""} !
+        </h1>
+        <p className="mt-3 max-w-sm text-ink/70">
+          {role === "locataire"
+            ? "Ton profil est prêt. Complète ton annonce et découvre les colocataires intéressés par ton logement."
+            : "Ton profil est prêt. Swipe les colocations qui te plaisent — un match, et la conversation commence !"}
+        </p>
+        <button
+          onClick={entrer}
+          className="bg-signature glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
+        >
+          {role === "locataire" ? "Créer mon annonce" : "Commencer à swiper"}
+        </button>
+      </main>
+    );
   }
 
   return (
