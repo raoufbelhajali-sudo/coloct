@@ -26,6 +26,7 @@ export default function ParametresPage() {
   const [telephone, setTelephone] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
+  const [notifPerm, setNotifPerm] = useState<string>("default");
 
   const [enCours, setEnCours] = useState(false);
   const [message, setMessage] = useState("");
@@ -48,6 +49,11 @@ export default function ParametresPage() {
       user.phone || (typeof meta.telephone === "string" ? meta.telephone : "")
     );
     setNotifEmail(meta.notif_email !== false);
+    if (typeof window !== "undefined" && "Notification" in window) {
+      setNotifPerm(Notification.permission);
+    } else {
+      setNotifPerm("unsupported");
+    }
   }, [loading, user, profile, router]);
 
   // Un seul enregistrement pour toute la page
@@ -101,6 +107,16 @@ export default function ParametresPage() {
   async function deconnexion() {
     await signOut();
     router.push("/");
+  }
+
+  // Autoriser les notifications système sur cet appareil/navigateur
+  async function activerNotifsAppareil() {
+    if (typeof window === "undefined" || !("Notification" in window)) {
+      setNotifPerm("unsupported");
+      return;
+    }
+    const p = await Notification.requestPermission();
+    setNotifPerm(p);
   }
 
   // Supprime définitivement le compte (via la fonction Supabase delete_my_account)
@@ -221,6 +237,38 @@ export default function ParametresPage() {
                 className="accent-pink h-5 w-5"
               />
             </label>
+          </Bloc>
+
+          {/* Notifications sur l'appareil (système) */}
+          <Bloc
+            icone={<Bell className="h-5 w-5 text-violet" />}
+            titre="Notifications sur cet appareil"
+          >
+            <p className="text-sm text-ink/70">
+              Reçois une alerte quand tu as un nouveau message.
+            </p>
+            {notifPerm === "granted" ? (
+              <p className="mt-2 flex items-center gap-1.5 text-sm text-pink">
+                <Check className="h-4 w-4" strokeWidth={3} /> Notifications
+                activées
+              </p>
+            ) : notifPerm === "denied" ? (
+              <p className="mt-2 text-sm text-ink/60">
+                Notifications bloquées. Réactive-les dans les réglages de ton
+                navigateur/téléphone pour cette app.
+              </p>
+            ) : notifPerm === "unsupported" ? (
+              <p className="mt-2 text-sm text-ink/60">
+                Ton navigateur ne gère pas les notifications.
+              </p>
+            ) : (
+              <button
+                onClick={activerNotifsAppareil}
+                className="bg-signature mt-3 rounded-full px-5 py-2 text-sm font-semibold text-white"
+              >
+                Activer les notifications
+              </button>
+            )}
           </Bloc>
 
           {/* Messages */}

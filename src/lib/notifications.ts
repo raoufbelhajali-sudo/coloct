@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./auth";
 import { getMatchesActivite } from "./messages";
 import { getLikesRecus } from "./likes";
@@ -17,15 +17,18 @@ export function marquerMatchLu(userId: string, matchId: number) {
   }
 }
 
-// Nombre de conversations avec du non-lu (nouveau message reçu, ou nouveau
-// match jamais ouvert). Disparaît dès que la conversation est ouverte. Poll 5s.
-export function useMessagesNonLus(): number {
+// Conversations non lues (badge) + alerte transitoire quand un NOUVEAU message
+// arrive (bandeau in-app + notification système si autorisée). Poll 5s.
+export function useMessagesNonLus(): { count: number; alerte: string } {
   const { user } = useAuth();
-  const [nb, setNb] = useState(0);
+  const [count, setCount] = useState(0);
+  const [alerte, setAlerte] = useState("");
+  const dernierVu = useRef<string | null>(null); // référence du dernier message reçu
 
   useEffect(() => {
     if (!user) {
-      setNb(0);
+      setCount(0);
+      dernierVu.current = null;
       return;
     }
     let actif = true;
@@ -33,14 +36,42 @@ export function useMessagesNonLus(): number {
     async function calculer() {
       const activite = await getMatchesActivite(user!.id);
       let n = 0;
+      let plusRecent = "";
       for (const a of activite) {
         const lu = localStorage.getItem(cleMatchLu(user!.id, a.matchId)) || "";
         // non lu = message reçu plus récent que la dernière ouverture,
         // ou match jamais ouvert (pas encore de message)
         const nonLu = a.dernierAutreMsg ? a.dernierAutreMsg > lu : !lu;
         if (nonLu) n++;
+        if (a.dernierAutreMsg && a.dernierAutreMsg > plusRecent)
+          plusRecent = a.dernierAutreMsg;
       }
-      if (actif) setNb(n);
+      if (!actif) return;
+      setCount(n);
+
+      // Détection d'un nouveau message reçu depuis le dernier passage
+      if (dernierVu.current === null) {
+        dernierVu.current = plusRecent; // premier passage = référence
+      } else if (plusRecent && plusRecent > dernierVu.current) {
+        dernierVu.current = plusRecent;
+        setAlerte("Nouveau message reçu");
+        if (
+          typeof window !== "undefined" &&
+          "Notification" in window &&
+          Notification.permission === "granted"
+        ) {
+          try {
+            new Notification("Colock't", {
+              body: "Tu as reçu un nouveau message",
+            });
+          } catch {
+            /* certains navigateurs refusent en dehors d'un service worker */
+          }
+        }
+        window.setTimeout(() => {
+          if (actif) setAlerte("");
+        }, 4000);
+      }
     }
 
     calculer();
@@ -51,7 +82,7 @@ export function useMessagesNonLus(): number {
     };
   }, [user]);
 
-  return nb;
+  return { count, alerte };
 }
 
 // Nombre de "j'aime reçus" non traités (fonctionnalité "Qui vous aime").

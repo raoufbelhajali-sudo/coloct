@@ -25,7 +25,7 @@ const badge =
 // En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
 export default function AppHeader() {
   const { user, profile } = useAuth();
-  const nbMessages = useMessagesNonLus();
+  const { count: nbMessages, alerte: alerteMsg } = useMessagesNonLus();
   const nbLikes = useLikesRecus();
 
   // Le logo ramène à l'accueil DANS l'app (selon le rôle), pas à la page publique
@@ -38,7 +38,17 @@ export default function AppHeader() {
   const estLoca = profile?.role === "locataire";
 
   return (
-    <header className="mb-6 flex w-full max-w-sm items-center justify-between">
+    <>
+      {/* Bandeau d'alerte quand un nouveau message arrive */}
+      {alerteMsg && (
+        <Link
+          href="/matchs"
+          className="fixed left-1/2 top-3 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white shadow-lg"
+        >
+          <MessageSquare className="h-4 w-4" /> {alerteMsg}
+        </Link>
+      )}
+      <header className="mb-6 flex w-full max-w-sm items-center justify-between">
       <Link href={accueil} className="flex items-center gap-2">
         <LogoMark className="h-7 w-7" />
         {/* Pin du rôle : Annonceur (locataire) ou Colocataire */}
@@ -102,6 +112,7 @@ export default function AppHeader() {
           </Link>
         )}
       </nav>
-    </header>
+      </header>
+    </>
   );
 }
