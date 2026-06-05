@@ -1,6 +1,12 @@
 import { supabase } from "./supabase";
 import type { Role } from "./auth";
 import { lieuComplet } from "./listings";
+import { getIdsBloques } from "./blocks";
+
+// Supprime une discussion (le match) — les messages sont supprimés en cascade
+export async function supprimerMatch(matchId: number): Promise<void> {
+  await supabase.from("matches").delete().eq("id", matchId);
+}
 
 // Résumé d'un match pour la liste "Mes matchs"
 export type MatchSummary = {
@@ -27,13 +33,22 @@ export type Message = {
 export async function getMyMatches(
   userId: string
 ): Promise<MatchSummary[]> {
-  const { data: matches } = await supabase
+  const { data: matchesRaw } = await supabase
     .from("matches")
     .select("id, listing_id, colocataire_id, locataire_id, created_at")
     .or(`colocataire_id.eq.${userId},locataire_id.eq.${userId}`)
     .order("created_at", { ascending: false });
 
-  if (!matches || matches.length === 0) return [];
+  if (!matchesRaw || matchesRaw.length === 0) return [];
+
+  // On masque les discussions avec des personnes bloquées
+  const bloques = await getIdsBloques(userId);
+  const matches = matchesRaw.filter((m) => {
+    const autre =
+      m.colocataire_id === userId ? m.locataire_id : m.colocataire_id;
+    return !bloques.has(autre);
+  });
+  if (matches.length === 0) return [];
 
   // On récupère les annonces concernées
   const listingIds = [...new Set(matches.map((m) => m.listing_id))];

@@ -2,6 +2,7 @@ import { supabase } from "./supabase";
 import type { Profile } from "./auth";
 import type { Listing } from "@/data/listings";
 import { attacherAnnonceurs, type ListingRow } from "./listings";
+import { getIdsBloques } from "./blocks";
 
 // Un "j'aime reçu" à afficher dans "Qui vous aime"
 export type LikeRecu =
@@ -26,6 +27,7 @@ export async function getLikesRecus(
   userId: string,
   role: "colocataire" | "locataire"
 ): Promise<LikeRecu[]> {
+  const bloques = await getIdsBloques(userId);
   if (role === "colocataire") {
     // Des locataires m'ont liké (target_user_id = moi)
     const { data: recus } = await supabase
@@ -67,6 +69,10 @@ export async function getLikesRecus(
 
     return pend
       .filter((p) => byId.has(String(p.listing_id)))
+      .filter((p) => {
+        const l = byId.get(String(p.listing_id))!;
+        return !(l.ownerId && bloques.has(l.ownerId)); // annonceur bloqué
+      })
       .map((p) => ({
         kind: "listing" as const,
         swipeId: p.id,
@@ -115,6 +121,7 @@ export async function getLikesRecus(
   const pend = recus.filter(
     (r) =>
       r.swiper_id !== userId &&
+      !bloques.has(r.swiper_id) && // colocataire bloqué
       !repondu.has(`${r.listing_id}:${r.swiper_id}`) &&
       !matched.has(`${r.listing_id}:${r.swiper_id}`)
   );

@@ -19,6 +19,7 @@ import {
 } from "@/lib/locataire";
 import { compatProfils, scoreProfilPourAnnonceur } from "@/lib/compat";
 import { estPremium } from "@/lib/offers";
+import { getIdsBloques } from "@/lib/blocks";
 import ProfileCard from "./ProfileCard";
 import ProfileDetail from "./ProfileDetail";
 
@@ -31,6 +32,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
 
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [swipedIds, setSwipedIds] = useState<Set<string>>(new Set());
+  const [bloques, setBloques] = useState<Set<string>>(new Set());
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
   const [match, setMatch] = useState<Profile | null>(null);
@@ -45,15 +47,24 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
 
   useEffect(() => {
     if (!user) return;
-    getSwipedProfileIds(user.id, listingId)
-      .then((swiped) => getColocataireProfiles(user.id, swiped))
-      .then((data) => setProfiles(data))
+    Promise.all([
+      getSwipedProfileIds(user.id, listingId).then((swiped) =>
+        getColocataireProfiles(user.id, swiped)
+      ),
+      getIdsBloques(user.id),
+    ])
+      .then(([data, blocs]) => {
+        setProfiles(data);
+        setBloques(blocs);
+      })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
   }, [user, listingId]);
 
   const remaining = useMemo(() => {
-    const base = profiles.filter((p) => !swipedIds.has(p.id));
+    const base = profiles.filter(
+      (p) => !swipedIds.has(p.id) && !bloques.has(p.id)
+    );
     // Annonceur boosté (premium) → meilleurs profils en tête (poste + compatibilité)
     if (estPremium(profile)) {
       return [...base].sort(
@@ -63,7 +74,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
       );
     }
     return base;
-  }, [profiles, swipedIds, profile]);
+  }, [profiles, swipedIds, bloques, profile]);
   const current = remaining[0];
   const next = remaining[1];
 

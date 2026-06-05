@@ -86,6 +86,9 @@ export async function attacherAnnonceurs(
   rows: ListingRow[]
 ): Promise<Listing[]> {
   const listings = rows.map(mapListingRow);
+  listings.forEach((l, i) => {
+    l.ownerId = rows[i].owner_id;
+  });
   const ownerIds = [...new Set(rows.map((r) => r.owner_id).filter(Boolean))];
   if (ownerIds.length) {
     const { data: owners } = await supabase

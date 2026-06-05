@@ -30,6 +30,7 @@ export type Listing = {
   boosted_until?: string | null; // annonce mise en avant jusqu'à cette date
   ownerPhoto?: string | null; // photo de profil (visage) de l'annonceur
   ownerPrenom?: string | null; // prénom de l'annonceur
+  ownerId?: string | null; // id du compte annonceur (pour le filtrage)
 };
 
 // Petite fonction utilitaire pour construire l'URL d'une photo Unsplash

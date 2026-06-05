@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
-  ListChecks, CheckSquare, Square, ChevronDown,
+  ListChecks, CheckSquare, Square, ChevronDown, MoreVertical, Trash2, Ban,
 } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -20,9 +20,11 @@ import {
   getMatchInfo,
   setDocumentsRequis,
   TYPES_DOCUMENTS,
+  supprimerMatch,
   type Message,
 } from "@/lib/messages";
 import { marquerMatchLu } from "@/lib/notifications";
+import { bloquerUtilisateur } from "@/lib/blocks";
 
 export default function ConversationPage() {
   const router = useRouter();
@@ -36,6 +38,7 @@ export default function ConversationPage() {
   const [autrePrenom, setAutrePrenom] = useState("");
   const [autreProfil, setAutreProfil] = useState<Profile | null>(null);
   const [voirProfil, setVoirProfil] = useState(false);
+  const [menuOuvert, setMenuOuvert] = useState(false);
   const [envoiDoc, setEnvoiDoc] = useState(false);
   const [docUrls, setDocUrls] = useState<Record<string, string>>({}); // liens des vocaux
   const [recording, setRecording] = useState(false);
@@ -93,6 +96,27 @@ export default function ConversationPage() {
       setAutreProfil((data as Profile) ?? null);
     });
   }, [user, matchId]);
+
+  // Supprime la discussion
+  async function supprimerDiscussion() {
+    if (!confirm("Supprimer cette discussion ? C'est irréversible.")) return;
+    await supprimerMatch(matchId);
+    router.push("/matchs");
+  }
+
+  // Bloque l'autre personne (et supprime la discussion)
+  async function bloquer() {
+    if (!user || !autreProfil) return;
+    if (
+      !confirm(
+        `Bloquer ${autrePrenom || "cette personne"} ? Vous ne vous verrez plus et la discussion sera supprimée.`
+      )
+    )
+      return;
+    await bloquerUtilisateur(user.id, autreProfil.id);
+    await supprimerMatch(matchId);
+    router.push("/matchs");
+  }
 
   // Bascule un type de document dans la liste demandée (côté locataire)
   function basculerDoc(type: string) {
@@ -262,7 +286,7 @@ export default function ConversationPage() {
         <Link href="/matchs" className="text-ink/60 hover:text-ink">
           <ArrowLeft className="h-6 w-6" />
         </Link>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="truncate font-display text-lg font-semibold">{titre}</p>
           {autrePrenom && (
             <button
@@ -272,6 +296,45 @@ export default function ConversationPage() {
             >
               avec {autrePrenom} · voir le profil
             </button>
+          )}
+        </div>
+
+        {/* Menu (supprimer / bloquer) */}
+        <div className="relative">
+          <button
+            onClick={() => setMenuOuvert((v) => !v)}
+            aria-label="Options"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 hover:bg-panel"
+          >
+            <MoreVertical className="h-5 w-5" />
+          </button>
+          {menuOuvert && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setMenuOuvert(false)}
+              />
+              <div className="absolute right-0 top-10 z-50 w-56 overflow-hidden rounded-2xl border border-ink/10 bg-panel shadow-xl">
+                <button
+                  onClick={() => {
+                    setMenuOuvert(false);
+                    supprimerDiscussion();
+                  }}
+                  className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-ink/85 hover:bg-panel-2"
+                >
+                  <Trash2 className="h-4 w-4" /> Supprimer la discussion
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOuvert(false);
+                    bloquer();
+                  }}
+                  className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-pink hover:bg-panel-2"
+                >
+                  <Ban className="h-4 w-4" /> Bloquer {autrePrenom}
+                </button>
+              </div>
+            </>
           )}
         </div>
       </header>

@@ -12,6 +12,7 @@ import {
 import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { compatAnnonce } from "@/lib/compat";
+import { getIdsBloques } from "@/lib/blocks";
 import { useAuth } from "@/lib/auth";
 import { estPremium } from "@/lib/offers";
 import {
@@ -43,6 +44,7 @@ export default function SwipeDeck() {
 
   // Annonces chargées depuis le serveur Supabase
   const [allListings, setAllListings] = useState<Listing[]>([]);
+  const [bloques, setBloques] = useState<Set<string>>(new Set());
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
 
@@ -73,11 +75,13 @@ export default function SwipeDeck() {
       getListings(),
       getSwipedListingIds(user.id),
       getLikesToday(user.id),
+      getIdsBloques(user.id),
     ])
-      .then(([data, swiped, likes]) => {
+      .then(([data, swiped, likes, blocs]) => {
         setAllListings(data);
         setSwipedIds(swiped);
         setLikesAujourdhui(likes);
+        setBloques(blocs);
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
@@ -104,12 +108,13 @@ export default function SwipeDeck() {
   const filtered = useMemo(() => {
     return allListings.filter((l) => {
       if (swipedIds.has(l.id)) return false;
+      if (l.ownerId && bloques.has(l.ownerId)) return false; // annonceur bloqué
       if (l.loyer > budgetMax) return false;
       if (quartier !== "all" && l.quartier !== quartier) return false;
       if (dispoAvant && l.dispo > dispoAvant) return false;
       return true;
     });
-  }, [allListings, swipedIds, budgetMax, quartier, dispoAvant]);
+  }, [allListings, swipedIds, bloques, budgetMax, quartier, dispoAvant]);
 
   // Position horizontale de la carte du dessus (pour le glissement)
   const x = useMotionValue(0);
