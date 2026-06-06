@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket, SlidersHorizontal } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2 } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -13,6 +13,7 @@ import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { compatAnnonce } from "@/lib/compat";
 import { getIdsBloques } from "@/lib/blocks";
+import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import { useAuth } from "@/lib/auth";
 import { estPremium } from "@/lib/offers";
@@ -412,6 +413,14 @@ export default function SwipeDeck() {
                 className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110"
               >
                 <X className="h-6 w-6" strokeWidth={2.5} />
+              </button>
+              <button
+                onClick={() => current && partagerAnnonce(current)}
+                aria-label="Partager"
+                title="Partager"
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110 hover:text-pink"
+              >
+                <Share2 className="h-5 w-5" />
               </button>
               <button
                 onClick={() => fly("right")}

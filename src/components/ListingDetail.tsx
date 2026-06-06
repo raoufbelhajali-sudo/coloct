@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { X, Heart, ChevronRight } from "lucide-react";
+import { X, Heart, ChevronRight, Share2 } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import type { Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { lieuSous } from "@/lib/listings";
+import { partagerAnnonce } from "@/lib/partage";
 import ProfileDetail from "@/components/ProfileDetail";
 
 // Vue détaillée d'une annonce (toutes les photos + infos), plein écran défilable.
@@ -194,6 +195,14 @@ export default function ListingDetail({
               className="flex h-16 w-16 items-center justify-center rounded-full border border-ink/15 bg-bg text-ink/60 transition-transform hover:scale-110"
             >
               <X className="h-7 w-7" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={() => partagerAnnonce(listing)}
+              aria-label="Partager"
+              title="Partager"
+              className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/15 bg-bg text-ink/60 transition-transform hover:scale-110 hover:text-pink"
+            >
+              <Share2 className="h-6 w-6" />
             </button>
             <button
               onClick={onLike}
