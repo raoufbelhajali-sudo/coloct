@@ -11,10 +11,9 @@ import RolePin from "@/components/RolePin";
 const iconBtn =
   "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
 
-// Boutons-icônes charbon mat métallisé
+// Icônes du menu en charbon mat (pas de cercle, juste l'icône colorée)
 const iconBtnCharbon =
-  "flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/90 shadow-sm transition-transform hover:scale-105";
-const charbon = { backgroundImage: "linear-gradient(135deg, #4a4a4f, #232328)" };
+  "flex h-9 w-9 items-center justify-center rounded-full text-[#2b2b30] transition-colors hover:bg-panel";
 
 // Pastille de notification : noire et vibrante
 const badge =
@@ -77,7 +76,6 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
             aria-label="Messages"
             title="Messages"
             className={iconBtnCharbon + " relative"}
-            style={charbon}
           >
             <MessageSquare className="h-[18px] w-[18px]" />
             {nbMessages > 0 && (
@@ -91,7 +89,6 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
             aria-label="Boutique"
             title="Boutique"
             className={iconBtnCharbon}
-            style={charbon}
           >
             <Zap className="h-[18px] w-[18px]" />
           </Link>
@@ -102,7 +99,6 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
             aria-label="Profil"
             title="Profil"
             className={iconBtnCharbon}
-            style={charbon}
           >
             <UserRound className="h-[18px] w-[18px]" />
           </Link>
@@ -113,7 +109,6 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
             aria-label="Paramètres"
             title="Paramètres"
             className={iconBtnCharbon}
-            style={charbon}
           >
             <Settings className="h-[18px] w-[18px]" />
           </Link>
