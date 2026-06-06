@@ -8,9 +8,9 @@ export function completudeProfil(p: Profile | null): number {
     !!p.age,
     !!p.genre,
     !!(p.bio && p.bio.trim()),
-    !!(p.interets && p.interets.length),
-    !!(p.ambiance && p.ambiance.length),
-    !!(p.rythme && p.rythme.length),
+    !!(p.interets && p.interets.length >= 3),
+    !!(p.ambiance && p.ambiance.length >= 3),
+    !!(p.rythme && p.rythme.length >= 3),
   ];
   // Le colocataire a en plus la profession
   const champs =

@@ -62,8 +62,8 @@ export default function ProfilPage() {
     if (!photoUrl) cible = "bloc-photo";
     else if (!age || !genre || (!estLocataire && !profession.trim()))
       cible = "sec-identite";
-    else if (!bio.trim() || interets.length === 0) cible = "sec-apropos";
-    else if (ambiance.length === 0 || rythme.length === 0) cible = "sec-modevie";
+    else if (!bio.trim() || interets.length < 3) cible = "sec-apropos";
+    else if (ambiance.length < 3 || rythme.length < 3) cible = "sec-modevie";
     if (!cible) return;
     setSectionCible(cible);
     setTimeout(() => {
@@ -159,6 +159,13 @@ export default function ProfilPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
+    if (interets.length < 3 || ambiance.length < 3 || rythme.length < 3) {
+      setErreurSave(
+        "Choisis au moins 3 centres d'intérêt, 3 ambiances et 3 rythmes."
+      );
+      completer();
+      return;
+    }
     setEnCours(true);
     setEnregistre(false);
     setErreurSave("");
@@ -352,11 +359,15 @@ export default function ProfilPage() {
                 className={champClasses}
               />
             </div>
-            <ChoixMultiple label="Centres d'intérêt" options={INTERETS} values={interets} onToggle={(v) => toggle(interets, setInterets, v)} />
-            <p className="text-xs text-ink/50">
-              Ajoutes-en un maximum : ça t&apos;aide à trouver plus facilement un
-              logement et des colocs compatibles.
-            </p>
+            <ChoixMultiple label="Centres d'intérêt (au moins 3)" options={INTERETS} values={interets} onToggle={(v) => toggle(interets, setInterets, v)} />
+            {interets.length < 3 ? (
+              <p className="text-xs text-pink">Choisis au moins 3 centres d&apos;intérêt ({interets.length}/3).</p>
+            ) : (
+              <p className="text-xs text-ink/50">
+                Ajoutes-en un maximum : ça t&apos;aide à trouver plus facilement un
+                logement et des colocs compatibles.
+              </p>
+            )}
           </Section>
 
           {/* ---------- Mode de vie ---------- */}
@@ -364,8 +375,14 @@ export default function ProfilPage() {
             <p className="text-xs text-ink/50">
               Plus tu en sélectionnes, plus les colocs proposés te correspondront.
             </p>
-            <ChoixMultiple label="Ambiance" options={AMBIANCES} values={ambiance} onToggle={(v) => toggle(ambiance, setAmbiance, v)} />
-            <ChoixMultiple label="Rythme" options={RYTHMES} values={rythme} onToggle={(v) => toggle(rythme, setRythme, v)} />
+            <ChoixMultiple label="Ambiance (au moins 3)" options={AMBIANCES} values={ambiance} onToggle={(v) => toggle(ambiance, setAmbiance, v)} />
+            {ambiance.length < 3 && (
+              <p className="text-xs text-pink">Choisis au moins 3 ambiances ({ambiance.length}/3).</p>
+            )}
+            <ChoixMultiple label="Rythme (au moins 3)" options={RYTHMES} values={rythme} onToggle={(v) => toggle(rythme, setRythme, v)} />
+            {rythme.length < 3 && (
+              <p className="text-xs text-pink">Choisis au moins 3 rythmes ({rythme.length}/3).</p>
+            )}
             <div className="space-y-2">
               <Checkbox label="Non-fumeur" checked={nonFumeur} onChange={setNonFumeur} />
               <Checkbox label="J'ai / j'aime les animaux" checked={animaux} onChange={setAnimaux} />

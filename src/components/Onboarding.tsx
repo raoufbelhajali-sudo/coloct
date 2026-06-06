@@ -94,12 +94,12 @@ export default function Onboarding({
       if (!age.trim() || Number(age) <= 0) return false;
       if (!genre) return false;
     }
-    if (etape === "interets" && interets.length === 0) return false;
+    if (etape === "interets" && interets.length < 3) return false;
     if (etape === "modevie") {
-      // chaque choix doit être renseigné
+      // chaque choix doit être renseigné (au moins 3 ambiances et 3 rythmes)
       if (
-        ambiance.length === 0 ||
-        rythme.length === 0 ||
+        ambiance.length < 3 ||
+        rythme.length < 3 ||
         !tabac ||
         !animaux ||
         !teletravail
@@ -465,9 +465,9 @@ export default function Onboarding({
                   values={interets}
                   onToggle={(v) => toggle(interets, setInterets, v)}
                 />
-                {interets.length === 0 && (
+                {interets.length < 3 && (
                   <p className="mt-3 text-xs text-pink">
-                    Sélectionne au moins un centre d&apos;intérêt pour continuer.
+                    Choisis au moins 3 centres d&apos;intérêt pour continuer ({interets.length}/3).
                   </p>
                 )}
               </Etape>
@@ -481,22 +481,32 @@ export default function Onboarding({
               >
                 <p className="text-sm text-ink/70">
                   Ambiance <span className="text-pink">*</span>{" "}
-                  <span className="text-ink/40">(plusieurs possibles)</span>
+                  <span className="text-ink/40">(au moins 3)</span>
                 </p>
                 <ChoixMultiple
                   options={AMBIANCES}
                   values={ambiance}
                   onToggle={(v) => toggle(ambiance, setAmbiance, v)}
                 />
+                {ambiance.length < 3 && (
+                  <p className="mt-2 text-xs text-pink">
+                    Choisis au moins 3 ambiances ({ambiance.length}/3).
+                  </p>
+                )}
                 <p className="mt-4 text-sm text-ink/70">
                   Rythme <span className="text-pink">*</span>{" "}
-                  <span className="text-ink/40">(plusieurs possibles)</span>
+                  <span className="text-ink/40">(au moins 3)</span>
                 </p>
                 <ChoixMultiple
                   options={RYTHMES}
                   values={rythme}
                   onToggle={(v) => toggle(rythme, setRythme, v)}
                 />
+                {rythme.length < 3 && (
+                  <p className="mt-2 text-xs text-pink">
+                    Choisis au moins 3 rythmes ({rythme.length}/3).
+                  </p>
+                )}
                 <p className="mt-4 text-sm text-ink/70">
                   Tabac <span className="text-pink">*</span>
                 </p>
