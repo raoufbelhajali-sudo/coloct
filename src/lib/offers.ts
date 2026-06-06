@@ -51,6 +51,32 @@ export async function activerBoostAnnonceur(
     .eq("id", Number(listingId));
 }
 
+// Ajoute 5 crédits de messages directs (démo — sans paiement réel)
+export async function activerMessagesDirects(userId: string): Promise<void> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("credits_messages")
+    .eq("id", userId)
+    .maybeSingle();
+  const actuel = (data?.credits_messages as number) ?? 0;
+  await supabase
+    .from("profiles")
+    .update({ credits_messages: actuel + 5 })
+    .eq("id", userId);
+}
+
+// Crée (ou réutilise) une conversation directe avec l'annonceur d'une annonce.
+// Renvoie l'id du match, ou null en cas d'échec.
+export async function contacterDirect(
+  listingId: string
+): Promise<number | null> {
+  const { data, error } = await supabase.rpc("creer_message_direct", {
+    p_listing: Number(listingId),
+  });
+  if (error) return null;
+  return (data as number) ?? null;
+}
+
 // Active le Boost pour 48h (démo — sans paiement réel)
 export async function activerBoost(userId: string): Promise<void> {
   const fin = new Date(Date.now() + 48 * 60 * 60 * 1000);

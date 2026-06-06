@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { X, Heart, ChevronRight, Share2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { X, Heart, ChevronRight, Share2, MessageSquare } from "lucide-react";
 import type { Listing } from "@/data/listings";
-import type { Profile } from "@/lib/auth";
+import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { lieuSous } from "@/lib/listings";
 import { partagerAnnonce } from "@/lib/partage";
+import { contacterDirect } from "@/lib/offers";
+import { findMatchForListing } from "@/lib/swipes";
 import ProfileDetail from "@/components/ProfileDetail";
 
 // Vue détaillée d'une annonce (toutes les photos + infos), plein écran défilable.
@@ -23,8 +26,38 @@ export default function ListingDetail({
   onPass?: () => void;
   preview?: boolean; // aperçu "mon annonce" → pas de boutons like/pass
 }) {
+  const { user, profile, refreshProfile } = useAuth();
+  const router = useRouter();
   const [annonceurProfil, setAnnonceurProfil] = useState<Profile | null>(null);
   const [voirAnnonceur, setVoirAnnonceur] = useState(false);
+  const [contactEnCours, setContactEnCours] = useState(false);
+
+  const credits = profile?.credits_messages ?? 0;
+  const peutContacter =
+    !preview &&
+    profile?.role === "colocataire" &&
+    credits > 0 &&
+    !!listing.ownerId;
+
+  // Contacter directement l'annonceur (consomme 1 crédit si nouvelle conversation)
+  async function contacter() {
+    if (!user || !profile || !listing.ownerId) return;
+    setContactEnCours(true);
+    const deja = await findMatchForListing(user.id, listing.id);
+    const matchId = await contacterDirect(listing.id);
+    if (!matchId) {
+      setContactEnCours(false);
+      return;
+    }
+    if (!deja) {
+      await supabase
+        .from("profiles")
+        .update({ credits_messages: Math.max(0, credits - 1) })
+        .eq("id", user.id);
+      await refreshProfile();
+    }
+    router.push(`/matchs/${matchId}`);
+  }
 
   // Ouvre le profil (la personne) de l'annonceur
   async function ouvrirAnnonceur() {
@@ -96,6 +129,20 @@ export default function ListingDetail({
                 {lieuSous(listing)}
               </p>
             </div>
+
+            {/* Contacter directement (crédits messages, sans match) */}
+            {peutContacter && (
+              <button
+                onClick={contacter}
+                disabled={contactEnCours}
+                className="bg-signature glow-pink flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60"
+              >
+                <MessageSquare className="h-4 w-4" />
+                {contactEnCours
+                  ? "Un instant…"
+                  : `Contacter directement (${credits} crédit${credits > 1 ? "s" : ""})`}
+              </button>
+            )}
 
             <div className="space-y-1 text-sm text-ink/80">
               <p>

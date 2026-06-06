@@ -39,6 +39,7 @@ export type Profile = {
   teletravail: boolean;
   parking_souhaite: boolean; // colocataire : souhaite une place de parking
   identite_verifiee: boolean; // pièce d'identité fournie → badge "vérifié"
+  credits_messages: number; // crédits de messages directs (contacter sans match)
   premium_until: string | null; // Pass Express actif jusqu'à cette date
   boosted_until: string | null; // Boost actif jusqu'à cette date
 };

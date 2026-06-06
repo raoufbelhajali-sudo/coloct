@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Rocket, Check, Lock } from "lucide-react";
+import { Zap, Rocket, Check, Lock, MessageSquare } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
@@ -12,6 +12,7 @@ import {
   activerPassExpress,
   activerBoost,
   activerBoostAnnonceur,
+  activerMessagesDirects,
 } from "@/lib/offers";
 import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
@@ -49,11 +50,12 @@ export default function BoutiquePage() {
     });
   }
 
-  async function activer(offre: "pass" | "boost" | "annonceur") {
+  async function activer(offre: "pass" | "boost" | "annonceur" | "messages") {
     if (!user) return;
     setEnCours(offre);
     if (offre === "pass") await activerPassExpress(user.id);
     else if (offre === "boost") await activerBoost(user.id);
+    else if (offre === "messages") await activerMessagesDirects(user.id);
     else if (offre === "annonceur" && listing)
       await activerBoostAnnonceur(user.id, listing.id);
     await refreshProfile();
@@ -141,6 +143,49 @@ export default function BoutiquePage() {
                 enCours={enCours === "boost"}
                 onActiver={() => activer("boost")}
               />
+
+              {/* Messages directs (crédits) */}
+              <div className="rounded-3xl bg-panel p-5">
+                <div className="flex items-center gap-3">
+                  <div className="bg-signature flex h-11 w-11 items-center justify-center rounded-2xl">
+                    <MessageSquare className="h-6 w-6 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-display text-xl font-semibold">
+                      Messages directs
+                    </p>
+                    <p className="text-sm text-ink/50">5 messages</p>
+                  </div>
+                  <p className="text-signature font-display text-2xl font-bold">
+                    3,99 €
+                  </p>
+                </div>
+                <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-pink" strokeWidth={3} />
+                    Contacte un annonceur sans attendre un match
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-pink" strokeWidth={3} />
+                    Va droit au but pour les annonces qui te plaisent
+                  </li>
+                </ul>
+                <p className="mt-3 text-sm text-ink/60">
+                  Tu as{" "}
+                  <span className="font-semibold text-pink">
+                    {profile?.credits_messages ?? 0}
+                  </span>{" "}
+                  crédit{(profile?.credits_messages ?? 0) > 1 ? "s" : ""} de
+                  message direct.
+                </p>
+                <button
+                  onClick={() => activer("messages")}
+                  disabled={enCours === "messages"}
+                  className="bg-signature mt-3 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                >
+                  {enCours === "messages" ? "Activation…" : "+5 messages (démo)"}
+                </button>
+              </div>
             </>
           )}
         </div>
