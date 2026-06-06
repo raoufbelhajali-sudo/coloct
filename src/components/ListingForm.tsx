@@ -5,8 +5,8 @@ import { ImagePlus, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { createListing, updateListing } from "@/lib/locataire";
-import { DEPARTEMENTS } from "@/lib/profilOptions";
 import type { Listing } from "@/data/listings";
+import VilleInput from "@/components/VilleInput";
 
 const PHOTO_PAR_DEFAUT =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70";
@@ -140,22 +140,17 @@ export default function ListingForm({
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
-      <div className="grid grid-cols-2 gap-4">
-        <Field label="Ville" value={ville} onChange={setVille} placeholder="Ex. Paris" required />
-        <div>
-          <label className="text-sm text-ink/70">Département</label>
-          <select
-            value={departement}
-            onChange={(e) => setDepartement(e.target.value)}
-            className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none"
-          >
-            {DEPARTEMENTS.map((d) => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <label className="text-sm text-ink/70">Ville</label>
+        <VilleInput
+          ville={ville}
+          departement={departement}
+          onChange={(v, d) => {
+            setVille(v);
+            setDepartement(d);
+          }}
+          className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+        />
       </div>
 
       <Field

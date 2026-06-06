@@ -15,9 +15,9 @@ import {
   TABAC,
   ANIMAUX,
   TELETRAVAIL,
-  DEPARTEMENTS,
   SALAIRES,
 } from "@/lib/profilOptions";
+import VilleInput from "@/components/VilleInput";
 
 const QUARTIERS = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -547,31 +547,16 @@ export default function Onboarding({
                   />
                   <span className="text-sm text-ink/50">ans</span>
                 </div>
-                <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-sm text-ink/70">Ville</label>
-                    <input
-                      value={ville}
-                      onChange={(e) => setVille(e.target.value)}
-                      placeholder="Ex. Paris"
-                      className={champ}
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm text-ink/70">Département</label>
-                    <select
-                      value={departement}
-                      onChange={(e) => setDepartement(e.target.value)}
-                      className={champ}
-                    >
-                      {DEPARTEMENTS.map((d) => (
-                        <option key={d} value={d}>
-                          {d}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                <p className="mt-4 text-sm text-ink/70">Ville recherchée</p>
+                <VilleInput
+                  ville={ville}
+                  departement={departement}
+                  onChange={(v, d) => {
+                    setVille(v);
+                    setDepartement(d);
+                  }}
+                  className={champ}
+                />
                 <p className="mt-4 text-sm text-ink/70">
                   Quartiers qui m&apos;intéressent
                 </p>

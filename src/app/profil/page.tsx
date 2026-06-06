@@ -10,7 +10,8 @@ import { useAuth, type Profile } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
-import { INTERETS, AMBIANCES, RYTHMES, DEPARTEMENTS, SALAIRES } from "@/lib/profilOptions";
+import VilleInput from "@/components/VilleInput";
+import { INTERETS, AMBIANCES, RYTHMES, SALAIRES } from "@/lib/profilOptions";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -318,19 +319,17 @@ export default function ProfilPage() {
                   <span className="text-sm text-ink/50">ans</span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm text-ink/70">Ville</label>
-                  <input value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Ex. Paris" className={champClasses} />
-                </div>
-                <div>
-                  <label className="text-sm text-ink/70">Département</label>
-                  <select value={departement} onChange={(e) => setDepartement(e.target.value)} className={champClasses}>
-                    {DEPARTEMENTS.map((d) => (
-                      <option key={d} value={d}>{d}</option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="text-sm text-ink/70">Ville recherchée</label>
+                <VilleInput
+                  ville={ville}
+                  departement={departement}
+                  onChange={(v, d) => {
+                    setVille(v);
+                    setDepartement(d);
+                  }}
+                  className={champClasses}
+                />
               </div>
               <ChoixMultiple label="Quartiers qui m'intéressent" options={quartiers} values={quartiersChoisis} onToggle={(v) => toggle(quartiersChoisis, setQuartiersChoisis, v)} />
               <div>
