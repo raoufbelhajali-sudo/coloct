@@ -18,11 +18,11 @@ import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import InviterAmis from "@/components/InviterAmis";
 
-// Un dégradé différent par forfait
-const GRAD_PASS = "linear-gradient(135deg,#fa5252,#fd7e14)"; // rose → violet
-const GRAD_BOOST = "linear-gradient(135deg,#f59e0b,#ec4899)"; // orange → rose
-const GRAD_MESSAGES = "linear-gradient(135deg,#3b82f6,#06b6d4)"; // bleu → cyan
-const GRAD_ANNONCE = "linear-gradient(135deg,#10b981,#06b6d4)"; // vert → cyan
+// Un dégradé chaud différent par forfait (harmonisé avec la charte corail/orange)
+const GRAD_PASS = "linear-gradient(135deg,#fa5252,#fd7e14)"; // corail → orange
+const GRAD_BOOST = "linear-gradient(135deg,#fd7e14,#f03e3e)"; // orange → rouge
+const GRAD_MESSAGES = "linear-gradient(135deg,#fa5252,#f06595)"; // corail → rose framboise
+const GRAD_ANNONCE = "linear-gradient(135deg,#e8590c,#fd7e14)"; // orange brûlé → orange
 
 export default function BoutiquePage() {
   const router = useRouter();
