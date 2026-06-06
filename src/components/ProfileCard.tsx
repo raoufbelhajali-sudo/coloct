@@ -1,4 +1,4 @@
-import { Sparkles, Star } from "lucide-react";
+import { Sparkles, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import { estSuperProfil, labelSuper } from "@/lib/completude";
 
@@ -64,7 +64,12 @@ export default function ProfileCard({
           {profile.prenom}
           {profile.age ? <span className="text-ink/60">, {profile.age} ans</span> : null}
         </h2>
-        {sousTitre && <p className="text-sm text-ink/60">{sousTitre}</p>}
+        {profile.identite_verifiee && (
+          <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-bg/70 px-2 py-0.5 text-[11px] font-medium text-ink backdrop-blur-sm">
+            <ShieldCheck className="h-3 w-3 text-violet" /> Identité vérifiée
+          </span>
+        )}
+        {sousTitre && <p className="mt-0.5 text-sm text-ink/60">{sousTitre}</p>}
         {profile.budget_max ? (
           <p className="mt-0.5 text-sm font-semibold text-pink">
             Budget jusqu&apos;à {profile.budget_max} € / mois

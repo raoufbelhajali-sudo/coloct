@@ -13,6 +13,7 @@ import {
   Check,
   AlertCircle,
   Repeat,
+  ShieldCheck,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -29,6 +30,8 @@ export default function ParametresPage() {
   const [motDePasse, setMotDePasse] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifPerm, setNotifPerm] = useState<string>("default");
+  const [idEnCours, setIdEnCours] = useState(false);
+  const [idErreur, setIdErreur] = useState("");
 
   const [enCours, setEnCours] = useState(false);
   const [message, setMessage] = useState("");
@@ -110,6 +113,31 @@ export default function ParametresPage() {
   async function deconnexion() {
     await signOut();
     router.push("/");
+  }
+
+  // Téléverse la pièce d'identité (stockage privé) → badge "Identité vérifiée"
+  async function televerserIdentite(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    setIdEnCours(true);
+    setIdErreur("");
+    const ext = file.name.split(".").pop() || "jpg";
+    const chemin = `${user.id}/piece-${Date.now()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("identites")
+      .upload(chemin, file, { upsert: true });
+    if (error) {
+      setIdEnCours(false);
+      setIdErreur("Échec de l'envoi. Réessaie.");
+      return;
+    }
+    await supabase
+      .from("profiles")
+      .update({ identite_verifiee: true })
+      .eq("id", user.id);
+    await refreshProfile();
+    setIdEnCours(false);
+    e.target.value = "";
   }
 
   // Changer de mode (Annonceur ↔ Colocataire) sur le même compte
@@ -306,6 +334,43 @@ export default function ParametresPage() {
               >
                 Activer les notifications
               </button>
+            )}
+          </Bloc>
+
+          {/* Vérification d'identité */}
+          <Bloc
+            icone={<ShieldCheck className="h-5 w-5 text-violet" />}
+            titre="Vérification d'identité"
+          >
+            {profile?.identite_verifiee ? (
+              <p className="flex items-center gap-1.5 text-sm font-semibold text-pink">
+                <Check className="h-4 w-4" strokeWidth={3} /> Identité vérifiée
+              </p>
+            ) : (
+              <>
+                <p className="text-sm text-ink/70">
+                  Téléverse ta pièce d&apos;identité pour obtenir le badge
+                  «&nbsp;Identité vérifiée&nbsp;».
+                </p>
+                <label className="bg-signature mt-3 inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white">
+                  <ShieldCheck className="h-4 w-4" />
+                  {idEnCours ? "Envoi…" : "Téléverser ma pièce d'identité"}
+                  <input
+                    type="file"
+                    accept="image/*,application/pdf"
+                    onChange={televerserIdentite}
+                    disabled={idEnCours}
+                    className="hidden"
+                  />
+                </label>
+                <p className="mt-2 text-xs text-ink/40">
+                  Document privé et sécurisé, visible seulement par toi et
+                  l&apos;équipe.
+                </p>
+                {idErreur && (
+                  <p className="mt-2 text-sm text-pink-light">{idErreur}</p>
+                )}
+              </>
             )}
           </Bloc>
 

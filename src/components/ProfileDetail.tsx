@@ -1,6 +1,6 @@
 "use client";
 
-import { X, Heart, Star } from "lucide-react";
+import { X, Heart, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import { estSuperProfil, labelSuper } from "@/lib/completude";
 
@@ -57,12 +57,20 @@ export default function ProfileDetail({
 
           <div className="space-y-5 p-5">
             <div>
-              {estSuperProfil(profile) && (
-                <span className="bg-signature mb-2 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white">
-                  <Star className="h-3.5 w-3.5" fill="currentColor" />
-                  {labelSuper(profile)}
-                </span>
-              )}
+              <div className="mb-2 flex flex-wrap gap-2">
+                {estSuperProfil(profile) && (
+                  <span className="bg-signature inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white">
+                    <Star className="h-3.5 w-3.5" fill="currentColor" />
+                    {labelSuper(profile)}
+                  </span>
+                )}
+                {profile.identite_verifiee && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-panel-2 px-2.5 py-1 text-[11px] font-medium text-ink/80">
+                    <ShieldCheck className="h-3.5 w-3.5 text-violet" /> Identité
+                    vérifiée
+                  </span>
+                )}
+              </div>
               <h2 className="font-display text-3xl font-semibold leading-tight">
                 {profile.prenom}
                 {profile.age ? (
