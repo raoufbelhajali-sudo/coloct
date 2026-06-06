@@ -19,13 +19,13 @@ export default function AppleIcon() {
       >
         <svg width="120" height="120" viewBox="0 0 48 48">
           <g fill="#ffffff">
-            <path d="M24 4 L45 22 a2.5 2.5 0 0 1 -1.6 4.4 H4.6 A2.5 2.5 0 0 1 3 22 Z" />
-            <rect x="9" y="23" width="30" height="21" rx="6" />
+            <circle cx="24" cy="14" r="12" />
+            <path d="M21 24 h6 v8 h4 v3 h-4 v4 h3 v3 h-3 v3 h-6 z" />
           </g>
           <path
             fill="#fa5252"
-            transform="translate(13.5 25.5) scale(0.86)"
-            d="M11 19.5C11 19.5 1.5 14 1.5 7.6 1.5 4.5 3.9 2.2 6.9 2.2c1.8 0 3.4.9 4.1 2.3.7-1.4 2.3-2.3 4.1-2.3 3 0 5.4 2.3 5.4 5.4C20.5 14 11 19.5 11 19.5Z"
+            transform="translate(16.5 6.2) scale(0.62)"
+            d="M12 21 C12 21 3 15 3 8.5 C3 5.4 5.5 3 8.5 3 C10.3 3 11.5 4 12 5 C12.5 4 13.7 3 15.5 3 C18.5 3 21 5.4 21 8.5 C21 15 12 21 12 21 Z"
           />
         </svg>
       </div>
