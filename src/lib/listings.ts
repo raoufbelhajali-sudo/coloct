@@ -36,6 +36,8 @@ export type ListingRow = {
   etage: string;
   colocs: Coloc[];
   criteres: string[];
+  services: string[] | null;
+  autres_frais: string | null;
   photos: string[];
   description: string;
   boosted_until: string | null;
@@ -58,6 +60,8 @@ export function mapListingRow(r: ListingRow): Listing {
     etage: r.etage,
     colocs: r.colocs ?? [],
     criteres: r.criteres ?? [],
+    services: r.services ?? [],
+    autresFrais: r.autres_frais,
     photos: r.photos ?? [],
     description: r.description,
     boosted_until: r.boosted_until,

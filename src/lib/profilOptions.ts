@@ -38,6 +38,18 @@ export const SALAIRES = [
   "Plus de 5 000 €",
 ];
 
+// Services / équipements compris dans la colocation (annonce)
+export const SERVICES = [
+  "Place de parking",
+  "Wifi / Internet",
+  "Charges comprises",
+  "Eau comprise",
+  "Électricité comprise",
+  "Chauffage compris",
+  "Lave-linge",
+  "Cuisine équipée",
+];
+
 // Choix de mode de vie (stockés en booléens dans le profil)
 export const TABAC = ["Non-fumeur", "Fumeur"];
 export const ANIMAUX = ["J'aime les animaux", "Plutôt sans animaux"];

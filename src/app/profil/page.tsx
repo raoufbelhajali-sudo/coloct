@@ -43,6 +43,7 @@ export default function ProfilPage() {
   const [ageMax, setAgeMax] = useState("99");
   const [ville, setVille] = useState("Paris");
   const [departement, setDepartement] = useState("75");
+  const [parking, setParking] = useState(false);
   const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>([]);
   const [dateEmmenagement, setDateEmmenagement] = useState("");
 
@@ -127,6 +128,7 @@ export default function ProfilPage() {
     setAgeMax(profile.age_max ? String(profile.age_max) : "99");
     setVille(profile.ville ?? "Paris");
     setDepartement(profile.departement ?? "75");
+    setParking(profile.parking_souhaite);
     setQuartiersChoisis(profile.quartiers ?? []);
     setDateEmmenagement(profile.date_emmenagement ?? "");
   }, [profile]);
@@ -162,6 +164,7 @@ export default function ProfilPage() {
         age_max: Number(ageMax) || null,
         ville: ville.trim() || null,
         departement: departement || null,
+        parking_souhaite: parking,
         quartiers: quartiersChoisis,
         date_emmenagement: dateEmmenagement || null,
       })
@@ -336,6 +339,7 @@ export default function ProfilPage() {
                 <label className="text-sm text-ink/70">Emménagement souhaité</label>
                 <input type="date" value={dateEmmenagement} onChange={(e) => setDateEmmenagement(e.target.value)} className={champClasses} />
               </div>
+              <Checkbox label="Place de parking souhaitée" checked={parking} onChange={setParking} />
             </Section>
           )}
 

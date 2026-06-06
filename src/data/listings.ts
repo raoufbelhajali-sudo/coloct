@@ -25,6 +25,8 @@ export type Listing = {
   etage: string; // ex. "3e étage avec ascenseur"
   colocs: Coloc[]; // qui vit déjà là
   criteres: string[]; // critères de vie commune
+  services?: string[]; // services compris (parking, wifi, charges…)
+  autresFrais?: string | null; // autres frais éventuels (texte libre)
   photos: string[]; // URLs des photos
   description: string; // courte description
   boosted_until?: string | null; // annonce mise en avant jusqu'à cette date

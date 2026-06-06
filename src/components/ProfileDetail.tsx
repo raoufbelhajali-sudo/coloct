@@ -24,6 +24,7 @@ export default function ProfileDetail({
   modeDeVie.push(profile.non_fumeur ? "Non-fumeur" : "Fumeur");
   modeDeVie.push(profile.animaux ? "J'aime les animaux" : "Plutôt sans animaux");
   modeDeVie.push(profile.teletravail ? "Télétravail" : "Travail sur place");
+  if (profile.parking_souhaite) modeDeVie.push("Souhaite un parking");
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">

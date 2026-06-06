@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { createListing, updateListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import VilleInput from "@/components/VilleInput";
+import { SERVICES } from "@/lib/profilOptions";
 
 const PHOTO_PAR_DEFAUT =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70";
@@ -45,6 +46,14 @@ export default function ListingForm({
   const [criteres, setCriteres] = useState<string[]>(
     listing?.criteres ?? ["Non-fumeur"]
   );
+  const [services, setServices] = useState<string[]>(listing?.services ?? []);
+  const [autresFrais, setAutresFrais] = useState(listing?.autresFrais ?? "");
+
+  function toggleService(s: string) {
+    setServices((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+    );
+  }
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
 
@@ -119,6 +128,8 @@ export default function ListingForm({
         description: description.trim(),
         photos: photos.length ? photos : [PHOTO_PAR_DEFAUT],
         criteres,
+        services,
+        autres_frais: autresFrais.trim() || null,
         colocs: profile
           ? [
               {
@@ -264,6 +275,39 @@ export default function ListingForm({
             );
           })}
         </div>
+      </div>
+
+      {/* Services compris dans la colocation */}
+      <div>
+        <p className="text-sm text-ink/70">Services compris</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {SERVICES.map((s) => {
+            const actif = services.includes(s);
+            return (
+              <button
+                key={s}
+                type="button"
+                onClick={() => toggleService(s)}
+                className={
+                  "rounded-full px-3 py-1.5 text-sm transition-colors " +
+                  (actif ? "bg-signature text-white" : "bg-panel text-ink/70 hover:text-ink")
+                }
+              >
+                {s}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div>
+        <label className="text-sm text-ink/70">Autres frais (optionnel)</label>
+        <input
+          value={autresFrais}
+          onChange={(e) => setAutresFrais(e.target.value)}
+          placeholder="Ex. caution 1 mois, ménage 20 €/mois…"
+          className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+        />
       </div>
 
       {erreur && (

@@ -33,6 +33,8 @@ export type NewListing = {
   description: string;
   photos: string[];
   criteres: string[];
+  services: string[];
+  autres_frais?: string | null;
   colocs: { prenom: string; age: number; ambiance: string }[];
 };
 

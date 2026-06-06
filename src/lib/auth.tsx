@@ -37,6 +37,7 @@ export type Profile = {
   non_fumeur: boolean;
   animaux: boolean;
   teletravail: boolean;
+  parking_souhaite: boolean; // colocataire : souhaite une place de parking
   premium_until: string | null; // Pass Express actif jusqu'à cette date
   boosted_until: string | null; // Boost actif jusqu'à cette date
 };

@@ -124,6 +124,22 @@ export default function ListingDetail({
               </Bloc>
             )}
 
+            {/* Services compris */}
+            {listing.services && listing.services.length > 0 && (
+              <Bloc titre="Services compris">
+                {listing.services.map((s) => (
+                  <Pill key={s} variante="neutre">{s}</Pill>
+                ))}
+              </Bloc>
+            )}
+
+            {listing.autresFrais ? (
+              <div>
+                <p className="text-xs text-ink/50">Autres frais</p>
+                <p className="text-sm text-ink/85">{listing.autresFrais}</p>
+              </div>
+            ) : null}
+
             {/* Critères de vie commune */}
             {listing.criteres && listing.criteres.length > 0 && (
               <Bloc titre="Vie commune">

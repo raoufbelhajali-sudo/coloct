@@ -69,6 +69,7 @@ export default function Onboarding({
   const [ageMax, setAgeMax] = useState("99");
   const [ville, setVille] = useState("Paris");
   const [departement, setDepartement] = useState("75");
+  const [parking, setParking] = useState(false);
   const [quartiers, setQuartiers] = useState<string[]>([]);
   const [dateEmm, setDateEmm] = useState("");
 
@@ -164,6 +165,7 @@ export default function Onboarding({
         non_fumeur: tabac === "Non-fumeur",
         animaux: animaux === "J'aime les animaux",
         teletravail: teletravail === "Je télétravaille",
+        parking_souhaite: parking,
         budget_max: budgetMax,
         age_min: Number(ageMin) || null,
         age_max: Number(ageMax) || null,
@@ -576,6 +578,15 @@ export default function Onboarding({
                     className={champ}
                   />
                 </div>
+                <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-ink/70">
+                  <input
+                    type="checkbox"
+                    checked={parking}
+                    onChange={(e) => setParking(e.target.checked)}
+                    className="accent-pink h-4 w-4"
+                  />
+                  Place de parking souhaitée
+                </label>
               </Etape>
             )}
           </motion.div>
