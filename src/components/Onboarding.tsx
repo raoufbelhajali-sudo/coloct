@@ -26,7 +26,7 @@ const GENRES = ["Femme", "Homme", "Autre"];
 const ETAPES_COLOC = [
   "role", "prenom", "toi", "photo", "bio", "interets", "modevie", "recherche",
 ] as const;
-const ETAPES_LOCA = ["role", "prenom"] as const;
+const ETAPES_LOCA = ["role", "prenom", "photo"] as const;
 
 type EtapeColoc = (typeof ETAPES_COLOC)[number];
 
