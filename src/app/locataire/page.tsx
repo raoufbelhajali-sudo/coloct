@@ -7,6 +7,7 @@ import AppHeader from "@/components/AppHeader";
 import ListingForm from "@/components/ListingForm";
 import ListingDetail from "@/components/ListingDetail";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
+import RappelProfil from "@/components/RappelProfil";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
 import { lieuComplet } from "@/lib/listings";
@@ -140,6 +141,8 @@ export default function LocatairePage() {
               Qui veut emménager ?
             </p>
             <ProfileSwipeDeck listingId={listing.id} />
+            {/* Rappel : finalise ton profil si < 100 % */}
+            <RappelProfil />
           </div>
         )}
       </div>
