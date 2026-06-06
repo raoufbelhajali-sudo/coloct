@@ -1,8 +1,12 @@
 "use client";
 
-import { X, Heart } from "lucide-react";
+import { useState } from "react";
+import { X, Heart, ChevronRight } from "lucide-react";
 import type { Listing } from "@/data/listings";
+import type { Profile } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import { lieuSous } from "@/lib/listings";
+import ProfileDetail from "@/components/ProfileDetail";
 
 // Vue détaillée d'une annonce (toutes les photos + infos), plein écran défilable.
 export default function ListingDetail({
@@ -18,7 +22,24 @@ export default function ListingDetail({
   onPass?: () => void;
   preview?: boolean; // aperçu "mon annonce" → pas de boutons like/pass
 }) {
+  const [annonceurProfil, setAnnonceurProfil] = useState<Profile | null>(null);
+  const [voirAnnonceur, setVoirAnnonceur] = useState(false);
+
+  // Ouvre le profil (la personne) de l'annonceur
+  async function ouvrirAnnonceur() {
+    if (!listing.ownerId) return;
+    if (!annonceurProfil) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", listing.ownerId)
+        .maybeSingle();
+      setAnnonceurProfil((data as Profile) ?? null);
+    }
+    setVoirAnnonceur(true);
+  }
   return (
+    <>
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">
       <div className="relative flex h-full w-full max-w-md flex-col bg-panel">
         {/* Zone défilable */}
@@ -83,9 +104,13 @@ export default function ListingDetail({
               <p>Disponible le {listing.dateDispo}</p>
             </div>
 
-            {/* L'annonceur (visage) dans la description */}
+            {/* L'annonceur (visage) — cliquable pour voir son profil */}
             {(listing.ownerPhoto || listing.ownerPrenom) && (
-              <div className="flex items-center gap-3 rounded-2xl bg-panel-2 p-3">
+              <button
+                type="button"
+                onClick={ouvrirAnnonceur}
+                className="flex w-full items-center gap-3 rounded-2xl bg-panel-2 p-3 text-left transition-colors hover:bg-panel"
+              >
                 <div className="bg-signature h-12 w-12 shrink-0 overflow-hidden rounded-full">
                   {listing.ownerPhoto ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
@@ -100,13 +125,16 @@ export default function ListingDetail({
                     </div>
                   )}
                 </div>
-                <div>
+                <div className="flex-1">
                   <p className="text-xs text-ink/50">Proposé par</p>
                   <p className="font-medium">
                     {listing.ownerPrenom ?? "L'annonceur"}
                   </p>
                 </div>
-              </div>
+                <span className="flex items-center gap-0.5 text-xs text-pink">
+                  Voir le profil <ChevronRight className="h-4 w-4" />
+                </span>
+              </button>
             )}
 
             {listing.description ? (
@@ -172,6 +200,16 @@ export default function ListingDetail({
         )}
       </div>
     </div>
+
+    {/* Profil de l'annonceur (clic sur sa photo) */}
+    {voirAnnonceur && annonceurProfil && (
+      <ProfileDetail
+        profile={annonceurProfil}
+        preview
+        onClose={() => setVoirAnnonceur(false)}
+      />
+    )}
+    </>
   );
 }
 
