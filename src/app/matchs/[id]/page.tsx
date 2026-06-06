@@ -10,6 +10,9 @@ import {
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import ProfileDetail from "@/components/ProfileDetail";
+import ListingDetail from "@/components/ListingDetail";
+import { getListingById } from "@/lib/listings";
+import type { Listing } from "@/data/listings";
 import {
   getMessages,
   sendMessage,
@@ -39,6 +42,8 @@ export default function ConversationPage() {
   const [autrePrenom, setAutrePrenom] = useState("");
   const [autreProfil, setAutreProfil] = useState<Profile | null>(null);
   const [voirProfil, setVoirProfil] = useState(false);
+  const [listingMatch, setListingMatch] = useState<Listing | null>(null);
+  const [voirAnnonce, setVoirAnnonce] = useState(false);
   const [menuOuvert, setMenuOuvert] = useState(false);
   const [envoiDoc, setEnvoiDoc] = useState(false);
   const [docUrls, setDocUrls] = useState<Record<string, string>>({}); // liens des vocaux
@@ -70,6 +75,7 @@ export default function ConversationPage() {
       if (m) {
         setTitre(m.titre);
         setAutrePrenom(m.autrePrenom);
+        getListingById(m.listingId).then(setListingMatch); // l'annonce du match
       }
     });
   }, [user, matchId]);
@@ -293,10 +299,17 @@ export default function ConversationPage() {
           {autrePrenom && (
             <button
               type="button"
-              onClick={() => autreProfil && setVoirProfil(true)}
+              onClick={() => {
+                if (estLocataire) {
+                  if (autreProfil) setVoirProfil(true); // annonceur → profil du colocataire
+                } else if (listingMatch) {
+                  setVoirAnnonce(true); // colocataire → l'annonce (le logement)
+                }
+              }}
               className="text-sm text-pink hover:underline"
             >
-              avec {autrePrenom} · voir le profil
+              avec {autrePrenom} ·{" "}
+              {estLocataire ? "voir le profil" : "voir l'annonce"}
             </button>
           )}
         </div>
@@ -347,6 +360,15 @@ export default function ConversationPage() {
           profile={autreProfil}
           preview
           onClose={() => setVoirProfil(false)}
+        />
+      )}
+
+      {/* Colocataire : voir l'annonce (le logement) */}
+      {voirAnnonce && listingMatch && (
+        <ListingDetail
+          listing={listingMatch}
+          preview
+          onClose={() => setVoirAnnonce(false)}
         />
       )}
 

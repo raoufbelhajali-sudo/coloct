@@ -85,6 +85,20 @@ export async function getListings(): Promise<Listing[]> {
   );
 }
 
+// Récupère une annonce par son id (avec l'annonceur rattaché)
+export async function getListingById(
+  id: number | string
+): Promise<Listing | null> {
+  const { data } = await supabase
+    .from("listings")
+    .select("*")
+    .eq("id", Number(id))
+    .maybeSingle();
+  if (!data) return null;
+  const [l] = await attacherAnnonceurs([data as ListingRow]);
+  return l ?? null;
+}
+
 // Convertit des lignes en annonces + rattache la photo/prénom de l'annonceur
 export async function attacherAnnonceurs(
   rows: ListingRow[]
