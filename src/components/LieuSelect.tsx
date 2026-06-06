@@ -2,14 +2,21 @@
 
 import { GRANDES_VILLES, DEPARTEMENTS_NOMS } from "@/lib/profilOptions";
 
-// Liste des départements qui ont au moins une grande ville (numéro + nom),
+// Clé de tri : la Corse (2A/2B) se place entre le 19 et le 21
+function cleDept(num: string): number {
+  if (num === "2A") return 20.1;
+  if (num === "2B") return 20.2;
+  return parseInt(num, 10);
+}
+
+// Liste des départements qui ont au moins une ville (numéro + nom),
 // triés par numéro.
 const DEPTS_DISPO = Array.from(new Set(GRANDES_VILLES.map((v) => v.dept)))
   .map((num) => ({
     num,
     nom: DEPARTEMENTS_NOMS.find((d) => d.num === num)?.nom ?? "",
   }))
-  .sort((a, b) => a.num.localeCompare(b.num, "fr", { numeric: true }));
+  .sort((a, b) => cleDept(a.num) - cleDept(b.num));
 
 // Deux menus déroulants : on choisit d'abord le Département,
 // puis la Ville (uniquement les villes de ce département).
