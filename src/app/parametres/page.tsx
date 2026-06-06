@@ -17,6 +17,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import Logo from "@/components/Logo";
+import RolePin from "@/components/RolePin";
 
 export default function ParametresPage() {
   const router = useRouter();
@@ -158,9 +159,12 @@ export default function ParametresPage() {
   return (
     <main className="flex min-h-dvh flex-col items-center px-4 py-6">
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
-        <Link href={retour}>
-          <Logo markClass="h-7 w-7" textClass="text-xl" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href={retour}>
+            <Logo markClass="h-7 w-7" textClass="text-xl" />
+          </Link>
+          <RolePin />
+        </div>
         <Link href={retour} className="text-sm text-ink/60 hover:text-ink">
           Retour
         </Link>

@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
 import Logo from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
+import RolePin from "@/components/RolePin";
 import { INTERETS, AMBIANCES, RYTHMES, DEPARTEMENTS, SALAIRES } from "@/lib/profilOptions";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -176,9 +177,12 @@ export default function ProfilPage() {
   return (
     <main className="flex min-h-screen flex-col items-center px-4 py-6">
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
-        <Link href={retour}>
-          <Logo markClass="h-7 w-7" textClass="text-xl" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href={retour}>
+            <Logo markClass="h-7 w-7" textClass="text-xl" />
+          </Link>
+          <RolePin />
+        </div>
         <div className="flex items-center gap-2">
           <button
             type="button"

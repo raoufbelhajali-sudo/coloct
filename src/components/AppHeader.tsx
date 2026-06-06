@@ -1,18 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import {
-  MessageSquare,
-  UserRound,
-  Zap,
-  Settings,
-  Sparkles,
-  KeyRound,
-  Telescope,
-} from "lucide-react";
+import { MessageSquare, UserRound, Zap, Settings, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 import { LogoMark } from "@/components/Logo";
+import RolePin from "@/components/RolePin";
 
 // Style commun des boutons-icônes du menu (ronds, survol rose)
 const iconBtn =
@@ -51,17 +44,7 @@ export default function AppHeader() {
       <header className="mb-6 flex w-full max-w-sm items-center justify-between">
       <Link href={accueil} className="flex items-center gap-2">
         <LogoMark className="h-7 w-7" />
-        {/* Pin du rôle : Annonceur (locataire) ou Colocataire */}
-        {profile && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-panel px-2 py-0.5 text-[11px] font-medium text-ink/70">
-            {estLoca ? (
-              <KeyRound className="h-3 w-3 text-violet" />
-            ) : (
-              <Telescope className="h-3 w-3 text-pink" />
-            )}
-            {estLoca ? "Annonceur" : "Colocataire"}
-          </span>
-        )}
+        <RolePin />
       </Link>
 
       <nav className="flex items-center gap-1.5">

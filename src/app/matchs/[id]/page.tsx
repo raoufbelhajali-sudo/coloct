@@ -25,6 +25,7 @@ import {
 } from "@/lib/messages";
 import { marquerMatchLu } from "@/lib/notifications";
 import { bloquerUtilisateur } from "@/lib/blocks";
+import RolePin from "@/components/RolePin";
 
 export default function ConversationPage() {
   const router = useRouter();
@@ -286,6 +287,7 @@ export default function ConversationPage() {
         <Link href="/matchs" className="text-ink/60 hover:text-ink">
           <ArrowLeft className="h-6 w-6" />
         </Link>
+        <RolePin />
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-lg font-semibold">{titre}</p>
           {autrePrenom && (
