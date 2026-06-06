@@ -1,7 +1,8 @@
 "use client";
 
-import { X, Heart } from "lucide-react";
+import { X, Heart, Star } from "lucide-react";
 import type { Profile } from "@/lib/auth";
+import { estSuperProfil, labelSuper } from "@/lib/completude";
 
 // Vue détaillée d'un profil colocataire (plein écran, défilable)
 export default function ProfileDetail({
@@ -56,6 +57,12 @@ export default function ProfileDetail({
 
           <div className="space-y-5 p-5">
             <div>
+              {estSuperProfil(profile) && (
+                <span className="bg-signature mb-2 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white">
+                  <Star className="h-3.5 w-3.5" fill="currentColor" />
+                  {labelSuper(profile)}
+                </span>
+              )}
               <h2 className="font-display text-3xl font-semibold leading-tight">
                 {profile.prenom}
                 {profile.age ? (

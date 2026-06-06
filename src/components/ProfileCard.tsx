@@ -1,5 +1,6 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, Star } from "lucide-react";
 import type { Profile } from "@/lib/auth";
+import { estSuperProfil, labelSuper } from "@/lib/completude";
 
 // Carte d'un profil colocataire (photo + infos clés). Détail complet au tap.
 export default function ProfileCard({
@@ -26,6 +27,14 @@ export default function ProfileCard({
           <span className="truncate">
             Ça peut coller : {compat.slice(0, 3).join(", ")}
           </span>
+        </div>
+      )}
+
+      {/* Badge Super colocataire (profil complet) */}
+      {estSuperProfil(profile) && (
+        <div className="bg-signature absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white shadow-md">
+          <Star className="h-3.5 w-3.5" fill="currentColor" />
+          {labelSuper(profile)}
         </div>
       )}
 

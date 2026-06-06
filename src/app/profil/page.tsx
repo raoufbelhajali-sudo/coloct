@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Check, Eye } from "lucide-react";
+import { Check, Eye, Star } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
@@ -12,6 +12,7 @@ import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import VilleInput from "@/components/VilleInput";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES } from "@/lib/profilOptions";
+import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -203,9 +204,41 @@ export default function ProfilPage() {
 
       <div className="w-full max-w-md">
         <h1 className="font-display text-3xl font-semibold">Mon profil</h1>
-        <p className="mt-1 mb-6 text-ink/60">
+        <p className="mt-1 mb-4 text-ink/60">
           C&apos;est ce que les colocs verront avant de t&apos;accepter. Soigne-le !
         </p>
+
+        {/* Complétude du profil + badge Super */}
+        {profile && (
+          <div className="mb-6 rounded-2xl bg-panel p-4">
+            {estSuperProfil(profile) ? (
+              <p className="flex items-center gap-2 text-sm font-semibold text-pink">
+                <Star className="h-4 w-4" fill="currentColor" /> Badge{" "}
+                {labelSuper(profile)} débloqué !
+              </p>
+            ) : (
+              <>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-ink/70">Profil complété</span>
+                  <span className="font-semibold text-pink">
+                    {completudeProfil(profile)}%
+                  </span>
+                </div>
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-panel-2">
+                  <div
+                    className="bg-signature h-full rounded-full transition-all"
+                    style={{ width: `${completudeProfil(profile)}%` }}
+                  />
+                </div>
+                <p className="mt-2 flex items-center gap-1 text-xs text-ink/50">
+                  <Star className="h-3.5 w-3.5" /> Complète tout (photo,
+                  présentation, intérêts, mode de vie…) pour débloquer le badge{" "}
+                  {labelSuper(profile)}.
+                </p>
+              </>
+            )}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-7">
           {/* ---------- Photo de profil ---------- */}
