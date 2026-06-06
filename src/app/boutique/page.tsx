@@ -80,7 +80,7 @@ export default function BoutiquePage() {
         <p className="mt-1 mb-6 text-ink/60">
           {estAnnonceur
             ? "Trouve le bon coloc plus vite. Pas d'abonnement : tu paies seulement quand tu en as besoin."
-            : "Trouve ta coloc plus vite. Pas d'abonnement : tu paies seulement quand tu en as besoin."}
+            : "10 swipes gratuits par jour. Pour aller plus loin, passe au Pass : 2,99 €/semaine, sans engagement."}
         </p>
 
         <div className="space-y-4">
@@ -122,13 +122,14 @@ export default function BoutiquePage() {
             <>
               <OffreCard
                 icon={<Zap className="h-6 w-6 text-white" />}
-                titre="Pass Express"
-                duree="7 jours"
-                prix="4,99 €"
+                titre="Pass"
+                duree="Par semaine · sans engagement"
+                prix="2,99 €"
                 avantages={[
-                  "Likes illimités",
-                  "Vois qui t'a déjà liké",
+                  "Swipes illimités (10 gratuits par jour sans Pass)",
+                  "Vois qui t'a liké",
                   "Filtres avancés",
+                  "Sans engagement — stoppe quand tu veux",
                 ]}
                 actif={premium}
                 actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
