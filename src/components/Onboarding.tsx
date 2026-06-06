@@ -17,7 +17,7 @@ import {
   TELETRAVAIL,
   SALAIRES,
 } from "@/lib/profilOptions";
-import VilleInput from "@/components/VilleInput";
+import LieuSelect from "@/components/LieuSelect";
 
 const QUARTIERS = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -575,7 +575,7 @@ export default function Onboarding({
                   <span className="text-sm text-ink/50">ans</span>
                 </div>
                 <p className="mt-4 text-sm text-ink/70">Ville recherchée</p>
-                <VilleInput
+                <LieuSelect
                   ville={ville}
                   departement={departement}
                   onChange={(v, d) => {

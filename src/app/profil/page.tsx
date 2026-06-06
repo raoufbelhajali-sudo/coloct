@@ -10,7 +10,7 @@ import { useAuth, type Profile } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
-import VilleInput from "@/components/VilleInput";
+import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
@@ -396,7 +396,7 @@ export default function ProfilPage() {
               </div>
               <div>
                 <label className="text-sm text-ink/70">Ville recherchée</label>
-                <VilleInput
+                <LieuSelect
                   ville={ville}
                   departement={departement}
                   onChange={(v, d) => {

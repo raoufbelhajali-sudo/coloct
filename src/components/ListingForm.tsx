@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import { createListing, updateListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
-import VilleInput from "@/components/VilleInput";
+import LieuSelect from "@/components/LieuSelect";
 import { SERVICES } from "@/lib/profilOptions";
 
 const PHOTO_PAR_DEFAUT =
@@ -157,7 +157,7 @@ export default function ListingForm({
     <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
       <div>
         <label className="text-sm text-ink/70">Ville</label>
-        <VilleInput
+        <LieuSelect
           ville={ville}
           departement={departement}
           onChange={(v, d) => {
