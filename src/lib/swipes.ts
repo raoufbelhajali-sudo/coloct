@@ -37,6 +37,23 @@ export async function getLikesToday(userId: string): Promise<number> {
   return count ?? 0;
 }
 
+// --- Swipes bonus (parrainage) : crédités quand on invite des amis ---
+function cleBonus(userId: string): string {
+  const jour = new Date().toISOString().slice(0, 10); // remis à zéro chaque jour
+  return `colockt-bonus-${userId}-${jour}`;
+}
+export function getBonusLikes(userId: string): number {
+  if (typeof window === "undefined") return 0;
+  return Number(localStorage.getItem(cleBonus(userId)) || 0);
+}
+export function ajouterBonusLikes(userId: string, n: number): number {
+  const total = Math.min(getBonusLikes(userId) + n, 30); // plafond /jour
+  if (typeof window !== "undefined") {
+    localStorage.setItem(cleBonus(userId), String(total));
+  }
+  return total;
+}
+
 // Vérifie si un match (réciproque) existe pour ce colocataire et cette annonce
 export async function findMatchForListing(
   userId: string,

@@ -13,6 +13,7 @@ import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { compatAnnonce } from "@/lib/compat";
 import { getIdsBloques } from "@/lib/blocks";
+import InviterAmis from "@/components/InviterAmis";
 import { useAuth } from "@/lib/auth";
 import { estPremium } from "@/lib/offers";
 import {
@@ -20,6 +21,7 @@ import {
   recordListingSwipe,
   findMatchForListing,
   getLikesToday,
+  getBonusLikes,
 } from "@/lib/swipes";
 import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
@@ -45,6 +47,7 @@ export default function SwipeDeck() {
   // Annonces chargées depuis le serveur Supabase
   const [allListings, setAllListings] = useState<Listing[]>([]);
   const [bloques, setBloques] = useState<Set<string>>(new Set());
+  const [bonusLikes, setBonusLikes] = useState(0);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
 
@@ -82,6 +85,7 @@ export default function SwipeDeck() {
         setSwipedIds(swiped);
         setLikesAujourdhui(likes);
         setBloques(blocs);
+        setBonusLikes(getBonusLikes(user.id));
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
@@ -134,8 +138,10 @@ export default function SwipeDeck() {
     controls.set({ x: 0, opacity: 1 });
   }
 
+  // Limite du jour = likes gratuits + swipes bonus (parrainage)
+  const limiteJour = LIKES_GRATUITS_PAR_JOUR + bonusLikes;
   // A-t-on encore des likes gratuits aujourd'hui ?
-  const likesEpuises = !premium && likesAujourdhui >= LIKES_GRATUITS_PAR_JOUR;
+  const likesEpuises = !premium && likesAujourdhui >= limiteJour;
 
   // Fait voler la carte hors de l'écran puis passe à la suivante
   async function fly(dir: Direction) {
@@ -245,7 +251,7 @@ export default function SwipeDeck() {
           </span>
         ) : (
           (() => {
-            const r = Math.max(0, LIKES_GRATUITS_PAR_JOUR - likesAujourdhui);
+            const r = Math.max(0, limiteJour - likesAujourdhui);
             return `${r} like${r > 1 ? "s" : ""} gratuit${r > 1 ? "s" : ""} aujourd'hui`;
           })()
         )}
@@ -460,6 +466,17 @@ export default function SwipeDeck() {
               >
                 Voir les offres Colock&apos;t+
               </button>
+              {/* Gratuit : inviter des amis pour gagner des swipes */}
+              {user && (
+                <InviterAmis
+                  onBonus={() => {
+                    const b = getBonusLikes(user.id);
+                    setBonusLikes(b);
+                    if (likesAujourdhui < LIKES_GRATUITS_PAR_JOUR + b)
+                      setPaywall(false);
+                  }}
+                />
+              )}
               <button
                 onClick={() => setPaywall(false)}
                 className="rounded-full px-6 py-3 font-medium text-ink/70 hover:text-ink"

@@ -15,6 +15,7 @@ import {
 } from "@/lib/offers";
 import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
+import InviterAmis from "@/components/InviterAmis";
 
 export default function BoutiquePage() {
   const router = useRouter();
@@ -142,6 +143,15 @@ export default function BoutiquePage() {
               />
             </>
           )}
+        </div>
+
+        {/* Parrainage : gratuit */}
+        <div className="mt-4 rounded-3xl bg-panel p-5">
+          <p className="font-display text-lg font-semibold">Inviter des amis</p>
+          <p className="mt-1 mb-3 text-sm text-ink/60">
+            Partage Colock&apos;t et gagne des swipes gratuits.
+          </p>
+          <InviterAmis />
         </div>
 
         <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-ink/40">
