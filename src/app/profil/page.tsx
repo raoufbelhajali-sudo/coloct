@@ -54,6 +54,24 @@ export default function ProfilPage() {
   const [enregistre, setEnregistre] = useState(false);
   const [erreurSave, setErreurSave] = useState("");
   const [apercu, setApercu] = useState(false);
+  const [sectionCible, setSectionCible] = useState("");
+
+  // Ouvre la 1re section incomplète et y défile
+  function completer() {
+    let cible = "";
+    if (!photoUrl) cible = "bloc-photo";
+    else if (!age || !genre || (!estLocataire && !profession.trim()))
+      cible = "sec-identite";
+    else if (!bio.trim() || interets.length === 0) cible = "sec-apropos";
+    else if (ambiance.length === 0 || rythme.length === 0) cible = "sec-modevie";
+    if (!cible) return;
+    setSectionCible(cible);
+    setTimeout(() => {
+      document
+        .getElementById(cible)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 60);
+  }
 
   const estLocataire = profile?.role === "locataire";
   const retour = estLocataire ? "/locataire" : "/swipe";
@@ -242,6 +260,13 @@ export default function ProfilPage() {
                   présentation, intérêts, mode de vie…) pour débloquer le badge{" "}
                   {labelSuper(profile)}.
                 </p>
+                <button
+                  type="button"
+                  onClick={completer}
+                  className="bg-signature mt-3 w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
+                >
+                  Compléter mon profil
+                </button>
               </>
             )}
           </div>
@@ -249,7 +274,7 @@ export default function ProfilPage() {
 
         <form onSubmit={handleSubmit} className="space-y-7">
           {/* ---------- Photo de profil ---------- */}
-          <div className="flex flex-col items-center gap-3">
+          <div id="bloc-photo" className="flex flex-col items-center gap-3">
             <div className="bg-signature h-28 w-28 overflow-hidden rounded-full">
               {photoUrl ? (
                 /* eslint-disable-next-line @next/next/no-img-element */
@@ -283,7 +308,7 @@ export default function ProfilPage() {
           </div>
 
           {/* ---------- Identité ---------- */}
-          <Section titre="Identité" defautOuvert>
+          <Section titre="Identité" defautOuvert id="sec-identite" forceOuvert={sectionCible === "sec-identite"}>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Prénom" value={prenom} onChange={setPrenom} required placeholder="Camille" />
               <Champ label="Pseudo" value={pseudo} onChange={setPseudo} placeholder="cam_paris" />
@@ -316,7 +341,7 @@ export default function ProfilPage() {
           </Section>
 
           {/* ---------- À propos ---------- */}
-          <Section titre="À propos de moi">
+          <Section titre="À propos de moi" id="sec-apropos" forceOuvert={sectionCible === "sec-apropos"}>
             <div>
               <label className="text-sm text-ink/70">Présentation</label>
               <textarea
@@ -335,7 +360,7 @@ export default function ProfilPage() {
           </Section>
 
           {/* ---------- Mode de vie ---------- */}
-          <Section titre="Mode de vie">
+          <Section titre="Mode de vie" id="sec-modevie" forceOuvert={sectionCible === "sec-modevie"}>
             <p className="text-xs text-ink/50">
               Plus tu en sélectionnes, plus les colocs proposés te correspondront.
             </p>
@@ -438,14 +463,21 @@ function Section({
   titre,
   children,
   defautOuvert = false,
+  id,
+  forceOuvert = false,
 }: {
   titre: string;
   children: React.ReactNode;
   defautOuvert?: boolean;
+  id?: string;
+  forceOuvert?: boolean;
 }) {
   const [ouvert, setOuvert] = useState(defautOuvert);
+  useEffect(() => {
+    if (forceOuvert) setOuvert(true);
+  }, [forceOuvert]);
   return (
-    <div className="overflow-hidden rounded-2xl bg-panel">
+    <div id={id} className="overflow-hidden rounded-2xl bg-panel">
       <button
         type="button"
         onClick={() => setOuvert((o) => !o)}
