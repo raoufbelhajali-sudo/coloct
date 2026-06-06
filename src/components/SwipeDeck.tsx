@@ -257,91 +257,110 @@ export default function SwipeDeck() {
         )}
       </p>
 
-      {/* ---------- Barre de filtres (repliable) ---------- */}
+      {/* ---------- Filtres (pop-up) ---------- */}
       {filtresOuverts && (
-      <div className="mb-5 w-full rounded-2xl bg-panel p-4">
-        {/* Budget max */}
-        <div className="flex items-center justify-between text-sm">
-          <label htmlFor="budget" className="text-ink/70">
-            Budget max
-          </label>
-          <span className="font-semibold text-pink-light">{budgetMax} € / mois</span>
-        </div>
-        <input
-          id="budget"
-          type="range"
-          min={BUDGET_MIN}
-          max={BUDGET_MAX}
-          step={10}
-          value={budgetMax}
-          onChange={(e) => {
-            setBudgetMax(Number(e.target.value));
-            resetDeck();
-          }}
-          className="accent-pink mt-2 w-full"
-        />
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-bg/70 backdrop-blur-sm sm:items-center sm:p-6"
+          onClick={() => setFiltresOuverts(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-t-3xl bg-panel p-5 sm:rounded-3xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <p className="font-display text-xl font-semibold">Filtres</p>
+              <button
+                onClick={() => setFiltresOuverts(false)}
+                aria-label="Fermer"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-ink/60 hover:bg-panel-2"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-        {/* Quartier + date */}
-        <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
-          <div>
-            <label htmlFor="quartier" className="text-ink/70">
-              Quartier
-            </label>
-            <select
-              id="quartier"
-              value={quartier}
-              onChange={(e) => {
-                setQuartier(e.target.value);
-                resetDeck();
-              }}
-              className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-2 py-2 text-ink"
-            >
-              <option value="all">Tous</option>
-              {quartiers.map((q) => (
-                <option key={q} value={q}>
-                  {q}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="dispo" className="text-ink/70">
-              Dispo avant le
-            </label>
+            {/* Budget max */}
+            <div className="flex items-center justify-between text-sm">
+              <label htmlFor="budget" className="text-ink/70">
+                Budget max
+              </label>
+              <span className="font-semibold text-pink">{budgetMax} € / mois</span>
+            </div>
             <input
-              id="dispo"
-              type="date"
-              value={dispoAvant}
+              id="budget"
+              type="range"
+              min={BUDGET_MIN}
+              max={BUDGET_MAX}
+              step={10}
+              value={budgetMax}
               onChange={(e) => {
-                setDispoAvant(e.target.value);
+                setBudgetMax(Number(e.target.value));
                 resetDeck();
               }}
-              className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-2 py-2 text-ink"
+              className="accent-pink mt-2 w-full"
             />
+
+            {/* Quartier + date */}
+            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <label htmlFor="quartier" className="text-ink/70">
+                  Quartier
+                </label>
+                <select
+                  id="quartier"
+                  value={quartier}
+                  onChange={(e) => {
+                    setQuartier(e.target.value);
+                    resetDeck();
+                  }}
+                  className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-2 py-2 text-ink"
+                >
+                  <option value="all">Tous</option>
+                  {quartiers.map((q) => (
+                    <option key={q} value={q}>
+                      {q}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="dispo" className="text-ink/70">
+                  Dispo avant le
+                </label>
+                <input
+                  id="dispo"
+                  type="date"
+                  value={dispoAvant}
+                  onChange={(e) => {
+                    setDispoAvant(e.target.value);
+                    resetDeck();
+                  }}
+                  className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-2 py-2 text-ink"
+                />
+              </div>
+            </div>
+
+            {(budgetMax !== BUDGET_MAX || quartier !== "all" || dispoAvant) && (
+              <button
+                onClick={() => {
+                  setBudgetMax(BUDGET_MAX);
+                  setQuartier("all");
+                  setDispoAvant("");
+                  resetDeck();
+                }}
+                className="mt-3 text-sm text-pink-light hover:underline"
+              >
+                Réinitialiser les filtres
+              </button>
+            )}
+
+            <button
+              onClick={() => setFiltresOuverts(false)}
+              className="bg-signature glow-pink mt-5 w-full rounded-full px-6 py-3 font-semibold text-white"
+            >
+              Voir les {filtered.length} annonce{filtered.length > 1 ? "s" : ""}
+            </button>
           </div>
         </div>
-
-        {/* Nombre de résultats + réinitialiser */}
-        <div className="mt-3 flex items-center justify-between text-xs text-ink/50">
-          <span>
-            {filtered.length} annonce{filtered.length > 1 ? "s" : ""} trouvée
-            {filtered.length > 1 ? "s" : ""}
-          </span>
-          {(budgetMax !== BUDGET_MAX || quartier !== "all" || dispoAvant) && (
-            <button
-              onClick={() => {
-                setBudgetMax(BUDGET_MAX);
-                setQuartier("all");
-                setDispoAvant("");
-                resetDeck();
-              }}
-              className="text-pink-light hover:underline"
-            >
-              Réinitialiser
-            </button>
-          )}
-        </div>
-      </div>
       )}
 
       {/* ---------- Zone des cartes ---------- */}
