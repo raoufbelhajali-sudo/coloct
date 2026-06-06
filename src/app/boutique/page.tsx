@@ -18,6 +18,12 @@ import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import InviterAmis from "@/components/InviterAmis";
 
+// Un dégradé différent par forfait
+const GRAD_PASS = "linear-gradient(135deg,#ff4d8d,#8b5cf6)"; // rose → violet
+const GRAD_BOOST = "linear-gradient(135deg,#f59e0b,#ec4899)"; // orange → rose
+const GRAD_MESSAGES = "linear-gradient(135deg,#3b82f6,#06b6d4)"; // bleu → cyan
+const GRAD_ANNONCE = "linear-gradient(135deg,#10b981,#06b6d4)"; // vert → cyan
+
 export default function BoutiquePage() {
   const router = useRouter();
   const { user, profile, loading, refreshProfile } = useAuth();
@@ -108,6 +114,7 @@ export default function BoutiquePage() {
                 actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
                 enCours={enCours === "annonceur"}
                 onActiver={() => activer("annonceur")}
+                grad={GRAD_ANNONCE}
               />
             )
           ) : (
@@ -127,6 +134,7 @@ export default function BoutiquePage() {
                 actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
                 enCours={enCours === "pass"}
                 onActiver={() => activer("pass")}
+                grad={GRAD_PASS}
               />
               <OffreCard
                 icon={<Rocket className="h-6 w-6 text-white" />}
@@ -142,12 +150,16 @@ export default function BoutiquePage() {
                 actifTexte={`Actif jusqu'au ${dateFr(profile?.boosted_until ?? null)}`}
                 enCours={enCours === "boost"}
                 onActiver={() => activer("boost")}
+                grad={GRAD_BOOST}
               />
 
               {/* Messages directs (crédits) */}
               <div className="rounded-3xl bg-panel p-5">
                 <div className="flex items-center gap-3">
-                  <div className="bg-signature flex h-11 w-11 items-center justify-center rounded-2xl">
+                  <div
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl"
+                    style={{ backgroundImage: GRAD_MESSAGES }}
+                  >
                     <MessageSquare className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -156,7 +168,15 @@ export default function BoutiquePage() {
                     </p>
                     <p className="text-sm text-ink/50">5 messages</p>
                   </div>
-                  <p className="text-signature font-display text-2xl font-bold">
+                  <p
+                    className="font-display text-2xl font-bold"
+                    style={{
+                      backgroundImage: GRAD_MESSAGES,
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      color: "transparent",
+                    }}
+                  >
                     3,99 €
                   </p>
                 </div>
@@ -181,7 +201,8 @@ export default function BoutiquePage() {
                 <button
                   onClick={() => activer("messages")}
                   disabled={enCours === "messages"}
-                  className="bg-signature mt-3 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                  className="mt-3 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                  style={{ backgroundImage: GRAD_MESSAGES }}
                 >
                   {enCours === "messages" ? "Activation…" : "+5 messages (démo)"}
                 </button>
@@ -218,6 +239,7 @@ function OffreCard({
   actifTexte,
   enCours,
   onActiver,
+  grad = GRAD_PASS,
 }: {
   icon: React.ReactNode;
   titre: string;
@@ -228,18 +250,32 @@ function OffreCard({
   actifTexte: string;
   enCours: boolean;
   onActiver: () => void;
+  grad?: string;
 }) {
   return (
     <div className="rounded-3xl bg-panel p-5">
       <div className="flex items-center gap-3">
-        <div className="bg-signature flex h-11 w-11 items-center justify-center rounded-2xl">
+        <div
+          className="flex h-11 w-11 items-center justify-center rounded-2xl"
+          style={{ backgroundImage: grad }}
+        >
           {icon}
         </div>
         <div className="flex-1">
           <p className="font-display text-xl font-semibold">{titre}</p>
           <p className="text-sm text-ink/50">{duree}</p>
         </div>
-        <p className="text-signature font-display text-2xl font-bold">{prix}</p>
+        <p
+          className="font-display text-2xl font-bold"
+          style={{
+            backgroundImage: grad,
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+          }}
+        >
+          {prix}
+        </p>
       </div>
 
       <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
@@ -259,7 +295,8 @@ function OffreCard({
         <button
           onClick={onActiver}
           disabled={enCours}
-          className="bg-signature mt-4 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+          className="mt-4 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+          style={{ backgroundImage: grad }}
         >
           {enCours ? "Activation…" : `Activer (démo)`}
         </button>
