@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Check, Eye, Star } from "lucide-react";
+import { Check, Eye, Star, ChevronDown } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
@@ -276,7 +276,7 @@ export default function ProfilPage() {
           </div>
 
           {/* ---------- Identité ---------- */}
-          <Section titre="Identité">
+          <Section titre="Identité" defautOuvert>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Prénom" value={prenom} onChange={setPrenom} required placeholder="Camille" />
               <Champ label="Pseudo" value={pseudo} onChange={setPseudo} placeholder="cam_paris" />
@@ -420,11 +420,34 @@ export default function ProfilPage() {
 const champClasses =
   "mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none";
 
-function Section({ titre, children }: { titre: string; children: React.ReactNode }) {
+function Section({
+  titre,
+  children,
+  defautOuvert = false,
+}: {
+  titre: string;
+  children: React.ReactNode;
+  defautOuvert?: boolean;
+}) {
+  const [ouvert, setOuvert] = useState(defautOuvert);
   return (
-    <div className="space-y-4">
-      <h2 className="font-display text-lg font-semibold text-pink">{titre}</h2>
-      {children}
+    <div className="overflow-hidden rounded-2xl bg-panel">
+      <button
+        type="button"
+        onClick={() => setOuvert((o) => !o)}
+        className="flex w-full items-center justify-between px-4 py-3.5 text-left"
+      >
+        <span className="font-display text-lg font-semibold text-pink">
+          {titre}
+        </span>
+        <ChevronDown
+          className={
+            "h-5 w-5 shrink-0 text-ink/50 transition-transform " +
+            (ouvert ? "rotate-180" : "")
+          }
+        />
+      </button>
+      {ouvert && <div className="space-y-4 px-4 pb-4">{children}</div>}
     </div>
   );
 }
