@@ -36,6 +36,7 @@ export default function ParametresPage() {
   const [supprEnCours, setSupprEnCours] = useState(false);
 
   const retour = profile?.role === "locataire" ? "/locataire" : "/swipe";
+  const estAnnonceur = profile?.role === "locataire";
 
   useEffect(() => {
     if (loading) return;
