@@ -179,7 +179,7 @@ function Pill({
     return (
       <span
         className="rounded-full border border-violet/40 px-3 py-1 text-xs font-medium"
-        style={{ color: "#6d28d9" }}
+        style={{ color: "#e8590c" }}
       >
         {children}
       </span>
@@ -188,7 +188,7 @@ function Pill({
     return (
       <span
         className="rounded-full px-3 py-1 text-xs font-medium"
-        style={{ backgroundColor: "rgba(255,77,141,0.12)", color: "#ff4d8d" }}
+        style={{ backgroundColor: "rgba(250,82,82,0.12)", color: "#fa5252" }}
       >
         {children}
       </span>

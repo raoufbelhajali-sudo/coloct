@@ -5,8 +5,8 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
     <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
       <defs>
         <linearGradient id="colockt-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#ff4d8d" />
-          <stop offset="100%" stopColor="#8b5cf6" />
+          <stop offset="0%" stopColor="#fa5252" />
+          <stop offset="100%" stopColor="#fd7e14" />
         </linearGradient>
       </defs>
       {/* Maison (toit + corps) en dégradé */}

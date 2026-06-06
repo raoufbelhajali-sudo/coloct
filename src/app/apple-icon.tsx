@@ -14,7 +14,7 @@ export default function AppleIcon() {
           justifyContent: "center",
           width: "100%",
           height: "100%",
-          background: "linear-gradient(135deg, #ff4d8d, #8b5cf6)",
+          background: "linear-gradient(135deg, #fa5252, #fd7e14)",
         }}
       >
         <svg width="120" height="120" viewBox="0 0 48 48">
@@ -23,7 +23,7 @@ export default function AppleIcon() {
             <rect x="9" y="23" width="30" height="21" rx="6" />
           </g>
           <path
-            fill="#ff4d8d"
+            fill="#fa5252"
             transform="translate(13.5 25.5) scale(0.86)"
             d="M11 19.5C11 19.5 1.5 14 1.5 7.6 1.5 4.5 3.9 2.2 6.9 2.2c1.8 0 3.4.9 4.1 2.3.7-1.4 2.3-2.3 4.1-2.3 3 0 5.4 2.3 5.4 5.4C20.5 14 11 19.5 11 19.5Z"
           />

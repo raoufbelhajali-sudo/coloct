@@ -19,7 +19,7 @@ import type { Listing } from "@/data/listings";
 import InviterAmis from "@/components/InviterAmis";
 
 // Un dégradé différent par forfait
-const GRAD_PASS = "linear-gradient(135deg,#ff4d8d,#8b5cf6)"; // rose → violet
+const GRAD_PASS = "linear-gradient(135deg,#fa5252,#fd7e14)"; // rose → violet
 const GRAD_BOOST = "linear-gradient(135deg,#f59e0b,#ec4899)"; // orange → rose
 const GRAD_MESSAGES = "linear-gradient(135deg,#3b82f6,#06b6d4)"; // bleu → cyan
 const GRAD_ANNONCE = "linear-gradient(135deg,#10b981,#06b6d4)"; // vert → cyan

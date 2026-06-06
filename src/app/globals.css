@@ -2,18 +2,18 @@
 
 /* ===========================================================
    Charte graphique Colock't
-   Thème clair, accents rose & violet
+   Thème clair, accents corail & orange (chaleureux, "maison")
    =========================================================== */
 @theme {
   /* Couleurs de la charte */
   --color-bg: #ffffff; /* Fond (blanc) */
-  --color-panel: #f4eefb; /* Panneaux (lavande très clair) */
-  --color-panel-2: #e9e1f6; /* Panneaux (variante) */
-  --color-ink: #211a2b; /* Texte (prune foncé) */
-  --color-pink: #ff4d8d; /* Rose principal */
-  --color-pink-light: #ff7bab; /* Rose clair */
-  --color-violet: #8b5cf6; /* Violet */
-  --color-violet-dark: #6d28d9; /* Violet foncé */
+  --color-panel: #fff1ea; /* Panneaux (pêche très clair) */
+  --color-panel-2: #ffe3d3; /* Panneaux (variante) */
+  --color-ink: #2b211a; /* Texte (brun foncé) */
+  --color-pink: #fa5252; /* Corail principal (accent 1) */
+  --color-pink-light: #ff8787; /* Corail clair */
+  --color-violet: #fd7e14; /* Orange (accent 2) */
+  --color-violet-dark: #e8590c; /* Orange foncé */
 
   /* Polices */
   --font-display: var(--font-fraunces); /* Titres / logo */
@@ -32,14 +32,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dégradé signature (logo, boutons clés) */
+/* Dégradé signature (logo, boutons clés) : corail → orange */
 .bg-signature {
-  background-image: linear-gradient(135deg, #ff4d8d, #8b5cf6);
+  background-image: linear-gradient(135deg, #fa5252, #fd7e14);
 }
 
 /* Texte rempli avec le dégradé signature */
 .text-signature {
-  background-image: linear-gradient(135deg, #ff4d8d, #8b5cf6);
+  background-image: linear-gradient(135deg, #fa5252, #fd7e14);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -47,7 +47,7 @@ body {
 
 /* Lueur douce derrière les éléments clés */
 .glow-pink {
-  box-shadow: 0 0 60px -15px rgba(255, 77, 141, 0.5);
+  box-shadow: 0 0 60px -15px rgba(250, 82, 82, 0.5);
 }
 
 /* Pastille de notification : vibration */
