@@ -45,6 +45,7 @@ export default function Onboarding({
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
   const [bienvenue, setBienvenue] = useState(false);
+  const [intro, setIntro] = useState(true); // écran d'accueil avant le parcours
 
   // --- Champs du profil ---
   const [role, setRole] = useState<Role>("colocataire");
@@ -189,6 +190,30 @@ export default function Onboarding({
   async function entrer() {
     await refreshProfile();
     router.replace(role === "locataire" ? "/locataire" : "/swipe");
+  }
+
+  // Écran d'accueil (tout début, juste après la connexion)
+  if (intro) {
+    return (
+      <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
+        <LogoMark className="mb-5 h-16 w-16" />
+        <h1 className="font-display text-3xl font-semibold leading-tight">
+          Bienvenue sur Colock&apos;t !
+        </h1>
+        <p className="mt-3 max-w-sm text-ink/70">
+          Prends quelques minutes pour <strong>bien remplir ton profil</strong>.
+          Plus tu donnes d&apos;infos (mode de vie, centres d&apos;intérêt, ce que
+          tu cherches…), plus tu trouveras <strong>facilement</strong> le
+          logement ou le coloc idéal.
+        </p>
+        <button
+          onClick={() => setIntro(false)}
+          className="bg-signature glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
+        >
+          C&apos;est parti
+        </button>
+      </main>
+    );
   }
 
   // Écran de bienvenue (fin d'inscription)
