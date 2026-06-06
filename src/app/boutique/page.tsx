@@ -3,12 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Rocket, Check, Lock, MessageSquare } from "lucide-react";
+import { Zap, Rocket, Check, Lock } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
   estPremium,
-  estBooste,
   activerPassExpress,
   activerBoost,
   activerBoostAnnonceur,
@@ -20,8 +19,6 @@ import InviterAmis from "@/components/InviterAmis";
 
 // Un dégradé chaud différent par forfait (harmonisé avec la charte corail/orange)
 const GRAD_PASS = "linear-gradient(135deg,#fa5252,#fd7e14)"; // corail → orange
-const GRAD_BOOST = "linear-gradient(135deg,#fd7e14,#f03e3e)"; // orange → rouge
-const GRAD_MESSAGES = "linear-gradient(135deg,#fa5252,#f06595)"; // corail → rose framboise
 const GRAD_ANNONCE = "linear-gradient(135deg,#e8590c,#fd7e14)"; // orange brûlé → orange
 
 export default function BoutiquePage() {
@@ -46,7 +43,6 @@ export default function BoutiquePage() {
   }, [chargerAnnonce]);
 
   const premium = estPremium(profile);
-  const booste = estBooste(profile);
 
   function dateFr(iso: string | null) {
     if (!iso) return "";
@@ -59,8 +55,12 @@ export default function BoutiquePage() {
   async function activer(offre: "pass" | "boost" | "annonceur" | "messages") {
     if (!user) return;
     setEnCours(offre);
-    if (offre === "pass") await activerPassExpress(user.id);
-    else if (offre === "boost") await activerBoost(user.id);
+    if (offre === "pass") {
+      // Le Pass tout-en-un active tous les avantages chercheur
+      await activerPassExpress(user.id);
+      await activerBoost(user.id);
+      await activerMessagesDirects(user.id);
+    } else if (offre === "boost") await activerBoost(user.id);
     else if (offre === "messages") await activerMessagesDirects(user.id);
     else if (offre === "annonceur" && listing)
       await activerBoostAnnonceur(user.id, listing.id);
@@ -118,97 +118,26 @@ export default function BoutiquePage() {
               />
             )
           ) : (
-            // ----- Colocataire : Pass Express + Boost -----
-            <>
-              <OffreCard
-                icon={<Zap className="h-6 w-6 text-white" />}
-                titre="Pass"
-                duree="Par semaine · sans engagement"
-                prix="2,99 €"
-                avantages={[
-                  "Swipes illimités (10 gratuits par jour sans Pass)",
-                  "Vois qui t'a liké",
-                  "Filtres avancés",
-                  "Sans engagement — stoppe quand tu veux",
-                ]}
-                actif={premium}
-                actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
-                enCours={enCours === "pass"}
-                onActiver={() => activer("pass")}
-                grad={GRAD_PASS}
-              />
-              <OffreCard
-                icon={<Rocket className="h-6 w-6 text-white" />}
-                titre="Boost"
-                duree="48 heures"
-                prix="2,99 €"
-                avantages={[
-                  "Ton profil passe en tête",
-                  "Vu par bien plus de monde",
-                  "Plus de matchs, plus vite",
-                ]}
-                actif={booste}
-                actifTexte={`Actif jusqu'au ${dateFr(profile?.boosted_until ?? null)}`}
-                enCours={enCours === "boost"}
-                onActiver={() => activer("boost")}
-                grad={GRAD_BOOST}
-              />
-
-              {/* Messages directs (crédits) */}
-              <div className="rounded-3xl bg-panel p-5">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl"
-                    style={{ backgroundImage: GRAD_MESSAGES }}
-                  >
-                    <MessageSquare className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-display text-xl font-semibold">
-                      Messages directs
-                    </p>
-                    <p className="text-sm text-ink/50">5 messages</p>
-                  </div>
-                  <p
-                    className="font-display text-2xl font-bold"
-                    style={{
-                      backgroundImage: GRAD_MESSAGES,
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      color: "transparent",
-                    }}
-                  >
-                    3,99 €
-                  </p>
-                </div>
-                <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
-                  <li className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-pink" strokeWidth={3} />
-                    Contacte un annonceur sans attendre un match
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-pink" strokeWidth={3} />
-                    Va droit au but pour les annonces qui te plaisent
-                  </li>
-                </ul>
-                <p className="mt-3 text-sm text-ink/60">
-                  Tu as{" "}
-                  <span className="font-semibold text-pink">
-                    {profile?.credits_messages ?? 0}
-                  </span>{" "}
-                  crédit{(profile?.credits_messages ?? 0) > 1 ? "s" : ""} de
-                  message direct.
-                </p>
-                <button
-                  onClick={() => activer("messages")}
-                  disabled={enCours === "messages"}
-                  className="mt-3 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
-                  style={{ backgroundImage: GRAD_MESSAGES }}
-                >
-                  {enCours === "messages" ? "Activation…" : "+5 messages (démo)"}
-                </button>
-              </div>
-            </>
+            // ----- Colocataire : une seule offre tout-en-un -----
+            <OffreCard
+              icon={<Zap className="h-6 w-6 text-white" />}
+              titre="Pass Colock't"
+              duree="Par semaine · sans engagement"
+              prix="2,99 €"
+              avantages={[
+                "Swipes illimités (10 gratuits par jour sans Pass)",
+                "Vois qui t'a liké",
+                "Ton profil boosté, vu en priorité",
+                "Messages directs : contacte sans attendre un match",
+                "Filtres avancés",
+                "Sans engagement — stoppe quand tu veux",
+              ]}
+              actif={premium}
+              actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
+              enCours={enCours === "pass"}
+              onActiver={() => activer("pass")}
+              grad={GRAD_PASS}
+            />
           )}
         </div>
 
