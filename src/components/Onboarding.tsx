@@ -178,12 +178,14 @@ export default function Onboarding({
       setErreur("L'enregistrement a échoué : " + error.message);
       return;
     }
-    await refreshProfile();
+    // NB : on NE rafraîchit PAS le profil ici, sinon la page parente
+    // redirigerait aussitôt et l'écran de bienvenue disparaîtrait.
     setEnCours(false);
-    setBienvenue(true); // écran de bienvenue avant d'entrer dans l'app
+    setBienvenue(true); // écran de bienvenue (reste jusqu'au clic sur Continuer)
   }
 
-  function entrer() {
+  async function entrer() {
+    await refreshProfile();
     router.replace(role === "locataire" ? "/locataire" : "/swipe");
   }
 
