@@ -7,7 +7,7 @@ import { Check, Eye } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
-import Logo from "@/components/Logo";
+import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import { INTERETS, AMBIANCES, RYTHMES, DEPARTEMENTS, SALAIRES } from "@/lib/profilOptions";
@@ -179,7 +179,7 @@ export default function ProfilPage() {
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
-            <Logo markClass="h-7 w-7" textClass="text-xl" />
+            <LogoMark className="h-7 w-7" />
           </Link>
           <RolePin />
         </div>

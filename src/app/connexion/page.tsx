@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Phone, Mail, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import Logo from "@/components/Logo";
+import { LogoMark } from "@/components/Logo";
 
 type Etape = "choix" | "email" | "emailEnvoye" | "phone" | "phoneCode";
 
@@ -91,7 +91,7 @@ export default function ConnexionPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-8">
       <Link href="/" className="mb-3">
-        <Logo markClass="h-9 w-9" textClass="text-3xl" />
+        <LogoMark className="h-12 w-12" />
       </Link>
       <p className="mb-8 text-center text-ink/60">
         Connecte-toi ou crée ton compte en un geste.

@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
-import Logo from "@/components/Logo";
+import { LogoMark } from "@/components/Logo";
 import RolePin from "@/components/RolePin";
 
 export default function ParametresPage() {
@@ -161,7 +161,7 @@ export default function ParametresPage() {
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
-            <Logo markClass="h-7 w-7" textClass="text-xl" />
+            <LogoMark className="h-7 w-7" />
           </Link>
           <RolePin />
         </div>
