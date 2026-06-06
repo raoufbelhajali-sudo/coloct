@@ -61,3 +61,18 @@ body {
 .animate-vibrate {
   animation: vibrate 0.45s linear infinite;
 }
+
+/* Vibration du logo (par à-coups, pour rester agréable) */
+@keyframes logo-vibrate {
+  0%, 90%, 100% { transform: translate(0, 0) rotate(0deg); }
+  91% { transform: translate(-2px, 0) rotate(-4deg); }
+  92% { transform: translate(2px, 0) rotate(4deg); }
+  93% { transform: translate(-2px, 0) rotate(-4deg); }
+  94% { transform: translate(2px, 0) rotate(4deg); }
+  95% { transform: translate(-1px, 0) rotate(-2deg); }
+  96% { transform: translate(1px, 0) rotate(2deg); }
+  97% { transform: translate(0, 0) rotate(0deg); }
+}
+.animate-logo-vibrate {
+  animation: logo-vibrate 2.6s ease-in-out infinite;
+}

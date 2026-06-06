@@ -193,7 +193,7 @@ export default function Onboarding({
   if (bienvenue) {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
-        <LogoMark className="mb-5 h-16 w-16" />
+        <LogoMark className="animate-logo-vibrate mb-5 h-16 w-16" />
         <h1 className="font-display text-3xl font-semibold leading-tight">
           Bienvenue{prenom.trim() ? ` ${prenom.trim()}` : ""} !
         </h1>
