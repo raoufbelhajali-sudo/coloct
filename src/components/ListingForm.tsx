@@ -37,6 +37,9 @@ export default function ListingForm({
   const [departement, setDepartement] = useState(listing?.departement ?? "75");
   const [loyer, setLoyer] = useState(listing ? String(listing.loyer) : "");
   const [surface, setSurface] = useState(listing ? String(listing.surface) : "");
+  const [nbOccupants, setNbOccupants] = useState(
+    listing?.nbOccupants ? String(listing.nbOccupants) : ""
+  );
   const [meuble, setMeuble] = useState(listing?.meuble ?? true);
   const [etage, setEtage] = useState(listing?.etage ?? "");
   const [dispo, setDispo] = useState(listing?.dispo ?? "");
@@ -121,6 +124,7 @@ export default function ListingForm({
         // arrondissement déduit si Paris (75), sinon non utilisé
         arrondissement: null,
         surface: Number(surface),
+        nb_occupants: Number(nbOccupants) || null,
         meuble,
         etage: etage.trim() || "—",
         dispo: dispo || "2026-01-01",
@@ -177,6 +181,14 @@ export default function ListingForm({
       </div>
 
       <Field label="Étage" value={etage} onChange={setEtage} placeholder="Ex. 3e avec ascenseur" />
+
+      <Field
+        label="Personnes dans le logement"
+        type="number"
+        value={nbOccupants}
+        onChange={setNbOccupants}
+        placeholder="Ex. 2 (colocs déjà sur place)"
+      />
 
       <div>
         <label className="text-sm text-ink/70">Disponible à partir du</label>

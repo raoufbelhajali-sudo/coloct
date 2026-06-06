@@ -26,6 +26,7 @@ export type NewListing = {
   departement: string;
   arrondissement?: number | null;
   surface: number;
+  nb_occupants?: number | null;
   meuble: boolean;
   etage: string;
   dispo: string; // AAAA-MM-JJ

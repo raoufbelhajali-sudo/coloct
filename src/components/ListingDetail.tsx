@@ -101,6 +101,12 @@ export default function ListingDetail({
                 {listing.surface} m² · {listing.etage}
               </p>
               <p>{listing.meuble ? "Meublé" : "Non meublé"}</p>
+              {listing.nbOccupants ? (
+                <p>
+                  {listing.nbOccupants} personne
+                  {listing.nbOccupants > 1 ? "s" : ""} dans le logement
+                </p>
+              ) : null}
               <p>Disponible le {listing.dateDispo}</p>
             </div>
 

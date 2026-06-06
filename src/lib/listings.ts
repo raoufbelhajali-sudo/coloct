@@ -32,6 +32,7 @@ export type ListingRow = {
   date_dispo: string;
   dispo: string;
   surface: number;
+  nb_occupants: number | null;
   meuble: boolean;
   etage: string;
   colocs: Coloc[];
@@ -56,6 +57,7 @@ export function mapListingRow(r: ListingRow): Listing {
     dateDispo: r.date_dispo,
     dispo: r.dispo,
     surface: r.surface,
+    nbOccupants: r.nb_occupants,
     meuble: r.meuble,
     etage: r.etage,
     colocs: r.colocs ?? [],

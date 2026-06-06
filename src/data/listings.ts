@@ -21,6 +21,7 @@ export type Listing = {
   dateDispo: string; // date de disponibilité (texte lisible)
   dispo: string; // même date au format AAAA-MM-JJ (pour filtrer/comparer)
   surface: number; // surface de la chambre (m²)
+  nbOccupants?: number | null; // nombre de personnes occupant déjà le logement
   meuble: boolean; // meublé ou non
   etage: string; // ex. "3e étage avec ascenseur"
   colocs: Coloc[]; // qui vit déjà là
