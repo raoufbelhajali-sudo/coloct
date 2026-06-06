@@ -433,7 +433,7 @@ export default function Onboarding({
             {etape === "interets" && (
               <Etape
                 titre="Tes centres d'intérêt"
-                sous="Choisis-en au moins un (autant que tu veux)."
+                sous="Ajoutes-en un maximum : plus ton profil est complet, plus tu trouveras facilement un logement et des colocs compatibles !"
               >
                 <ChoixMultiple
                   options={INTERETS}
@@ -452,7 +452,7 @@ export default function Onboarding({
             {etape === "modevie" && (
               <Etape
                 titre="Ton mode de vie"
-                sous="Réponds à tout pour trouver les bons colocs."
+                sous="Plus tu en dis sur toi, plus on te proposera des colocs qui te correspondent."
               >
                 <p className="text-sm text-ink/70">
                   Ambiance <span className="text-pink">*</span>{" "}

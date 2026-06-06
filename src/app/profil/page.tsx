@@ -328,10 +328,17 @@ export default function ProfilPage() {
               />
             </div>
             <ChoixMultiple label="Centres d'intérêt" options={INTERETS} values={interets} onToggle={(v) => toggle(interets, setInterets, v)} />
+            <p className="text-xs text-ink/50">
+              Ajoutes-en un maximum : ça t&apos;aide à trouver plus facilement un
+              logement et des colocs compatibles.
+            </p>
           </Section>
 
           {/* ---------- Mode de vie ---------- */}
           <Section titre="Mode de vie">
+            <p className="text-xs text-ink/50">
+              Plus tu en sélectionnes, plus les colocs proposés te correspondront.
+            </p>
             <ChoixMultiple label="Ambiance" options={AMBIANCES} values={ambiance} onToggle={(v) => toggle(ambiance, setAmbiance, v)} />
             <ChoixMultiple label="Rythme" options={RYTHMES} values={rythme} onToggle={(v) => toggle(rythme, setRythme, v)} />
             <div className="space-y-2">

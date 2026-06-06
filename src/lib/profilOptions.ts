@@ -3,27 +3,33 @@
 export const INTERETS = [
   // Sport & bien-être
   "Sport", "Fitness", "Course à pied", "Vélo", "Randonnée", "Yoga",
-  "Danse", "Natation", "Escalade", "Foot",
+  "Danse", "Natation", "Escalade", "Foot", "Tennis", "Boxe", "Ski",
+  "Surf", "Pilates", "Marche",
   // Culture & sorties
   "Musique", "Concerts", "Festivals", "Cinéma", "Séries", "Théâtre",
-  "Lecture", "Photographie", "Art", "Musées",
+  "Lecture", "Photographie", "Art", "Musées", "Expos", "Karaoké",
+  "Vinyles", "Stand-up",
   // Food & boissons
   "Cuisine", "Pâtisserie", "Brunch", "Vin", "Café", "Bières",
+  "Restos", "Apéros",
   // Maison & nature
   "Voyages", "Nature", "Jardinage", "Écologie", "Animaux", "Plantes",
-  // Loisirs
+  "Camping", "Mer", "Montagne",
+  // Loisirs & autres
   "Jeux vidéo", "Jeux de société", "Tech", "Mode", "Bénévolat",
-  "Méditation", "Sorties", "Podcasts", "Bricolage",
+  "Méditation", "Sorties", "Podcasts", "Bricolage", "Langues",
+  "Entrepreneuriat", "Astronomie", "DIY", "Mode durable",
 ];
 
 export const AMBIANCES = [
   "Calme", "Sociable", "Fêtard·e", "Discret·e", "Convivial·e",
-  "Indépendant·e", "Casanier·ère", "Bon vivant·e",
+  "Indépendant·e", "Casanier·ère", "Bon vivant·e", "Organisé·e",
+  "Détendu·e", "Écolo", "Esprit famille",
 ];
 
 export const RYTHMES = [
   "Matinal·e", "Couche-tôt", "Noctambule", "Couche-tard",
-  "Flexible", "Horaires décalés",
+  "Flexible", "Horaires décalés", "Télétravail", "Souvent absent·e",
 ];
 
 // Départements d'Île-de-France (numéros uniquement, pas d'option vide)
