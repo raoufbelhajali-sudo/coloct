@@ -11,9 +11,14 @@ import RolePin from "@/components/RolePin";
 const iconBtn =
   "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
 
+// Boutons-icônes charbon mat métallisé
+const iconBtnCharbon =
+  "flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/90 shadow-sm transition-transform hover:scale-105";
+const charbon = { backgroundImage: "linear-gradient(135deg, #4a4a4f, #232328)" };
+
 // Pastille de notification : noire et vibrante
 const badge =
-  "animate-vibrate absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white";
+  "animate-vibrate absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white";
 
 // En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
 export default function AppHeader({ compact = false }: { compact?: boolean }) {
@@ -71,7 +76,8 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
             href="/matchs"
             aria-label="Messages"
             title="Messages"
-            className={iconBtn + " relative"}
+            className={iconBtnCharbon + " relative"}
+            style={charbon}
           >
             <MessageSquare className="h-[18px] w-[18px]" />
             {nbMessages > 0 && (
@@ -80,12 +86,24 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
           </Link>
         )}
         {user && (
-          <Link href="/boutique" aria-label="Boutique" title="Boutique" className={iconBtn}>
+          <Link
+            href="/boutique"
+            aria-label="Boutique"
+            title="Boutique"
+            className={iconBtnCharbon}
+            style={charbon}
+          >
             <Zap className="h-[18px] w-[18px]" />
           </Link>
         )}
         {user && (
-          <Link href="/profil" aria-label="Profil" title="Profil" className={iconBtn}>
+          <Link
+            href="/profil"
+            aria-label="Profil"
+            title="Profil"
+            className={iconBtnCharbon}
+            style={charbon}
+          >
             <UserRound className="h-[18px] w-[18px]" />
           </Link>
         )}
@@ -94,7 +112,8 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
             href="/parametres"
             aria-label="Paramètres"
             title="Paramètres"
-            className={iconBtn}
+            className={iconBtnCharbon}
+            style={charbon}
           >
             <Settings className="h-[18px] w-[18px]" />
           </Link>
