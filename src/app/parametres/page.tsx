@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Repeat,
   ShieldCheck,
+  ArrowLeft,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -193,8 +194,13 @@ export default function ParametresPage() {
           </Link>
           <RolePin />
         </div>
-        <Link href={retour} className="text-sm text-ink/60 hover:text-ink">
-          Retour
+        <Link
+          href={retour}
+          aria-label="Retour"
+          title="Retour"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+        >
+          <ArrowLeft className="h-5 w-5" />
         </Link>
       </header>
 

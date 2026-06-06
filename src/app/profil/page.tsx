@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Check, Eye, Star, ChevronDown } from "lucide-react";
+import { Check, Eye, Star, ChevronDown, ArrowLeft } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
@@ -188,16 +188,23 @@ export default function ProfilPage() {
           </Link>
           <RolePin />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => setApercu(true)}
-            className="flex items-center gap-1.5 rounded-full border border-ink/15 bg-panel px-3 py-1.5 text-sm text-ink/70 hover:border-pink hover:text-pink"
+            aria-label="Voir mon profil"
+            title="Voir mon profil"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
           >
-            <Eye className="h-4 w-4" /> Voir mon profil
+            <Eye className="h-5 w-5" />
           </button>
-          <Link href={retour} className="text-sm text-ink/60 hover:text-ink">
-            Retour
+          <Link
+            href={retour}
+            aria-label="Retour"
+            title="Retour"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+          >
+            <ArrowLeft className="h-5 w-5" />
           </Link>
         </div>
       </header>
