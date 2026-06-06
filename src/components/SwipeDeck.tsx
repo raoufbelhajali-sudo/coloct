@@ -20,10 +20,11 @@ import { estPremium } from "@/lib/offers";
 import {
   getSwipedListingIds,
   recordListingSwipe,
-  findMatchForListing,
   getLikesToday,
   getBonusLikes,
+  getMatchIdForListing,
 } from "@/lib/swipes";
+import { marquerAnnonce } from "@/lib/matchPopup";
 import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
 
@@ -175,7 +176,11 @@ export default function SwipeDeck() {
         setLikes((prev) => [...prev, swiped]);
         setLikesAujourdhui((n) => n + 1);
         // match seulement si le locataire t'a aussi liké
-        if (await findMatchForListing(user.id, swiped.id)) setMatch(swiped);
+        const mid = await getMatchIdForListing(user.id, swiped.id);
+        if (mid) {
+          setMatch(swiped);
+          marquerAnnonce(user.id, mid); // évite la double pop-up globale
+        }
       }
     } catch {
       // souci réseau : on n'interrompt pas le swipe

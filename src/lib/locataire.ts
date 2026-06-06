@@ -111,11 +111,19 @@ export async function findMatchForColocataire(
   colocataireId: string,
   listingId: string
 ): Promise<boolean> {
+  return (await getMatchIdForColocataire(colocataireId, listingId)) !== null;
+}
+
+// Renvoie l'id du match (colocataire ↔ annonce) ou null
+export async function getMatchIdForColocataire(
+  colocataireId: string,
+  listingId: string
+): Promise<number | null> {
   const { data } = await supabase
     .from("matches")
     .select("id")
     .eq("colocataire_id", colocataireId)
     .eq("listing_id", Number(listingId))
     .maybeSingle();
-  return !!data;
+  return (data?.id as number) ?? null;
 }

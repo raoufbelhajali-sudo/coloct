@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
+import MatchPopup from "@/components/MatchPopup";
 
 // Police des titres et du logo (serif chic)
 const fraunces = Fraunces({
@@ -43,7 +44,10 @@ export default function RootLayout({
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <MatchPopup />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

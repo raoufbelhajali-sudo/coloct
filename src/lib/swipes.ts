@@ -59,11 +59,19 @@ export async function findMatchForListing(
   userId: string,
   listingId: string
 ): Promise<boolean> {
+  return (await getMatchIdForListing(userId, listingId)) !== null;
+}
+
+// Renvoie l'id du match (colocataire ↔ annonce) ou null
+export async function getMatchIdForListing(
+  userId: string,
+  listingId: string
+): Promise<number | null> {
   const { data } = await supabase
     .from("matches")
     .select("id")
     .eq("colocataire_id", userId)
     .eq("listing_id", Number(listingId))
     .maybeSingle();
-  return !!data;
+  return (data?.id as number) ?? null;
 }

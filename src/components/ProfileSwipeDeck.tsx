@@ -15,11 +15,12 @@ import {
   getColocataireProfiles,
   getSwipedProfileIds,
   recordProfileSwipe,
-  findMatchForColocataire,
+  getMatchIdForColocataire,
 } from "@/lib/locataire";
 import { compatProfils, scoreProfilPourAnnonceur } from "@/lib/compat";
 import { estPremium } from "@/lib/offers";
 import { getIdsBloques } from "@/lib/blocks";
+import { marquerAnnonce } from "@/lib/matchPopup";
 import ProfileCard from "./ProfileCard";
 import ProfileDetail from "./ProfileDetail";
 
@@ -98,7 +99,11 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
     try {
       await recordProfileSwipe(user.id, listingId, swiped.id, direction);
       if (direction === "like") {
-        if (await findMatchForColocataire(swiped.id, listingId)) setMatch(swiped);
+        const mid = await getMatchIdForColocataire(swiped.id, listingId);
+        if (mid) {
+          setMatch(swiped);
+          if (user) marquerAnnonce(user.id, mid); // évite la double pop-up globale
+        }
       }
     } catch {
       // souci réseau : on n'interrompt pas le swipe
