@@ -16,7 +16,7 @@ const badge =
   "animate-vibrate absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white";
 
 // En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
-export default function AppHeader() {
+export default function AppHeader({ compact = false }: { compact?: boolean }) {
   const { user, profile } = useAuth();
   const { count: nbMessages, alerte: alerteMsg } = useMessagesNonLus();
   const nbLikes = useLikesRecus();
@@ -41,7 +41,12 @@ export default function AppHeader() {
           <MessageSquare className="h-4 w-4" /> {alerteMsg}
         </Link>
       )}
-      <header className="mb-6 flex w-full max-w-sm items-center justify-between">
+      <header
+        className={
+          "flex w-full max-w-sm items-center justify-between " +
+          (compact ? "mb-2" : "mb-6")
+        }
+      >
       <Link href={accueil} className="flex items-center gap-2">
         <LogoMark className="h-7 w-7" />
         <RolePin />

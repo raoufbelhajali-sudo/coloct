@@ -214,14 +214,27 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
-      {/* Bouton filtres */}
-      <div className="mb-1 flex w-full items-center justify-end gap-2">
+      {/* Compteur de likes + bouton filtres (même ligne) */}
+      <div className="mb-2 flex w-full items-center justify-between gap-2">
+        <span className="text-xs text-ink/50">
+          {premium ? (
+            <span className="inline-flex items-center gap-1 font-medium text-pink">
+              <Star className="h-3.5 w-3.5" fill="currentColor" /> Colock&apos;t+ ·
+              likes illimités
+            </span>
+          ) : (
+            (() => {
+              const r = Math.max(0, limiteJour - likesAujourdhui);
+              return `${r} like${r > 1 ? "s" : ""} gratuit${r > 1 ? "s" : ""} aujourd'hui`;
+            })()
+          )}
+        </span>
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"
           title="Filtres"
           className={
-            "relative flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-panel " +
+            "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-panel " +
             (filtresOuverts ? "bg-panel text-pink" : "text-ink/60 hover:text-pink")
           }
         >
@@ -231,21 +244,6 @@ export default function SwipeDeck() {
           )}
         </button>
       </div>
-
-      {/* Likes gratuits restants aujourd'hui */}
-      <p className="mb-3 w-full text-left text-xs text-ink/50">
-        {premium ? (
-          <span className="inline-flex items-center gap-1 font-medium text-pink">
-            <Star className="h-3.5 w-3.5" fill="currentColor" /> Colock&apos;t+ · likes
-            illimités
-          </span>
-        ) : (
-          (() => {
-            const r = Math.max(0, limiteJour - likesAujourdhui);
-            return `${r} like${r > 1 ? "s" : ""} gratuit${r > 1 ? "s" : ""} aujourd'hui`;
-          })()
-        )}
-      </p>
 
       {/* ---------- Filtres (pop-up) ---------- */}
       {filtresOuverts && (
