@@ -12,6 +12,7 @@ import {
   Trash2,
   Check,
   AlertCircle,
+  Repeat,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -109,6 +110,15 @@ export default function ParametresPage() {
     router.push("/");
   }
 
+  // Changer de mode (Annonceur ↔ Colocataire) sur le même compte
+  async function changerRole() {
+    if (!user) return;
+    const nouveau = estAnnonceur ? "colocataire" : "locataire";
+    await supabase.from("profiles").update({ role: nouveau }).eq("id", user.id);
+    await refreshProfile();
+    router.push(nouveau === "locataire" ? "/locataire" : "/swipe");
+  }
+
   // Autoriser les notifications système sur cet appareil/navigateur
   async function activerNotifsAppareil() {
     if (typeof window === "undefined" || !("Notification" in window)) {
@@ -162,6 +172,29 @@ export default function ParametresPage() {
         </p>
 
         <div className="space-y-6">
+          {/* Mode (rôle) */}
+          <Bloc
+            icone={<Repeat className="h-5 w-5 text-violet" />}
+            titre="Mode"
+          >
+            <p className="text-sm text-ink/70">
+              Tu es actuellement :{" "}
+              <span className="font-semibold text-ink">
+                {estAnnonceur ? "Annonceur (je propose un logement)" : "Colocataire (je cherche)"}
+              </span>
+            </p>
+            <button
+              onClick={changerRole}
+              className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
+            >
+              <Repeat className="h-4 w-4" />
+              Passer en mode {estAnnonceur ? "Colocataire" : "Annonceur"}
+            </button>
+            <p className="mt-2 text-xs text-ink/40">
+              Tes infos des deux côtés sont conservées (ton annonce et ton profil de recherche).
+            </p>
+          </Bloc>
+
           {/* Pseudo */}
           <Bloc icone={<AtSign className="h-5 w-5 text-pink" />} titre="Pseudo">
             <input
