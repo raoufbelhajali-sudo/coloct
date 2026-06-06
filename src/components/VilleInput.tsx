@@ -29,16 +29,18 @@ export default function VilleInput({
 
   function chercher(q: string) {
     if (timer.current) clearTimeout(timer.current);
-    if (q.trim().length < 1) {
+    const v = q.trim();
+    if (v.length < 1) {
       setSuggestions([]);
+      setOuvert(false);
       return;
     }
     timer.current = setTimeout(async () => {
       try {
         const r = await fetch(
           `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
-            q
-          )}&type=municipality&autocomplete=1&limit=6`
+            v
+          )}&type=municipality&autocomplete=1&limit=8`
         );
         const d = await r.json();
         const sugg: Suggestion[] = (d.features ?? []).map(
@@ -56,8 +58,13 @@ export default function VilleInput({
             };
           }
         );
+        // Code postal complet (5 chiffres) avec une seule commune → remplissage auto
+        if (/^\d{5}$/.test(v) && sugg.length === 1) {
+          choisir(sugg[0]);
+          return;
+        }
         setSuggestions(sugg);
-        setOuvert(true);
+        setOuvert(sugg.length > 0);
       } catch {
         setSuggestions([]);
       }
@@ -81,18 +88,23 @@ export default function VilleInput({
           chercher(e.target.value);
         }}
         onFocus={() => suggestions.length && setOuvert(true)}
-        placeholder="Code postal ou ville (ex. 75011 ou Paris)"
+        placeholder="Tape ton code postal (ex. 69003)"
+        inputMode="text"
         autoComplete="off"
         className={className}
       />
-      {departement && (
+      {departement ? (
         <p className="mt-1 text-xs text-ink/50">Département : {departement}</p>
+      ) : (
+        <p className="mt-1 text-xs text-ink/40">
+          Tape le code postal : la ville se remplit toute seule (toute la France).
+        </p>
       )}
 
       {ouvert && suggestions.length > 0 && (
         <>
-          <div className="fixed inset-0 z-30" onClick={() => setOuvert(false)} />
-          <ul className="absolute z-40 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-ink/10 bg-panel shadow-xl">
+          <div className="fixed inset-0 z-40" onClick={() => setOuvert(false)} />
+          <ul className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-lg border border-ink/10 bg-panel shadow-xl">
             {suggestions.map((s, i) => (
               <li key={`${s.cp}-${s.ville}-${i}`}>
                 <button
