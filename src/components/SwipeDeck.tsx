@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Sparkles, Star, Eye, Rocket, SlidersHorizontal } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket, SlidersHorizontal } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -64,7 +64,6 @@ export default function SwipeDeck() {
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
   const [quartier, setQuartier] = useState("all");
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
-  const [prenom, setPrenom] = useState("");
 
   // Pas connecté → direction la page de connexion
   useEffect(() => {
@@ -94,7 +93,6 @@ export default function SwipeDeck() {
   // On pré-remplit les filtres depuis le profil du compte connecté
   useEffect(() => {
     if (!profile) return;
-    setPrenom(profile.prenom);
     if (profile.budget_max) {
       const v = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, profile.budget_max));
       setBudgetMax(v);
@@ -216,16 +214,8 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
-      {/* Accueil + bouton filtres */}
-      <div className="mb-1 flex w-full items-center justify-between gap-2">
-        {prenom ? (
-          <p className="flex items-center gap-2 font-display text-xl">
-            Salut {prenom}
-            <Sparkles className="h-5 w-5 text-pink" />
-          </p>
-        ) : (
-          <span />
-        )}
+      {/* Bouton filtres */}
+      <div className="mb-1 flex w-full items-center justify-end gap-2">
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"
