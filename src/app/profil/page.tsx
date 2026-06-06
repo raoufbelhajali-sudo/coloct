@@ -477,7 +477,7 @@ function Section({
     if (forceOuvert) setOuvert(true);
   }, [forceOuvert]);
   return (
-    <div id={id} className="overflow-hidden rounded-2xl bg-panel">
+    <div id={id} className="rounded-2xl bg-panel">
       <button
         type="button"
         onClick={() => setOuvert((o) => !o)}
