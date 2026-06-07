@@ -23,8 +23,8 @@ export default function InviterAmis({
     try {
       if (navigator.share) {
         await navigator.share({
-          title: "FlatMap",
-          text: "Rejoins-moi sur FlatMap pour trouver une coloc à Paris !",
+          title: "FlatSwiper",
+          text: "Rejoins-moi sur FlatSwiper pour trouver une coloc à Paris !",
           url: lien,
         });
       } else {

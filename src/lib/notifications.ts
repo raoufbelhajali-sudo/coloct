@@ -61,7 +61,7 @@ export function useMessagesNonLus(): { count: number; alerte: string } {
           Notification.permission === "granted"
         ) {
           try {
-            new Notification("FlatMap", {
+            new Notification("FlatSwiper", {
               body: "Tu as reçu un nouveau message",
             });
           } catch {

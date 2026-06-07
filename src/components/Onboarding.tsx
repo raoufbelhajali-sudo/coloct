@@ -198,7 +198,7 @@ export default function Onboarding({
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
         <LogoMark className="mb-5 h-16 w-16" />
         <h1 className="font-display text-3xl font-semibold leading-tight">
-          Bienvenue sur FlatMap !
+          Bienvenue sur FlatSwiper !
         </h1>
         <p className="mt-3 max-w-sm text-ink/70">
           Prends quelques minutes pour <strong>bien remplir ton profil</strong>.

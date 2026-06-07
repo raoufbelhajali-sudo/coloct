@@ -121,7 +121,7 @@ export default function BoutiquePage() {
             // ----- Colocataire : une seule offre tout-en-un -----
             <OffreCard
               icon={<Zap className="h-6 w-6 text-white" />}
-              titre="Pass FlatMap"
+              titre="Pass FlatSwiper"
               duree="Par semaine · sans engagement"
               prix="2,99 €"
               avantages={[
@@ -145,7 +145,7 @@ export default function BoutiquePage() {
         <div className="mt-4 rounded-3xl bg-panel p-5">
           <p className="font-display text-lg font-semibold">Inviter des amis</p>
           <p className="mt-1 mb-3 text-sm text-ink/60">
-            Partage FlatMap et gagne des swipes gratuits.
+            Partage FlatSwiper et gagne des swipes gratuits.
           </p>
           <InviterAmis />
         </div>

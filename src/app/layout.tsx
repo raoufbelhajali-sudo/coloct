@@ -19,12 +19,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "FlatMap — Trouve ta colocation partout en France",
+  title: "FlatSwiper — Trouve ta colocation partout en France",
   description:
     "Swipe les colocations disponibles près de chez toi et entre en contact quand il y a un match.",
   appleWebApp: {
     capable: true,
-    title: "FlatMap",
+    title: "FlatSwiper",
     statusBarStyle: "default",
   },
 };
