@@ -18,6 +18,9 @@ import {
   SALAIRES,
   DUREES_COLOC,
   PROFESSIONS,
+  LANGUES,
+  NIVEAUX_SONORES,
+  GENRES_COLOC_RECHERCHE,
 } from "@/lib/profilOptions";
 import LieuSelect from "@/components/LieuSelect";
 
@@ -67,6 +70,9 @@ export default function Onboarding({
   const [tabac, setTabac] = useState(""); // "Non-fumeur" / "Fumeur" (obligatoire)
   const [animaux, setAnimaux] = useState(""); // ANIMAUX
   const [teletravail, setTeletravail] = useState(""); // TELETRAVAIL
+  const [langues, setLangues] = useState<string[]>([]);
+  const [niveauSonore, setNiveauSonore] = useState("");
+  const [genreColocRecherche, setGenreColocRecherche] = useState("");
   const [budgetMax, setBudgetMax] = useState(700);
   const [ageMin, setAgeMin] = useState("18");
   const [ageMax, setAgeMax] = useState("99");
@@ -169,6 +175,9 @@ export default function Onboarding({
         non_fumeur: tabac === "Non-fumeur",
         animaux: animaux === "J'aime les animaux",
         teletravail: teletravail === "Je télétravaille",
+        langues,
+        niveau_sonore: niveauSonore || null,
+        genre_coloc_recherche: genreColocRecherche || null,
         parking_souhaite: parking,
         budget_max: budgetMax,
         age_min: Number(ageMin) || null,
@@ -518,6 +527,23 @@ export default function Onboarding({
                   </p>
                 )}
                 <p className="mt-4 text-sm text-ink/70">
+                  Niveau sonore / soirées{" "}
+                  <span className="text-ink/40">(facultatif)</span>
+                </p>
+                <ChoixUnique
+                  options={NIVEAUX_SONORES}
+                  value={niveauSonore}
+                  onChange={setNiveauSonore}
+                />
+                <p className="mt-4 text-sm text-ink/70">
+                  Langues parlées <span className="text-ink/40">(facultatif)</span>
+                </p>
+                <ChoixMultiple
+                  options={LANGUES}
+                  values={langues}
+                  onToggle={(v) => toggle(langues, setLangues, v)}
+                />
+                <p className="mt-4 text-sm text-ink/70">
                   Tabac <span className="text-pink">*</span>
                 </p>
                 <ChoixUnique
@@ -636,6 +662,23 @@ export default function Onboarding({
                     {DUREES_COLOC.map((d) => (
                       <option key={d} value={d}>
                         {d}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mt-4">
+                  <label className="text-sm text-ink/70">
+                    Type de coloc recherché
+                  </label>
+                  <select
+                    value={genreColocRecherche}
+                    onChange={(e) => setGenreColocRecherche(e.target.value)}
+                    className={champ}
+                  >
+                    <option value="">Choisir…</option>
+                    {GENRES_COLOC_RECHERCHE.map((g) => (
+                      <option key={g} value={g}>
+                        {g}
                       </option>
                     ))}
                   </select>

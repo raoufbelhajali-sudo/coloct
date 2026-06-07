@@ -25,6 +25,7 @@ export default function ProfileDetail({
   modeDeVie.push(profile.non_fumeur ? "Non-fumeur" : "Fumeur");
   modeDeVie.push(profile.animaux ? "J'aime les animaux" : "Plutôt sans animaux");
   modeDeVie.push(profile.teletravail ? "Télétravail" : "Travail sur place");
+  if (profile.niveau_sonore) modeDeVie.push(profile.niveau_sonore);
   if (profile.parking_souhaite) modeDeVie.push("Souhaite un parking");
 
   return (
@@ -152,6 +153,20 @@ export default function ProfileDetail({
             {profile.duree_coloc && (
               <Bloc titre="Durée souhaitée">
                 <Pill variante="violet">{profile.duree_coloc}</Pill>
+              </Bloc>
+            )}
+
+            {profile.genre_coloc_recherche && (
+              <Bloc titre="Coloc recherchée">
+                <Pill variante="violet">{profile.genre_coloc_recherche}</Pill>
+              </Bloc>
+            )}
+
+            {profile.langues && profile.langues.length > 0 && (
+              <Bloc titre="Langues">
+                {profile.langues.map((l) => (
+                  <Pill key={l} variante="neutre">{l}</Pill>
+                ))}
               </Bloc>
             )}
           </div>

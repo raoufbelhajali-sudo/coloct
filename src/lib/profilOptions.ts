@@ -217,6 +217,23 @@ export const DUREES_MIN_BAIL = [
 ];
 export const GENRES_COLOC = ["Mixte", "Entre filles", "Entre garçons"];
 
+// Profil colocataire enrichi
+export const LANGUES = [
+  "Français", "Anglais", "Arabe", "Espagnol", "Italien",
+  "Allemand", "Portugais", "Chinois", "Autre",
+];
+export const NIVEAUX_SONORES = [
+  "Plutôt calme",
+  "Équilibré",
+  "J'aime recevoir / faire la fête",
+];
+export const GENRES_COLOC_RECHERCHE = [
+  "Indifférent",
+  "Plutôt entre filles",
+  "Plutôt entre garçons",
+  "Coloc mixte",
+];
+
 // Durée de colocation souhaitée (colocataire)
 export const DUREES_COLOC = [
   "Quelques semaines",

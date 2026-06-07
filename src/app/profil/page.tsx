@@ -11,7 +11,7 @@ import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import LieuSelect from "@/components/LieuSelect";
-import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS } from "@/lib/profilOptions";
+import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -39,6 +39,9 @@ export default function ProfilPage() {
   const [nonFumeur, setNonFumeur] = useState(false);
   const [animaux, setAnimaux] = useState(false);
   const [teletravail, setTeletravail] = useState(false);
+  const [langues, setLangues] = useState<string[]>([]);
+  const [niveauSonore, setNiveauSonore] = useState("");
+  const [genreColocRecherche, setGenreColocRecherche] = useState("");
   // Recherche
   const [budgetMax, setBudgetMax] = useState(700);
   const [ageMin, setAgeMin] = useState("18");
@@ -99,6 +102,9 @@ export default function ProfilPage() {
         ambiance: ambiance.length ? ambiance : null,
         rythme: rythme.length ? rythme : null,
         non_fumeur: nonFumeur,
+        langues,
+        niveau_sonore: niveauSonore || null,
+        genre_coloc_recherche: estLocataire ? null : genreColocRecherche || null,
         animaux,
         teletravail,
         budget_max: estLocataire ? null : budgetMax,
@@ -147,6 +153,9 @@ export default function ProfilPage() {
     setNonFumeur(profile.non_fumeur);
     setAnimaux(profile.animaux);
     setTeletravail(profile.teletravail);
+    setLangues(profile.langues ?? []);
+    setNiveauSonore(profile.niveau_sonore ?? "");
+    setGenreColocRecherche(profile.genre_coloc_recherche ?? "");
     if (profile.budget_max) setBudgetMax(profile.budget_max);
     setAgeMin(profile.age_min ? String(profile.age_min) : "18");
     setAgeMax(profile.age_max ? String(profile.age_max) : "99");
@@ -190,6 +199,9 @@ export default function ProfilPage() {
         ambiance: ambiance.length ? ambiance : null,
         rythme: rythme.length ? rythme : null,
         non_fumeur: nonFumeur,
+        langues,
+        niveau_sonore: niveauSonore || null,
+        genre_coloc_recherche: estLocataire ? null : genreColocRecherche || null,
         animaux,
         teletravail,
         budget_max: budgetMax,
@@ -430,6 +442,14 @@ export default function ProfilPage() {
               <Checkbox label="J'ai / j'aime les animaux" checked={animaux} onChange={setAnimaux} />
               <Checkbox label="Je télétravaille" checked={teletravail} onChange={setTeletravail} />
             </div>
+            <div>
+              <label className="text-sm text-ink/70">Niveau sonore / soirées</label>
+              <select value={niveauSonore} onChange={(e) => setNiveauSonore(e.target.value)} className={champClasses}>
+                <option value="">Choisir…</option>
+                {NIVEAUX_SONORES.map((n) => (<option key={n} value={n}>{n}</option>))}
+              </select>
+            </div>
+            <ChoixMultiple label="Langues parlées" options={LANGUES} values={langues} onToggle={(v) => toggle(langues, setLangues, v)} />
           </Section>
 
           {/* ---------- Recherche (colocataire uniquement) ---------- */}
@@ -477,6 +497,13 @@ export default function ProfilPage() {
                   {DUREES_COLOC.map((d) => (
                     <option key={d} value={d}>{d}</option>
                   ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-sm text-ink/70">Type de coloc recherché</label>
+                <select value={genreColocRecherche} onChange={(e) => setGenreColocRecherche(e.target.value)} className={champClasses}>
+                  <option value="">Choisir…</option>
+                  {GENRES_COLOC_RECHERCHE.map((g) => (<option key={g} value={g}>{g}</option>))}
                 </select>
               </div>
               <Checkbox label="Place de parking souhaitée" checked={parking} onChange={setParking} />

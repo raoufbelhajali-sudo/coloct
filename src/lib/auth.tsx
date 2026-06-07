@@ -35,6 +35,9 @@ export type Profile = {
   quartiers: string[] | null;
   date_emmenagement: string | null;
   duree_coloc: string | null; // durée de colocation souhaitée
+  langues: string[] | null; // langues parlées
+  niveau_sonore: string | null; // calme / équilibré / fêtard
+  genre_coloc_recherche: string | null; // préférence de mixité
   prompts: Record<string, string> | null; // réponses libres (questions de profil)
   non_fumeur: boolean;
   animaux: boolean;
