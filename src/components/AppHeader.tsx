@@ -7,19 +7,18 @@ import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 import { LogoMark } from "@/components/Logo";
 import RolePin from "@/components/RolePin";
 
-// Style commun des boutons-icônes du menu (ronds, survol rose)
-const iconBtn =
-  "flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink";
+// Bleu pastel pour l'icône Boutique
+const BLEU_PASTEL = "#74c0fc";
 
-// Icônes du menu en charbon mat (pas de cercle, juste l'icône colorée)
-const iconBtnCharbon =
-  "flex h-9 w-9 items-center justify-center rounded-full text-[#2b2b30] transition-colors hover:bg-panel";
+// Style d'un bouton de la barre du bas
+const navItem =
+  "relative flex h-14 w-14 items-center justify-center transition-transform active:scale-90";
 
 // Pastille de notification : noire et vibrante
 const badge =
-  "animate-vibrate absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white";
+  "animate-vibrate absolute right-2 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white";
 
-// En-tête commun aux pages connectées : logo + liens (déconnexion = dans Paramètres)
+// En-tête : logo + rôle en haut, icônes de navigation dans une barre fixe en bas
 export default function AppHeader({ compact = false }: { compact?: boolean }) {
   const { user, profile } = useAuth();
   const { count: nbMessages, alerte: alerteMsg } = useMessagesNonLus();
@@ -45,76 +44,84 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
           <MessageSquare className="h-4 w-4" /> {alerteMsg}
         </Link>
       )}
+
+      {/* Haut : logo + pastille de rôle */}
       <header
         className={
           "flex w-full max-w-sm items-center justify-between " +
           (compact ? "mb-2" : "mb-6")
         }
       >
-      <Link href={accueil} className="flex items-center gap-2">
-        <LogoMark className="h-7 w-7" />
-        <RolePin />
-      </Link>
-
-      <nav className="flex items-center gap-1.5">
-        {user && (
-          <Link
-            href="/jaime"
-            aria-label={estLoca ? "Candidats intéressés" : "Intéressés par toi"}
-            title={estLoca ? "Candidats intéressés" : "Intéressés par toi"}
-            className={iconBtn + " relative"}
-          >
-            <Sparkles className="h-[18px] w-[18px]" />
-            {nbLikes > 0 && (
-              <span className={badge}>{nbLikes > 9 ? "9+" : nbLikes}</span>
-            )}
-          </Link>
-        )}
-        {user && (
-          <Link
-            href="/matchs"
-            aria-label="Messages"
-            title="Messages"
-            className={iconBtnCharbon + " relative"}
-          >
-            <MessageSquare className="h-[18px] w-[18px]" />
-            {nbMessages > 0 && (
-              <span className={badge}>{nbMessages > 9 ? "9+" : nbMessages}</span>
-            )}
-          </Link>
-        )}
-        {user && (
-          <Link
-            href="/boutique"
-            aria-label="Boutique"
-            title="Boutique"
-            className={iconBtnCharbon}
-          >
-            <Zap className="h-[18px] w-[18px]" />
-          </Link>
-        )}
-        {user && (
-          <Link
-            href="/profil"
-            aria-label="Profil"
-            title="Profil"
-            className={iconBtnCharbon}
-          >
-            <UserRound className="h-[18px] w-[18px]" />
-          </Link>
-        )}
-        {user && (
-          <Link
-            href="/parametres"
-            aria-label="Paramètres"
-            title="Paramètres"
-            className={iconBtnCharbon}
-          >
-            <Settings className="h-[18px] w-[18px]" />
-          </Link>
-        )}
-      </nav>
+        <Link href={accueil} className="flex items-center gap-2">
+          <LogoMark className="h-7 w-7" />
+          <RolePin />
+        </Link>
       </header>
+
+      {/* Bas : barre de navigation fixe (icônes pleines) */}
+      {user && (
+        <nav
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-panel/95 backdrop-blur"
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
+          <div className="mx-auto flex max-w-sm items-center justify-around px-2">
+            <Link
+              href="/jaime"
+              aria-label={estLoca ? "Candidats intéressés" : "Intéressés par toi"}
+              title={estLoca ? "Candidats intéressés" : "Intéressés par toi"}
+              className={navItem}
+            >
+              <Sparkles className="h-6 w-6 text-black" fill="currentColor" />
+              {nbLikes > 0 && (
+                <span className={badge}>{nbLikes > 9 ? "9+" : nbLikes}</span>
+              )}
+            </Link>
+
+            <Link
+              href="/matchs"
+              aria-label="Messages"
+              title="Messages"
+              className={navItem}
+            >
+              <MessageSquare className="h-6 w-6 text-black" fill="currentColor" />
+              {nbMessages > 0 && (
+                <span className={badge}>{nbMessages > 9 ? "9+" : nbMessages}</span>
+              )}
+            </Link>
+
+            <Link
+              href="/boutique"
+              aria-label="Boutique"
+              title="Boutique"
+              className={navItem}
+            >
+              <Zap
+                className="h-6 w-6"
+                style={{ color: BLEU_PASTEL }}
+                fill={BLEU_PASTEL}
+              />
+            </Link>
+
+            <Link
+              href="/profil"
+              aria-label="Profil"
+              title="Profil"
+              className={navItem}
+            >
+              <UserRound className="h-6 w-6 text-black" fill="currentColor" />
+            </Link>
+
+            <Link
+              href="/parametres"
+              aria-label="Paramètres"
+              title="Paramètres"
+              className={navItem}
+            >
+              <Settings className="h-6 w-6 text-black" fill="currentColor" />
+            </Link>
+          </div>
+        </nav>
+      )}
     </>
   );
 }
