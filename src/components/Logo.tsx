@@ -10,23 +10,22 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
           <stop offset="100%" stopColor="#fd7e14" />
         </linearGradient>
       </defs>
-      {/* F façon clé : 2 bras (dents) en haut + tige + anneau (tête) en bas */}
+      {/* F façon clé : 2 bras (dents) en haut + tige + tête (anneau) tout en bas */}
       <g fill="url(#colockt-grad)">
         {/* Tige verticale = barre du F / corps de la clé */}
-        <rect x="13" y="8" width="8" height="26" rx="3" />
+        <rect x="13" y="7" width="8" height="18" rx="3" />
         {/* Bras supérieur du F = dent du haut */}
-        <rect x="13" y="8" width="22" height="7" rx="3" />
+        <rect x="13" y="7" width="22" height="7" rx="3" />
         {/* Bras médian du F = dent du milieu (plus courte) */}
-        <rect x="13" y="19" width="15" height="7" rx="3" />
+        <rect x="13" y="17" width="15" height="7" rx="3" />
+        {/* Tête de la clé = anneau au bas du F */}
+        <circle cx="17" cy="34" r="9" />
       </g>
-      {/* Anneau de la clé = bas du F, même épaisseur que les barres (8) */}
-      <circle
-        cx="17"
-        cy="37"
-        r="7"
-        fill="none"
-        stroke="url(#colockt-grad)"
-        strokeWidth="8"
+      {/* Cœur blanc évidé au centre de la tête */}
+      <path
+        fill="#fff"
+        transform="translate(11 28) scale(0.5)"
+        d="M12 21 C12 21 3 15 3 8.5 C3 5.4 5.5 3 8.5 3 C10.3 3 11.5 4 12 5 C12.5 4 13.7 3 15.5 3 C18.5 3 21 5.4 21 8.5 C21 15 12 21 12 21 Z"
       />
     </svg>
   );
