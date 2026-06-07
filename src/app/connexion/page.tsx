@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Phone, Mail, ArrowLeft } from "lucide-react";
+import { Mail, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { LogoMark } from "@/components/Logo";
 
@@ -109,16 +109,8 @@ export default function ConnexionPage() {
               Continuer avec Google
             </button>
 
-            <button
-              onClick={() => {
-                reset();
-                setEtape("phone");
-              }}
-              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-panel-2 px-4 py-3.5 font-medium text-ink transition-colors hover:border-ink/30"
-            >
-              <Phone className="h-5 w-5 text-violet" />
-              Continuer avec un téléphone
-            </button>
+            {/* Connexion par SMS désactivée pour l'instant (fournisseur SMS payant
+                à brancher plus tard). Le code des étapes phone reste en place. */}
 
             <button
               onClick={() => {
