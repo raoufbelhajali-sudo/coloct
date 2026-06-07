@@ -93,6 +93,7 @@ export type MatchActivite = {
   matchId: number;
   createdAt: string;
   dernierAutreMsg: string | null; // date du dernier message reçu de l'autre
+  dernierAutreType: string | null; // type du dernier message reçu (doc_name)
 };
 
 // Récupère, pour chaque match du compte, sa date et la date du dernier message
@@ -109,15 +110,17 @@ export async function getMatchesActivite(
   const ids = matches.map((m) => m.id);
   const { data: msgs } = await supabase
     .from("messages")
-    .select("match_id, sender_id, created_at")
+    .select("match_id, sender_id, created_at, doc_name")
     .in("match_id", ids)
     .order("created_at", { ascending: false });
 
-  // Dernier message reçu (envoyé par quelqu'un d'autre) par match
+  // Dernier message reçu (envoyé par quelqu'un d'autre) par match : date + type
   const dernierAutre = new Map<number, string>();
+  const dernierType = new Map<number, string | null>();
   for (const m of msgs ?? []) {
     if (m.sender_id !== userId && !dernierAutre.has(m.match_id)) {
       dernierAutre.set(m.match_id, m.created_at);
+      dernierType.set(m.match_id, m.doc_name ?? null);
     }
   }
 
@@ -125,6 +128,7 @@ export async function getMatchesActivite(
     matchId: m.id,
     createdAt: m.created_at,
     dernierAutreMsg: dernierAutre.get(m.id) ?? null,
+    dernierAutreType: dernierType.get(m.id) ?? null,
   }));
 }
 

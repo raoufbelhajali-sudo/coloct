@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "./auth";
-import { getMatchesActivite } from "./messages";
+import { getMatchesActivite, MARQUEUR_VISITE_OK } from "./messages";
 import { getLikesRecus } from "./likes";
 
 // Clé propre à CHAQUE compte (sinon, en testant 2 comptes dans le même
@@ -49,14 +49,17 @@ export function useMessagesNonLus(): { count: number; alerte: string } {
       const activite = await getMatchesActivite(user!.id);
       let n = 0;
       let plusRecent = "";
+      let plusRecentType: string | null = null;
       for (const a of activite) {
         const lu = localStorage.getItem(cleMatchLu(user!.id, a.matchId)) || "";
         // non lu = message reçu plus récent que la dernière ouverture,
         // ou match jamais ouvert (pas encore de message)
         const nonLu = a.dernierAutreMsg ? a.dernierAutreMsg > lu : !lu;
         if (nonLu) n++;
-        if (a.dernierAutreMsg && a.dernierAutreMsg > plusRecent)
+        if (a.dernierAutreMsg && a.dernierAutreMsg > plusRecent) {
           plusRecent = a.dernierAutreMsg;
+          plusRecentType = a.dernierAutreType;
+        }
       }
       if (!actif) return;
       setCount(n);
@@ -66,7 +69,12 @@ export function useMessagesNonLus(): { count: number; alerte: string } {
         dernierVu.current = plusRecent; // premier passage = référence
       } else if (plusRecent && plusRecent > dernierVu.current) {
         dernierVu.current = plusRecent;
-        setAlerte("Nouveau message reçu");
+        // Message spécifique si c'est une confirmation de rendez-vous
+        const confirmation = plusRecentType === MARQUEUR_VISITE_OK;
+        const texte = confirmation
+          ? "Rendez-vous confirmé !"
+          : "Nouveau message reçu";
+        setAlerte(texte);
         if (
           typeof window !== "undefined" &&
           "Notification" in window &&
@@ -74,7 +82,9 @@ export function useMessagesNonLus(): { count: number; alerte: string } {
         ) {
           try {
             new Notification("FlatSwiper", {
-              body: "Tu as reçu un nouveau message",
+              body: confirmation
+                ? "Ta visite a été acceptée 🎉"
+                : "Tu as reçu un nouveau message",
             });
           } catch {
             /* certains navigateurs refusent en dehors d'un service worker */
