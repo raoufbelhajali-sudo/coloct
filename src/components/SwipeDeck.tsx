@@ -13,6 +13,7 @@ import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { compatAnnonce } from "@/lib/compat";
 import { getIdsBloques } from "@/lib/blocks";
+import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import RolePin from "@/components/RolePin";
@@ -34,6 +35,9 @@ type Direction = "left" | "right";
 // Bornes de budget pour le curseur
 const BUDGET_MIN = 500;
 const BUDGET_MAX = 900;
+
+// Borne du filtre distance (au max = pas de limite, "toute la France")
+const DIST_MAX = 200;
 
 // Nombre de "j'aime" gratuits par jour
 const LIKES_GRATUITS_PAR_JOUR = 10;
@@ -67,6 +71,8 @@ export default function SwipeDeck() {
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
   const [quartier, setQuartier] = useState("all");
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
+  const [maxDistance, setMaxDistance] = useState(DIST_MAX); // DIST_MAX = pas de limite
+  const [coordChercheur, setCoordChercheur] = useState<Coord | null>(null);
 
   // Pas connecté → direction la page de connexion
   useEffect(() => {
@@ -103,6 +109,21 @@ export default function SwipeDeck() {
     if (profile.date_emmenagement) setDispoAvant(profile.date_emmenagement);
   }, [profile]);
 
+  // Coordonnées de la ville recherchée par le chercheur (pour le filtre distance)
+  useEffect(() => {
+    if (!profile?.ville) {
+      setCoordChercheur(null);
+      return;
+    }
+    let actif = true;
+    geocodeVille(profile.ville, profile.departement ?? undefined).then((c) => {
+      if (actif) setCoordChercheur(c);
+    });
+    return () => {
+      actif = false;
+    };
+  }, [profile?.ville, profile?.departement]);
+
   // Liste des quartiers présents dans les annonces (pour le menu déroulant)
   const quartiers = useMemo(
     () => Array.from(new Set(allListings.map((l) => l.quartier))).sort(),
@@ -117,9 +138,28 @@ export default function SwipeDeck() {
       if (l.loyer > budgetMax) return false;
       if (quartier !== "all" && l.quartier !== quartier) return false;
       if (dispoAvant && l.dispo > dispoAvant) return false;
+      // Filtre distance : seulement si une limite est posée, le chercheur est
+      // localisé et l'annonce a des coordonnées (sinon on ne masque pas).
+      if (
+        maxDistance < DIST_MAX &&
+        coordChercheur &&
+        l.lat != null &&
+        l.lng != null &&
+        distanceKm(coordChercheur, { lat: l.lat, lng: l.lng }) > maxDistance
+      )
+        return false;
       return true;
     });
-  }, [allListings, swipedIds, bloques, budgetMax, quartier, dispoAvant]);
+  }, [
+    allListings,
+    swipedIds,
+    bloques,
+    budgetMax,
+    quartier,
+    dispoAvant,
+    maxDistance,
+    coordChercheur,
+  ]);
 
   // Position horizontale de la carte du dessus (pour le glissement)
   const x = useMotionValue(0);
@@ -304,6 +344,37 @@ export default function SwipeDeck() {
               className="accent-pink mt-2 w-full"
             />
 
+            {/* Distance */}
+            <div className="mt-4 flex items-center justify-between text-sm">
+              <label htmlFor="distance" className="text-ink/70">
+                Distance max
+              </label>
+              <span className="font-semibold text-pink">
+                {maxDistance >= DIST_MAX
+                  ? "Toute la France"
+                  : `${maxDistance} km`}
+              </span>
+            </div>
+            <input
+              id="distance"
+              type="range"
+              min={5}
+              max={DIST_MAX}
+              step={5}
+              value={maxDistance}
+              onChange={(e) => {
+                setMaxDistance(Number(e.target.value));
+                resetDeck();
+              }}
+              className="accent-pink mt-2 w-full"
+            />
+            {!coordChercheur && maxDistance < DIST_MAX && (
+              <p className="mt-1 text-xs text-ink/40">
+                Renseigne ta ville recherchée (dans ton profil) pour activer le
+                filtre par distance.
+              </p>
+            )}
+
             {/* Quartier + date */}
             <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div>
@@ -344,12 +415,16 @@ export default function SwipeDeck() {
               </div>
             </div>
 
-            {(budgetMax !== BUDGET_MAX || quartier !== "all" || dispoAvant) && (
+            {(budgetMax !== BUDGET_MAX ||
+              quartier !== "all" ||
+              dispoAvant ||
+              maxDistance < DIST_MAX) && (
               <button
                 onClick={() => {
                   setBudgetMax(BUDGET_MAX);
                   setQuartier("all");
                   setDispoAvant("");
+                  setMaxDistance(DIST_MAX);
                   resetDeck();
                 }}
                 className="mt-3 text-sm text-pink-light hover:underline"
@@ -445,7 +520,7 @@ export default function SwipeDeck() {
                 className="relative flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110 hover:text-pink"
               >
                 <SlidersHorizontal className="h-5 w-5" />
-                {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant) && (
+                {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX) && (
                   <span className="bg-signature absolute right-2.5 top-2.5 h-2 w-2 rounded-full" />
                 )}
               </button>

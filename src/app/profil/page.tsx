@@ -11,7 +11,7 @@ import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import LieuSelect from "@/components/LieuSelect";
-import { INTERETS, AMBIANCES, RYTHMES, SALAIRES } from "@/lib/profilOptions";
+import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -32,6 +32,7 @@ export default function ProfilPage() {
   // À propos
   const [bio, setBio] = useState("");
   const [interets, setInterets] = useState<string[]>([]);
+  const [prompts, setPrompts] = useState<Record<string, string>>({});
   // Mode de vie
   const [ambiance, setAmbiance] = useState<string[]>([]);
   const [rythme, setRythme] = useState<string[]>([]);
@@ -93,6 +94,7 @@ export default function ProfilPage() {
         salaire: sansSalaire ? null : salaire || null,
         bio: bio.trim() || null,
         interets,
+        prompts,
         ambiance: ambiance.length ? ambiance : null,
         rythme: rythme.length ? rythme : null,
         non_fumeur: nonFumeur,
@@ -137,6 +139,7 @@ export default function ProfilPage() {
     setSalaire(profile.salaire ?? "");
     setBio(profile.bio ?? "");
     setInterets(profile.interets ?? []);
+    setPrompts(profile.prompts ?? {});
     setAmbiance(profile.ambiance ?? []);
     setRythme(profile.rythme ?? []);
     setNonFumeur(profile.non_fumeur);
@@ -180,6 +183,7 @@ export default function ProfilPage() {
         salaire: sansSalaire ? null : salaire || null,
         bio: bio.trim() || null,
         interets,
+        prompts,
         ambiance: ambiance.length ? ambiance : null,
         rythme: rythme.length ? rythme : null,
         non_fumeur: nonFumeur,
@@ -368,6 +372,32 @@ export default function ProfilPage() {
                 logement et des colocs compatibles.
               </p>
             )}
+
+            {/* Prompts : réponses libres (facultatif) */}
+            <div className="pt-2">
+              <p className="text-sm font-medium text-ink/80">
+                En quelques mots <span className="text-ink/40">(facultatif)</span>
+              </p>
+              <p className="mb-2 text-xs text-ink/50">
+                Réponds à ce qui t&apos;inspire — ça rend ton profil plus vivant.
+              </p>
+              <div className="space-y-3">
+                {PROMPTS.map((q) => (
+                  <div key={q}>
+                    <label className="text-xs text-ink/60">{q}</label>
+                    <input
+                      value={prompts[q] ?? ""}
+                      onChange={(e) =>
+                        setPrompts((p) => ({ ...p, [q]: e.target.value }))
+                      }
+                      placeholder="Ta réponse…"
+                      maxLength={120}
+                      className={champClasses}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </Section>
 
           {/* ---------- Mode de vie ---------- */}

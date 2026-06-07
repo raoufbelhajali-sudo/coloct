@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
   ListChecks, CheckSquare, Square, ChevronDown, MoreVertical, Trash2, Ban, Flag,
+  CalendarPlus, CalendarClock,
 } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -24,6 +25,8 @@ import {
   setDocumentsRequis,
   getLecture,
   marquerLu,
+  proposerVisite,
+  MARQUEUR_VISITE,
   TYPES_DOCUMENTS,
   supprimerMatch,
   type Message,
@@ -57,6 +60,10 @@ export default function ConversationPage() {
   const [lecture, setLecture] = useState<{ colocataire: string | null; locataire: string | null }>({ colocataire: null, locataire: null });
   const [signalerOuvert, setSignalerOuvert] = useState(false);
   const [signalEnvoye, setSignalEnvoye] = useState(false);
+  const [visiteOuverte, setVisiteOuverte] = useState(false);
+  const [visiteDate, setVisiteDate] = useState("");
+  const [visiteHeure, setVisiteHeure] = useState("");
+  const [visiteLieu, setVisiteLieu] = useState("");
   const [docsRequis, setDocsRequis] = useState<string[]>([]);
   const [checklistOuverte, setChecklistOuverte] = useState(false);
   const finRef = useRef<HTMLDivElement>(null);
@@ -136,6 +143,35 @@ export default function ConversationPage() {
     await bloquerUtilisateur(user.id, autreProfil.id);
     await supprimerMatch(matchId);
     router.push("/matchs");
+  }
+
+  // Propose une visite (date + heure + lieu)
+  async function envoyerVisite(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user || !visiteDate || !visiteHeure) return;
+    const iso = new Date(`${visiteDate}T${visiteHeure}`).toISOString();
+    await proposerVisite(matchId, user.id, iso, visiteLieu.trim());
+    setVisiteOuverte(false);
+    setVisiteDate("");
+    setVisiteHeure("");
+    setVisiteLieu("");
+    setMessages(await getMessages(matchId));
+  }
+
+  // Lien "Ajouter à Google Agenda" pour une visite
+  function lienAgenda(iso: string, lieu: string): string {
+    const debut = new Date(iso);
+    const fin = new Date(debut.getTime() + 60 * 60 * 1000);
+    const fmt = (d: Date) =>
+      d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const params = new URLSearchParams({
+      action: "TEMPLATE",
+      text: "Visite colocation — FlatSwiper",
+      dates: `${fmt(debut)}/${fmt(fin)}`,
+      details: "Visite organisée via FlatSwiper",
+      location: lieu || "",
+    });
+    return `https://calendar.google.com/calendar/render?${params.toString()}`;
   }
 
   // Signale l'autre personne
@@ -413,6 +449,74 @@ export default function ConversationPage() {
         />
       )}
 
+      {/* Planifier une visite */}
+      {visiteOuverte && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setVisiteOuverte(false)}
+        >
+          <form
+            onSubmit={envoyerVisite}
+            className="w-full max-w-sm rounded-3xl bg-panel p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <p className="flex items-center gap-2 font-display text-xl font-semibold">
+                <CalendarClock className="h-5 w-5 text-pink" /> Planifier une visite
+              </p>
+              <button
+                type="button"
+                onClick={() => setVisiteOuverte(false)}
+                aria-label="Fermer"
+                className="flex h-8 w-8 items-center justify-center rounded-full text-ink/60 hover:bg-panel-2"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm text-ink/70">Date</label>
+                <input
+                  type="date"
+                  required
+                  value={visiteDate}
+                  onChange={(e) => setVisiteDate(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-3 text-ink focus:border-pink focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-ink/70">Heure</label>
+                <input
+                  type="time"
+                  required
+                  value={visiteHeure}
+                  onChange={(e) => setVisiteHeure(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-3 text-ink focus:border-pink focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-ink/70">
+                  Adresse / point de rendez-vous{" "}
+                  <span className="text-ink/40">(facultatif)</span>
+                </label>
+                <input
+                  value={visiteLieu}
+                  onChange={(e) => setVisiteLieu(e.target.value)}
+                  placeholder="ex. devant le 12 rue…"
+                  className="mt-1 w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+                />
+              </div>
+            </div>
+            <button
+              type="submit"
+              className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
+            >
+              Proposer la visite
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* Signaler un profil */}
       {signalerOuvert && (
         <div
@@ -621,6 +725,41 @@ export default function ConversationPage() {
                 </button>
               );
             }
+            // Message = proposition de visite
+            if (m.doc_name === MARQUEUR_VISITE) {
+              const [iso, lieu] = m.content.split("|");
+              const d = new Date(iso);
+              const quand = d.toLocaleString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              return (
+                <div
+                  key={m.id}
+                  className={
+                    "max-w-[85%] rounded-2xl bg-panel-2 p-3 " +
+                    (deMoi ? "self-end" : "self-start")
+                  }
+                >
+                  <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
+                    <CalendarClock className="h-4 w-4 text-pink" /> Visite proposée
+                  </p>
+                  <p className="mt-1 text-sm capitalize text-ink/85">{quand}</p>
+                  {lieu && <p className="text-sm text-ink/60">{lieu}</p>}
+                  <a
+                    href={lienAgenda(iso, lieu)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block rounded-full bg-pink/10 px-3 py-1.5 text-xs font-semibold text-pink hover:bg-pink/20"
+                  >
+                    Ajouter à mon agenda
+                  </a>
+                </div>
+              );
+            }
             // Message texte
             return (
               <div
@@ -695,6 +834,16 @@ export default function ConversationPage() {
               className="hidden"
             />
           </label>
+          {/* Planifier une visite */}
+          <button
+            type="button"
+            onClick={() => setVisiteOuverte(true)}
+            title="Planifier une visite"
+            aria-label="Planifier une visite"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-pink"
+          >
+            <CalendarPlus className="h-5 w-5" />
+          </button>
           <input
             value={texte}
             onChange={(e) => setTexte(e.target.value)}

@@ -149,6 +149,24 @@ export async function sendMessage(
     .insert({ match_id: matchId, sender_id: senderId, content });
 }
 
+// Marqueur d'un message "proposition de visite"
+export const MARQUEUR_VISITE = "Visite proposée";
+
+// Propose une visite (date/heure ISO + lieu) sous forme de message spécial
+export async function proposerVisite(
+  matchId: number,
+  senderId: string,
+  iso: string,
+  lieu: string
+): Promise<void> {
+  await supabase.from("messages").insert({
+    match_id: matchId,
+    sender_id: senderId,
+    content: `${iso}|${lieu}`,
+    doc_name: MARQUEUR_VISITE,
+  });
+}
+
 // Types de documents proposés dans la checklist
 export const TYPES_DOCUMENTS = [
   "Pièce d'identité",

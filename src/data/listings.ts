@@ -34,6 +34,8 @@ export type Listing = {
   ownerPhoto?: string | null; // photo de profil (visage) de l'annonceur
   ownerPrenom?: string | null; // prénom de l'annonceur
   ownerId?: string | null; // id du compte annonceur (pour le filtrage)
+  lat?: number | null; // coordonnées (filtre par distance)
+  lng?: number | null;
 };
 
 // Petite fonction utilitaire pour construire l'URL d'une photo Unsplash

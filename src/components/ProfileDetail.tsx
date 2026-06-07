@@ -102,6 +102,22 @@ export default function ProfileDetail({
               <p className="text-ink/80">{profile.bio}</p>
             ) : null}
 
+            {/* Prompts : réponses libres */}
+            {profile.prompts &&
+              Object.entries(profile.prompts).filter(([, a]) => a && a.trim())
+                .length > 0 && (
+                <div className="space-y-2">
+                  {Object.entries(profile.prompts)
+                    .filter(([, a]) => a && a.trim())
+                    .map(([q, a]) => (
+                      <div key={q} className="rounded-2xl bg-panel-2 p-3">
+                        <p className="text-xs text-ink/50">{q}</p>
+                        <p className="text-ink/90">{a}</p>
+                      </div>
+                    ))}
+                </div>
+              )}
+
             {/* Mode de vie en premier : c'est le plus important pour l'annonceur */}
             {modeDeVie.length > 0 && (
               <Bloc titre="Mode de vie">

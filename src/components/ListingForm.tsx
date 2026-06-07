@@ -8,6 +8,7 @@ import { createListing, updateListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import LieuSelect from "@/components/LieuSelect";
 import { SERVICES } from "@/lib/profilOptions";
+import { geocodeVille } from "@/lib/geo";
 
 const PHOTO_PAR_DEFAUT =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70";
@@ -117,6 +118,9 @@ export default function ListingForm({
         })
       : "Dès que possible";
 
+    // Coordonnées de la ville (pour le filtre par distance côté chercheur)
+    const coord = await geocodeVille(ville.trim(), departement);
+
     try {
       const donnees = {
         loyer: Number(loyer),
@@ -125,6 +129,8 @@ export default function ListingForm({
         departement,
         // arrondissement déduit si Paris (75), sinon non utilisé
         arrondissement: null,
+        lat: coord?.lat ?? null,
+        lng: coord?.lng ?? null,
         surface: Number(surface),
         nb_occupants: Number(nbOccupants) || null,
         meuble,

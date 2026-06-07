@@ -43,6 +43,8 @@ export type ListingRow = {
   description: string;
   boosted_until: string | null;
   owner_id: string | null;
+  lat: number | null;
+  lng: number | null;
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -67,6 +69,8 @@ export function mapListingRow(r: ListingRow): Listing {
     photos: r.photos ?? [],
     description: r.description,
     boosted_until: r.boosted_until,
+    lat: r.lat ?? null,
+    lng: r.lng ?? null,
   };
 }
 

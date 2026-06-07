@@ -200,6 +200,16 @@ export const SERVICES = [
   "Cuisine équipée",
 ];
 
+// Questions "prompts" de profil (réponses libres, façon Tinder/Muzz)
+export const PROMPTS = [
+  "Le coloc idéal pour moi, c'est…",
+  "Chez moi, le dimanche…",
+  "Ce que j'apporte à une coloc…",
+  "Mon petit plus…",
+  "Ce que je ne supporte pas en coloc…",
+  "Ma soirée parfaite à la maison…",
+];
+
 // Choix de mode de vie (stockés en booléens dans le profil)
 export const TABAC = ["Non-fumeur", "Fumeur"];
 export const ANIMAUX = ["J'aime les animaux", "Plutôt sans animaux"];
