@@ -22,6 +22,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
 import RolePin from "@/components/RolePin";
+import AppHeader from "@/components/AppHeader";
 
 export default function ParametresPage() {
   const router = useRouter();
@@ -188,7 +189,9 @@ export default function ParametresPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center px-4 py-6">
+    <main className="flex min-h-dvh flex-col items-center px-4 pb-28 pt-6">
+      {/* Barre de navigation du bas (toujours visible) */}
+      <AppHeader hideTop />
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
