@@ -3,6 +3,7 @@ import { Fraunces, Outfit } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import MatchPopup from "@/components/MatchPopup";
+import CookieBanner from "@/components/CookieBanner";
 
 // Police des titres et du logo (serif chic)
 const fraunces = Fraunces({
@@ -47,6 +48,7 @@ export default function RootLayout({
         <AuthProvider>
           <MatchPopup />
           {children}
+          <CookieBanner />
         </AuthProvider>
       </body>
     </html>
