@@ -45,17 +45,14 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
         </Link>
       )}
 
-      {/* Haut : logo + pastille de rôle */}
+      {/* Haut : pastille de rôle uniquement (le logo est passé en bas) */}
       <header
         className={
           "flex w-full max-w-sm items-center justify-between " +
           (compact ? "mb-2" : "mb-6")
         }
       >
-        <Link href={accueil} className="flex items-center gap-2">
-          <LogoMark className="h-7 w-7" />
-          <RolePin />
-        </Link>
+        <RolePin />
       </header>
 
       {/* Bas : barre de navigation fixe (icônes pleines) */}
@@ -87,6 +84,16 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
               {nbMessages > 0 && (
                 <span className={badge}>{nbMessages > 9 ? "9+" : nbMessages}</span>
               )}
+            </Link>
+
+            {/* Clé (logo) au centre : ramène à l'accueil */}
+            <Link
+              href={accueil}
+              aria-label="Accueil"
+              title="Accueil"
+              className="relative -mt-5 flex h-14 w-14 items-center justify-center rounded-full border-4 border-bg bg-panel shadow-lg transition-transform active:scale-90"
+            >
+              <LogoMark className="h-8 w-8" />
             </Link>
 
             <Link
