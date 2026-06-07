@@ -841,6 +841,37 @@ export default function ConversationPage() {
         <div ref={finRef} />
       </div>
 
+      {/* Suggestions d'accroche / questions (selon le rôle) */}
+      {!recording && (
+        <div className="mt-2 flex w-full max-w-sm gap-2 overflow-x-auto pb-1">
+          {(estLocataire
+            ? [
+                "Quand voudrais-tu emménager ?",
+                "As-tu un garant ?",
+                "Tu cherches pour combien de temps ?",
+                "Quelle est ta situation pro ?",
+                "Tu fumes ? as-tu des animaux ?",
+              ]
+            : [
+                "Bonjour ! Ton annonce m'intéresse 😊",
+                "La chambre est-elle toujours dispo ?",
+                "Quand peut-on faire une visite ?",
+                "Les charges sont-elles comprises ?",
+                "Quel est le montant de la caution ?",
+              ]
+          ).map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setTexte(s)}
+              className="shrink-0 rounded-full border border-ink/15 bg-panel px-3 py-1.5 text-xs text-ink/75 hover:border-pink hover:text-pink"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Zone d'envoi */}
       {recording ? (
         <div className="mt-3 flex w-full max-w-sm items-center gap-2 rounded-full bg-panel px-3 py-2">
