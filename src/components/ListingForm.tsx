@@ -100,8 +100,10 @@ export default function ListingForm({
     e.preventDefault();
     if (!user) return;
     setErreur("");
-    if (photos.length === 0) {
-      setErreur("Ajoute au moins une photo de l'appartement.");
+    if (photos.length < 5) {
+      setErreur(
+        `Ajoute au moins 5 photos : la chambre proposée, la cuisine, les WC / salle de bain et les pièces communes (${photos.length}/5).`
+      );
       return;
     }
     setEnCours(true);
@@ -225,8 +227,14 @@ export default function ListingForm({
       {/* Photos de l'appartement (depuis le téléphone) */}
       <div>
         <label className="text-sm text-ink/70">
-          Photos de l&apos;appartement <span className="text-pink">*</span>
+          Photos de l&apos;appartement (au moins 5){" "}
+          <span className="text-pink">*</span>
         </label>
+        <p className="mt-1 text-xs text-ink/55">
+          Obligatoire : la <strong>chambre proposée</strong>, la{" "}
+          <strong>cuisine</strong>, les <strong>WC / salle de bain</strong> et les{" "}
+          <strong>pièces communes</strong> (salon…).
+        </p>
         <div className="mt-2 flex flex-wrap gap-3">
           {photos.map((url) => (
             <div
@@ -260,9 +268,14 @@ export default function ListingForm({
             />
           </label>
         </div>
-        <p className="mt-1 text-xs text-ink/40">
-          Au moins une photo par pièce (chambre, salon, cuisine, salle de
-          bain…). La première sera la photo principale.
+        <p
+          className={
+            "mt-1 text-xs " + (photos.length < 5 ? "text-pink" : "text-ink/40")
+          }
+        >
+          {photos.length < 5
+            ? `Encore ${5 - photos.length} photo${5 - photos.length > 1 ? "s" : ""} à ajouter (${photos.length}/5). La première sera la photo principale.`
+            : "C'est bon ! La première photo sera la photo principale."}
         </p>
       </div>
 
