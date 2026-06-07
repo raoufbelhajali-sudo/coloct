@@ -1,4 +1,4 @@
-// Logo de Colock't : une clé (accès au logement) avec un cœur évidé
+// Logo de FlatMap : une clé (accès au logement) avec un cœur évidé
 // (trouver la bonne coloc), dans le dégradé signature corail → orange.
 
 export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
@@ -26,7 +26,7 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
   );
 }
 
-// Logo complet : symbole + nom « Colock't »
+// Logo complet : symbole + nom « FlatMap »
 export default function Logo({
   markClass = "h-9 w-9",
   textClass = "text-2xl",
@@ -38,7 +38,7 @@ export default function Logo({
     <span className="inline-flex items-center gap-2">
       <LogoMark className={markClass} />
       <span className={`text-signature font-display font-semibold ${textClass}`}>
-        Colock&apos;t
+        FlatMap
       </span>
     </span>
   );

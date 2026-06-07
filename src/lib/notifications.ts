@@ -61,7 +61,7 @@ export function useMessagesNonLus(): { count: number; alerte: string } {
           Notification.permission === "granted"
         ) {
           try {
-            new Notification("Colock't", {
+            new Notification("FlatMap", {
               body: "Tu as reçu un nouveau message",
             });
           } catch {

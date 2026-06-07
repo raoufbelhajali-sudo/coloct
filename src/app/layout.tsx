@@ -19,12 +19,12 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Colock't — Trouve ta coloc à Paris",
+  title: "FlatMap — Trouve ta colocation partout en France",
   description:
-    "Swipe les colocations parisiennes disponibles et entre en contact quand il y a un match.",
+    "Swipe les colocations disponibles près de chez toi et entre en contact quand il y a un match.",
   appleWebApp: {
     capable: true,
-    title: "Colock't",
+    title: "FlatMap",
     statusBarStyle: "default",
   },
 };

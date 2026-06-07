@@ -24,7 +24,7 @@ export default function Home() {
       {/* Logo */}
       <LogoMark className="mb-4 h-20 w-20 drop-shadow-[0_8px_30px_rgba(250,82,82,0.35)]" />
       <h1 className="font-display text-6xl font-semibold tracking-tight sm:text-7xl">
-        <span className="text-signature">Colock&apos;t</span>
+        <span className="text-signature">FlatMap</span>
       </h1>
 
       {/* Accroche */}

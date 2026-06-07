@@ -148,7 +148,7 @@ export default function SwipeDeck() {
   async function fly(dir: Direction) {
     if (animating.current || !current || !user) return;
 
-    // Limite de likes gratuits : on bloque le "j'aime" et on propose Colock't+
+    // Limite de likes gratuits : on bloque le "j'aime" et on propose FlatMap+
     if (dir === "right" && likesEpuises) {
       setPaywall(true);
       return;
@@ -227,7 +227,7 @@ export default function SwipeDeck() {
         <div className="ml-auto flex items-center gap-2">
         {premium ? (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold text-pink">
-            <Star className="h-4 w-4" fill="currentColor" /> Colock&apos;t+ · illimité
+            <Star className="h-4 w-4" fill="currentColor" /> FlatMap+ · illimité
           </span>
         ) : (
           (() => {
@@ -467,7 +467,7 @@ export default function SwipeDeck() {
         />
       )}
 
-      {/* ---------- Écran Colock't+ (limite de likes atteinte) ---------- */}
+      {/* ---------- Écran FlatMap+ (limite de likes atteinte) ---------- */}
       {paywall && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
           <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
@@ -477,7 +477,7 @@ export default function SwipeDeck() {
             <p className="mt-3 text-ink/80">
               Tu as utilisé tes {LIKES_GRATUITS_PAR_JOUR} likes du jour. Reviens
               demain… ou passe en{" "}
-              <span className="text-signature font-semibold">Colock&apos;t+</span> :
+              <span className="text-signature font-semibold">FlatMap+</span> :
             </p>
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
               <li className="flex items-center gap-2">
@@ -497,7 +497,7 @@ export default function SwipeDeck() {
                 onClick={() => router.push("/boutique")}
                 className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
-                Voir les offres Colock&apos;t+
+                Voir les offres FlatMap+
               </button>
               {/* Gratuit : inviter des amis pour gagner des swipes */}
               {user && (
