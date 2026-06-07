@@ -189,7 +189,7 @@ export default function ParametresPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center px-4 pb-28 pt-6">
+    <main className="flex min-h-dvh flex-col items-center px-4 pb-36 pt-6">
       {/* Barre de navigation du bas (toujours visible) */}
       <AppHeader hideTop />
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
