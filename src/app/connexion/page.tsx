@@ -22,22 +22,14 @@ export default function ConnexionPage() {
     setEnCours(false);
   }
 
-  // --- OAuth générique (Google, Facebook, X/Twitter) ---
-  async function handleOAuth(provider: "google" | "facebook" | "twitter") {
+  // --- Google ---
+  async function handleGoogle() {
     reset();
     const { error } = await supabase.auth.signInWithOAuth({
-      provider,
+      provider: "google",
       options: { redirectTo: `${window.location.origin}/bienvenue` },
     });
     if (error) setErreur(traduireErreur(error.message));
-  }
-  const handleGoogle = () => handleOAuth("google");
-
-  // Instagram n'est pas un fournisseur de connexion standard
-  function infoInstagram() {
-    setErreur(
-      "La connexion Instagram n'est pas encore disponible. Utilise Google, Facebook, X ou ton email."
-    );
   }
 
   // --- Email + mot de passe ---
@@ -130,60 +122,6 @@ export default function ConnexionPage() {
               <Mail className="h-5 w-5 text-pink" />
               Continuer avec un email
             </button>
-
-            {/* Réseaux sociaux (petites icônes) */}
-            <div className="flex items-center gap-3 pt-2">
-              <span className="h-px flex-1 bg-ink/10" />
-              <span className="text-xs text-ink/40">ou continue avec</span>
-              <span className="h-px flex-1 bg-ink/10" />
-            </div>
-            <div className="flex items-center justify-center gap-4 pt-1">
-              <button
-                onClick={() => handleOAuth("facebook")}
-                aria-label="Continuer avec Facebook"
-                title="Facebook"
-                className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-                style={{ backgroundColor: "#1877F2" }}
-              >
-                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
-                  <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.9h-2.34V22c4.78-.79 8.43-4.94 8.43-9.94Z" />
-                </svg>
-              </button>
-
-              <button
-                onClick={infoInstagram}
-                aria-label="Continuer avec Instagram"
-                title="Instagram"
-                className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)",
-                }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5.5" />
-                  <circle cx="12" cy="12" r="4.2" />
-                  <circle cx="17.3" cy="6.7" r="1.3" fill="currentColor" stroke="none" />
-                </svg>
-              </button>
-
-              <button
-                onClick={() => handleOAuth("twitter")}
-                aria-label="Continuer avec X"
-                title="X"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-black text-white transition-transform hover:scale-110"
-              >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-                  <path d="M18.244 2H21.5l-7.5 8.57L23 22h-6.59l-5.16-6.74L5.34 22H2.08l8.02-9.17L1.5 2h6.75l4.66 6.16L18.244 2Zm-1.16 18h1.83L7.01 3.9H5.05L17.084 20Z" />
-                </svg>
-              </button>
-            </div>
           </div>
         )}
 
