@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
@@ -42,9 +43,22 @@ export default function Home() {
       </a>
 
       {/* Petit pied de page */}
-      <p className="absolute bottom-6 text-sm text-ink/40">
-        Partout en France · maintenant en ligne
-      </p>
+      <div className="absolute bottom-6 flex flex-col items-center gap-1 text-center">
+        <p className="text-sm text-ink/40">Partout en France · maintenant en ligne</p>
+        <nav className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-ink/40">
+          <Link href="/mentions-legales" className="hover:text-ink/70">
+            Mentions légales
+          </Link>
+          <span>·</span>
+          <Link href="/confidentialite" className="hover:text-ink/70">
+            Confidentialité
+          </Link>
+          <span>·</span>
+          <Link href="/cgu" className="hover:text-ink/70">
+            CGU
+          </Link>
+        </nav>
+      </div>
     </main>
   );
 }

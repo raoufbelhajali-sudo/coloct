@@ -38,6 +38,7 @@ export default function ParametresPage() {
   const [notifPerm, setNotifPerm] = useState<string>("default");
   const [idEnCours, setIdEnCours] = useState(false);
   const [idErreur, setIdErreur] = useState("");
+  const [idSoumise, setIdSoumise] = useState(false);
 
   const [enCours, setEnCours] = useState(false);
   const [message, setMessage] = useState("");
@@ -61,6 +62,11 @@ export default function ParametresPage() {
       user.phone || (typeof meta.telephone === "string" ? meta.telephone : "")
     );
     setNotifEmail(meta.notif_email !== false);
+    if (typeof window !== "undefined") {
+      setIdSoumise(
+        localStorage.getItem(`flatswiper-id-soumise-${user.id}`) === "1"
+      );
+    }
     if (typeof window !== "undefined" && "Notification" in window) {
       setNotifPerm(Notification.permission);
     } else {
@@ -126,7 +132,8 @@ export default function ParametresPage() {
     router.push("/");
   }
 
-  // Téléverse la pièce d'identité (stockage privé) → badge "Identité vérifiée"
+  // Téléverse la pièce d'identité (stockage privé). La vérification est MANUELLE :
+  // on N'attribue PAS le badge automatiquement → statut "en cours de vérification".
   async function televerserIdentite(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file || !user) return;
@@ -142,11 +149,11 @@ export default function ParametresPage() {
       setIdErreur("Échec de l'envoi. Réessaie.");
       return;
     }
-    await supabase
-      .from("profiles")
-      .update({ identite_verifiee: true })
-      .eq("id", user.id);
-    await refreshProfile();
+    // On mémorise que la pièce a été soumise (vérif manuelle par l'équipe ensuite)
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`flatswiper-id-soumise-${user.id}`, "1");
+    }
+    setIdSoumise(true);
     setIdEnCours(false);
     e.target.value = "";
   }
@@ -397,11 +404,22 @@ export default function ParametresPage() {
               <p className="flex items-center gap-1.5 text-sm font-semibold text-pink">
                 <Check className="h-4 w-4" strokeWidth={3} /> Identité vérifiée
               </p>
+            ) : idSoumise ? (
+              <>
+                <p className="flex items-center gap-1.5 text-sm font-semibold text-ink/80">
+                  <ShieldCheck className="h-4 w-4 text-violet" /> Pièce reçue —
+                  vérification en cours
+                </p>
+                <p className="mt-1 text-xs text-ink/50">
+                  Notre équipe vérifie ton document. Le badge «&nbsp;Identité
+                  vérifiée&nbsp;» apparaîtra une fois la vérification faite.
+                </p>
+              </>
             ) : (
               <>
                 <p className="text-sm text-ink/70">
-                  Téléverse ta pièce d&apos;identité pour obtenir le badge
-                  «&nbsp;Identité vérifiée&nbsp;».
+                  Téléverse ta pièce d&apos;identité. Après vérification par notre
+                  équipe, tu obtiendras le badge «&nbsp;Identité vérifiée&nbsp;».
                 </p>
                 <label className="bg-signature mt-3 inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white">
                   <ShieldCheck className="h-4 w-4" />
