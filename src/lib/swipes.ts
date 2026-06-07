@@ -14,13 +14,28 @@ export async function getSwipedListingIds(userId: string): Promise<Set<string>> 
 export async function recordListingSwipe(
   userId: string,
   listingId: string,
-  direction: "like" | "pass"
+  direction: "like" | "pass",
+  superLike = false
 ): Promise<void> {
   await supabase.from("swipes").insert({
     swiper_id: userId,
     listing_id: Number(listingId),
     direction,
+    super: superLike,
   });
+}
+
+// Annule (supprime) le swipe d'un colocataire sur une annonce
+export async function annulerSwipeListing(
+  userId: string,
+  listingId: string
+): Promise<void> {
+  await supabase
+    .from("swipes")
+    .delete()
+    .eq("swiper_id", userId)
+    .eq("listing_id", Number(listingId))
+    .is("target_user_id", null);
 }
 
 // Compte les "j'aime" donnés aujourd'hui (depuis minuit) par ce colocataire

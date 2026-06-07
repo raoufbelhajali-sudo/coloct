@@ -71,6 +71,36 @@ export async function updateListing(
   if (error) throw error;
 }
 
+// Statistiques d'une annonce (likes reçus, matchs, mises en favori)
+export async function getStatsAnnonce(listingId: string): Promise<{
+  likes: number;
+  matchs: number;
+  favoris: number;
+}> {
+  const lid = Number(listingId);
+  const [likes, matchs, favoris] = await Promise.all([
+    supabase
+      .from("swipes")
+      .select("id", { count: "exact", head: true })
+      .eq("listing_id", lid)
+      .is("target_user_id", null)
+      .eq("direction", "like"),
+    supabase
+      .from("matches")
+      .select("id", { count: "exact", head: true })
+      .eq("listing_id", lid),
+    supabase
+      .from("favoris")
+      .select("id", { count: "exact", head: true })
+      .eq("listing_id", lid),
+  ]);
+  return {
+    likes: likes.count ?? 0,
+    matchs: matchs.count ?? 0,
+    favoris: favoris.count ?? 0,
+  };
+}
+
 // Gèle (bien loué) ou réactive une annonce
 export async function setListingGelee(
   listingId: string,

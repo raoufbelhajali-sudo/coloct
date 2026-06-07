@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2 } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -22,10 +22,17 @@ import { estPremium } from "@/lib/offers";
 import {
   getSwipedListingIds,
   recordListingSwipe,
+  annulerSwipeListing,
   getLikesToday,
   getBonusLikes,
   getMatchIdForListing,
 } from "@/lib/swipes";
+import {
+  getFavorisIds,
+  ajouterFavori,
+  retirerFavori,
+} from "@/lib/favoris";
+import Link from "next/link";
 import { marquerAnnonce } from "@/lib/matchPopup";
 import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
@@ -55,6 +62,10 @@ export default function SwipeDeck() {
   const [allListings, setAllListings] = useState<Listing[]>([]);
   const [bloques, setBloques] = useState<Set<string>>(new Set());
   const [bonusLikes, setBonusLikes] = useState(0);
+  const [dernierSwipe, setDernierSwipe] = useState<
+    { id: string; direction: "like" | "pass"; superLike: boolean } | null
+  >(null);
+  const [favorisIds, setFavorisIds] = useState<Set<string>>(new Set());
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
 
@@ -87,12 +98,14 @@ export default function SwipeDeck() {
       getSwipedListingIds(user.id),
       getLikesToday(user.id),
       getIdsBloques(user.id),
+      getFavorisIds(user.id),
     ])
-      .then(([data, swiped, likes, blocs]) => {
+      .then(([data, swiped, likes, blocs, favs]) => {
         setAllListings(data);
         setSwipedIds(swiped);
         setLikesAujourdhui(likes);
         setBloques(blocs);
+        setFavorisIds(favs);
         setBonusLikes(getBonusLikes(user.id));
       })
       .catch(() => setErreur(true))
@@ -187,7 +200,7 @@ export default function SwipeDeck() {
   const flou = likesEpuises;
 
   // Fait voler la carte hors de l'écran puis passe à la suivante
-  async function fly(dir: Direction) {
+  async function fly(dir: Direction, superLike = false) {
     if (animating.current || !current || !user) return;
 
     // Limite de likes gratuits : on bloque le "j'aime" et on propose FlatSwiper+
@@ -213,8 +226,9 @@ export default function SwipeDeck() {
 
     // puis on enregistre le swipe sur le serveur
     const direction = dir === "right" ? "like" : "pass";
+    setDernierSwipe({ id: swiped.id, direction, superLike });
     try {
-      await recordListingSwipe(user.id, swiped.id, direction);
+      await recordListingSwipe(user.id, swiped.id, direction, superLike);
       if (direction === "like") {
         setLikes((prev) => [...prev, swiped]);
         setLikesAujourdhui((n) => n + 1);
@@ -227,6 +241,48 @@ export default function SwipeDeck() {
       }
     } catch {
       // souci réseau : on n'interrompt pas le swipe
+    }
+  }
+
+  // Annule le dernier swipe (revient en arrière)
+  async function annulerDernier() {
+    if (!user || !dernierSwipe || animating.current) return;
+    const { id, direction } = dernierSwipe;
+    setDernierSwipe(null);
+    setSwipedIds((prev) => {
+      const n = new Set(prev);
+      n.delete(id);
+      return n;
+    });
+    if (direction === "like") {
+      setLikes((prev) => prev.filter((l) => l.id !== id));
+      setLikesAujourdhui((n) => Math.max(0, n - 1));
+    }
+    x.set(0);
+    controls.set({ x: 0, opacity: 1 });
+    try {
+      await annulerSwipeListing(user.id, id);
+    } catch {
+      /* réseau */
+    }
+  }
+
+  // Ajoute / retire l'annonce courante des favoris
+  async function basculerFavori() {
+    if (!user || !current) return;
+    const id = current.id;
+    const estFav = favorisIds.has(id);
+    setFavorisIds((prev) => {
+      const n = new Set(prev);
+      if (estFav) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+    try {
+      if (estFav) await retirerFavori(user.id, id);
+      else await ajouterFavori(user.id, id);
+    } catch {
+      /* réseau */
     }
   }
 
@@ -291,6 +347,41 @@ export default function SwipeDeck() {
             );
           })()
         )}
+        <button
+          onClick={basculerFavori}
+          aria-label="Sauvegarder en favori"
+          title="Mettre en favori"
+          className={
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-panel " +
+            (current && favorisIds.has(current.id)
+              ? "text-violet"
+              : "text-ink/60 hover:text-violet")
+          }
+        >
+          <Bookmark
+            className="h-[18px] w-[18px]"
+            fill={current && favorisIds.has(current.id) ? "currentColor" : "none"}
+          />
+        </button>
+        <Link
+          href="/favoris"
+          aria-label="Mes favoris"
+          title="Mes favoris"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-violet"
+        >
+          <Star className="h-[18px] w-[18px]" />
+        </Link>
+        <button
+          onClick={() => setFiltresOuverts((v) => !v)}
+          aria-label="Filtres"
+          title="Filtres"
+          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+        >
+          <SlidersHorizontal className="h-[18px] w-[18px]" />
+          {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX) && (
+            <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
+          )}
+        </button>
         <button
           onClick={() => current && partagerAnnonce(current)}
           aria-label="Partager"
@@ -505,7 +596,16 @@ export default function SwipeDeck() {
             </motion.div>
 
             {/* Boutons posés sur la carte */}
-            <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-6">
+            <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-4">
+              <button
+                onClick={annulerDernier}
+                disabled={!dernierSwipe}
+                aria-label="Annuler le dernier swipe"
+                title="Annuler"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/50 shadow-lg backdrop-blur transition-transform hover:scale-110 disabled:opacity-40"
+              >
+                <RotateCcw className="h-5 w-5" />
+              </button>
               <button
                 onClick={() => fly("left")}
                 aria-label="Je passe"
@@ -514,15 +614,12 @@ export default function SwipeDeck() {
                 <X className="h-6 w-6" strokeWidth={2.5} />
               </button>
               <button
-                onClick={() => setFiltresOuverts((v) => !v)}
-                aria-label="Filtres"
-                title="Filtres"
-                className="relative flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110 hover:text-pink"
+                onClick={() => fly("right", true)}
+                aria-label="Coup de cœur"
+                title="Coup de cœur"
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-violet shadow-lg backdrop-blur transition-transform hover:scale-110"
               >
-                <SlidersHorizontal className="h-5 w-5" />
-                {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX) && (
-                  <span className="bg-signature absolute right-2.5 top-2.5 h-2 w-2 rounded-full" />
-                )}
+                <Star className="h-6 w-6" fill="currentColor" />
               </button>
               <button
                 onClick={() => fly("right")}

@@ -8,7 +8,7 @@ import AppHeader from "@/components/AppHeader";
 import ListingForm from "@/components/ListingForm";
 import ListingDetail from "@/components/ListingDetail";
 import { useAuth } from "@/lib/auth";
-import { getMyListing, setListingGelee } from "@/lib/locataire";
+import { getMyListing, setListingGelee, getStatsAnnonce } from "@/lib/locataire";
 import { lieuComplet } from "@/lib/listings";
 import { boostActif, activerBoostAnnonce } from "@/lib/offers";
 import type { Listing } from "@/data/listings";
@@ -23,6 +23,7 @@ export default function MonAnnoncePage() {
   const [gelEnCours, setGelEnCours] = useState(false);
   const [edition, setEdition] = useState(false);
   const [apercu, setApercu] = useState(false);
+  const [stats, setStats] = useState<{ likes: number; matchs: number; favoris: number } | null>(null);
 
   useEffect(() => {
     if (loading) return;
@@ -33,7 +34,9 @@ export default function MonAnnoncePage() {
   const chargerAnnonce = useCallback(async () => {
     if (!user) return;
     setChargement(true);
-    setListing(await getMyListing(user.id));
+    const l = await getMyListing(user.id);
+    setListing(l);
+    if (l) setStats(await getStatsAnnonce(l.id));
     setChargement(false);
   }, [user]);
 
@@ -115,6 +118,24 @@ export default function MonAnnoncePage() {
               <p className="mt-1 text-sm text-ink/70">
                 {listing.loyer} € / mois · {listing.surface} m²
               </p>
+
+              {/* Statistiques */}
+              {stats && (
+                <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                  <div className="rounded-xl bg-panel-2 py-2">
+                    <p className="font-display text-xl font-bold text-pink">{stats.likes}</p>
+                    <p className="text-[11px] text-ink/55">J&apos;aime reçus</p>
+                  </div>
+                  <div className="rounded-xl bg-panel-2 py-2">
+                    <p className="font-display text-xl font-bold text-pink">{stats.matchs}</p>
+                    <p className="text-[11px] text-ink/55">Matchs</p>
+                  </div>
+                  <div className="rounded-xl bg-panel-2 py-2">
+                    <p className="font-display text-xl font-bold text-violet">{stats.favoris}</p>
+                    <p className="text-[11px] text-ink/55">Favoris</p>
+                  </div>
+                </div>
+              )}
 
               <div className="mt-4 grid grid-cols-2 gap-3">
                 <button
