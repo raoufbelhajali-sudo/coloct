@@ -20,9 +20,8 @@ export default function ConfidentialitePage() {
         <p className="text-sm leading-relaxed">
           FlatSwiper attache de l&apos;importance à la protection de tes données
           personnelles, conformément au Règlement Général sur la Protection des
-          Données (RGPD). Le responsable du traitement est{" "}
-          <strong>Raouf Belhaj Ali</strong> (21 avenue Maurice Berteaux, 78500
-          Sartrouville) — contact&nbsp;: contact@flatswiper.com.
+          Données (RGPD). Le responsable du traitement peut être contacté à
+          contact@flatswiper.com.
         </p>
 
         <section>
