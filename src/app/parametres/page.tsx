@@ -31,7 +31,9 @@ export default function ParametresPage() {
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [motDePasse, setMotDePasse] = useState("");
+  const [resetEnvoi, setResetEnvoi] = useState(false);
+  const [resetEnvoye, setResetEnvoye] = useState(false);
+  const [resetErreur, setResetErreur] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifPerm, setNotifPerm] = useState<string>("default");
   const [idEnCours, setIdEnCours] = useState(false);
@@ -72,11 +74,6 @@ export default function ParametresPage() {
     setErreur("");
     setMessage("");
 
-    if (motDePasse && motDePasse.length < 6) {
-      setErreur("Mot de passe : 6 caractères minimum.");
-      return;
-    }
-
     setEnCours(true);
 
     // 1) Pseudo → table profiles
@@ -90,13 +87,11 @@ export default function ParametresPage() {
       email.trim().toLowerCase() !== (user.email ?? "").toLowerCase();
     const updates: {
       email?: string;
-      password?: string;
       data: Record<string, unknown>;
     } = {
       data: { telephone: telephone.trim(), notif_email: notifEmail },
     };
     if (emailChange && email.trim()) updates.email = email.trim().toLowerCase();
-    if (motDePasse) updates.password = motDePasse;
 
     const { error } = await supabase.auth.updateUser(updates);
     await refreshProfile();
@@ -106,12 +101,24 @@ export default function ParametresPage() {
       setErreur(traduire(error.message));
       return;
     }
-    setMotDePasse("");
     setMessage(
       emailChange
         ? "Modifications enregistrées. Vérifie ta boîte mail pour confirmer ton nouvel email."
         : "Modifications enregistrées ✓"
     );
+  }
+
+  // Envoie un lien de changement de mot de passe à l'email du compte
+  async function demanderResetMdp() {
+    if (!user?.email) return;
+    setResetEnvoi(true);
+    setResetErreur("");
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+      redirectTo: `${window.location.origin}/nouveau-mot-de-passe`,
+    });
+    setResetEnvoi(false);
+    if (error) setResetErreur("Échec de l'envoi. Réessaie dans un instant.");
+    else setResetEnvoye(true);
   }
 
   async function deconnexion() {
@@ -299,22 +306,36 @@ export default function ParametresPage() {
             />
           </Bloc>
 
-          {/* Mot de passe */}
+          {/* Mot de passe — changement sécurisé par lien email */}
           <Bloc
             icone={<Lock className="h-5 w-5 text-violet" />}
             titre="Mot de passe"
           >
-            <input
-              type="password"
-              value={motDePasse}
-              onChange={(e) => setMotDePasse(e.target.value)}
-              placeholder="Nouveau mot de passe"
-              className={champ}
-            />
-            <p className="mt-1 text-xs text-ink/40">
-              Laisse vide pour ne pas le changer. Sinon, tu pourras te connecter
-              avec ton email + ce mot de passe.
-            </p>
+            {resetEnvoye ? (
+              <p className="flex items-start gap-2 text-sm text-ink/70">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-pink" strokeWidth={3} />
+                Lien envoyé à <span className="font-medium text-ink">{user.email}</span>.
+                Ouvre l&apos;email et clique sur le lien pour choisir ton nouveau
+                mot de passe (pense à regarder les spams).
+              </p>
+            ) : (
+              <>
+                <p className="text-sm text-ink/70">
+                  Pour ta sécurité, le changement de mot de passe se fait via un
+                  lien envoyé à ton email.
+                </p>
+                <button
+                  onClick={demanderResetMdp}
+                  disabled={resetEnvoi}
+                  className="bg-signature mt-3 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+                >
+                  {resetEnvoi ? "Envoi…" : "Recevoir un lien par email"}
+                </button>
+                {resetErreur && (
+                  <p className="mt-2 text-sm text-pink-light">{resetErreur}</p>
+                )}
+              </>
+            )}
           </Bloc>
 
           {/* Notifications */}
