@@ -10,14 +10,19 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
           <stop offset="100%" stopColor="#fd7e14" />
         </linearGradient>
       </defs>
-      {/* La lettre F (barre verticale + 2 bras), coins arrondis */}
+      {/* F façon clé : anneau (tête) en haut + tige verticale + 2 dents (bras) */}
       <g fill="url(#colockt-grad)">
-        <rect x="13" y="8" width="8" height="32" rx="3" />
-        <rect x="13" y="8" width="24" height="8" rx="3" />
-        <rect x="13" y="20" width="17" height="8" rx="3" />
+        {/* Anneau / tête de la clé = sommet du F */}
+        <circle cx="15" cy="13" r="9" />
+        {/* Tige verticale = barre du F / corps de la clé */}
+        <rect x="11.5" y="13" width="7" height="27" rx="3.5" />
+        {/* Dent du haut = bras supérieur du F */}
+        <rect x="18" y="9" width="16" height="6.5" rx="2.5" />
+        {/* Dent du milieu = bras médian du F (plus courte) */}
+        <rect x="18" y="20.5" width="11" height="6.5" rx="2.5" />
       </g>
-      {/* Trou de serrure (clin d'œil "clé") percé dans le bras du haut */}
-      <circle cx="31.5" cy="12" r="2.6" fill="#fff" />
+      {/* Trou de serrure au centre de l'anneau */}
+      <circle cx="15" cy="13" r="3.4" fill="#fff" />
     </svg>
   );
 }
