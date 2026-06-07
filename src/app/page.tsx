@@ -29,8 +29,8 @@ export default function Home() {
 
       {/* Accroche */}
       <p className="mt-6 max-w-md text-lg text-ink/80 sm:text-xl">
-        Trouve ta chambre en colocation à Paris en swipant. Un match, et la
-        conversation commence.
+        Trouve ta chambre en colocation partout en France en swipant. Un match,
+        et la conversation commence.
       </p>
 
       {/* Bouton principal */}
@@ -43,7 +43,7 @@ export default function Home() {
 
       {/* Petit pied de page */}
       <p className="absolute bottom-6 text-sm text-ink/40">
-        Paris · maintenant en ligne
+        Partout en France · maintenant en ligne
       </p>
     </main>
   );
