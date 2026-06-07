@@ -15,6 +15,8 @@ import {
   Repeat,
   ShieldCheck,
   ArrowLeft,
+  UserRound,
+  ChevronRight,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -211,6 +213,25 @@ export default function ParametresPage() {
         </p>
 
         <div className="space-y-6">
+          {/* Modifier mon profil (première ligne) */}
+          <Link
+            href="/profil"
+            className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+          >
+            <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+              <UserRound className="h-5 w-5 text-white" />
+            </span>
+            <span className="flex-1">
+              <span className="block font-display text-lg font-semibold">
+                Modifier mon profil
+              </span>
+              <span className="block text-sm text-ink/55">
+                Photo, infos, centres d&apos;intérêt, mode de vie…
+              </span>
+            </span>
+            <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+          </Link>
+
           {/* Mode (rôle) */}
           <Bloc
             icone={<Repeat className="h-5 w-5 text-violet" />}
