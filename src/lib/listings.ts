@@ -46,6 +46,7 @@ export type ListingRow = {
   lat: number | null;
   lng: number | null;
   gelee: boolean | null;
+  statut_annonceur: string | null;
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -73,6 +74,7 @@ export function mapListingRow(r: ListingRow): Listing {
     lat: r.lat ?? null,
     lng: r.lng ?? null,
     gelee: r.gelee ?? false,
+    statutAnnonceur: r.statut_annonceur ?? null,
   };
 }
 

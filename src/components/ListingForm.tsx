@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { createListing, updateListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import LieuSelect from "@/components/LieuSelect";
-import { SERVICES } from "@/lib/profilOptions";
+import { SERVICES, STATUTS_ANNONCEUR } from "@/lib/profilOptions";
 import { geocodeVille } from "@/lib/geo";
 
 const PHOTO_PAR_DEFAUT =
@@ -42,6 +42,9 @@ export default function ListingForm({
     listing?.nbOccupants ? String(listing.nbOccupants) : ""
   );
   const [meuble, setMeuble] = useState(listing?.meuble ?? true);
+  const [statutAnnonceur, setStatutAnnonceur] = useState(
+    listing?.statutAnnonceur ?? ""
+  );
   const [etage, setEtage] = useState(listing?.etage ?? "");
   const [dispo, setDispo] = useState(listing?.dispo ?? "");
   const [description, setDescription] = useState(listing?.description ?? "");
@@ -134,6 +137,7 @@ export default function ListingForm({
         surface: Number(surface),
         nb_occupants: Number(nbOccupants) || null,
         meuble,
+        statut_annonceur: statutAnnonceur || null,
         etage: etage.trim() || "—",
         dispo: dispo || "2026-01-01",
         date_dispo: dateLisible,
@@ -206,6 +210,25 @@ export default function ListingForm({
           onChange={(e) => setDispo(e.target.value)}
           className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none"
         />
+      </div>
+
+      {/* Statut de l'annonceur vis-à-vis du bien */}
+      <div>
+        <label className="text-sm text-ink/70">
+          Tu es, pour ce logement…
+        </label>
+        <select
+          value={statutAnnonceur}
+          onChange={(e) => setStatutAnnonceur(e.target.value)}
+          className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none"
+        >
+          <option value="">Choisir…</option>
+          {STATUTS_ANNONCEUR.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Meublé */}

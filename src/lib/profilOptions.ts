@@ -203,6 +203,9 @@ export const SERVICES = [
 // Situation professionnelle (menu déroulant)
 export const PROFESSIONS = ["Étudiant", "CDD", "CDI", "Chômeur", "Retraité"];
 
+// Statut de l'annonceur vis-à-vis du logement
+export const STATUTS_ANNONCEUR = ["Propriétaire", "Locataire (sous-location)"];
+
 // Durée de colocation souhaitée (colocataire)
 export const DUREES_COLOC = [
   "Quelques semaines",

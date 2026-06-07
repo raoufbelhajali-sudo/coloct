@@ -39,6 +39,7 @@ export type NewListing = {
   colocs: { prenom: string; age: number; ambiance: string }[];
   lat?: number | null;
   lng?: number | null;
+  statut_annonceur?: string | null;
 };
 
 // Crée l'annonce du locataire

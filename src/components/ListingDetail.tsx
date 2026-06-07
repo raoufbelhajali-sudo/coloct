@@ -155,6 +155,11 @@ export default function ListingDetail({
                   {listing.nbOccupants > 1 ? "s" : ""} dans le logement
                 </p>
               ) : null}
+              {listing.statutAnnonceur ? (
+                <p className="font-medium text-violet">
+                  Annonceur : {listing.statutAnnonceur}
+                </p>
+              ) : null}
               <p>Disponible le {listing.dateDispo}</p>
             </div>
 
