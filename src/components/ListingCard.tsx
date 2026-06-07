@@ -12,16 +12,6 @@ export default function ListingCard({
 }) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-panel shadow-2xl select-none">
-      {/* Bandeau "ça peut coller" si points communs */}
-      {compat.length > 0 && (
-        <div className="absolute left-3 top-3 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md">
-          <Sparkles className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">
-            Ça peut coller : {compat.slice(0, 3).join(", ")}
-          </span>
-        </div>
-      )}
-
       {/* Photo principale */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -39,6 +29,16 @@ export default function ListingCard({
       <div className="absolute top-4 right-4 rounded-full bg-bg/70 px-3 py-2 text-xs font-medium text-ink backdrop-blur-sm">
         {listing.meuble ? "Meublé" : "Non meublé"}
       </div>
+
+      {/* Bandeau "ça peut coller" — placé sous le prix pour ne pas le cacher */}
+      {compat.length > 0 && (
+        <div className="absolute left-4 top-16 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md">
+          <Sparkles className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">
+            Ça peut coller : {compat.slice(0, 3).join(", ")}
+          </span>
+        </div>
+      )}
 
       {/* Dégradé bas */}
       <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-bg via-bg/85 to-transparent" />
