@@ -5,7 +5,14 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
   return (
     <svg viewBox="0 0 48 48" className={className} aria-hidden="true">
       <defs>
-        <linearGradient id="colockt-grad" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient
+          id="colockt-grad"
+          gradientUnits="userSpaceOnUse"
+          x1="8"
+          y1="6"
+          x2="40"
+          y2="47"
+        >
           <stop offset="0%" stopColor="#fa5252" />
           <stop offset="100%" stopColor="#fd7e14" />
         </linearGradient>
