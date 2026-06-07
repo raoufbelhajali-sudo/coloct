@@ -20,9 +20,13 @@
   --font-sans: var(--font-outfit); /* Texte courant */
 }
 
-html,
-body {
+html {
   height: 100%;
+}
+
+/* min-height (et non height) pour que la page puisse grandir et défiler */
+body {
+  min-height: 100%;
 }
 
 body {
