@@ -10,19 +10,19 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
           <stop offset="100%" stopColor="#fd7e14" />
         </linearGradient>
       </defs>
-      {/* F façon clé : anneau (tête) en haut + tige verticale + 2 dents (bras) */}
+      {/* F façon clé : 2 bras (dents) en haut + tige + anneau (tête) en bas */}
       <g fill="url(#colockt-grad)">
-        {/* Anneau / tête de la clé = sommet du F */}
-        <circle cx="15" cy="13" r="9" />
         {/* Tige verticale = barre du F / corps de la clé */}
-        <rect x="11.5" y="13" width="7" height="27" rx="3.5" />
-        {/* Dent du haut = bras supérieur du F */}
-        <rect x="18" y="9" width="16" height="6.5" rx="2.5" />
-        {/* Dent du milieu = bras médian du F (plus courte) */}
-        <rect x="18" y="20.5" width="11" height="6.5" rx="2.5" />
+        <rect x="13" y="8" width="8" height="26" rx="3" />
+        {/* Bras supérieur du F = dent du haut */}
+        <rect x="13" y="8" width="22" height="7" rx="3" />
+        {/* Bras médian du F = dent du milieu (plus courte) */}
+        <rect x="13" y="19" width="15" height="7" rx="3" />
+        {/* Anneau / tête de la clé = bas du F */}
+        <circle cx="17" cy="39" r="8.5" />
       </g>
       {/* Trou de serrure au centre de l'anneau */}
-      <circle cx="15" cy="13" r="3.4" fill="#fff" />
+      <circle cx="17" cy="39" r="3.4" fill="#fff" />
     </svg>
   );
 }

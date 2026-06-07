@@ -19,12 +19,12 @@ export default function AppleIcon() {
       >
         <svg width="120" height="120" viewBox="0 0 48 48">
           <g fill="#ffffff">
-            <circle cx="17" cy="15" r="9" />
-            <rect x="13.5" y="15" width="7" height="25" rx="3.5" />
-            <rect x="20" y="11" width="16" height="6.5" rx="2.5" />
-            <rect x="20" y="22.5" width="11" height="6.5" rx="2.5" />
+            <rect x="14" y="9" width="8" height="24" rx="3" />
+            <rect x="14" y="9" width="21" height="7" rx="3" />
+            <rect x="14" y="19" width="15" height="7" rx="3" />
+            <circle cx="18" cy="37" r="8" />
           </g>
-          <circle cx="17" cy="15" r="3.4" fill="#fa5252" />
+          <circle cx="18" cy="37" r="3.2" fill="#fa5252" />
         </svg>
       </div>
     ),
