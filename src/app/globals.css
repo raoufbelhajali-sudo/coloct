@@ -12,8 +12,12 @@
   --color-ink: #2b211a; /* Texte (brun foncé) */
   --color-pink: #fa5252; /* Corail principal (accent 1) */
   --color-pink-light: #ff8787; /* Corail clair */
-  --color-violet: #fd7e14; /* Orange (accent 2) */
-  --color-violet-dark: #e8590c; /* Orange foncé */
+  /* Accent 2 = BLEU CONFIANCE (le nom de token reste "violet" pour éviter de
+     tout renommer ; il pilote les accents secondaires : icônes, pastilles…). */
+  --color-violet: #228be6; /* Bleu confiance (accent 2) */
+  --color-violet-dark: #1c7ed6; /* Bleu foncé */
+  --color-bleu: #228be6; /* Alias clair du bleu */
+  --color-bleu-clair: #e7f5ff; /* Bleu très clair (fonds de pastilles) */
 
   /* Polices */
   --font-display: var(--font-fraunces); /* Titres / logo */
