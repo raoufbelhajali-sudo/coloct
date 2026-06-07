@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   UserRound,
   ChevronRight,
+  Home,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -248,6 +249,27 @@ export default function ParametresPage() {
             </span>
             <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
           </Link>
+
+          {/* Mon annonce (annonceur uniquement) */}
+          {estAnnonceur && (
+            <Link
+              href="/mon-annonce"
+              className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+            >
+              <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                <Home className="h-5 w-5 text-white" />
+              </span>
+              <span className="flex-1">
+                <span className="block font-display text-lg font-semibold">
+                  Mon annonce
+                </span>
+                <span className="block text-sm text-ink/55">
+                  Voir, modifier ou booster ton logement
+                </span>
+              </span>
+              <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+            </Link>
+          )}
 
           {/* Mode (rôle) */}
           <Bloc
