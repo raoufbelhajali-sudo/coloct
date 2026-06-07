@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
+import { toucherActivite } from "./activite";
 
 export type Role = "locataire" | "colocataire";
 
@@ -35,6 +36,7 @@ export type Profile = {
   quartiers: string[] | null;
   date_emmenagement: string | null;
   duree_coloc: string | null; // durée de colocation souhaitée
+  last_seen: string | null; // dernière activité (badge "actif récemment")
   langues: string[] | null; // langues parlées
   niveau_sonore: string | null; // calme / équilibré / fêtard
   genre_coloc_recherche: string | null; // préférence de mixité
@@ -97,6 +99,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => sub.subscription.unsubscribe();
   }, []);
+
+  // Marque l'utilisateur comme "actif récemment" à chaque ouverture
+  useEffect(() => {
+    if (user) toucherActivite(user.id).catch(() => {});
+  }, [user?.id]);
 
   async function signOut() {
     await supabase.auth.signOut();

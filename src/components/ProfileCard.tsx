@@ -1,6 +1,7 @@
 import { Sparkles, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import { estSuperProfil, labelSuper } from "@/lib/completude";
+import { estActifRecemment } from "@/lib/activite";
 
 // Carte d'un profil colocataire (photo + infos clés). Détail complet au tap.
 export default function ProfileCard({
@@ -64,11 +65,18 @@ export default function ProfileCard({
           {profile.prenom}
           {profile.age ? <span className="text-ink/60">, {profile.age} ans</span> : null}
         </h2>
-        {profile.identite_verifiee && (
-          <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-bg/70 px-2 py-0.5 text-[11px] font-medium text-ink backdrop-blur-sm">
-            <ShieldCheck className="h-3 w-3 text-violet" /> Identité vérifiée
-          </span>
-        )}
+        <span className="mt-1 flex flex-wrap items-center gap-1">
+          {profile.identite_verifiee && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-bg/70 px-2 py-0.5 text-[11px] font-medium text-ink backdrop-blur-sm">
+              <ShieldCheck className="h-3 w-3 text-violet" /> Identité vérifiée
+            </span>
+          )}
+          {estActifRecemment(profile.last_seen) && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-bg/70 px-2 py-0.5 text-[11px] font-medium text-ink backdrop-blur-sm">
+              <span className="h-2 w-2 rounded-full bg-green-500" /> Actif récemment
+            </span>
+          )}
+        </span>
         {sousTitre && <p className="mt-0.5 text-sm text-ink/60">{sousTitre}</p>}
         {profile.budget_max ? (
           <p className="mt-0.5 text-sm font-semibold text-pink">

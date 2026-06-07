@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
   ListChecks, CheckSquare, Square, ChevronDown, MoreVertical, Trash2, Ban, Flag,
-  CalendarPlus, CalendarClock, Check,
+  CalendarPlus, CalendarClock, Check, Star,
 } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -36,6 +36,7 @@ import {
 import { marquerMatchLu } from "@/lib/notifications";
 import { bloquerUtilisateur } from "@/lib/blocks";
 import { signalerUtilisateur, RAISONS_SIGNALEMENT } from "@/lib/reports";
+import { laisserAvis, getMonAvis } from "@/lib/reviews";
 import RolePin from "@/components/RolePin";
 
 export default function ConversationPage() {
@@ -62,6 +63,10 @@ export default function ConversationPage() {
   const [lecture, setLecture] = useState<{ colocataire: string | null; locataire: string | null }>({ colocataire: null, locataire: null });
   const [signalerOuvert, setSignalerOuvert] = useState(false);
   const [signalEnvoye, setSignalEnvoye] = useState(false);
+  const [avisOuvert, setAvisOuvert] = useState(false);
+  const [avisNote, setAvisNote] = useState(0);
+  const [avisCommentaire, setAvisCommentaire] = useState("");
+  const [avisEnvoye, setAvisEnvoye] = useState(false);
   const [visiteOuverte, setVisiteOuverte] = useState(false);
   const [visiteDate, setVisiteDate] = useState("");
   const [visiteHeure, setVisiteHeure] = useState("");
@@ -186,6 +191,26 @@ export default function ConversationPage() {
       location: lieu || "",
     });
     return `https://calendar.google.com/calendar/render?${params.toString()}`;
+  }
+
+  // Ouvre le formulaire d'avis (pré-rempli si déjà noté)
+  async function ouvrirAvis() {
+    setAvisEnvoye(false);
+    setAvisOuvert(true);
+    if (user && autreProfil) {
+      const a = await getMonAvis(user.id, autreProfil.id);
+      if (a) {
+        setAvisNote(a.note);
+        setAvisCommentaire(a.commentaire ?? "");
+      }
+    }
+  }
+
+  // Envoie l'avis
+  async function envoyerAvis() {
+    if (!user || !autreProfil || avisNote < 1) return;
+    await laisserAvis(user.id, autreProfil.id, avisNote, avisCommentaire);
+    setAvisEnvoye(true);
   }
 
   // Signale l'autre personne
@@ -423,6 +448,15 @@ export default function ConversationPage() {
                 <button
                   onClick={() => {
                     setMenuOuvert(false);
+                    ouvrirAvis();
+                  }}
+                  className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-ink/85 hover:bg-panel-2"
+                >
+                  <Star className="h-4 w-4" /> Laisser un avis
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOuvert(false);
                     setSignalEnvoye(false);
                     setSignalerOuvert(true);
                   }}
@@ -528,6 +562,75 @@ export default function ConversationPage() {
               Proposer la visite
             </button>
           </form>
+        </div>
+      )}
+
+      {/* Laisser un avis */}
+      {avisOuvert && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setAvisOuvert(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl bg-panel p-6 text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {avisEnvoye ? (
+              <>
+                <div className="bg-signature mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+                  <Star className="h-6 w-6 text-white" fill="currentColor" />
+                </div>
+                <p className="font-display text-xl font-semibold">Merci !</p>
+                <p className="mt-1 text-sm text-ink/70">Ton avis a bien été enregistré.</p>
+                <button
+                  onClick={() => setAvisOuvert(false)}
+                  className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
+                >
+                  Fermer
+                </button>
+              </>
+            ) : (
+              <>
+                <p className="font-display text-xl font-semibold">
+                  Noter {autrePrenom}
+                </p>
+                <p className="mt-1 mb-3 text-sm text-ink/60">
+                  Ton avis aide la communauté à se faire confiance.
+                </p>
+                <div className="mb-4 flex justify-center gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      onClick={() => setAvisNote(n)}
+                      aria-label={`${n} étoile${n > 1 ? "s" : ""}`}
+                    >
+                      <Star
+                        className={
+                          "h-8 w-8 " +
+                          (n <= avisNote ? "text-amber-400" : "text-ink/20")
+                        }
+                        fill="currentColor"
+                      />
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  value={avisCommentaire}
+                  onChange={(e) => setAvisCommentaire(e.target.value)}
+                  placeholder="Un commentaire (facultatif)…"
+                  rows={3}
+                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2 text-sm text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+                />
+                <button
+                  onClick={envoyerAvis}
+                  disabled={avisNote < 1}
+                  className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white disabled:opacity-60"
+                >
+                  Envoyer mon avis
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
 

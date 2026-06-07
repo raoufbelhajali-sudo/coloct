@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { X, Heart, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import { estSuperProfil, labelSuper } from "@/lib/completude";
+import { estActifRecemment } from "@/lib/activite";
+import { getNoteMoyenne } from "@/lib/reviews";
 
 // Vue détaillée d'un profil colocataire (plein écran, défilable)
 export default function ProfileDetail({
@@ -18,6 +21,14 @@ export default function ProfileDetail({
   onPass?: () => void;
   preview?: boolean; // aperçu "mon profil" → pas de boutons like/pass
 }) {
+  const [note, setNote] = useState<{ moyenne: number; nombre: number }>({
+    moyenne: 0,
+    nombre: 0,
+  });
+  useEffect(() => {
+    getNoteMoyenne(profile.id).then(setNote);
+  }, [profile.id]);
+
   // Mode de vie complet (l'annonceur doit tout voir, pas seulement le positif)
   const modeDeVie: string[] = [];
   (profile.ambiance ?? []).forEach((a) => modeDeVie.push(a));
@@ -69,6 +80,18 @@ export default function ProfileDetail({
                   <span className="inline-flex items-center gap-1 rounded-full bg-panel-2 px-2.5 py-1 text-[11px] font-medium text-ink/80">
                     <ShieldCheck className="h-3.5 w-3.5 text-violet" /> Identité
                     vérifiée
+                  </span>
+                )}
+                {estActifRecemment(profile.last_seen) && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-panel-2 px-2.5 py-1 text-[11px] font-medium text-ink/80">
+                    <span className="h-2 w-2 rounded-full bg-green-500" /> Actif
+                    récemment
+                  </span>
+                )}
+                {note.nombre > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-panel-2 px-2.5 py-1 text-[11px] font-semibold text-ink/80">
+                    <Star className="h-3.5 w-3.5 text-amber-400" fill="currentColor" />
+                    {note.moyenne} ({note.nombre})
                   </span>
                 )}
               </div>
