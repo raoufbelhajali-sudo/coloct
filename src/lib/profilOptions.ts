@@ -200,6 +200,16 @@ export const SERVICES = [
   "Cuisine équipée",
 ];
 
+// Durée de colocation souhaitée (colocataire)
+export const DUREES_COLOC = [
+  "Quelques semaines",
+  "1 à 3 mois",
+  "3 à 6 mois",
+  "6 mois à 1 an",
+  "1 an ou plus",
+  "Indifférent",
+];
+
 // Questions "prompts" de profil (réponses libres, façon Tinder/Muzz)
 export const PROMPTS = [
   "Le coloc idéal pour moi, c'est…",

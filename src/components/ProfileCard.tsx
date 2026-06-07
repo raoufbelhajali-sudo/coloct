@@ -75,6 +75,11 @@ export default function ProfileCard({
             Budget jusqu&apos;à {profile.budget_max} € / mois
           </p>
         ) : null}
+        {profile.duree_coloc ? (
+          <p className="mt-0.5 text-sm font-medium text-violet">
+            Durée : {profile.duree_coloc}
+          </p>
+        ) : null}
 
         {profile.interets && profile.interets.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">

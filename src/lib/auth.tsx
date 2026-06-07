@@ -34,6 +34,7 @@ export type Profile = {
   departement: string | null;
   quartiers: string[] | null;
   date_emmenagement: string | null;
+  duree_coloc: string | null; // durée de colocation souhaitée
   prompts: Record<string, string> | null; // réponses libres (questions de profil)
   non_fumeur: boolean;
   animaux: boolean;

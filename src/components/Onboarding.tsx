@@ -16,6 +16,7 @@ import {
   ANIMAUX,
   TELETRAVAIL,
   SALAIRES,
+  DUREES_COLOC,
 } from "@/lib/profilOptions";
 import LieuSelect from "@/components/LieuSelect";
 
@@ -73,6 +74,7 @@ export default function Onboarding({
   const [parking, setParking] = useState(false);
   const [quartiers, setQuartiers] = useState<string[]>([]);
   const [dateEmm, setDateEmm] = useState("");
+  const [dureeColoc, setDureeColoc] = useState("");
 
   const etapes: readonly string[] =
     role === "locataire" ? ETAPES_LOCA : ETAPES_COLOC;
@@ -174,6 +176,7 @@ export default function Onboarding({
         departement,
         quartiers,
         date_emmenagement: dateEmm || null,
+        duree_coloc: dureeColoc || null,
       })
       .eq("id", user.id);
     if (error) {
@@ -612,6 +615,23 @@ export default function Onboarding({
                     onChange={(e) => setDateEmm(e.target.value)}
                     className={champ}
                   />
+                </div>
+                <div className="mt-4">
+                  <label className="text-sm text-ink/70">
+                    Durée de colocation souhaitée
+                  </label>
+                  <select
+                    value={dureeColoc}
+                    onChange={(e) => setDureeColoc(e.target.value)}
+                    className={champ}
+                  >
+                    <option value="">Choisir…</option>
+                    {DUREES_COLOC.map((d) => (
+                      <option key={d} value={d}>
+                        {d}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <label className="mt-4 flex cursor-pointer items-center gap-2 text-sm text-ink/70">
                   <input

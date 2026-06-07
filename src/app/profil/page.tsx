@@ -11,7 +11,7 @@ import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import LieuSelect from "@/components/LieuSelect";
-import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS } from "@/lib/profilOptions";
+import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -48,6 +48,7 @@ export default function ProfilPage() {
   const [parking, setParking] = useState(false);
   const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>([]);
   const [dateEmmenagement, setDateEmmenagement] = useState("");
+  const [dureeColoc, setDureeColoc] = useState("");
 
   const [photoUrl, setPhotoUrl] = useState("");
   const [photoEnCours, setPhotoEnCours] = useState(false);
@@ -103,6 +104,7 @@ export default function ProfilPage() {
         budget_max: estLocataire ? null : budgetMax,
         quartiers: estLocataire ? [] : quartiersChoisis,
         date_emmenagement: estLocataire ? null : dateEmmenagement || null,
+        duree_coloc: estLocataire ? null : dureeColoc || null,
       }
     : null;
 
@@ -153,6 +155,7 @@ export default function ProfilPage() {
     setParking(profile.parking_souhaite);
     setQuartiersChoisis(profile.quartiers ?? []);
     setDateEmmenagement(profile.date_emmenagement ?? "");
+    setDureeColoc(profile.duree_coloc ?? "");
   }, [profile]);
 
   function toggle(list: string[], set: (v: string[]) => void, val: string) {
@@ -197,6 +200,7 @@ export default function ProfilPage() {
         parking_souhaite: parking,
         quartiers: quartiersChoisis,
         date_emmenagement: dateEmmenagement || null,
+        duree_coloc: dureeColoc || null,
       })
       .eq("id", user.id);
     setEnCours(false);
@@ -457,6 +461,15 @@ export default function ProfilPage() {
               <div>
                 <label className="text-sm text-ink/70">Emménagement souhaité</label>
                 <input type="date" value={dateEmmenagement} onChange={(e) => setDateEmmenagement(e.target.value)} className={champClasses} />
+              </div>
+              <div>
+                <label className="text-sm text-ink/70">Durée de colocation souhaitée</label>
+                <select value={dureeColoc} onChange={(e) => setDureeColoc(e.target.value)} className={champClasses}>
+                  <option value="">Choisir…</option>
+                  {DUREES_COLOC.map((d) => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+                </select>
               </div>
               <Checkbox label="Place de parking souhaitée" checked={parking} onChange={setParking} />
             </Section>

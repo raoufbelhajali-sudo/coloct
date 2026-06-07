@@ -148,6 +148,12 @@ export default function ProfileDetail({
                 <Pill variante="neutre">{profile.date_emmenagement}</Pill>
               </Bloc>
             )}
+
+            {profile.duree_coloc && (
+              <Bloc titre="Durée souhaitée">
+                <Pill variante="violet">{profile.duree_coloc}</Pill>
+              </Bloc>
+            )}
           </div>
         </div>
 
