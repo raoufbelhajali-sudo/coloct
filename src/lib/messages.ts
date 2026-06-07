@@ -178,6 +178,35 @@ export async function getMatchInfo(matchId: number): Promise<{
   };
 }
 
+// --- Accusés de lecture ---
+// Dates de dernière lecture de chaque membre du match
+export async function getLecture(matchId: number): Promise<{
+  colocataire: string | null;
+  locataire: string | null;
+}> {
+  const { data } = await supabase
+    .from("matches")
+    .select("lu_colocataire_at, lu_locataire_at")
+    .eq("id", matchId)
+    .maybeSingle();
+  return {
+    colocataire: data?.lu_colocataire_at ?? null,
+    locataire: data?.lu_locataire_at ?? null,
+  };
+}
+
+// Marque la conversation comme lue par le membre courant (selon son rôle)
+export async function marquerLu(
+  matchId: number,
+  estLocataire: boolean
+): Promise<void> {
+  const champ = estLocataire ? "lu_locataire_at" : "lu_colocataire_at";
+  await supabase
+    .from("matches")
+    .update({ [champ]: new Date().toISOString() })
+    .eq("id", matchId);
+}
+
 // Le locataire met à jour la liste des documents demandés
 export async function setDocumentsRequis(
   matchId: number,

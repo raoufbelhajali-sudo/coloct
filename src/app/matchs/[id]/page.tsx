@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
-  ListChecks, CheckSquare, Square, ChevronDown, MoreVertical, Trash2, Ban,
+  ListChecks, CheckSquare, Square, ChevronDown, MoreVertical, Trash2, Ban, Flag,
 } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -22,12 +22,15 @@ import {
   getMyMatches,
   getMatchInfo,
   setDocumentsRequis,
+  getLecture,
+  marquerLu,
   TYPES_DOCUMENTS,
   supprimerMatch,
   type Message,
 } from "@/lib/messages";
 import { marquerMatchLu } from "@/lib/notifications";
 import { bloquerUtilisateur } from "@/lib/blocks";
+import { signalerUtilisateur, RAISONS_SIGNALEMENT } from "@/lib/reports";
 import RolePin from "@/components/RolePin";
 
 export default function ConversationPage() {
@@ -50,6 +53,10 @@ export default function ConversationPage() {
   const [recording, setRecording] = useState(false);
   const [recordSec, setRecordSec] = useState(0);
   const [estLocataire, setEstLocataire] = useState(false);
+  const [roleCharge, setRoleCharge] = useState(false);
+  const [lecture, setLecture] = useState<{ colocataire: string | null; locataire: string | null }>({ colocataire: null, locataire: null });
+  const [signalerOuvert, setSignalerOuvert] = useState(false);
+  const [signalEnvoye, setSignalEnvoye] = useState(false);
   const [docsRequis, setDocsRequis] = useState<string[]>([]);
   const [checklistOuverte, setChecklistOuverte] = useState(false);
   const finRef = useRef<HTMLDivElement>(null);
@@ -85,6 +92,11 @@ export default function ConversationPage() {
     if (user) marquerMatchLu(user.id, matchId);
   }, [user, matchId, messages]);
 
+  // Accusé de lecture : on note notre lecture côté serveur (quand on connaît le rôle)
+  useEffect(() => {
+    if (user && roleCharge) marquerLu(matchId, estLocataire);
+  }, [user, matchId, messages, estLocataire, roleCharge]);
+
   // Rôle + documents demandés (checklist)
   useEffect(() => {
     if (!user) return;
@@ -92,6 +104,7 @@ export default function ConversationPage() {
       if (!info) return;
       const jeSuisLoca = info.locataire_id === user.id;
       setEstLocataire(jeSuisLoca);
+      setRoleCharge(true);
       setDocsRequis(info.documents_requis);
       // Profil de l'autre personne (annonceur ↔ colocataire), pour pouvoir l'ouvrir
       const autreId = jeSuisLoca ? info.colocataire_id : info.locataire_id;
@@ -124,6 +137,20 @@ export default function ConversationPage() {
     await supprimerMatch(matchId);
     router.push("/matchs");
   }
+
+  // Signale l'autre personne
+  async function envoyerSignalement(raison: string) {
+    if (!user || !autreProfil) return;
+    await signalerUtilisateur(user.id, autreProfil.id, raison);
+    setSignalEnvoye(true);
+  }
+
+  // Date de lecture de l'AUTRE personne (pour afficher "Vu")
+  const autreLuAt = estLocataire ? lecture.colocataire : lecture.locataire;
+  // Mon dernier message texte (pour y accrocher le "Vu")
+  const monDernierMsgId = [...messages]
+    .reverse()
+    .find((m) => m.sender_id === user?.id)?.id;
 
   // Bascule un type de document dans la liste demandée (côté locataire)
   function basculerDoc(type: string) {
@@ -162,10 +189,14 @@ export default function ConversationPage() {
   useEffect(() => {
     if (!user) return;
     let actif = true;
-    const charger = () =>
+    const charger = () => {
       getMessages(matchId).then((m) => {
         if (actif) setMessages(m);
       });
+      getLecture(matchId).then((l) => {
+        if (actif) setLecture(l);
+      });
+    };
     charger();
     const intervalle = setInterval(charger, 3000);
     return () => {
@@ -342,6 +373,16 @@ export default function ConversationPage() {
                 <button
                   onClick={() => {
                     setMenuOuvert(false);
+                    setSignalEnvoye(false);
+                    setSignalerOuvert(true);
+                  }}
+                  className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-ink/85 hover:bg-panel-2"
+                >
+                  <Flag className="h-4 w-4" /> Signaler {autrePrenom}
+                </button>
+                <button
+                  onClick={() => {
+                    setMenuOuvert(false);
                     bloquer();
                   }}
                   className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm text-pink hover:bg-panel-2"
@@ -370,6 +411,66 @@ export default function ConversationPage() {
           preview
           onClose={() => setVoirAnnonce(false)}
         />
+      )}
+
+      {/* Signaler un profil */}
+      {signalerOuvert && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setSignalerOuvert(false)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl bg-panel p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {signalEnvoye ? (
+              <div className="text-center">
+                <div className="bg-signature mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full">
+                  <Flag className="h-6 w-6 text-white" />
+                </div>
+                <p className="font-display text-xl font-semibold">Merci !</p>
+                <p className="mt-1 text-sm text-ink/70">
+                  Ton signalement a bien été envoyé. Notre équipe va l&apos;examiner.
+                </p>
+                <button
+                  onClick={() => setSignalerOuvert(false)}
+                  className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
+                >
+                  Fermer
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="font-display text-xl font-semibold">
+                    Signaler {autrePrenom}
+                  </p>
+                  <button
+                    onClick={() => setSignalerOuvert(false)}
+                    aria-label="Fermer"
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-ink/60 hover:bg-panel-2"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <p className="mb-3 text-sm text-ink/60">
+                  Quel est le problème ?
+                </p>
+                <div className="flex flex-col gap-2">
+                  {RAISONS_SIGNALEMENT.map((r) => (
+                    <button
+                      key={r}
+                      onClick={() => envoyerSignalement(r)}
+                      className="rounded-xl bg-panel-2 px-4 py-3 text-left text-sm font-medium text-ink hover:bg-panel"
+                    >
+                      {r}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
 
       {/* ---------- Checklist des documents ---------- */}
@@ -536,6 +637,22 @@ export default function ConversationPage() {
             );
           })
         )}
+        {/* Accusé de lecture : "Vu" sous mon dernier message s'il a été lu */}
+        {(() => {
+          const last = messages[messages.length - 1];
+          if (
+            last &&
+            last.sender_id === user?.id &&
+            last.id === monDernierMsgId &&
+            autreLuAt &&
+            autreLuAt >= last.created_at
+          ) {
+            return (
+              <p className="self-end pr-1 text-xs text-ink/40">Vu</p>
+            );
+          }
+          return null;
+        })()}
         <div ref={finRef} />
       </div>
 

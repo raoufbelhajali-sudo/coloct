@@ -143,6 +143,8 @@ export default function SwipeDeck() {
   const limiteJour = LIKES_GRATUITS_PAR_JOUR + bonusLikes;
   // A-t-on encore des likes gratuits aujourd'hui ?
   const likesEpuises = !premium && likesAujourdhui >= limiteJour;
+  // Au-delà de la limite (sans Pass) : on masque (floute) les annonces
+  const flou = likesEpuises;
 
   // Fait voler la carte hors de l'écran puis passe à la suivante
   async function fly(dir: Direction) {
@@ -388,7 +390,11 @@ export default function SwipeDeck() {
           <div className="relative w-full flex-1 min-h-0">
             {next && (
               <div className="absolute inset-0 scale-95 opacity-60">
-                <ListingCard listing={next} compat={compatAnnonce(profile, next)} />
+                <ListingCard
+                  listing={next}
+                  compat={compatAnnonce(profile, next)}
+                  flou={flou}
+                />
               </div>
             )}
 
@@ -399,7 +405,7 @@ export default function SwipeDeck() {
               dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
               dragElastic={0.6}
               onDragEnd={handleDragEnd}
-              onTap={() => setDetail(current)}
+              onTap={() => (flou ? setPaywall(true) : setDetail(current))}
               style={{ x, rotate }}
               animate={controls}
             >
@@ -416,7 +422,11 @@ export default function SwipeDeck() {
                 JE PASSE
               </motion.div>
 
-              <ListingCard listing={current} compat={compatAnnonce(profile, current)} />
+              <ListingCard
+                listing={current}
+                compat={compatAnnonce(profile, current)}
+                flou={flou}
+              />
             </motion.div>
 
             {/* Boutons posés sur la carte */}
