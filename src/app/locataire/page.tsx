@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Users, Home } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
-import RappelProfil from "@/components/RappelProfil";
+import AccrocheAnnonceur from "@/components/AccrocheAnnonceur";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
@@ -77,8 +77,8 @@ export default function LocatairePage() {
               </Link>
             </div>
             <ProfileSwipeDeck listingId={listing.id} />
-            {/* Rappel : finalise ton profil si < 100 % */}
-            <RappelProfil />
+            {/* Message d'accueil annonceur (1×/session) */}
+            <AccrocheAnnonceur />
           </div>
         )}
       </div>
