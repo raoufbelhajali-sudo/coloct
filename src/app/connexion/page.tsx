@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, ArrowLeft, Instagram } from "lucide-react";
+import { Mail, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { LogoMark } from "@/components/Logo";
 
@@ -160,7 +160,17 @@ export default function ConnexionPage() {
                     "linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)",
                 }}
               >
-                <Instagram className="h-6 w-6" />
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5.5" />
+                  <circle cx="12" cy="12" r="4.2" />
+                  <circle cx="17.3" cy="6.7" r="1.3" fill="currentColor" stroke="none" />
+                </svg>
               </button>
 
               <button
