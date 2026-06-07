@@ -19,7 +19,13 @@ const badge =
   "animate-vibrate absolute right-2 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white";
 
 // En-tête : logo + rôle en haut, icônes de navigation dans une barre fixe en bas
-export default function AppHeader({ compact = false }: { compact?: boolean }) {
+export default function AppHeader({
+  compact = false,
+  hideTop = false,
+}: {
+  compact?: boolean;
+  hideTop?: boolean;
+}) {
   const { user, profile } = useAuth();
   const { count: nbMessages, alerte: alerteMsg } = useMessagesNonLus();
   const nbLikes = useLikesRecus();
@@ -46,14 +52,16 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
       )}
 
       {/* Haut : pastille de rôle uniquement (le logo est passé en bas) */}
-      <header
-        className={
-          "flex w-full max-w-sm items-center justify-between " +
-          (compact ? "mb-2" : "mb-6")
-        }
-      >
-        <RolePin />
-      </header>
+      {!hideTop && (
+        <header
+          className={
+            "flex w-full max-w-sm items-center justify-between " +
+            (compact ? "mb-2" : "mb-6")
+          }
+        >
+          <RolePin />
+        </header>
+      )}
 
       {/* Bas : barre de navigation fixe (icônes pleines) */}
       {user && (

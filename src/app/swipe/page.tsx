@@ -5,7 +5,7 @@ import RappelProfil from "@/components/RappelProfil";
 export default function SwipePage() {
   return (
     <main className="flex h-dvh flex-col items-center overflow-hidden px-4 pb-20 pt-3">
-      <AppHeader compact />
+      <AppHeader compact hideTop />
 
       {/* Le paquet de cartes à swiper (remplit l'écran restant) */}
       <div className="flex w-full min-h-0 flex-1 justify-center">

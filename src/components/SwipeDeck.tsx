@@ -15,6 +15,7 @@ import { compatAnnonce } from "@/lib/compat";
 import { getIdsBloques } from "@/lib/blocks";
 import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
+import RolePin from "@/components/RolePin";
 import { useAuth } from "@/lib/auth";
 import { estPremium } from "@/lib/offers";
 import {
@@ -220,8 +221,10 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
-      {/* Compteur de likes restants + bouton filtres (même ligne) */}
-      <div className="mb-2 flex w-full items-center justify-between gap-2">
+      {/* Rôle + compteur de likes restants + bouton filtres (même ligne) */}
+      <div className="mb-2 flex w-full items-center gap-2">
+        <RolePin />
+        <div className="ml-auto flex items-center gap-2">
         {premium ? (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold text-pink">
             <Star className="h-4 w-4" fill="currentColor" /> Colock&apos;t+ · illimité
@@ -260,6 +263,7 @@ export default function SwipeDeck() {
             <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
           )}
         </button>
+        </div>
       </div>
 
       {/* ---------- Filtres (pop-up) ---------- */}
