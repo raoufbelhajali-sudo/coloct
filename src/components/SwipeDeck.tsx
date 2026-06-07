@@ -220,21 +220,32 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
-      {/* Compteur de likes + bouton filtres (même ligne) */}
+      {/* Compteur de likes restants + bouton filtres (même ligne) */}
       <div className="mb-2 flex w-full items-center justify-between gap-2">
-        <span className="text-xs text-ink/50">
-          {premium ? (
-            <span className="inline-flex items-center gap-1 font-medium text-pink">
-              <Star className="h-3.5 w-3.5" fill="currentColor" /> Colock&apos;t+ ·
-              likes illimités
-            </span>
-          ) : (
-            (() => {
-              const r = Math.max(0, limiteJour - likesAujourdhui);
-              return `${r} like${r > 1 ? "s" : ""} gratuit${r > 1 ? "s" : ""} aujourd'hui`;
-            })()
-          )}
-        </span>
+        {premium ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold text-pink">
+            <Star className="h-4 w-4" fill="currentColor" /> Colock&apos;t+ · illimité
+          </span>
+        ) : (
+          (() => {
+            const r = Math.max(0, limiteJour - likesAujourdhui);
+            return (
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold"
+                title="Likes gratuits restants aujourd'hui"
+              >
+                <Heart
+                  className={r > 0 ? "h-4 w-4 text-pink" : "h-4 w-4 text-ink/30"}
+                  fill="currentColor"
+                />
+                <span className={r > 0 ? "text-pink" : "text-ink/40"}>{r}</span>
+                <span className="text-xs font-normal text-ink/40">
+                  / {limiteJour} likes
+                </span>
+              </span>
+            );
+          })()
+        )}
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"
