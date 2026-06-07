@@ -1,5 +1,5 @@
-// Logo de FlatSwiper : une clé (accès au logement) avec un cœur évidé
-// (trouver la bonne coloc), dans le dégradé signature corail → orange.
+// Logo de FlatSwiper : un « F » (initiale) façon clé — un trou de serrure
+// percé dans la barre du haut — dans le dégradé signature corail → orange.
 
 export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
   return (
@@ -10,18 +10,14 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
           <stop offset="100%" stopColor="#fd7e14" />
         </linearGradient>
       </defs>
+      {/* La lettre F (barre verticale + 2 bras), coins arrondis */}
       <g fill="url(#colockt-grad)">
-        {/* Tête de la clé */}
-        <circle cx="24" cy="14" r="12" />
-        {/* Tige + dents de la clé */}
-        <path d="M21 24 h6 v8 h4 v3 h-4 v4 h3 v3 h-3 v3 h-6 z" />
+        <rect x="13" y="8" width="8" height="32" rx="3" />
+        <rect x="13" y="8" width="24" height="8" rx="3" />
+        <rect x="13" y="20" width="17" height="8" rx="3" />
       </g>
-      {/* Cœur blanc évidé (le "trou" de la clé) */}
-      <path
-        fill="#fff"
-        transform="translate(16.5 6.2) scale(0.62)"
-        d="M12 21 C12 21 3 15 3 8.5 C3 5.4 5.5 3 8.5 3 C10.3 3 11.5 4 12 5 C12.5 4 13.7 3 15.5 3 C18.5 3 21 5.4 21 8.5 C21 15 12 21 12 21 Z"
-      />
+      {/* Trou de serrure (clin d'œil "clé") percé dans le bras du haut */}
+      <circle cx="31.5" cy="12" r="2.6" fill="#fff" />
     </svg>
   );
 }
