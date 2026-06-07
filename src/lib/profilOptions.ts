@@ -206,6 +206,17 @@ export const PROFESSIONS = ["Étudiant", "CDD", "CDI", "Chômeur", "Retraité"];
 // Statut de l'annonceur vis-à-vis du logement
 export const STATUTS_ANNONCEUR = ["Propriétaire", "Locataire (sous-location)"];
 
+// Infos annonce
+export const TYPES_LOGEMENT = ["Appartement", "Maison", "Studio"];
+export const SALLES_DE_BAIN = ["Privée", "Partagée"];
+export const DUREES_MIN_BAIL = [
+  "Sans minimum",
+  "3 mois minimum",
+  "6 mois minimum",
+  "1 an minimum",
+];
+export const GENRES_COLOC = ["Mixte", "Entre filles", "Entre garçons"];
+
 // Durée de colocation souhaitée (colocataire)
 export const DUREES_COLOC = [
   "Quelques semaines",

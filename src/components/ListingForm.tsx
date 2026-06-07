@@ -7,7 +7,14 @@ import { supabase } from "@/lib/supabase";
 import { createListing, updateListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import LieuSelect from "@/components/LieuSelect";
-import { SERVICES, STATUTS_ANNONCEUR } from "@/lib/profilOptions";
+import {
+  SERVICES,
+  STATUTS_ANNONCEUR,
+  TYPES_LOGEMENT,
+  SALLES_DE_BAIN,
+  DUREES_MIN_BAIL,
+  GENRES_COLOC,
+} from "@/lib/profilOptions";
 import { geocodeVille } from "@/lib/geo";
 
 const PHOTO_PAR_DEFAUT =
@@ -45,6 +52,16 @@ export default function ListingForm({
   const [statutAnnonceur, setStatutAnnonceur] = useState(
     listing?.statutAnnonceur ?? ""
   );
+  const [typeLogement, setTypeLogement] = useState(listing?.typeLogement ?? "");
+  const [nbColocsTotal, setNbColocsTotal] = useState(
+    listing?.nbColocsTotal ? String(listing.nbColocsTotal) : ""
+  );
+  const [caution, setCaution] = useState(
+    listing?.caution ? String(listing.caution) : ""
+  );
+  const [salleDeBain, setSalleDeBain] = useState(listing?.salleDeBain ?? "");
+  const [dureeMinBail, setDureeMinBail] = useState(listing?.dureeMinBail ?? "");
+  const [genreColocs, setGenreColocs] = useState(listing?.genreColocs ?? "");
   const [etage, setEtage] = useState(listing?.etage ?? "");
   const [dispo, setDispo] = useState(listing?.dispo ?? "");
   const [description, setDescription] = useState(listing?.description ?? "");
@@ -138,6 +155,12 @@ export default function ListingForm({
         nb_occupants: Number(nbOccupants) || null,
         meuble,
         statut_annonceur: statutAnnonceur || null,
+        type_logement: typeLogement || null,
+        nb_colocs_total: Number(nbColocsTotal) || null,
+        caution: Number(caution) || null,
+        salle_de_bain: salleDeBain || null,
+        duree_min_bail: dureeMinBail || null,
+        genre_colocs: genreColocs || null,
         etage: etage.trim() || "—",
         dispo: dispo || "2026-01-01",
         date_dispo: dateLisible,
@@ -220,7 +243,7 @@ export default function ListingForm({
         <select
           value={statutAnnonceur}
           onChange={(e) => setStatutAnnonceur(e.target.value)}
-          className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none"
+          className={champSelect}
         >
           <option value="">Choisir…</option>
           {STATUTS_ANNONCEUR.map((s) => (
@@ -229,6 +252,48 @@ export default function ListingForm({
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Type de logement + salle de bain */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-sm text-ink/70">Type de logement</label>
+          <select value={typeLogement} onChange={(e) => setTypeLogement(e.target.value)} className={champSelect}>
+            <option value="">Choisir…</option>
+            {TYPES_LOGEMENT.map((t) => (<option key={t} value={t}>{t}</option>))}
+          </select>
+        </div>
+        <div>
+          <label className="text-sm text-ink/70">Salle de bain</label>
+          <select value={salleDeBain} onChange={(e) => setSalleDeBain(e.target.value)} className={champSelect}>
+            <option value="">Choisir…</option>
+            {SALLES_DE_BAIN.map((s) => (<option key={s} value={s}>{s}</option>))}
+          </select>
+        </div>
+      </div>
+
+      {/* Nb colocs total + caution */}
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Colocataires au total" type="number" value={nbColocsTotal} onChange={setNbColocsTotal} placeholder="Ex. 3" />
+        <Field label="Caution (€)" type="number" value={caution} onChange={setCaution} placeholder="Ex. 800" />
+      </div>
+
+      {/* Durée min de bail + genre des colocs */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-sm text-ink/70">Durée minimale</label>
+          <select value={dureeMinBail} onChange={(e) => setDureeMinBail(e.target.value)} className={champSelect}>
+            <option value="">Choisir…</option>
+            {DUREES_MIN_BAIL.map((d) => (<option key={d} value={d}>{d}</option>))}
+          </select>
+        </div>
+        <div>
+          <label className="text-sm text-ink/70">Colocs actuels</label>
+          <select value={genreColocs} onChange={(e) => setGenreColocs(e.target.value)} className={champSelect}>
+            <option value="">Choisir…</option>
+            {GENRES_COLOC.map((g) => (<option key={g} value={g}>{g}</option>))}
+          </select>
+        </div>
       </div>
 
       {/* Meublé */}
@@ -382,6 +447,9 @@ export default function ListingForm({
     </form>
   );
 }
+
+const champSelect =
+  "mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none";
 
 function Field({
   label,

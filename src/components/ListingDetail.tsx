@@ -148,12 +148,24 @@ export default function ListingDetail({
               <p>
                 {listing.surface} m² · {listing.etage}
               </p>
-              <p>{listing.meuble ? "Meublé" : "Non meublé"}</p>
+              <p>
+                {listing.meuble ? "Meublé" : "Non meublé"}
+                {listing.typeLogement ? ` · ${listing.typeLogement}` : ""}
+                {listing.salleDeBain ? ` · SdB ${listing.salleDeBain.toLowerCase()}` : ""}
+              </p>
               {listing.nbOccupants ? (
                 <p>
                   {listing.nbOccupants} personne
                   {listing.nbOccupants > 1 ? "s" : ""} dans le logement
                 </p>
+              ) : null}
+              {listing.nbColocsTotal ? (
+                <p>{listing.nbColocsTotal} colocataires au total</p>
+              ) : null}
+              {listing.genreColocs ? <p>Colocs : {listing.genreColocs}</p> : null}
+              {listing.caution ? <p>Caution : {listing.caution} €</p> : null}
+              {listing.dureeMinBail && listing.dureeMinBail !== "Sans minimum" ? (
+                <p>Engagement : {listing.dureeMinBail}</p>
               ) : null}
               {listing.statutAnnonceur ? (
                 <p className="font-medium text-violet">

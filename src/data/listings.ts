@@ -38,6 +38,12 @@ export type Listing = {
   lng?: number | null;
   gelee?: boolean | null; // annonce gelée (bien loué) → masquée du swipe
   statutAnnonceur?: string | null; // "Propriétaire" / "Locataire (sous-location)"
+  typeLogement?: string | null; // Appartement / Maison / Studio
+  nbColocsTotal?: number | null; // nb de colocataires au total
+  caution?: number | null; // dépôt de garantie (€)
+  salleDeBain?: string | null; // Privée / Partagée
+  dureeMinBail?: string | null; // durée minimale demandée
+  genreColocs?: string | null; // Mixte / Entre filles / Entre garçons
 };
 
 // Petite fonction utilitaire pour construire l'URL d'une photo Unsplash

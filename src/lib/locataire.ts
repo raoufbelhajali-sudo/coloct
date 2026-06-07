@@ -40,6 +40,12 @@ export type NewListing = {
   lat?: number | null;
   lng?: number | null;
   statut_annonceur?: string | null;
+  type_logement?: string | null;
+  nb_colocs_total?: number | null;
+  caution?: number | null;
+  salle_de_bain?: string | null;
+  duree_min_bail?: string | null;
+  genre_colocs?: string | null;
 };
 
 // Crée l'annonce du locataire

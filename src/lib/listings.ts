@@ -47,6 +47,12 @@ export type ListingRow = {
   lng: number | null;
   gelee: boolean | null;
   statut_annonceur: string | null;
+  type_logement: string | null;
+  nb_colocs_total: number | null;
+  caution: number | null;
+  salle_de_bain: string | null;
+  duree_min_bail: string | null;
+  genre_colocs: string | null;
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -75,6 +81,12 @@ export function mapListingRow(r: ListingRow): Listing {
     lng: r.lng ?? null,
     gelee: r.gelee ?? false,
     statutAnnonceur: r.statut_annonceur ?? null,
+    typeLogement: r.type_logement ?? null,
+    nbColocsTotal: r.nb_colocs_total ?? null,
+    caution: r.caution ?? null,
+    salleDeBain: r.salle_de_bain ?? null,
+    dureeMinBail: r.duree_min_bail ?? null,
+    genreColocs: r.genre_colocs ?? null,
   };
 }
 
