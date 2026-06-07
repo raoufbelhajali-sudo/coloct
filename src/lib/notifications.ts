@@ -17,6 +17,18 @@ export function marquerMatchLu(userId: string, matchId: number) {
   }
 }
 
+// Une conversation est-elle non lue ? (dernier message reçu plus récent que
+// la dernière ouverture). Utilisé pour styliser la boîte de réception.
+export function estMatchNonLu(
+  userId: string,
+  matchId: number,
+  dernierAutreMsg: string | null
+): boolean {
+  if (typeof window === "undefined") return false;
+  const lu = localStorage.getItem(cleMatchLu(userId, matchId)) || "";
+  return dernierAutreMsg ? dernierAutreMsg > lu : false;
+}
+
 // Conversations non lues (badge) + alerte transitoire quand un NOUVEAU message
 // arrive (bandeau in-app + notification système si autorisée). Poll 5s.
 export function useMessagesNonLus(): { count: number; alerte: string } {
