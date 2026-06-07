@@ -45,6 +45,7 @@ export type ListingRow = {
   owner_id: string | null;
   lat: number | null;
   lng: number | null;
+  gelee: boolean | null;
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -71,6 +72,7 @@ export function mapListingRow(r: ListingRow): Listing {
     boosted_until: r.boosted_until,
     lat: r.lat ?? null,
     lng: r.lng ?? null,
+    gelee: r.gelee ?? false,
   };
 }
 
@@ -82,7 +84,9 @@ export async function getListings(): Promise<Listing[]> {
     .order("id");
 
   if (error) throw error;
-  const listings = await attacherAnnonceurs((data as ListingRow[]) ?? []);
+  const listings = (await attacherAnnonceurs((data as ListingRow[]) ?? []))
+    // On ne montre pas les annonces gelées (bien déjà loué)
+    .filter((l) => !l.gelee);
 
   // Les annonces boostées passent en tête
   return listings.sort(

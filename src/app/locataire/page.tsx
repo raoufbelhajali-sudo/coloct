@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Users, Home } from "lucide-react";
+import { Users, Home, Snowflake } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import AccrocheAnnonceur from "@/components/AccrocheAnnonceur";
@@ -57,6 +57,22 @@ export default function LocatairePage() {
               className="bg-signature glow-pink rounded-full px-6 py-3 font-semibold text-white"
             >
               Décrire mon bien
+            </Link>
+          </div>
+        ) : listing.gelee ? (
+          // Annonce gelée (bien loué) → on ne swipe plus
+          <div className="m-auto flex max-w-xs flex-col items-center gap-4 text-center">
+            <Snowflake className="h-12 w-12 text-violet" />
+            <p className="font-display text-2xl">Annonce gelée</p>
+            <p className="text-sm text-ink/70">
+              Ton bien est loué : ton annonce est masquée et tu ne reçois plus de
+              candidats. Tu peux la réactiver quand tu veux.
+            </p>
+            <Link
+              href="/mon-annonce"
+              className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+            >
+              Réactiver mon annonce
             </Link>
           </div>
         ) : (

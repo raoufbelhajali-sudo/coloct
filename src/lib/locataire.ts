@@ -64,6 +64,18 @@ export async function updateListing(
   if (error) throw error;
 }
 
+// Gèle (bien loué) ou réactive une annonce
+export async function setListingGelee(
+  listingId: string,
+  gelee: boolean
+): Promise<void> {
+  const { error } = await supabase
+    .from("listings")
+    .update({ gelee })
+    .eq("id", Number(listingId));
+  if (error) throw error;
+}
+
 // Profils des colocataires déjà swipés par ce locataire (pour cette annonce)
 export async function getSwipedProfileIds(
   userId: string,

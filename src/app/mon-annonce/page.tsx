@@ -3,12 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Rocket, Eye, ArrowLeft, Pencil } from "lucide-react";
+import { Rocket, Eye, ArrowLeft, Pencil, Snowflake, CheckCircle2 } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ListingForm from "@/components/ListingForm";
 import ListingDetail from "@/components/ListingDetail";
 import { useAuth } from "@/lib/auth";
-import { getMyListing } from "@/lib/locataire";
+import { getMyListing, setListingGelee } from "@/lib/locataire";
 import { lieuComplet } from "@/lib/listings";
 import { boostActif, activerBoostAnnonce } from "@/lib/offers";
 import type { Listing } from "@/data/listings";
@@ -20,6 +20,7 @@ export default function MonAnnoncePage() {
   const [listing, setListing] = useState<Listing | null>(null);
   const [chargement, setChargement] = useState(true);
   const [boostEnCours, setBoostEnCours] = useState(false);
+  const [gelEnCours, setGelEnCours] = useState(false);
   const [edition, setEdition] = useState(false);
   const [apercu, setApercu] = useState(false);
 
@@ -46,6 +47,15 @@ export default function MonAnnoncePage() {
     await activerBoostAnnonce(listing.id);
     await chargerAnnonce();
     setBoostEnCours(false);
+  }
+
+  // Gèle (bien loué) ou réactive l'annonce
+  async function basculerGel() {
+    if (!listing) return;
+    setGelEnCours(true);
+    await setListingGelee(listing.id, !listing.gelee);
+    await chargerAnnonce();
+    setGelEnCours(false);
   }
 
   const retour = "/locataire";
@@ -121,20 +131,48 @@ export default function MonAnnoncePage() {
                 </button>
               </div>
 
-              {/* Boost */}
-              {boostActif(listing.boosted_until) ? (
-                <p className="mt-3 flex items-center justify-center gap-2 rounded-full bg-panel-2 px-4 py-2.5 text-sm font-semibold text-pink">
-                  <Rocket className="h-4 w-4" /> Annonce mise en avant
-                </p>
+              {listing.gelee ? (
+                // Annonce gelée (bien loué)
+                <>
+                  <div className="mt-3 flex items-center gap-2 rounded-xl bg-bleu-clair px-4 py-3 text-sm font-medium text-violet">
+                    <Snowflake className="h-4 w-4 shrink-0" /> Annonce gelée — ton
+                    bien est loué. Elle n&apos;apparaît plus aux colocataires.
+                  </div>
+                  <button
+                    onClick={basculerGel}
+                    disabled={gelEnCours}
+                    className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                  >
+                    {gelEnCours ? "…" : "Réactiver mon annonce"}
+                  </button>
+                </>
               ) : (
-                <button
-                  onClick={booster}
-                  disabled={boostEnCours}
-                  className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
-                >
-                  <Rocket className="h-4 w-4" />
-                  {boostEnCours ? "Activation…" : "Booster mon annonce (48h)"}
-                </button>
+                <>
+                  {/* Boost */}
+                  {boostActif(listing.boosted_until) ? (
+                    <p className="mt-3 flex items-center justify-center gap-2 rounded-full bg-panel-2 px-4 py-2.5 text-sm font-semibold text-pink">
+                      <Rocket className="h-4 w-4" /> Annonce mise en avant
+                    </p>
+                  ) : (
+                    <button
+                      onClick={booster}
+                      disabled={boostEnCours}
+                      className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                    >
+                      <Rocket className="h-4 w-4" />
+                      {boostEnCours ? "Activation…" : "Booster mon annonce (48h)"}
+                    </button>
+                  )}
+                  {/* Geler (bien loué) */}
+                  <button
+                    onClick={basculerGel}
+                    disabled={gelEnCours}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-ink/15 bg-panel-2 px-4 py-3 text-sm font-medium text-ink/70 transition-colors hover:border-ink/30 disabled:opacity-60"
+                  >
+                    <CheckCircle2 className="h-4 w-4" />
+                    {gelEnCours ? "…" : "J'ai loué mon bien — geler l'annonce"}
+                  </button>
+                </>
               )}
             </div>
 

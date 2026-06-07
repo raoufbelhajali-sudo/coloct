@@ -36,6 +36,7 @@ export type Listing = {
   ownerId?: string | null; // id du compte annonceur (pour le filtrage)
   lat?: number | null; // coordonnées (filtre par distance)
   lng?: number | null;
+  gelee?: boolean | null; // annonce gelée (bien loué) → masquée du swipe
 };
 
 // Petite fonction utilitaire pour construire l'URL d'une photo Unsplash
