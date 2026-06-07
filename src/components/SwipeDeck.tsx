@@ -250,18 +250,12 @@ export default function SwipeDeck() {
           })()
         )}
         <button
-          onClick={() => setFiltresOuverts((v) => !v)}
-          aria-label="Filtres"
-          title="Filtres"
-          className={
-            "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-panel " +
-            (filtresOuverts ? "bg-panel text-pink" : "text-ink/60 hover:text-pink")
-          }
+          onClick={() => current && partagerAnnonce(current)}
+          aria-label="Partager"
+          title="Partager"
+          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
         >
-          <SlidersHorizontal className="h-[18px] w-[18px]" />
-          {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant) && (
-            <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
-          )}
+          <Share2 className="h-[18px] w-[18px]" />
         </button>
         </div>
       </div>
@@ -435,12 +429,15 @@ export default function SwipeDeck() {
                 <X className="h-6 w-6" strokeWidth={2.5} />
               </button>
               <button
-                onClick={() => current && partagerAnnonce(current)}
-                aria-label="Partager"
-                title="Partager"
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110 hover:text-pink"
+                onClick={() => setFiltresOuverts((v) => !v)}
+                aria-label="Filtres"
+                title="Filtres"
+                className="relative flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110 hover:text-pink"
               >
-                <Share2 className="h-5 w-5" />
+                <SlidersHorizontal className="h-5 w-5" />
+                {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant) && (
+                  <span className="bg-signature absolute right-2.5 top-2.5 h-2 w-2 rounded-full" />
+                )}
               </button>
               <button
                 onClick={() => fly("right")}
