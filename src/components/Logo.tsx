@@ -18,11 +18,16 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
         <rect x="13" y="8" width="22" height="7" rx="3" />
         {/* Bras médian du F = dent du milieu (plus courte) */}
         <rect x="13" y="19" width="15" height="7" rx="3" />
-        {/* Anneau / tête de la clé = bas du F */}
-        <circle cx="17" cy="39" r="8.5" />
       </g>
-      {/* Trou de serrure au centre de l'anneau */}
-      <circle cx="17" cy="39" r="3.4" fill="#fff" />
+      {/* Anneau de la clé = bas du F, même épaisseur que les barres (8) */}
+      <circle
+        cx="17"
+        cy="37"
+        r="7"
+        fill="none"
+        stroke="url(#colockt-grad)"
+        strokeWidth="8"
+      />
     </svg>
   );
 }

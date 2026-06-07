@@ -22,9 +22,8 @@ export default function AppleIcon() {
             <rect x="14" y="9" width="8" height="24" rx="3" />
             <rect x="14" y="9" width="21" height="7" rx="3" />
             <rect x="14" y="19" width="15" height="7" rx="3" />
-            <circle cx="18" cy="37" r="8" />
           </g>
-          <circle cx="18" cy="37" r="3.2" fill="#fa5252" />
+          <circle cx="18" cy="36" r="7" fill="none" stroke="#ffffff" strokeWidth="8" />
         </svg>
       </div>
     ),
