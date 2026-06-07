@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MessageSquare, UserRound, Zap, Settings, Sparkles } from "lucide-react";
+import { MessageSquare, Zap, Settings, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 import { LogoMark } from "@/components/Logo";
@@ -100,15 +100,6 @@ export default function AppHeader({ compact = false }: { compact?: boolean }) {
                 style={{ color: BLEU_PASTEL }}
                 fill={BLEU_PASTEL}
               />
-            </Link>
-
-            <Link
-              href="/profil"
-              aria-label="Profil"
-              title="Profil"
-              className={navItem}
-            >
-              <UserRound className="h-6 w-6 text-black" fill="currentColor" />
             </Link>
 
             <Link
