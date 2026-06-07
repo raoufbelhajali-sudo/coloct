@@ -22,12 +22,12 @@ export default function MentionsLegalesPage() {
             l&apos;adresse flatswiper.com) sont édités par&nbsp;:
           </p>
           <ul className="mt-2 list-disc pl-5 text-sm leading-relaxed">
-            <li>Nom / Raison sociale : <strong>[À compléter]</strong></li>
-            <li>Statut juridique : [À compléter — ex. auto-entrepreneur, SAS…]</li>
-            <li>Adresse : [À compléter]</li>
-            <li>Email de contact : [contact@flatswiper.com]</li>
-            <li>SIRET / RCS : [À compléter le cas échéant]</li>
-            <li>Directeur de la publication : [À compléter]</li>
+            <li>Éditeur : <strong>Raouf Belhaj Ali</strong></li>
+            <li>Statut : entrepreneur individuel (auto-entrepreneur / micro-entreprise)</li>
+            <li>Adresse : 21 avenue Maurice Berteaux, 78500 Sartrouville, France</li>
+            <li>Email de contact : contact@flatswiper.com</li>
+            <li>SIRET : à compléter</li>
+            <li>Directeur de la publication : Raouf Belhaj Ali</li>
           </ul>
         </section>
 
@@ -64,7 +64,7 @@ export default function MentionsLegalesPage() {
         <section>
           <h2 className="font-display text-xl font-semibold">Contact</h2>
           <p className="mt-2 text-sm leading-relaxed">
-            Pour toute question : [contact@flatswiper.com].
+            Pour toute question : contact@flatswiper.com.
           </p>
         </section>
 
