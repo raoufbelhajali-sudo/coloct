@@ -149,10 +149,11 @@ export async function sendMessage(
     .insert({ match_id: matchId, sender_id: senderId, content });
 }
 
-// Marqueur d'un message "proposition de visite"
+// Marqueurs des messages de visite
 export const MARQUEUR_VISITE = "Visite proposée";
+export const MARQUEUR_VISITE_OK = "Visite acceptée";
 
-// Propose une visite (date/heure ISO + lieu) sous forme de message spécial
+// L'annonceur propose une visite (date/heure ISO + lieu)
 export async function proposerVisite(
   matchId: number,
   senderId: string,
@@ -164,6 +165,21 @@ export async function proposerVisite(
     sender_id: senderId,
     content: `${iso}|${lieu}`,
     doc_name: MARQUEUR_VISITE,
+  });
+}
+
+// Le colocataire accepte le rendez-vous proposé
+export async function accepterVisite(
+  matchId: number,
+  senderId: string,
+  iso: string,
+  lieu: string
+): Promise<void> {
+  await supabase.from("messages").insert({
+    match_id: matchId,
+    sender_id: senderId,
+    content: `${iso}|${lieu}`,
+    doc_name: MARQUEUR_VISITE_OK,
   });
 }
 

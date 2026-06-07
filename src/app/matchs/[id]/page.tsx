@@ -6,7 +6,7 @@ import Link from "next/link";
 import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
   ListChecks, CheckSquare, Square, ChevronDown, MoreVertical, Trash2, Ban, Flag,
-  CalendarPlus, CalendarClock,
+  CalendarPlus, CalendarClock, Check,
 } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -26,7 +26,9 @@ import {
   getLecture,
   marquerLu,
   proposerVisite,
+  accepterVisite,
   MARQUEUR_VISITE,
+  MARQUEUR_VISITE_OK,
   TYPES_DOCUMENTS,
   supprimerMatch,
   type Message,
@@ -157,6 +159,18 @@ export default function ConversationPage() {
     setVisiteLieu("");
     setMessages(await getMessages(matchId));
   }
+
+  // Le colocataire accepte un créneau proposé
+  async function onAccepterVisite(iso: string, lieu: string) {
+    if (!user) return;
+    await accepterVisite(matchId, user.id, iso, lieu);
+    setMessages(await getMessages(matchId));
+  }
+
+  // Une visite a-t-elle déjà été acceptée dans cette conversation ?
+  const visiteAcceptee = messages.some(
+    (m) => m.doc_name === MARQUEUR_VISITE_OK
+  );
 
   // Lien "Ajouter à Google Agenda" pour une visite
   function lienAgenda(iso: string, lieu: string): string {
@@ -757,6 +771,38 @@ export default function ConversationPage() {
                   >
                     Ajouter à mon agenda
                   </a>
+                  {/* Le colocataire peut accepter le créneau */}
+                  {!estLocataire && !visiteAcceptee && (
+                    <button
+                      onClick={() => onAccepterVisite(iso, lieu)}
+                      className="bg-signature mt-2 ml-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white"
+                    >
+                      <Check className="h-3.5 w-3.5" /> Accepter le rendez-vous
+                    </button>
+                  )}
+                </div>
+              );
+            }
+            // Message = visite acceptée
+            if (m.doc_name === MARQUEUR_VISITE_OK) {
+              const [iso] = m.content.split("|");
+              const quand = new Date(iso).toLocaleString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              return (
+                <div
+                  key={m.id}
+                  className={
+                    "flex max-w-[85%] items-center gap-1.5 rounded-2xl bg-panel-2 px-3 py-2 text-sm font-semibold text-pink " +
+                    (deMoi ? "self-end" : "self-start")
+                  }
+                >
+                  <Check className="h-4 w-4" strokeWidth={3} />
+                  <span className="capitalize">Rendez-vous confirmé · {quand}</span>
                 </div>
               );
             }
@@ -834,16 +880,18 @@ export default function ConversationPage() {
               className="hidden"
             />
           </label>
-          {/* Planifier une visite */}
-          <button
-            type="button"
-            onClick={() => setVisiteOuverte(true)}
-            title="Planifier une visite"
-            aria-label="Planifier une visite"
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-pink"
-          >
-            <CalendarPlus className="h-5 w-5" />
-          </button>
+          {/* Planifier une visite — réservé à l'annonceur */}
+          {estLocataire && (
+            <button
+              type="button"
+              onClick={() => setVisiteOuverte(true)}
+              title="Proposer une visite"
+              aria-label="Proposer une visite"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-pink"
+            >
+              <CalendarPlus className="h-5 w-5" />
+            </button>
+          )}
           <input
             value={texte}
             onChange={(e) => setTexte(e.target.value)}
