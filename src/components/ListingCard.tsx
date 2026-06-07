@@ -1,4 +1,4 @@
-import { Sparkles, Lock } from "lucide-react";
+import { Sparkles, Lock, Bookmark } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { lieuSous } from "@/lib/listings";
 
@@ -8,10 +8,14 @@ export default function ListingCard({
   listing,
   compat = [],
   flou = false,
+  favori = false,
+  onToggleFavori,
 }: {
   listing: Listing;
   compat?: string[];
   flou?: boolean;
+  favori?: boolean;
+  onToggleFavori?: () => void;
 }) {
   return (
     <div className="relative h-full w-full overflow-hidden rounded-3xl bg-panel shadow-2xl select-none">
@@ -53,6 +57,22 @@ export default function ListingCard({
           <div className="absolute top-4 right-4 rounded-full bg-bg/70 px-3 py-2 text-xs font-medium text-ink backdrop-blur-sm">
             {listing.meuble ? "Meublé" : "Non meublé"}
           </div>
+          {/* Bouton favori (signet) */}
+          {onToggleFavori && (
+            <button
+              type="button"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavori();
+              }}
+              aria-label="Mettre en favori"
+              title="Mettre en favori"
+              className="absolute right-4 top-16 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-bg/80 text-violet shadow-md backdrop-blur-sm transition-transform hover:scale-110"
+            >
+              <Bookmark className="h-5 w-5" fill={favori ? "currentColor" : "none"} />
+            </button>
+          )}
 
           {/* Bandeau "ça peut coller" — placé sous le prix pour ne pas le cacher */}
           {compat.length > 0 && (

@@ -18,6 +18,7 @@ import {
   UserRound,
   ChevronRight,
   Home,
+  Bookmark,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -249,6 +250,27 @@ export default function ParametresPage() {
             </span>
             <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
           </Link>
+
+          {/* Mes favoris (colocataire uniquement) */}
+          {!estAnnonceur && (
+            <Link
+              href="/favoris"
+              className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+            >
+              <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+                <Bookmark className="h-5 w-5 text-white" />
+              </span>
+              <span className="flex-1">
+                <span className="block font-display text-lg font-semibold">
+                  Mes favoris
+                </span>
+                <span className="block text-sm text-ink/55">
+                  Les annonces que tu as sauvegardées
+                </span>
+              </span>
+              <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+            </Link>
+          )}
 
           {/* Mon annonce (annonceur uniquement) */}
           {estAnnonceur && (

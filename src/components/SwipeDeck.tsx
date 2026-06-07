@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -327,50 +327,28 @@ export default function SwipeDeck() {
           <span className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold text-pink">
             <Star className="h-4 w-4" fill="currentColor" /> FlatSwiper+ · illimité
           </span>
+        ) : likesEpuises ? (
+          // Likes épuisés → on retire le compteur et on invite au Pass
+          <Link
+            href="/boutique"
+            className="bg-signature inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-white"
+          >
+            <Star className="h-4 w-4" fill="currentColor" /> Passe au Pass
+          </Link>
         ) : (
-          (() => {
-            const r = Math.max(0, limiteJour - likesAujourdhui);
-            return (
-              <span
-                className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold"
-                title="Likes gratuits restants aujourd'hui"
-              >
-                <Heart
-                  className={r > 0 ? "h-4 w-4 text-pink" : "h-4 w-4 text-ink/30"}
-                  fill="currentColor"
-                />
-                <span className={r > 0 ? "text-pink" : "text-ink/40"}>{r}</span>
-                <span className="text-xs font-normal text-ink/40">
-                  / {limiteJour} likes
-                </span>
-              </span>
-            );
-          })()
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold"
+            title="Likes gratuits restants aujourd'hui"
+          >
+            <Heart className="h-4 w-4 text-pink" fill="currentColor" />
+            <span className="text-pink">
+              {Math.max(0, limiteJour - likesAujourdhui)}
+            </span>
+            <span className="text-xs font-normal text-ink/40">
+              / {limiteJour} likes
+            </span>
+          </span>
         )}
-        <button
-          onClick={basculerFavori}
-          aria-label="Sauvegarder en favori"
-          title="Mettre en favori"
-          className={
-            "flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-panel " +
-            (current && favorisIds.has(current.id)
-              ? "text-violet"
-              : "text-ink/60 hover:text-violet")
-          }
-        >
-          <Bookmark
-            className="h-[18px] w-[18px]"
-            fill={current && favorisIds.has(current.id) ? "currentColor" : "none"}
-          />
-        </button>
-        <Link
-          href="/favoris"
-          aria-label="Mes favoris"
-          title="Mes favoris"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-violet"
-        >
-          <Star className="h-[18px] w-[18px]" />
-        </Link>
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"
@@ -592,6 +570,8 @@ export default function SwipeDeck() {
                 listing={current}
                 compat={compatAnnonce(profile, current)}
                 flou={flou}
+                favori={favorisIds.has(current.id)}
+                onToggleFavori={basculerFavori}
               />
             </motion.div>
 
