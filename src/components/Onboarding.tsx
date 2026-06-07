@@ -17,6 +17,7 @@ import {
   TELETRAVAIL,
   SALAIRES,
   DUREES_COLOC,
+  PROFESSIONS,
 } from "@/lib/profilOptions";
 import LieuSelect from "@/components/LieuSelect";
 
@@ -361,14 +362,20 @@ export default function Onboarding({
                 />
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">
-                    Profession / statut
+                    Situation professionnelle
                   </label>
-                  <input
+                  <select
                     value={profession}
                     onChange={(e) => setProfession(e.target.value)}
-                    placeholder="Étudiante, Designer…"
                     className={champ}
-                  />
+                  >
+                    <option value="">Choisir…</option>
+                    {PROFESSIONS.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">

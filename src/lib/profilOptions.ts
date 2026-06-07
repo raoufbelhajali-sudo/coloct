@@ -200,6 +200,9 @@ export const SERVICES = [
   "Cuisine équipée",
 ];
 
+// Situation professionnelle (menu déroulant)
+export const PROFESSIONS = ["Étudiant", "CDD", "CDI", "Chômeur", "Retraité"];
+
 // Durée de colocation souhaitée (colocataire)
 export const DUREES_COLOC = [
   "Quelques semaines",

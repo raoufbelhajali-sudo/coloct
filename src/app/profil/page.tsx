@@ -11,7 +11,7 @@ import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import LieuSelect from "@/components/LieuSelect";
-import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC } from "@/lib/profilOptions";
+import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
 const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
@@ -331,7 +331,15 @@ export default function ProfilPage() {
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Âge" type="number" value={age} onChange={setAge} placeholder="25" />
               {!estLocataire && (
-                <Champ label="Profession / statut" value={profession} onChange={setProfession} placeholder="Étudiante, Designer…" />
+                <div>
+                  <label className="text-sm text-ink/70">Situation pro</label>
+                  <select value={profession} onChange={(e) => setProfession(e.target.value)} className={champClasses}>
+                    <option value="">Choisir…</option>
+                    {PROFESSIONS.map((p) => (
+                      <option key={p} value={p}>{p}</option>
+                    ))}
+                  </select>
+                </div>
               )}
             </div>
             <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} />
