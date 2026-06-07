@@ -158,16 +158,12 @@ export default function ListingDetail({
               <p>Disponible le {listing.dateDispo}</p>
             </div>
 
-            {/* L'annonceur (visage) — cliquable seulement s'il a un vrai profil */}
+            {/* L'annonceur (visage) — cliquable pour voir son profil */}
             {(listing.ownerPhoto || listing.ownerPrenom) && (
               <button
                 type="button"
                 onClick={ouvrirAnnonceur}
-                disabled={!listing.ownerId}
-                className={
-                  "flex w-full items-center gap-3 rounded-2xl bg-panel-2 p-3 text-left transition-colors " +
-                  (listing.ownerId ? "hover:bg-panel" : "cursor-default")
-                }
+                className="flex w-full items-center gap-3 rounded-2xl bg-panel-2 p-3 text-left transition-colors hover:bg-panel"
               >
                 <div className="bg-signature h-12 w-12 shrink-0 overflow-hidden rounded-full">
                   {listing.ownerPhoto ? (
@@ -189,11 +185,9 @@ export default function ListingDetail({
                     {listing.ownerPrenom ?? "L'annonceur"}
                   </p>
                 </div>
-                {listing.ownerId && (
-                  <span className="flex items-center gap-0.5 text-xs text-pink">
-                    Voir le profil <ChevronRight className="h-4 w-4" />
-                  </span>
-                )}
+                <span className="flex items-center gap-0.5 text-xs text-pink">
+                  Voir le profil <ChevronRight className="h-4 w-4" />
+                </span>
               </button>
             )}
 

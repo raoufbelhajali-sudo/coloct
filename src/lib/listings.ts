@@ -43,8 +43,6 @@ export type ListingRow = {
   description: string;
   boosted_until: string | null;
   owner_id: string | null;
-  owner_name: string | null; // annonceur fictif (sans compte) — nom
-  owner_photo: string | null; // annonceur fictif (sans compte) — photo
 };
 
 // Convertit une ligne du serveur vers le format utilisé par l'app
@@ -112,20 +110,17 @@ export async function attacherAnnonceurs(
     l.ownerId = rows[i].owner_id;
   });
   const ownerIds = [...new Set(rows.map((r) => r.owner_id).filter(Boolean))];
-  const byId = new Map<string, { id: string; prenom: string | null; photo_url: string | null }>();
   if (ownerIds.length) {
     const { data: owners } = await supabase
       .from("profiles")
       .select("id, prenom, photo_url")
       .in("id", ownerIds as string[]);
-    (owners ?? []).forEach((o) => byId.set(o.id, o));
+    const byId = new Map((owners ?? []).map((o) => [o.id, o]));
+    listings.forEach((l, i) => {
+      const o = rows[i].owner_id ? byId.get(rows[i].owner_id!) : null;
+      l.ownerPhoto = o?.photo_url ?? null;
+      l.ownerPrenom = o?.prenom ?? null;
+    });
   }
-  // Annonceur réel (profil) sinon annonceur fictif (owner_name/owner_photo)
-  listings.forEach((l, i) => {
-    const r = rows[i];
-    const o = r.owner_id ? byId.get(r.owner_id) : null;
-    l.ownerPrenom = o?.prenom ?? r.owner_name ?? null;
-    l.ownerPhoto = o?.photo_url ?? r.owner_photo ?? null;
-  });
   return listings;
 }
