@@ -528,7 +528,7 @@ export default function ProfilPage() {
           {/* ---------- Annonce (locataire uniquement) ---------- */}
           {estLocataire && (
             <Link
-              href="/locataire"
+              href="/mon-annonce"
               className="flex items-center justify-between rounded-2xl bg-panel px-4 py-4 text-ink/85 hover:bg-panel-2"
             >
               <span className="font-medium">Mon annonce (la chambre)</span>
