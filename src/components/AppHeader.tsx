@@ -13,10 +13,8 @@ const badge =
 
 // En-tête : pastille de rôle en haut, barre de navigation fixe en bas.
 export default function AppHeader({
-  compact = false,
   hideTop = false,
 }: {
-  compact?: boolean;
   hideTop?: boolean;
 }) {
   const { user, profile } = useAuth();
@@ -89,12 +87,7 @@ export default function AppHeader({
 
       {/* Haut : pastille de rôle uniquement */}
       {!hideTop && (
-        <header
-          className={
-            "flex w-full max-w-sm items-center gap-2 " +
-            (compact ? "mb-2" : "mb-6")
-          }
-        >
+        <header className="mb-4 flex h-9 w-full max-w-md items-center">
           {/* Logo complet (symbole + nom), à gauche */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />

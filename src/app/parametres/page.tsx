@@ -203,10 +203,10 @@ export default function ParametresPage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center px-4 pb-40 pt-6">
+    <main className="flex min-h-dvh flex-col items-center px-4 pb-40 pt-5">
       {/* Barre de navigation du bas (toujours visible) */}
       <AppHeader hideTop />
-      <header className="mb-6 flex w-full max-w-md items-center justify-between">
+      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
             {/* eslint-disable-next-line @next/next/no-img-element */}

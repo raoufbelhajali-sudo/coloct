@@ -345,10 +345,8 @@ export default function SwipeDeck() {
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
       {/* Rôle + compteur de likes restants + bouton filtres (même ligne) */}
-      <div className="mb-2 flex w-full items-center gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto shrink-0" />
-        <div className="ml-auto flex items-center gap-2">
+      <div className="mb-2 flex w-full items-center justify-end gap-2">
+        <div className="flex items-center gap-2">
         {!premium && (likesEpuises ? (
           // Likes épuisés → on retire le compteur et on invite au Pass
           <Link

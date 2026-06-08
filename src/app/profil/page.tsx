@@ -224,9 +224,9 @@ export default function ProfilPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-6">
+    <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">
       <AppHeader hideTop />
-      <header className="mb-6 flex w-full max-w-md items-center justify-between">
+      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
