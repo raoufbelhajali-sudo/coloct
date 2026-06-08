@@ -40,6 +40,7 @@ export default function ListingForm({
   const { user, profile } = useAuth();
   const edition = !!listing;
 
+  const [titre, setTitre] = useState(listing?.titre ?? "");
   const [quartier, setQuartier] = useState(listing?.quartier ?? "");
   const [ville, setVille] = useState(listing?.ville ?? "Paris");
   const [departement, setDepartement] = useState(listing?.departement ?? "75");
@@ -143,6 +144,7 @@ export default function ListingForm({
 
     try {
       const donnees = {
+        titre: titre.trim() || null,
         loyer: Number(loyer),
         quartier: quartier.trim(),
         ville: ville.trim() || "Paris",
@@ -190,6 +192,13 @@ export default function ListingForm({
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
+      <Field
+        label="Titre de l'annonce"
+        value={titre}
+        onChange={setTitre}
+        placeholder="Ex. Chambre lumineuse près de la fac"
+      />
+
       <div>
         <label className="text-sm text-ink/70">Ville</label>
         <LieuSelect

@@ -146,7 +146,7 @@ function Vignette({ item }: { item: LikeRecu }) {
 }
 
 function titre(it: LikeRecu): string {
-  if (it.kind === "listing") return lieuComplet(it.listing);
+  if (it.kind === "listing") return it.listing.titre || lieuComplet(it.listing);
   return `${it.profile.prenom}${it.profile.age ? `, ${it.profile.age} ans` : ""}`;
 }
 

@@ -13,6 +13,7 @@ export type Coloc = {
 // Une annonce de chambre en colocation
 export type Listing = {
   id: string;
+  titre?: string | null; // nom/titre donné à l'annonce par l'annonceur
   loyer: number; // loyer mensuel charges comprises (€)
   quartier: string;
   ville?: string | null; // ex. "Paris", "Saint-Denis"

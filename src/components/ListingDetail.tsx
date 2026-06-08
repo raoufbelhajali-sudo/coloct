@@ -123,7 +123,7 @@ export default function ListingDetail({
           <div className="space-y-5 p-5">
             <div>
               <h2 className="font-display text-3xl font-semibold leading-tight">
-                {listing.quartier || listing.ville}
+                {listing.titre || listing.quartier || listing.ville}
               </h2>
               <p className="text-sm font-semibold text-pink">
                 {lieuSous(listing)}

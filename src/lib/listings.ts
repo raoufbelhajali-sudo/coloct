@@ -24,6 +24,7 @@ export function lieuComplet(l: Lieu): string {
 // Forme brute d'une ligne telle que stockée dans Supabase (colonnes en snake_case)
 export type ListingRow = {
   id: number;
+  titre?: string | null;
   loyer: number;
   quartier: string;
   ville: string | null;
@@ -59,6 +60,7 @@ export type ListingRow = {
 export function mapListingRow(r: ListingRow): Listing {
   return {
     id: String(r.id),
+    titre: r.titre ?? null,
     loyer: r.loyer,
     quartier: r.quartier,
     ville: r.ville,

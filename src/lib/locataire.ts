@@ -20,6 +20,7 @@ export async function getMyListing(userId: string): Promise<Listing | null> {
 
 // Données d'une nouvelle annonce à créer
 export type NewListing = {
+  titre?: string | null;
   loyer: number;
   quartier: string;
   ville: string;
