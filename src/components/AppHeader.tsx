@@ -96,6 +96,9 @@ export default function AppHeader({
             (compact ? "mb-2" : "mb-6")
           }
         >
+          {/* Logo complet (symbole + nom), petit — même hauteur que le pin */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-full.png" alt="FlatSwiper" className="h-5 w-auto" />
           <RolePin />
         </header>
       )}
