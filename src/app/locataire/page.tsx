@@ -8,7 +8,6 @@ import AppHeader from "@/components/AppHeader";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import AccrocheAnnonceur from "@/components/AccrocheAnnonceur";
 import RappelProfil from "@/components/RappelProfil";
-import FondAccueil from "@/components/FondAccueil";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
@@ -40,7 +39,6 @@ export default function LocatairePage() {
 
   return (
     <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-24 pt-5">
-      <FondAccueil />
       <AppHeader hideTop />
       <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
         {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
-import FondAccueil from "@/components/FondAccueil";
 
 export default function Home() {
   const router = useRouter();
@@ -18,7 +17,6 @@ export default function Home() {
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
-      <FondAccueil />
       {/* Halos colorés en fond pour l'ambiance nocturne */}
       <div className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full bg-pink opacity-20 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-violet opacity-20 blur-[120px]" />

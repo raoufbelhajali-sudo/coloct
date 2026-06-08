@@ -1,12 +1,10 @@
 import AppHeader from "@/components/AppHeader";
 import SwipeDeck from "@/components/SwipeDeck";
 import RappelProfil from "@/components/RappelProfil";
-import FondAccueil from "@/components/FondAccueil";
 
 export default function SwipePage() {
   return (
     <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-20 pt-5">
-      <FondAccueil />
       <AppHeader hideTop />
 
       {/* Le paquet de cartes à swiper (remplit l'écran restant) */}

@@ -6,6 +6,7 @@ import MatchPopup from "@/components/MatchPopup";
 import CookieBanner from "@/components/CookieBanner";
 import ComingSoonGate from "@/components/ComingSoonGate";
 import NativeSetup from "@/components/NativeSetup";
+import FondAccueil from "@/components/FondAccueil";
 
 // Police des titres et du logo (serif chic)
 const fraunces = Fraunces({
@@ -51,6 +52,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NativeSetup />
+        <FondAccueil />
         <ComingSoonGate>
           <AuthProvider>
             <MatchPopup />

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Capacitor } from "@capacitor/core";
-import FondAccueil from "@/components/FondAccueil";
 
 // Mot de passe d'accès anticipé au SITE web (modifiable ici).
 // NB : c'est une protection "coming soon" côté navigateur — suffisante avant
@@ -57,7 +56,6 @@ export default function ComingSoonGate({
   // ----- Page "Bientôt disponible" + mot de passe (web uniquement) -----
   return (
     <main className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden px-6 text-center">
-      <FondAccueil />
       <div className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full bg-pink opacity-20 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-violet opacity-20 blur-[120px]" />
 
