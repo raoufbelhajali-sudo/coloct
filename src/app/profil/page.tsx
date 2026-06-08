@@ -10,6 +10,7 @@ import { useAuth, type Profile } from "@/lib/auth";
 import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
+import AppHeader from "@/components/AppHeader";
 import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
@@ -225,7 +226,8 @@ export default function ProfilPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-6">
+    <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-6">
+      <AppHeader hideTop />
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
