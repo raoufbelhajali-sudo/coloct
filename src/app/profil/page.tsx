@@ -260,28 +260,29 @@ export default function ProfilPage() {
           C&apos;est ce que les colocs verront avant de t&apos;accepter. Soigne-le !
         </p>
 
-        {/* Complétude du profil + badge Super */}
+        {/* Complétude du profil (jauge toujours visible) + badge Super */}
         {profile && (
           <div className="mb-6 rounded-2xl bg-panel p-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-ink/70">Profil complété</span>
+              <span className="font-semibold text-pink">
+                {completudeProfil(profile)}%
+              </span>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-panel-2">
+              <div
+                className="bg-signature h-full rounded-full transition-all"
+                style={{ width: `${completudeProfil(profile)}%` }}
+              />
+            </div>
+
             {estSuperProfil(profile) ? (
-              <p className="flex items-center gap-2 text-sm font-semibold text-pink">
+              <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-pink">
                 <Star className="h-4 w-4" fill="currentColor" /> Badge{" "}
                 {labelSuper(profile)} débloqué !
               </p>
             ) : (
               <>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-ink/70">Profil complété</span>
-                  <span className="font-semibold text-pink">
-                    {completudeProfil(profile)}%
-                  </span>
-                </div>
-                <div className="mt-2 h-2 overflow-hidden rounded-full bg-panel-2">
-                  <div
-                    className="bg-signature h-full rounded-full transition-all"
-                    style={{ width: `${completudeProfil(profile)}%` }}
-                  />
-                </div>
                 <p className="mt-2 flex items-center gap-1 text-xs text-ink/50">
                   <Star className="h-3.5 w-3.5" /> Complète tout (photo,
                   présentation, intérêts, mode de vie…) pour débloquer le badge{" "}
