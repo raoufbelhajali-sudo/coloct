@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Users, Rocket } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import { completudeProfil } from "@/lib/completude";
 
 // Petit message d'accueil à l'ouverture du swipe annonceur (1×/session) :
 // motive à trouver facilement les meilleurs colocataires.
@@ -13,6 +14,8 @@ export default function AccrocheAnnonceur() {
 
   useEffect(() => {
     if (loading || !profile) return;
+    // Profil incomplet → priorité au rappel "Termine ton profil" (pas de double popup)
+    if (completudeProfil(profile) < 100) return;
     if (sessionStorage.getItem("flatswiper-accroche-annonceur") === "1") return;
     const t = setTimeout(() => setOuvert(true), 700);
     return () => clearTimeout(t);

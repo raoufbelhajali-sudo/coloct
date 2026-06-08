@@ -7,6 +7,7 @@ import { Home, Snowflake } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import AccrocheAnnonceur from "@/components/AccrocheAnnonceur";
+import RappelProfil from "@/components/RappelProfil";
 import { useAuth } from "@/lib/auth";
 import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
@@ -98,6 +99,9 @@ export default function LocatairePage() {
           </div>
         )}
       </div>
+
+      {/* Rappel : finalise ton profil (critères) si < 100 % */}
+      <RappelProfil />
     </main>
   );
 }
