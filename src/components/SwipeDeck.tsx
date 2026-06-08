@@ -18,7 +18,8 @@ import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import RolePin from "@/components/RolePin";
 import { useAuth } from "@/lib/auth";
-import { estPremium, estHero } from "@/lib/offers";
+import { estPremium, estHero, contacterDirect } from "@/lib/offers";
+import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import {
   getSwipedListingIds,
   recordListingSwipe,
@@ -212,6 +213,9 @@ export default function SwipeDeck() {
     animating.current = true;
     const swiped = current; // on retient l'annonce avant d'avancer la pile
 
+    // Vibration tactile immédiate (plus marquée pour un like)
+    vibrer(dir === "right" ? ImpactStyle.Medium : ImpactStyle.Light);
+
     await controls.start({
       x: dir === "right" ? 700 : -700,
       opacity: 0,
@@ -235,6 +239,7 @@ export default function SwipeDeck() {
         // match seulement si le locataire t'a aussi liké
         const mid = await getMatchIdForListing(user.id, swiped.id);
         if (mid) {
+          vibrerSucces(); // c'est un match !
           setMatch(swiped);
           marquerAnnonce(user.id, mid); // évite la double pop-up globale
         }
@@ -268,6 +273,23 @@ export default function SwipeDeck() {
       await annulerSwipeListing(user.id, id);
     } catch {
       /* réseau */
+    }
+  }
+
+  // Message direct à l'annonceur SANS attendre un match — réservé HeroSwiper
+  const [contactEnCours, setContactEnCours] = useState(false);
+  async function messageDirect() {
+    if (!user || !current || contactEnCours) return;
+    if (!estHero(profile)) {
+      router.push("/boutique"); // fonctionnalité HeroSwiper
+      return;
+    }
+    setContactEnCours(true);
+    try {
+      const mid = await contacterDirect(current.id);
+      if (mid) router.push(`/matchs/conversation/?id=${mid}`);
+    } finally {
+      setContactEnCours(false);
     }
   }
 
@@ -613,10 +635,11 @@ export default function SwipeDeck() {
                 <X className="h-6 w-6" strokeWidth={2.5} />
               </button>
               <button
-                onClick={() => fly("right", true)}
-                aria-label="Coup de cœur"
-                title="Coup de cœur"
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-violet shadow-lg backdrop-blur transition-transform hover:scale-110"
+                onClick={messageDirect}
+                disabled={contactEnCours}
+                aria-label="Message direct (HeroSwiper)"
+                title="Message direct à l'annonceur (HeroSwiper)"
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-bleu shadow-lg backdrop-blur transition-transform hover:scale-110 disabled:opacity-60"
               >
                 <Star className="h-6 w-6" fill="currentColor" />
               </button>

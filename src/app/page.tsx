@@ -35,12 +35,12 @@ export default function Home() {
       </p>
 
       {/* Bouton principal */}
-      <a
+      <Link
         href="/connexion"
         className="bg-signature glow-pink mt-10 inline-block rounded-full px-8 py-4 text-base font-semibold text-white transition-transform hover:scale-105"
       >
         Commencer
-      </a>
+      </Link>
 
       {/* Petit pied de page */}
       <div className="absolute bottom-6 flex flex-col items-center gap-1 text-center">

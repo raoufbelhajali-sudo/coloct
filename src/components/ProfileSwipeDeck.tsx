@@ -19,6 +19,7 @@ import {
 } from "@/lib/locataire";
 import { compatProfils, scoreProfilPourAnnonceur } from "@/lib/compat";
 import { estPremium } from "@/lib/offers";
+import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import { getIdsBloques } from "@/lib/blocks";
 import { marquerAnnonce } from "@/lib/matchPopup";
 import ProfileCard from "./ProfileCard";
@@ -84,6 +85,9 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
     animating.current = true;
     const swiped = current;
 
+    // Vibration tactile immédiate (plus marquée pour un like)
+    vibrer(dir === "right" ? ImpactStyle.Medium : ImpactStyle.Light);
+
     await controls.start({
       x: dir === "right" ? 700 : -700,
       opacity: 0,
@@ -101,6 +105,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
       if (direction === "like") {
         const mid = await getMatchIdForColocataire(swiped.id, listingId);
         if (mid) {
+          vibrerSucces(); // c'est un match !
           setMatch(swiped);
           if (user) marquerAnnonce(user.id, mid); // évite la double pop-up globale
         }

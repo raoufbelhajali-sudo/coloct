@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 // Icône pour l'écran d'accueil iOS (iOS arrondit les coins lui-même)
+export const dynamic = "force-static";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 

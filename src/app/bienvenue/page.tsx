@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth, type Role } from "@/lib/auth";
 import Onboarding from "@/components/Onboarding";
 
@@ -92,12 +93,12 @@ export default function BienvenuePage() {
         <p className="mb-6 max-w-sm break-words rounded-lg bg-panel-2 px-3 py-2 text-sm text-pink-light">
           {authErr}
         </p>
-        <a
+        <Link
           href="/connexion"
           className="bg-signature glow-pink rounded-full px-6 py-3 font-semibold text-white"
         >
           Réessayer
-        </a>
+        </Link>
       </main>
     );
   }

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
 import MatchPopup from "@/components/MatchPopup";
 import CookieBanner from "@/components/CookieBanner";
+import ComingSoonGate from "@/components/ComingSoonGate";
 
 // Police des titres et du logo (serif chic)
 const fraunces = Fraunces({
@@ -32,6 +33,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#fa5252",
+  // Permet à l'app d'occuper tout l'écran et d'activer les zones de sécurité
+  // (env(safe-area-inset-*)) → s'adapte à tous les iPhone (encoche, Dynamic Island…)
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -45,11 +49,13 @@ export default function RootLayout({
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <AuthProvider>
-          <MatchPopup />
-          {children}
-          <CookieBanner />
-        </AuthProvider>
+        <ComingSoonGate>
+          <AuthProvider>
+            <MatchPopup />
+            {children}
+            <CookieBanner />
+          </AuthProvider>
+        </ComingSoonGate>
       </body>
     </html>
   );

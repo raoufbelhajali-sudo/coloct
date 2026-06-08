@@ -63,7 +63,7 @@ export default function MatchsPage() {
               return (
                 <li key={m.id}>
                   <Link
-                    href={`/matchs/${m.id}`}
+                    href={`/matchs/conversation/?id=${m.id}`}
                     className={
                       "flex items-center gap-4 rounded-2xl p-3 transition-colors " +
                       (nonLu

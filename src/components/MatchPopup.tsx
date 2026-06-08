@@ -61,7 +61,7 @@ export default function MatchPopup() {
         </p>
         <div className="mt-6 flex flex-col gap-3">
           <Link
-            href={`/matchs/${popup.id}`}
+            href={`/matchs/conversation/?id=${popup.id}`}
             onClick={() => setPopup(null)}
             className="bg-signature glow-pink rounded-full px-6 py-3 font-semibold text-white"
           >

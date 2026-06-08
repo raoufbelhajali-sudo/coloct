@@ -56,7 +56,7 @@ export default function ListingDetail({
         .eq("id", user.id);
       await refreshProfile();
     }
-    router.push(`/matchs/${matchId}`);
+    router.push(`/matchs/conversation/?id=${matchId}`);
   }
 
   // Ouvre le profil (la personne) de l'annonceur

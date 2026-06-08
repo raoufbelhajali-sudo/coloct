@@ -81,7 +81,8 @@ export default function AppHeader({
       {alerteMsg && (
         <Link
           href="/matchs"
-          className="fixed left-1/2 top-3 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white shadow-lg"
+          className="fixed left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white shadow-lg"
+          style={{ top: "calc(env(safe-area-inset-top) + 0.75rem)" }}
         >
           <MessageSquare className="h-4 w-4" /> {alerteMsg}
         </Link>
@@ -121,28 +122,20 @@ export default function AppHeader({
               count={nbMessages}
             />
 
-            {/* Logo central : accueil */}
+            {/* Bouton central : le swipe (sans texte, dans le footer) */}
             <Link
               href={accueil}
-              aria-label="Accueil"
-              title="Accueil"
-              className="flex flex-1 flex-col items-center gap-1 py-2"
+              aria-label="Swipe"
+              title="Swipe"
+              className="flex flex-1 flex-col items-center justify-center py-2"
             >
               <span
                 className={
-                  "-mt-6 flex h-14 w-14 items-center justify-center rounded-full border-4 border-bg bg-panel shadow-lg transition-transform active:scale-90 " +
-                  (accueilActif ? "ring-2 ring-pink" : "")
+                  "flex h-11 w-11 items-center justify-center rounded-full bg-panel shadow-sm transition-transform active:scale-90 " +
+                  (accueilActif ? "ring-2 ring-pink" : "ring-1 ring-ink/10")
                 }
               >
-                <LogoMark className="h-8 w-8" />
-              </span>
-              <span
-                className={
-                  "-mt-1 text-[10px] font-medium leading-none " +
-                  (accueilActif ? "text-pink" : "text-ink/40")
-                }
-              >
-                Accueil
+                <LogoMark className="h-7 w-7" />
               </span>
             </Link>
 

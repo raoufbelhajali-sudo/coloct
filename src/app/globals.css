@@ -38,6 +38,9 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Zone de sécurité du haut (heure, réseau, encoche / Dynamic Island).
+     env() vaut 0 dans un navigateur classique → aucun effet sur le site web. */
+  padding-top: env(safe-area-inset-top);
 }
 
 /* Dégradé signature (logo, boutons clés) : corail → orange */

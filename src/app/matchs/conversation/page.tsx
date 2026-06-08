@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Send, Paperclip, FileText, Download, Mic, X,
@@ -39,10 +39,10 @@ import { signalerUtilisateur, RAISONS_SIGNALEMENT } from "@/lib/reports";
 import { laisserAvis, getMonAvis } from "@/lib/reviews";
 import RolePin from "@/components/RolePin";
 
-export default function ConversationPage() {
+function ConversationInner() {
   const router = useRouter();
-  const params = useParams();
-  const matchId = Number(params.id);
+  const searchParams = useSearchParams();
+  const matchId = Number(searchParams.get("id"));
   const { user, loading } = useAuth();
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -393,7 +393,7 @@ export default function ConversationPage() {
   }
 
   return (
-    <main className="flex h-dvh flex-col items-center px-4 py-4">
+    <main className="flex h-[calc(100dvh_-_env(safe-area-inset-top))] flex-col items-center px-4 py-4">
       {/* En-tête */}
       <header className="flex w-full max-w-sm items-center gap-3 pb-3">
         <Link href="/matchs" className="text-ink/60 hover:text-ink">
@@ -1054,5 +1054,13 @@ export default function ConversationPage() {
         </form>
       )}
     </main>
+  );
+}
+
+export default function ConversationPage() {
+  return (
+    <Suspense fallback={null}>
+      <ConversationInner />
+    </Suspense>
   );
 }

@@ -1,10 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Mail, ArrowLeft } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
+import { SocialLogin } from "@capgo/capacitor-social-login";
 import { supabase } from "@/lib/supabase";
 import { LogoMark } from "@/components/Logo";
+
+// IDs Google (Cloud Console, projet "colockt")
+const GOOGLE_IOS_CLIENT_ID =
+  "318002057817-kvmsgko418un2urcs73p1pr3cfc1na7s.apps.googleusercontent.com";
+const GOOGLE_WEB_CLIENT_ID =
+  "318002057817-svim0vr5lfa4uo47o1qtos2bhif0mfit.apps.googleusercontent.com";
+let socialLoginPret = false;
+
+// Génère un nonce aléatoire (hexadécimal)
+function genererNonce(): string {
+  const a = new Uint8Array(16);
+  crypto.getRandomValues(a);
+  return Array.from(a)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+// SHA-256 d'une chaîne → hexadécimal (nonce haché envoyé à Google)
+async function sha256hex(str: string): Promise<string> {
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 
 type Etape = "choix" | "email" | "emailEnvoye" | "phone" | "phoneCode";
 
@@ -16,13 +44,20 @@ export default function ConnexionPage() {
   const [password, setPassword] = useState("");
   const [erreur, setErreur] = useState("");
   const [enCours, setEnCours] = useState(false);
+  // Dans l'app native (iPhone), on masque Google + lien magique : ils ouvrent
+  // un navigateur externe (barre d'adresse). On garde email + mot de passe,
+  // qui reste 100% dans l'app. Sur le site web, tout reste disponible.
+  const [estNatif, setEstNatif] = useState(false);
+  useEffect(() => {
+    setEstNatif(Capacitor.isNativePlatform());
+  }, []);
 
   function reset() {
     setErreur("");
     setEnCours(false);
   }
 
-  // --- Google ---
+  // --- Google sur le SITE web (redirection navigateur) ---
   async function handleGoogle() {
     reset();
     const { error } = await supabase.auth.signInWithOAuth({
@@ -30,6 +65,64 @@ export default function ConnexionPage() {
       options: { redirectTo: `${window.location.origin}/bienvenue` },
     });
     if (error) setErreur(traduireErreur(error.message));
+  }
+
+  // --- Google DANS L'APP (natif, feuille Google, sans navigateur) ---
+  async function handleGoogleNatif() {
+    reset();
+    setEnCours(true);
+    try {
+      if (!socialLoginPret) {
+        await SocialLogin.initialize({
+          google: {
+            iOSClientId: GOOGLE_IOS_CLIENT_ID,
+            iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
+            webClientId: GOOGLE_WEB_CLIENT_ID,
+            mode: "online",
+          },
+        });
+        socialLoginPret = true;
+      }
+      // IMPORTANT : forcer une connexion fraîche. Sinon le plugin restaure la
+      // session Google précédente SANS notre nonce → erreur "nonce mismatch".
+      try {
+        await SocialLogin.logout({ provider: "google" });
+      } catch {
+        /* pas de session précédente : on continue */
+      }
+
+      // Sécurité "nonce" : on envoie le nonce HACHÉ à Google (il se retrouve
+      // tel quel dans le jeton) et le nonce BRUT à Supabase, qui le re-hache
+      // et compare. Les deux correspondent ainsi.
+      const rawNonce = genererNonce();
+      const hashedNonce = await sha256hex(rawNonce);
+      const res = await SocialLogin.login({
+        provider: "google",
+        options: {
+          scopes: ["email", "profile"],
+          nonce: hashedNonce,
+          forcePrompt: true,
+        },
+      });
+      const result = res.result as { idToken?: string | null };
+      const idToken = result?.idToken;
+      if (!idToken) {
+        setErreur("Connexion Google impossible (jeton manquant).");
+        setEnCours(false);
+        return;
+      }
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: "google",
+        token: idToken,
+        nonce: rawNonce,
+      });
+      setEnCours(false);
+      if (error) setErreur(traduireErreur(error.message));
+      else window.location.href = "/bienvenue/";
+    } catch {
+      setEnCours(false);
+      setErreur("Connexion Google annulée.");
+    }
   }
 
   // --- Email + mot de passe ---
@@ -43,7 +136,7 @@ export default function ConnexionPage() {
     });
     setEnCours(false);
     if (error) setErreur(traduireErreur(error.message));
-    else window.location.href = "/bienvenue";
+    else window.location.href = "/bienvenue/";
   }
 
   // --- Email (lien magique, sans mot de passe) ---
@@ -85,7 +178,7 @@ export default function ConnexionPage() {
     });
     setEnCours(false);
     if (error) setErreur(traduireErreur(error.message));
-    else window.location.href = "/bienvenue";
+    else window.location.href = "/bienvenue/";
   }
 
   return (
@@ -102,8 +195,9 @@ export default function ConnexionPage() {
         {etape === "choix" && (
           <div className="space-y-3">
             <button
-              onClick={handleGoogle}
-              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-white px-4 py-3.5 font-medium text-[#1f1a2b] transition-colors hover:bg-ink/5"
+              onClick={estNatif ? handleGoogleNatif : handleGoogle}
+              disabled={enCours}
+              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-white px-4 py-3.5 font-medium text-[#1f1a2b] transition-colors hover:bg-ink/5 disabled:opacity-60"
             >
               <GoogleLogo />
               Continuer avec Google
@@ -155,13 +249,15 @@ export default function ConnexionPage() {
               />
             </div>
             <BoutonPrincipal enCours={enCours} label="Se connecter" />
-            <button
-              type="button"
-              onClick={envoyerLienEmail}
-              className="w-full text-center text-sm text-pink-light hover:underline"
-            >
-              Pas de mot de passe ? Recevoir un lien par email
-            </button>
+            {!estNatif && (
+              <button
+                type="button"
+                onClick={envoyerLienEmail}
+                className="w-full text-center text-sm text-pink-light hover:underline"
+              >
+                Pas de mot de passe ? Recevoir un lien par email
+              </button>
+            )}
           </form>
         )}
 
