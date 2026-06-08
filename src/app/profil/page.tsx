@@ -271,8 +271,20 @@ export default function ProfilPage() {
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-panel-2">
               <div
-                className="bg-signature h-full rounded-full transition-all"
-                style={{ width: `${completudeProfil(profile)}%` }}
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${completudeProfil(profile)}%`,
+                  // Dégradé orange → vert → bleu, calé sur toute la jauge :
+                  // orange à 0 %, le bleu n'apparaît qu'en approchant des 100 %.
+                  backgroundImage:
+                    "linear-gradient(to right, #fd7e14, #40c057, #228be6)",
+                  backgroundSize: `${
+                    completudeProfil(profile) > 0
+                      ? 10000 / completudeProfil(profile)
+                      : 100
+                  }% 100%`,
+                  backgroundRepeat: "no-repeat",
+                }}
               />
             </div>
 
