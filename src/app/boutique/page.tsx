@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Rocket, Check, Lock } from "lucide-react";
+import { Zap, Rocket, Check, Lock, Star } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
@@ -20,6 +20,7 @@ import InviterAmis from "@/components/InviterAmis";
 // Un dégradé chaud différent par forfait (harmonisé avec la charte corail/orange)
 const GRAD_PASS = "linear-gradient(135deg,#fa5252,#fd7e14)"; // corail → orange
 const GRAD_ANNONCE = "linear-gradient(135deg,#e8590c,#fd7e14)"; // orange brûlé → orange
+const GRAD_HERO = "linear-gradient(135deg,#4dabf7,#228be6)"; // bleu (HeroSwiper)
 
 export default function BoutiquePage() {
   const router = useRouter();
@@ -52,11 +53,16 @@ export default function BoutiquePage() {
     });
   }
 
-  async function activer(offre: "pass" | "boost" | "annonceur" | "messages") {
+  async function activer(
+    offre: "pass" | "swiper" | "boost" | "annonceur" | "messages"
+  ) {
     if (!user) return;
     setEnCours(offre);
-    if (offre === "pass") {
-      // Le Pass tout-en-un active tous les avantages chercheur
+    if (offre === "swiper") {
+      // Pack Swiper : swipes illimités + filtres avancés
+      await activerPassExpress(user.id);
+    } else if (offre === "pass") {
+      // HeroSwiper (le max) : tous les avantages chercheur
       await activerPassExpress(user.id);
       await activerBoost(user.id);
       await activerMessagesDirects(user.id);
@@ -80,7 +86,7 @@ export default function BoutiquePage() {
         <p className="mt-1 mb-6 text-ink/60">
           {estAnnonceur
             ? "Trouve le bon coloc plus vite. Pas d'abonnement : tu paies seulement quand tu en as besoin."
-            : "10 swipes gratuits par jour. Pour aller plus loin, passe au Pass : 2,99 €/semaine, sans engagement."}
+            : "10 swipes gratuits par jour. Pour aller plus loin, choisis ton pack, sans engagement."}
         </p>
 
         <div className="space-y-4">
@@ -118,26 +124,85 @@ export default function BoutiquePage() {
               />
             )
           ) : (
-            // ----- Colocataire : une seule offre tout-en-un -----
-            <OffreCard
-              icon={<Zap className="h-6 w-6 text-white" />}
-              titre="Pass FlatSwiper"
-              duree="Par semaine · sans engagement"
-              prix="2,99 €"
-              avantages={[
-                "Swipes illimités (10 gratuits par jour sans Pass)",
-                "Vois qui t'a liké",
-                "Ton profil boosté, vu en priorité",
-                "Messages directs : contacte sans attendre un match",
-                "Filtres avancés",
-                "Sans engagement — stoppe quand tu veux",
-              ]}
-              actif={premium}
-              actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
-              enCours={enCours === "pass"}
-              onActiver={() => activer("pass")}
-              grad={GRAD_PASS}
-            />
+            // ----- Colocataire : 2 forfaits -----
+            <>
+              <OffreCard
+                icon={<Zap className="h-6 w-6 text-white" />}
+                titre="Pack Swiper"
+                duree="Par semaine · sans engagement"
+                prix="1,99 €"
+                avantages={[
+                  "Swipes illimités (10 gratuits/jour sans pack)",
+                  "Filtres avancés",
+                  "Sans engagement — stoppe quand tu veux",
+                ]}
+                actif={premium}
+                actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
+                enCours={enCours === "swiper"}
+                onActiver={() => activer("swiper")}
+                grad={GRAD_PASS}
+              />
+
+              {/* HeroSwiper — le max (bloc bleu) */}
+              <div className="relative rounded-3xl bg-panel p-5 ring-2 ring-bleu">
+                <span className="bg-bleu absolute -top-2 right-4 rounded-full px-2.5 py-0.5 text-[11px] font-bold text-white">
+                  LE MAX
+                </span>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl"
+                    style={{ backgroundImage: GRAD_HERO }}
+                  >
+                    <Star className="h-6 w-6 text-white" fill="currentColor" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-display text-xl font-semibold">HeroSwiper</p>
+                    <p className="text-sm text-ink/50">
+                      Par semaine · sans engagement
+                    </p>
+                  </div>
+                  <p
+                    className="font-display text-2xl font-bold"
+                    style={{
+                      backgroundImage: GRAD_HERO,
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      color: "transparent",
+                    }}
+                  >
+                    3,99 €
+                  </p>
+                </div>
+                <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
+                  {[
+                    "Tout le Pack Swiper",
+                    "Vois qui t'a liké",
+                    "Ton profil boosté, vu en priorité",
+                    "Messages directs : contacte sans attendre un match",
+                  ].map((a) => (
+                    <li key={a} className="flex items-center gap-2">
+                      <Check className="h-4 w-4 text-bleu" strokeWidth={3} />
+                      {a}
+                    </li>
+                  ))}
+                </ul>
+                {premium ? (
+                  <div className="mt-4 flex items-center justify-center gap-1.5 rounded-full bg-bleu-clair px-6 py-3 text-sm font-semibold text-bleu">
+                    <Check className="h-4 w-4" strokeWidth={3} /> Actif jusqu&apos;au{" "}
+                    {dateFr(profile?.premium_until ?? null)}
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => activer("pass")}
+                    disabled={enCours === "pass"}
+                    className="mt-4 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                    style={{ backgroundImage: GRAD_HERO }}
+                  >
+                    {enCours === "pass" ? "Activation…" : "Activer (démo)"}
+                  </button>
+                )}
+              </div>
+            </>
           )}
         </div>
 
