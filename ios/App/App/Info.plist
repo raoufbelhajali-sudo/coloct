@@ -5,9 +5,22 @@
     <key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>fr</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>fr</string>
+		<string>en</string>
+	</array>
 	<key>CFBundleDisplayName</key>
         <string>FlatSwiper</string>
+	<key>NSCameraUsageDescription</key>
+	<string>FlatSwiper utilise l'appareil photo pour ajouter des photos à ton annonce ou à ton profil.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>FlatSwiper accède à tes photos pour les ajouter à ton annonce ou à ton profil.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>FlatSwiper enregistre des photos dans ta photothèque.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>FlatSwiper utilise le micro pour enregistrer des messages vocaux dans la messagerie.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
