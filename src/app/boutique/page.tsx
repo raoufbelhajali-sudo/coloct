@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Zap, Rocket, Check, Lock, Star } from "lucide-react";
+import { Zap, Rocket, Check, Lock, Star, Gift } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
@@ -47,6 +48,14 @@ export default function BoutiquePage() {
 
   const premium = estPremium(profile);
   const hero = estHero(profile);
+
+  // Offre de lancement : sur le SITE WEB, tout est gratuit pour l'instant
+  // (« gratuit aujourd'hui, payant demain »). Dans l'app, on garde le mode normal.
+  const [estNatif, setEstNatif] = useState(false);
+  useEffect(() => {
+    setEstNatif(Capacitor.isNativePlatform());
+  }, []);
+  const lancement = !estNatif;
 
   function dateFr(iso: string | null) {
     if (!iso) return "";
@@ -92,6 +101,21 @@ export default function BoutiquePage() {
             : "10 swipes gratuits par jour. Pour aller plus loin, choisis ton pack, sans engagement."}
         </p>
 
+        {lancement && (
+          <div className="bg-signature mb-5 flex items-center gap-3 rounded-2xl p-4 text-white">
+            <Gift className="h-8 w-8 shrink-0" />
+            <div>
+              <p className="font-display text-lg font-bold leading-tight">
+                Offre de lancement 🎉
+              </p>
+              <p className="text-sm leading-snug text-white/90">
+                Tout est <strong>gratuit aujourd&apos;hui</strong> — profite-en,
+                ce sera <strong>payant bientôt</strong>&nbsp;!
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-4">
           {estAnnonceur ? (
             // ----- Annonceur : un seul bloc -----
@@ -124,6 +148,7 @@ export default function BoutiquePage() {
                 enCours={enCours === "annonceur"}
                 onActiver={() => activer("annonceur")}
                 grad={GRAD_ANNONCE}
+                lancement={lancement}
               />
             )
           ) : (
@@ -144,6 +169,7 @@ export default function BoutiquePage() {
                 enCours={enCours === "swiper"}
                 onActiver={() => activer("swiper")}
                 grad={GRAD_PASS}
+                lancement={lancement}
               />
 
               {/* HeroSwiper — le max (bloc bleu) */}
@@ -164,17 +190,34 @@ export default function BoutiquePage() {
                       Par semaine · sans engagement
                     </p>
                   </div>
-                  <p
-                    className="font-display text-2xl font-bold"
-                    style={{
-                      backgroundImage: GRAD_HERO,
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      color: "transparent",
-                    }}
-                  >
-                    3,99 €
-                  </p>
+                  {lancement ? (
+                    <div className="text-right leading-tight">
+                      <p className="text-xs text-ink/40 line-through">3,99 €</p>
+                      <p
+                        className="font-display text-xl font-bold"
+                        style={{
+                          backgroundImage: GRAD_HERO,
+                          WebkitBackgroundClip: "text",
+                          backgroundClip: "text",
+                          color: "transparent",
+                        }}
+                      >
+                        Gratuit
+                      </p>
+                    </div>
+                  ) : (
+                    <p
+                      className="font-display text-2xl font-bold"
+                      style={{
+                        backgroundImage: GRAD_HERO,
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        color: "transparent",
+                      }}
+                    >
+                      3,99 €
+                    </p>
+                  )}
                 </div>
                 <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
                   {[
@@ -202,7 +245,11 @@ export default function BoutiquePage() {
                     className="mt-4 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
                     style={{ backgroundImage: GRAD_HERO }}
                   >
-                    {enCours === "pass" ? "Activation…" : "Activer (démo)"}
+                    {enCours === "pass"
+                      ? "Activation…"
+                      : lancement
+                        ? "J'en profite — gratuit"
+                        : "Activer (démo)"}
                   </button>
                 )}
               </div>
@@ -221,7 +268,9 @@ export default function BoutiquePage() {
 
         <p className="mt-6 flex items-center justify-center gap-1.5 text-center text-xs text-ink/40">
           <Lock className="h-3.5 w-3.5" />
-          Paiement sécurisé à venir — activation de démo gratuite pour tester.
+          {lancement
+            ? "Offre de lancement : gratuit pour le moment, paiement sécurisé bientôt."
+            : "Paiement sécurisé à venir — activation de démo gratuite pour tester."}
         </p>
       </div>
     </main>
@@ -239,6 +288,7 @@ function OffreCard({
   enCours,
   onActiver,
   grad = GRAD_PASS,
+  lancement = false,
 }: {
   icon: React.ReactNode;
   titre: string;
@@ -250,6 +300,7 @@ function OffreCard({
   enCours: boolean;
   onActiver: () => void;
   grad?: string;
+  lancement?: boolean;
 }) {
   return (
     <div className="rounded-3xl bg-panel p-5">
@@ -264,17 +315,34 @@ function OffreCard({
           <p className="font-display text-xl font-semibold">{titre}</p>
           <p className="text-sm text-ink/50">{duree}</p>
         </div>
-        <p
-          className="font-display text-2xl font-bold"
-          style={{
-            backgroundImage: grad,
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            color: "transparent",
-          }}
-        >
-          {prix}
-        </p>
+        {lancement ? (
+          <div className="text-right leading-tight">
+            <p className="text-xs text-ink/40 line-through">{prix}</p>
+            <p
+              className="font-display text-xl font-bold"
+              style={{
+                backgroundImage: grad,
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              Gratuit
+            </p>
+          </div>
+        ) : (
+          <p
+            className="font-display text-2xl font-bold"
+            style={{
+              backgroundImage: grad,
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            {prix}
+          </p>
+        )}
       </div>
 
       <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
@@ -297,7 +365,11 @@ function OffreCard({
           className="mt-4 w-full rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
           style={{ backgroundImage: grad }}
         >
-          {enCours ? "Activation…" : `Activer (démo)`}
+          {enCours
+            ? "Activation…"
+            : lancement
+              ? "J'en profite — gratuit"
+              : "Activer (démo)"}
         </button>
       )}
     </div>
