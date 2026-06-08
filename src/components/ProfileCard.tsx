@@ -23,7 +23,7 @@ export default function ProfileCard({
     <div className="bg-signature relative h-full w-full overflow-hidden rounded-3xl shadow-2xl select-none">
       {/* Bandeau "ça peut coller" si points communs */}
       {compat.length > 0 && (
-        <div className="absolute left-3 top-3 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-bleu shadow-md">
+        <div className="absolute left-3 top-3 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md">
           <Sparkles className="h-3.5 w-3.5 shrink-0" />
           <span className="truncate">
             Ça peut coller : {compat.slice(0, 3).join(", ")}

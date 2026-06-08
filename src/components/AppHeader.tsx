@@ -57,7 +57,7 @@ export default function AppHeader({
         title={label}
         className={
           "flex flex-1 flex-col items-center gap-1 py-2 transition-transform active:scale-90 " +
-          (actif ? "text-bleu" : "text-ink/40 hover:text-ink/70")
+          (actif ? "text-pink" : "text-ink/40 hover:text-ink/70")
         }
       >
         <span className="relative">
@@ -132,7 +132,7 @@ export default function AppHeader({
               <span
                 className={
                   "flex h-11 w-11 items-center justify-center rounded-full bg-panel shadow-sm transition-transform active:scale-90 " +
-                  (accueilActif ? "ring-2 ring-bleu" : "ring-1 ring-ink/10")
+                  (accueilActif ? "ring-2 ring-pink" : "ring-1 ring-ink/10")
                 }
               >
                 <LogoMark className="h-7 w-7" />
