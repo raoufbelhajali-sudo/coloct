@@ -7,7 +7,6 @@ import { Check, Eye, Star, ChevronDown, ArrowLeft } from "lucide-react";
 import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
-import { LogoMark } from "@/components/Logo";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
 import AppHeader from "@/components/AppHeader";
@@ -231,7 +230,8 @@ export default function ProfilPage() {
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
-            <LogoMark className="h-7 w-7" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
           </Link>
           <RolePin />
         </div>

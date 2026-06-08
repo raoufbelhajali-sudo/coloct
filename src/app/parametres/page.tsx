@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
-import { LogoMark } from "@/components/Logo";
 import RolePin from "@/components/RolePin";
 import AppHeader from "@/components/AppHeader";
 
@@ -211,7 +210,8 @@ export default function ParametresPage() {
       <header className="mb-6 flex w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <Link href={retour}>
-            <LogoMark className="h-7 w-7" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
           </Link>
           <RolePin />
         </div>
