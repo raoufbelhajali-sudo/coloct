@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -570,10 +570,23 @@ export default function SwipeDeck() {
                 listing={current}
                 compat={compatAnnonce(profile, current)}
                 flou={flou}
-                favori={favorisIds.has(current.id)}
-                onToggleFavori={basculerFavori}
               />
             </motion.div>
+
+            {/* Bouton favori (signet) — posé sur la carte, hors zone de swipe */}
+            {!flou && current && (
+              <button
+                onClick={basculerFavori}
+                aria-label="Mettre en favori"
+                title="Mettre en favori"
+                className="absolute right-4 top-16 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-bg/80 text-violet shadow-md backdrop-blur-sm transition-transform hover:scale-110"
+              >
+                <Bookmark
+                  className="h-5 w-5"
+                  fill={favorisIds.has(current.id) ? "currentColor" : "none"}
+                />
+              </button>
+            )}
 
             {/* Boutons posés sur la carte */}
             <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-4">
