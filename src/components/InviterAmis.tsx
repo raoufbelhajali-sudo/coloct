@@ -40,7 +40,7 @@ export default function InviterAmis({
       <button
         onClick={inviter}
         className={
-          "flex w-full items-center justify-center gap-2 rounded-full bg-panel-2 px-5 py-3 text-sm font-semibold text-ink transition-colors hover:text-pink " +
+          "flex w-full items-center justify-center gap-2 rounded-full bg-panel-2 px-5 py-3 text-sm font-semibold text-ink transition-colors hover:text-bleu " +
           className
         }
       >

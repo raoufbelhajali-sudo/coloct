@@ -97,7 +97,7 @@ export default function BoutiquePage() {
             // ----- Annonceur : un seul bloc -----
             !listing ? (
               <div className="rounded-3xl bg-panel p-6 text-center text-ink/70">
-                <Rocket className="mx-auto h-10 w-10 text-pink" />
+                <Rocket className="mx-auto h-10 w-10 text-bleu" />
                 <p className="mt-3">
                   Publie d&apos;abord ton annonce pour pouvoir la booster.
                 </p>
@@ -280,7 +280,7 @@ function OffreCard({
       <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
         {avantages.map((a) => (
           <li key={a} className="flex items-center gap-2">
-            <Check className="h-4 w-4 text-pink" strokeWidth={3} />
+            <Check className="h-4 w-4 text-bleu" strokeWidth={3} />
             {a}
           </li>
         ))}

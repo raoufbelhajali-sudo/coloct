@@ -46,7 +46,7 @@ export default function LocatairePage() {
         ) : !listing ? (
           // Pas encore d'annonce → invite à la créer
           <div className="m-auto flex max-w-xs flex-col items-center gap-4 text-center">
-            <Home className="h-12 w-12 text-pink" />
+            <Home className="h-12 w-12 text-bleu" />
             <p className="font-display text-2xl">Crée ton annonce</p>
             <p className="text-sm text-ink/70">
               Publie ta chambre pour voir les colocataires intéressés et commencer

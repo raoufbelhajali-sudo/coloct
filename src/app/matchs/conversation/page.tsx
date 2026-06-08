@@ -510,7 +510,7 @@ function ConversationInner() {
           >
             <div className="mb-3 flex items-center justify-between">
               <p className="flex items-center gap-2 font-display text-xl font-semibold">
-                <CalendarClock className="h-5 w-5 text-pink" /> Planifier une visite
+                <CalendarClock className="h-5 w-5 text-bleu" /> Planifier une visite
               </p>
               <button
                 type="button"
@@ -732,7 +732,7 @@ function ConversationInner() {
                         className="flex items-center gap-2 rounded-lg px-2 py-2 text-left text-sm hover:bg-panel-2"
                       >
                         {demande ? (
-                          <CheckSquare className="h-5 w-5 shrink-0 text-pink" />
+                          <CheckSquare className="h-5 w-5 shrink-0 text-bleu" />
                         ) : (
                           <Square className="h-5 w-5 shrink-0 text-ink/30" />
                         )}
@@ -763,7 +763,7 @@ function ConversationInner() {
                       className="flex items-center gap-2 rounded-lg px-2 py-2 text-sm"
                     >
                       {ok ? (
-                        <CheckSquare className="h-5 w-5 shrink-0 text-pink" />
+                        <CheckSquare className="h-5 w-5 shrink-0 text-bleu" />
                       ) : (
                         <Square className="h-5 w-5 shrink-0 text-ink/30" />
                       )}
@@ -862,7 +862,7 @@ function ConversationInner() {
                   }
                 >
                   <p className="flex items-center gap-1.5 text-sm font-semibold text-ink">
-                    <CalendarClock className="h-4 w-4 text-pink" /> Visite proposée
+                    <CalendarClock className="h-4 w-4 text-bleu" /> Visite proposée
                   </p>
                   <p className="mt-1 text-sm capitalize text-ink/85">{quand}</p>
                   {lieu && <p className="text-sm text-ink/60">{lieu}</p>}
@@ -967,7 +967,7 @@ function ConversationInner() {
               key={s}
               type="button"
               onClick={() => setTexte(s)}
-              className="shrink-0 rounded-full border border-ink/15 bg-panel px-3 py-1.5 text-xs text-ink/75 hover:border-pink hover:text-pink"
+              className="shrink-0 rounded-full border border-ink/15 bg-panel px-3 py-1.5 text-xs text-ink/75 hover:border-pink hover:text-bleu"
             >
               {s}
             </button>
@@ -1003,9 +1003,9 @@ function ConversationInner() {
           {/* Joindre un document (fiche de paie, garant…) */}
           <label
             title="Joindre un document"
-            className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-pink"
+            className="flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-bleu"
           >
-            <Paperclip className={"h-5 w-5 " + (envoiDoc ? "animate-pulse text-pink" : "")} />
+            <Paperclip className={"h-5 w-5 " + (envoiDoc ? "animate-pulse text-bleu" : "")} />
             <input
               type="file"
               accept=".pdf,image/*"
@@ -1021,7 +1021,7 @@ function ConversationInner() {
               onClick={() => setVisiteOuverte(true)}
               title="Proposer une visite"
               aria-label="Proposer une visite"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-pink"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-panel text-ink/60 transition-colors hover:text-bleu"
             >
               <CalendarPlus className="h-5 w-5" />
             </button>

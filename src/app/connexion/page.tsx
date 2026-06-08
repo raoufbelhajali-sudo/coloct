@@ -213,7 +213,7 @@ export default function ConnexionPage() {
               }}
               className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-panel-2 px-4 py-3.5 font-medium text-ink transition-colors hover:border-ink/30"
             >
-              <Mail className="h-5 w-5 text-pink" />
+              <Mail className="h-5 w-5 text-bleu" />
               Continuer avec un email
             </button>
           </div>
@@ -264,7 +264,7 @@ export default function ConnexionPage() {
         {/* ----- Email : lien envoyé ----- */}
         {etape === "emailEnvoye" && (
           <div className="space-y-4 text-center">
-            <Mail className="mx-auto h-12 w-12 text-pink" />
+            <Mail className="mx-auto h-12 w-12 text-bleu" />
             <p className="font-display text-xl">Vérifie ta boîte mail !</p>
             <p className="text-sm text-ink/70">
               On a envoyé un lien de connexion à{" "}

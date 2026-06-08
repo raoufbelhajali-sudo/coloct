@@ -239,7 +239,7 @@ export default function ProfilPage() {
             onClick={() => setApercu(true)}
             aria-label="Voir mon profil"
             title="Voir mon profil"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
           >
             <Eye className="h-5 w-5" />
           </button>
@@ -247,7 +247,7 @@ export default function ProfilPage() {
             href={retour}
             aria-label="Retour"
             title="Retour"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>

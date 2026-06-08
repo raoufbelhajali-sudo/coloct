@@ -53,7 +53,7 @@ export default function JaimePage() {
 
       <div className="w-full max-w-sm">
         <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-semibold">
-          <Sparkles className="h-6 w-6 text-pink" />
+          <Sparkles className="h-6 w-6 text-bleu" />
           {profile?.role === "locataire"
             ? "Candidats intéressés"
             : "Intéressés par toi"}
@@ -68,7 +68,7 @@ export default function JaimePage() {
           <p className="text-ink/60">Chargement…</p>
         ) : items.length === 0 ? (
           <div className="flex flex-col items-center rounded-2xl bg-panel p-6 text-center text-ink/70">
-            <Sparkles className="h-10 w-10 text-pink" />
+            <Sparkles className="h-10 w-10 text-bleu" />
             <p className="mt-3">
               Personne pour le moment. Continue à swiper, ça va venir !
             </p>

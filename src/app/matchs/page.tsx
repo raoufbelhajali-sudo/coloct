@@ -51,7 +51,7 @@ export default function MatchsPage() {
           <p className="text-ink/60">Chargement…</p>
         ) : matches.length === 0 ? (
           <div className="flex flex-col items-center rounded-2xl bg-panel p-6 text-center text-ink/70">
-            <HeartHandshake className="h-10 w-10 text-pink" />
+            <HeartHandshake className="h-10 w-10 text-bleu" />
             <p className="mt-3">
               Pas encore de match. Continue à swiper, ça va arriver !
             </p>

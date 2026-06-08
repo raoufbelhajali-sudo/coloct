@@ -300,7 +300,7 @@ export default function Onboarding({
                   <CarteRole
                     titre="Chercher une chambre"
                     sous="Je veux trouver une coloc (colocataire)"
-                    icon={<Telescope className="h-7 w-7 text-pink" />}
+                    icon={<Telescope className="h-7 w-7 text-bleu" />}
                     actif={role === "colocataire"}
                     onClick={() => setRole("colocataire")}
                   />

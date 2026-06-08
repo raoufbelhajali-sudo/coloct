@@ -219,7 +219,7 @@ export default function ParametresPage() {
           href={retour}
           aria-label="Retour"
           title="Retour"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
@@ -317,7 +317,7 @@ export default function ParametresPage() {
           </Bloc>
 
           {/* Pseudo */}
-          <Bloc icone={<AtSign className="h-5 w-5 text-pink" />} titre="Pseudo">
+          <Bloc icone={<AtSign className="h-5 w-5 text-bleu" />} titre="Pseudo">
             <input
               value={pseudo}
               onChange={(e) => setPseudo(e.target.value)}
@@ -345,7 +345,7 @@ export default function ParametresPage() {
 
           {/* Téléphone */}
           <Bloc
-            icone={<Phone className="h-5 w-5 text-pink" />}
+            icone={<Phone className="h-5 w-5 text-bleu" />}
             titre="Numéro de téléphone"
           >
             <input
@@ -364,7 +364,7 @@ export default function ParametresPage() {
           >
             {resetEnvoye ? (
               <p className="flex items-start gap-2 text-sm text-ink/70">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-pink" strokeWidth={3} />
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-bleu" strokeWidth={3} />
                 Lien envoyé à <span className="font-medium text-ink">{user.email}</span>.
                 Ouvre l&apos;email et clique sur le lien pour choisir ton nouveau
                 mot de passe (pense à regarder les spams).
@@ -391,7 +391,7 @@ export default function ParametresPage() {
 
           {/* Notifications */}
           <Bloc
-            icone={<Bell className="h-5 w-5 text-pink" />}
+            icone={<Bell className="h-5 w-5 text-bleu" />}
             titre="Notifications par email"
           >
             <label className="flex cursor-pointer items-center justify-between">

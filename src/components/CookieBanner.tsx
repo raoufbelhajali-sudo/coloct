@@ -28,7 +28,7 @@ export default function CookieBanner() {
   return (
     <div className="fixed inset-x-0 bottom-0 z-[60] flex justify-center p-3">
       <div className="flex w-full max-w-md flex-col gap-3 rounded-2xl border border-ink/10 bg-panel p-4 shadow-2xl sm:flex-row sm:items-center">
-        <Cookie className="h-6 w-6 shrink-0 text-pink" />
+        <Cookie className="h-6 w-6 shrink-0 text-bleu" />
         <p className="flex-1 text-sm text-ink/80">
           On utilise uniquement les cookies <strong>nécessaires</strong> au
           fonctionnement (connexion, préférences) — pas de pub ni de traçage.{" "}

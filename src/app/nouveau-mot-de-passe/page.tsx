@@ -72,7 +72,7 @@ export default function NouveauMotDePassePage() {
           <p className="text-center text-ink/60">Vérification du lien…</p>
         ) : !pret ? (
           <div className="space-y-3 text-center">
-            <Lock className="mx-auto h-10 w-10 text-pink" />
+            <Lock className="mx-auto h-10 w-10 text-bleu" />
             <p className="font-display text-xl">Lien invalide ou expiré</p>
             <p className="text-sm text-ink/70">
               Ce lien n&apos;est plus valable. Retourne dans Paramètres pour
@@ -82,7 +82,7 @@ export default function NouveauMotDePassePage() {
         ) : (
           <form onSubmit={enregistrer} className="space-y-4">
             <div className="text-center">
-              <Lock className="mx-auto h-10 w-10 text-pink" />
+              <Lock className="mx-auto h-10 w-10 text-bleu" />
               <p className="mt-2 font-display text-xl">Nouveau mot de passe</p>
             </div>
             <div>

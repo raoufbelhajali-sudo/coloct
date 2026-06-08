@@ -347,7 +347,7 @@ export default function ListingForm({
               </button>
             </div>
           ))}
-          <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-ink/20 text-ink/50 hover:border-pink hover:text-pink">
+          <label className="flex h-24 w-24 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-ink/20 text-ink/50 hover:border-pink hover:text-bleu">
             <ImagePlus className="h-6 w-6" />
             <span className="text-xs">
               {photoEnCours ? "Envoi…" : "Ajouter"}

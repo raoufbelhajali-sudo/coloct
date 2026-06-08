@@ -366,7 +366,7 @@ export default function SwipeDeck() {
             className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold"
             title="Likes gratuits restants aujourd'hui"
           >
-            <Heart className="h-4 w-4 text-pink" fill="currentColor" />
+            <Heart className="h-4 w-4 text-bleu" fill="currentColor" />
             <span className="text-pink">
               {Math.max(0, limiteJour - likesAujourdhui)}
             </span>
@@ -379,7 +379,7 @@ export default function SwipeDeck() {
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"
           title="Filtres"
-          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
         >
           <SlidersHorizontal className="h-[18px] w-[18px]" />
           {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX) && (
@@ -391,7 +391,7 @@ export default function SwipeDeck() {
             onClick={() => partagerAnnonce(current)}
             aria-label="Partager"
             title="Partager"
-            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
           >
             <Share2 className="h-[18px] w-[18px]" />
           </button>
@@ -685,14 +685,14 @@ export default function SwipeDeck() {
             </p>
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
               <li className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-pink" fill="currentColor" /> Likes
+                <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Likes
                 illimités
               </li>
               <li className="flex items-center gap-2">
-                <Eye className="h-4 w-4 text-pink" /> Vois qui t&apos;a déjà liké
+                <Eye className="h-4 w-4 text-bleu" /> Vois qui t&apos;a déjà liké
               </li>
               <li className="flex items-center gap-2">
-                <Rocket className="h-4 w-4 text-pink" /> Ton profil mis en avant
+                <Rocket className="h-4 w-4 text-bleu" /> Ton profil mis en avant
                 (Boost)
               </li>
             </ul>

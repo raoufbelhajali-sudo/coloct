@@ -51,7 +51,7 @@ export default function MatchPopup() {
         className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-8 text-center"
         onClick={(e) => e.stopPropagation()}
       >
-        <HeartHandshake className="mx-auto h-12 w-12 text-pink" />
+        <HeartHandshake className="mx-auto h-12 w-12 text-bleu" />
         <p className="text-signature mt-3 font-display text-4xl font-bold">
           C&apos;est un match !
         </p>
