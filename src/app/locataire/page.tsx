@@ -37,7 +37,7 @@ export default function LocatairePage() {
   }, [user, chargerAnnonce]);
 
   return (
-    <main className="flex h-[calc(100dvh_-_env(safe-area-inset-top))] flex-col items-center overflow-hidden px-4 pb-24 pt-4">
+    <main className="flex h-dvh flex-col items-center overflow-hidden px-4 pb-24 pt-4">
       <AppHeader compact />
 
       <div className="flex w-full min-h-0 flex-1 flex-col items-center">

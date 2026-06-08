@@ -4,6 +4,7 @@ import { useState } from "react";
 import { UserPlus, Check } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { ajouterBonusLikes } from "@/lib/swipes";
+import { partagerLien } from "@/lib/share";
 
 const BONUS = 5; // swipes gagnés par invitation
 
@@ -19,26 +20,19 @@ export default function InviterAmis({
   const [msg, setMsg] = useState("");
 
   async function inviter() {
-    const lien = `${window.location.origin}/?ref=${user?.id ?? ""}`;
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: "FlatSwiper",
-          text: "Rejoins-moi sur FlatSwiper pour trouver une coloc à Paris !",
-          url: lien,
-        });
-      } else {
-        await navigator.clipboard.writeText(lien);
-      }
-      if (user) {
-        ajouterBonusLikes(user.id, BONUS);
-        onBonus?.();
-      }
-      setMsg(`Merci ! +${BONUS} swipes ajoutés`);
-      setTimeout(() => setMsg(""), 3000);
-    } catch {
-      /* partage annulé : pas de bonus */
+    const lien = `https://flatswiper.com/?ref=${user?.id ?? ""}`;
+    const ok = await partagerLien({
+      title: "FlatSwiper",
+      text: "Rejoins-moi sur FlatSwiper pour trouver une coloc partout en France !",
+      url: lien,
+    });
+    if (!ok) return; // partage annulé : pas de bonus
+    if (user) {
+      ajouterBonusLikes(user.id, BONUS);
+      onBonus?.();
     }
+    setMsg(`Merci ! +${BONUS} swipes ajoutés`);
+    setTimeout(() => setMsg(""), 3000);
   }
 
   return (

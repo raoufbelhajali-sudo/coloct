@@ -26,11 +26,15 @@
 
 html {
   height: 100%;
+  /* Coupe le rebond élastique : pas de "scroll dans le vide" si la page tient
+     dans l'écran (le défilement reste normal quand il y a du contenu plus bas). */
+  overscroll-behavior: none;
 }
 
 /* min-height (et non height) pour que la page puisse grandir et défiler */
 body {
   min-height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
@@ -38,9 +42,6 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
-  /* Zone de sécurité du haut (heure, réseau, encoche / Dynamic Island).
-     env() vaut 0 dans un navigateur classique → aucun effet sur le site web. */
-  padding-top: env(safe-area-inset-top);
 }
 
 /* Dégradé signature (logo, boutons clés) : corail → orange */

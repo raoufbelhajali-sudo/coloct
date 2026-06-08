@@ -5,6 +5,7 @@ import { AuthProvider } from "@/lib/auth";
 import MatchPopup from "@/components/MatchPopup";
 import CookieBanner from "@/components/CookieBanner";
 import ComingSoonGate from "@/components/ComingSoonGate";
+import NativeSetup from "@/components/NativeSetup";
 
 // Police des titres et du logo (serif chic)
 const fraunces = Fraunces({
@@ -49,6 +50,7 @@ export default function RootLayout({
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <NativeSetup />
         <ComingSoonGate>
           <AuthProvider>
             <MatchPopup />

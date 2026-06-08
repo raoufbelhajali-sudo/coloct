@@ -393,7 +393,7 @@ function ConversationInner() {
   }
 
   return (
-    <main className="flex h-[calc(100dvh_-_env(safe-area-inset-top))] flex-col items-center px-4 py-4">
+    <main className="flex h-dvh flex-col items-center px-4 py-4">
       {/* En-tête */}
       <header className="flex w-full max-w-sm items-center gap-3 pb-3">
         <Link href="/matchs" className="text-ink/60 hover:text-ink">

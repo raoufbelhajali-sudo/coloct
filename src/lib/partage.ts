@@ -1,17 +1,13 @@
 import type { Listing } from "@/data/listings";
 import { lieuComplet } from "./listings";
+import { partagerLien } from "./share";
 
-// Partage une annonce (partage natif ou copie du lien)
+// Partage une annonce (feuille de partage native dans l'app, sinon web)
 export async function partagerAnnonce(listing: Listing): Promise<void> {
-  const lien = typeof window !== "undefined" ? window.location.origin : "";
   const texte = `Regarde cette coloc : ${lieuComplet(listing)} · ${listing.loyer} € / mois sur FlatSwiper !`;
-  try {
-    if (typeof navigator !== "undefined" && navigator.share) {
-      await navigator.share({ title: "FlatSwiper", text: texte, url: lien });
-    } else if (typeof navigator !== "undefined" && navigator.clipboard) {
-      await navigator.clipboard.writeText(`${texte} ${lien}`);
-    }
-  } catch {
-    /* partage annulé */
-  }
+  await partagerLien({
+    title: "FlatSwiper",
+    text: texte,
+    url: "https://flatswiper.com",
+  });
 }

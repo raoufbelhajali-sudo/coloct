@@ -8,6 +8,7 @@ import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
   estPremium,
+  estHero,
   activerPassExpress,
   activerHero,
   activerBoost,
@@ -45,6 +46,7 @@ export default function BoutiquePage() {
   }, [chargerAnnonce]);
 
   const premium = estPremium(profile);
+  const hero = estHero(profile);
 
   function dateFr(iso: string | null) {
     if (!iso) return "";
@@ -188,10 +190,10 @@ export default function BoutiquePage() {
                     </li>
                   ))}
                 </ul>
-                {premium ? (
+                {hero ? (
                   <div className="mt-4 flex items-center justify-center gap-1.5 rounded-full bg-bleu-clair px-6 py-3 text-sm font-semibold text-bleu">
                     <Check className="h-4 w-4" strokeWidth={3} /> Actif jusqu&apos;au{" "}
-                    {dateFr(profile?.premium_until ?? null)}
+                    {dateFr(profile?.hero_until ?? null)}
                   </div>
                 ) : (
                   <button
