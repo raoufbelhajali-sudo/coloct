@@ -4,7 +4,7 @@ export default function FondAccueil() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-center opacity-[0.07]"
+      className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-center opacity-[0.16]"
       style={{ backgroundImage: "url(/accueil-bg.jpg)" }}
     />
   );
