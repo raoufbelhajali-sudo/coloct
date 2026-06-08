@@ -17,6 +17,7 @@ import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import RolePin from "@/components/RolePin";
+import PremiumPin from "@/components/PremiumPin";
 import { useAuth } from "@/lib/auth";
 import { estPremium, estHero, contacterDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
@@ -348,12 +349,9 @@ export default function SwipeDeck() {
       {/* Rôle + compteur de likes restants + bouton filtres (même ligne) */}
       <div className="mb-2 flex w-full items-center gap-2">
         <RolePin />
+        <PremiumPin />
         <div className="ml-auto flex items-center gap-2">
-        {premium ? (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold text-pink">
-            <Star className="h-4 w-4" fill="currentColor" /> FlatSwiper+ · illimité
-          </span>
-        ) : likesEpuises ? (
+        {!premium && (likesEpuises ? (
           // Likes épuisés → on retire le compteur et on invite au Pass
           <Link
             href="/boutique"
@@ -374,7 +372,7 @@ export default function SwipeDeck() {
               / {limiteJour} likes
             </span>
           </span>
-        )}
+        ))}
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"

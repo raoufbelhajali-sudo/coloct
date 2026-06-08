@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 import { LogoMark } from "@/components/Logo";
 import RolePin from "@/components/RolePin";
+import PremiumPin from "@/components/PremiumPin";
 
 // Pastille de notification : noire et vibrante
 const badge =
@@ -92,7 +93,7 @@ export default function AppHeader({
       {!hideTop && (
         <header
           className={
-            "flex w-full max-w-sm items-center justify-between " +
+            "flex w-full max-w-sm items-center gap-2 " +
             (compact ? "mb-2" : "mb-6")
           }
         >
@@ -100,6 +101,7 @@ export default function AppHeader({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-full.png" alt="FlatSwiper" className="h-5 w-auto" />
           <RolePin />
+          <PremiumPin />
         </header>
       )}
 

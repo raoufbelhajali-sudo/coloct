@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
 import ProfileDetail from "@/components/ProfileDetail";
 import RolePin from "@/components/RolePin";
+import PremiumPin from "@/components/PremiumPin";
 import AppHeader from "@/components/AppHeader";
 import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
@@ -234,6 +235,7 @@ export default function ProfilPage() {
             <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
           </Link>
           <RolePin />
+          <PremiumPin />
         </div>
         <div className="flex items-center gap-1.5">
           <button

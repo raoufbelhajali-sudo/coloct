@@ -23,6 +23,7 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import RolePin from "@/components/RolePin";
+import PremiumPin from "@/components/PremiumPin";
 import AppHeader from "@/components/AppHeader";
 
 export default function ParametresPage() {
@@ -214,6 +215,7 @@ export default function ParametresPage() {
             <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
           </Link>
           <RolePin />
+          <PremiumPin />
         </div>
         <Link
           href={retour}
