@@ -37,8 +37,6 @@ import { marquerMatchLu } from "@/lib/notifications";
 import { bloquerUtilisateur } from "@/lib/blocks";
 import { signalerUtilisateur, RAISONS_SIGNALEMENT } from "@/lib/reports";
 import { laisserAvis, getMonAvis } from "@/lib/reviews";
-import RolePin from "@/components/RolePin";
-import PremiumPin from "@/components/PremiumPin";
 
 function ConversationInner() {
   const router = useRouter();
@@ -400,8 +398,6 @@ function ConversationInner() {
         <Link href="/matchs" className="text-ink/60 hover:text-ink">
           <ArrowLeft className="h-6 w-6" />
         </Link>
-        <RolePin />
-        <PremiumPin />
         <div className="min-w-0 flex-1">
           <p className="truncate font-display text-lg font-semibold">{titre}</p>
           {autrePrenom && (

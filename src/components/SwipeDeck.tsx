@@ -16,8 +16,6 @@ import { getIdsBloques } from "@/lib/blocks";
 import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
-import RolePin from "@/components/RolePin";
-import PremiumPin from "@/components/PremiumPin";
 import { useAuth } from "@/lib/auth";
 import { estPremium, estHero, contacterDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
@@ -348,8 +346,8 @@ export default function SwipeDeck() {
     <div className="flex h-full w-full max-w-sm flex-col">
       {/* Rôle + compteur de likes restants + bouton filtres (même ligne) */}
       <div className="mb-2 flex w-full items-center gap-2">
-        <RolePin />
-        <PremiumPin />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto shrink-0" />
         <div className="ml-auto flex items-center gap-2">
         {!premium && (likesEpuises ? (
           // Likes épuisés → on retire le compteur et on invite au Pass

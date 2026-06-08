@@ -6,8 +6,6 @@ import { MessageSquare, Zap, Settings, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 import { LogoMark } from "@/components/Logo";
-import RolePin from "@/components/RolePin";
-import PremiumPin from "@/components/PremiumPin";
 
 // Pastille de notification : noire et vibrante
 const badge =
@@ -97,11 +95,9 @@ export default function AppHeader({
             (compact ? "mb-2" : "mb-6")
           }
         >
-          {/* Logo complet (symbole + nom), petit — même hauteur que le pin */}
+          {/* Logo complet (symbole + nom), à gauche */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-full.png" alt="FlatSwiper" className="h-5 w-auto" />
-          <RolePin />
-          <PremiumPin />
+          <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
         </header>
       )}
 
