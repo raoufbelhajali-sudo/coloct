@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Capacitor } from "@capacitor/core";
-import { LogoMark } from "@/components/Logo";
 
 // Mot de passe d'accès anticipé au SITE web (modifiable ici).
 // NB : c'est une protection "coming soon" côté navigateur — suffisante avant
@@ -60,10 +59,12 @@ export default function ComingSoonGate({
       <div className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full bg-pink opacity-20 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-violet opacity-20 blur-[120px]" />
 
-      <LogoMark className="mb-5 h-20 w-20 drop-shadow-[0_8px_30px_rgba(250,82,82,0.35)]" />
-      <h1 className="font-display text-5xl font-semibold tracking-tight sm:text-6xl">
-        <span className="text-signature">FlatSwiper</span>
-      </h1>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo-full.png"
+        alt="FlatSwiper"
+        className="mb-2 w-[320px] max-w-[85%] drop-shadow-[0_8px_30px_rgba(250,82,82,0.25)]"
+      />
       <p className="mt-4 max-w-md text-lg text-ink/70">
         Bientôt disponible. Trouve ta colocation en swipant, partout en France.
       </p>

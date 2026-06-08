@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
-import { LogoMark } from "@/components/Logo";
 
 export default function Home() {
   const router = useRouter();
@@ -22,11 +21,13 @@ export default function Home() {
       <div className="pointer-events-none absolute -top-32 -left-24 h-96 w-96 rounded-full bg-pink opacity-20 blur-[120px]" />
       <div className="pointer-events-none absolute -bottom-32 -right-24 h-96 w-96 rounded-full bg-violet opacity-20 blur-[120px]" />
 
-      {/* Logo */}
-      <LogoMark className="mb-4 h-20 w-20 drop-shadow-[0_8px_30px_rgba(250,82,82,0.35)]" />
-      <h1 className="font-display text-6xl font-semibold tracking-tight sm:text-7xl">
-        <span className="text-signature">FlatSwiper</span>
-      </h1>
+      {/* Logo complet (symbole + nom manuscrit) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/logo-full.png"
+        alt="FlatSwiper"
+        className="mb-2 w-[300px] max-w-[85%] drop-shadow-[0_8px_30px_rgba(250,82,82,0.25)]"
+      />
 
       {/* Accroche */}
       <p className="mt-6 max-w-md text-lg text-ink/80 sm:text-xl">
