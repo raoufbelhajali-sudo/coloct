@@ -68,21 +68,37 @@ export async function getMyMatches(
   ];
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, prenom")
+    .select("id, prenom, photo_url")
     .in("id", otherIds);
   const prenomById = new Map((profiles ?? []).map((p) => [p.id, p.prenom]));
+  const photoById = new Map(
+    (profiles ?? []).map((p) => [p.id, p.photo_url as string | null])
+  );
 
   return matches.map((m) => {
     const l = listingById.get(m.listing_id);
     const otherId =
       m.colocataire_id === userId ? m.locataire_id : m.colocataire_id;
     const autrePrenom = prenomById.get(otherId) ?? "Quelqu'un";
+    // L'annonceur (locataire) voit le COLOCATAIRE (nom + photo).
+    // Le colocataire voit l'ANNONCE (titre + photo du logement).
+    const estAnnonceur = m.colocataire_id !== userId;
     return {
       id: m.id,
       listingId: m.listing_id,
-      titre: l ? l.titre || lieuComplet(l) : "Colocation",
-      sousTitre: l ? `${l.loyer} € · avec ${autrePrenom}` : `avec ${autrePrenom}`,
-      photo: l?.photos?.[0] ?? null,
+      titre: estAnnonceur
+        ? autrePrenom
+        : l
+          ? l.titre || lieuComplet(l)
+          : "Colocation",
+      sousTitre: estAnnonceur
+        ? "Intéressé·e par ta chambre"
+        : l
+          ? `${l.loyer} € · avec ${autrePrenom}`
+          : `avec ${autrePrenom}`,
+      photo: estAnnonceur
+        ? photoById.get(otherId) ?? l?.photos?.[0] ?? null
+        : l?.photos?.[0] ?? null,
       autrePrenom,
     };
   });
