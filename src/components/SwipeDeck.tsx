@@ -18,7 +18,7 @@ import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import RolePin from "@/components/RolePin";
 import { useAuth } from "@/lib/auth";
-import { estPremium } from "@/lib/offers";
+import { estPremium, estHero } from "@/lib/offers";
 import {
   getSwipedListingIds,
   recordListingSwipe,
@@ -244,9 +244,13 @@ export default function SwipeDeck() {
     }
   }
 
-  // Annule le dernier swipe (revient en arrière)
+  // Annule le dernier swipe (revient en arrière) — réservé HeroSwiper
   async function annulerDernier() {
     if (!user || !dernierSwipe || animating.current) return;
+    if (!estHero(profile)) {
+      router.push("/boutique"); // fonctionnalité HeroSwiper
+      return;
+    }
     const { id, direction } = dernierSwipe;
     setDernierSwipe(null);
     setSwipedIds((prev) => {

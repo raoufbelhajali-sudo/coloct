@@ -37,6 +37,23 @@ export async function activerPassExpress(userId: string): Promise<void> {
     .eq("id", userId);
 }
 
+// HeroSwiper actif ? (forfait "le max")
+export function estHero(profile: Profile | null): boolean {
+  return (
+    !!profile?.hero_until &&
+    new Date(profile.hero_until).getTime() > Date.now()
+  );
+}
+
+// Active HeroSwiper 7 jours (premium + marqueur hero) — démo
+export async function activerHero(userId: string): Promise<void> {
+  const fin = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  await supabase
+    .from("profiles")
+    .update({ premium_until: fin, hero_until: fin })
+    .eq("id", userId);
+}
+
 // Boost Annonceur (démo, 5 €) : met l'annonce en avant 7 jours ET débloque
 // l'accès aux meilleurs profils (premium_until → tri par poste + compatibilité).
 export async function activerBoostAnnonceur(

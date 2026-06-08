@@ -37,6 +37,7 @@ export type Profile = {
   date_emmenagement: string | null;
   duree_coloc: string | null; // durée de colocation souhaitée
   last_seen: string | null; // dernière activité (badge "actif récemment")
+  hero_until: string | null; // forfait HeroSwiper actif jusqu'à
   langues: string[] | null; // langues parlées
   niveau_sonore: string | null; // calme / équilibré / fêtard
   genre_coloc_recherche: string | null; // préférence de mixité

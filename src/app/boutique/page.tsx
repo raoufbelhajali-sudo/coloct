@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth";
 import {
   estPremium,
   activerPassExpress,
+  activerHero,
   activerBoost,
   activerBoostAnnonceur,
   activerMessagesDirects,
@@ -63,7 +64,7 @@ export default function BoutiquePage() {
       await activerPassExpress(user.id);
     } else if (offre === "pass") {
       // HeroSwiper (le max) : tous les avantages chercheur
-      await activerPassExpress(user.id);
+      await activerHero(user.id);
       await activerBoost(user.id);
       await activerMessagesDirects(user.id);
     } else if (offre === "boost") await activerBoost(user.id);
@@ -176,6 +177,7 @@ export default function BoutiquePage() {
                 <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
                   {[
                     "Tout le Pack Swiper",
+                    "Annuler le dernier swipe (oups !)",
                     "Vois qui t'a liké",
                     "Ton profil boosté, vu en priorité",
                     "Messages directs : contacte sans attendre un match",
