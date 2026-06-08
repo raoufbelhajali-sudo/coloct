@@ -364,14 +364,16 @@ export default function SwipeDeck() {
             <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
           )}
         </button>
-        <button
-          onClick={() => current && partagerAnnonce(current)}
-          aria-label="Partager"
-          title="Partager"
-          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
-        >
-          <Share2 className="h-[18px] w-[18px]" />
-        </button>
+        {current && (
+          <button
+            onClick={() => partagerAnnonce(current)}
+            aria-label="Partager"
+            title="Partager"
+            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-pink"
+          >
+            <Share2 className="h-[18px] w-[18px]" />
+          </button>
+        )}
         </div>
       </div>
 
