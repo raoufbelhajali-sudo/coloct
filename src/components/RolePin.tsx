@@ -1,6 +1,6 @@
 "use client";
 
-import { KeyRound, Telescope } from "lucide-react";
+import { KeyRound, Search } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 // Petit pin indiquant le rôle (Annonceur / Colocataire). Affiché à côté du logo.
@@ -16,7 +16,7 @@ export default function RolePin() {
       {estLoca ? (
         <KeyRound className="h-3 w-3 text-white/80" />
       ) : (
-        <Telescope className="h-3 w-3 text-white/80" />
+        <Search className="h-3 w-3 text-white/80" />
       )}
       {estLoca ? "Annonceur" : "Colocataire"}
     </span>
