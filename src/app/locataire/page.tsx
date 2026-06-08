@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Users, Home, Snowflake } from "lucide-react";
+import { Home, Snowflake } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ProfileSwipeDeck from "@/components/ProfileSwipeDeck";
 import AccrocheAnnonceur from "@/components/AccrocheAnnonceur";
@@ -38,7 +38,21 @@ export default function LocatairePage() {
 
   return (
     <main className="flex h-dvh flex-col items-center overflow-hidden px-4 pb-24 pt-5">
-      <AppHeader />
+      <AppHeader hideTop />
+      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
+        {listing && !listing.gelee && (
+          <Link
+            href="/mon-annonce"
+            title="Gérer mon annonce"
+            aria-label="Gérer mon annonce"
+            className="flex h-8 items-center gap-1.5 rounded-full bg-panel px-3 text-xs font-medium text-ink/70 hover:bg-panel-2"
+          >
+            <Home className="h-4 w-4" /> Mon annonce
+          </Link>
+        )}
+      </header>
 
       <div className="flex w-full min-h-0 flex-1 flex-col items-center">
         {chargement ? (
@@ -78,20 +92,6 @@ export default function LocatairePage() {
         ) : (
           // Annonce publiée → on swipe sur les colocataires (deck maximisé)
           <div className="flex h-full w-full max-w-sm flex-col">
-            <div className="mb-2 flex w-full items-center justify-between">
-              <p className="flex items-center gap-2 text-left font-display text-xl">
-                <Users className="h-5 w-5 text-violet" />
-                Qui veut emménager ?
-              </p>
-              <Link
-                href="/mon-annonce"
-                title="Gérer mon annonce"
-                aria-label="Gérer mon annonce"
-                className="flex h-9 items-center gap-1.5 rounded-full bg-panel px-3 text-xs font-medium text-ink/70 hover:bg-panel-2"
-              >
-                <Home className="h-4 w-4" /> Mon annonce
-              </Link>
-            </div>
             <ProfileSwipeDeck listingId={listing.id} />
             {/* Message d'accueil annonceur (1×/session) */}
             <AccrocheAnnonceur />
