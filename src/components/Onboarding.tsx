@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Telescope, KeyRound, Check, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Role } from "@/lib/auth";
-import { listings } from "@/data/listings";
 import { LogoMark } from "@/components/Logo";
 import {
   INTERETS,
@@ -24,7 +23,6 @@ import {
 } from "@/lib/profilOptions";
 import LieuSelect from "@/components/LieuSelect";
 
-const QUARTIERS = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
 
 // Étapes du parcours selon le rôle
@@ -79,7 +77,7 @@ export default function Onboarding({
   const [ville, setVille] = useState("Paris");
   const [departement, setDepartement] = useState("75");
   const [parking, setParking] = useState(false);
-  const [quartiers, setQuartiers] = useState<string[]>([]);
+  const quartiers: string[] = []; // quartiers retirés : on ne garde que dép. + ville
   const [dateEmm, setDateEmm] = useState("");
   const [dureeColoc, setDureeColoc] = useState("");
 
@@ -635,14 +633,6 @@ export default function Onboarding({
                     setDepartement(d);
                   }}
                   className={champ}
-                />
-                <p className="mt-4 text-sm text-ink/70">
-                  Quartiers qui m&apos;intéressent
-                </p>
-                <ChoixMultiple
-                  options={QUARTIERS}
-                  values={quartiers}
-                  onToggle={(v) => toggle(quartiers, setQuartiers, v)}
                 />
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">

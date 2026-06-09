@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Check, Eye, Star, ChevronDown, ArrowLeft } from "lucide-react";
-import { listings } from "@/data/listings";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
 import ProfileDetail from "@/components/ProfileDetail";
@@ -14,7 +13,6 @@ import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
 
-const quartiers = Array.from(new Set(listings.map((l) => l.quartier))).sort();
 const GENRES = ["Femme", "Homme", "Autre"];
 
 export default function ProfilPage() {
@@ -502,7 +500,6 @@ export default function ProfilPage() {
                   className={champClasses}
                 />
               </div>
-              <ChoixMultiple label="Quartiers qui m'intéressent" options={quartiers} values={quartiersChoisis} onToggle={(v) => toggle(quartiersChoisis, setQuartiersChoisis, v)} />
               <div>
                 <label className="text-sm text-ink/70">Emménagement souhaité</label>
                 <input type="date" value={dateEmmenagement} onChange={(e) => setDateEmmenagement(e.target.value)} className={champClasses} />
