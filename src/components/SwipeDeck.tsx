@@ -17,6 +17,7 @@ import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import { useAuth } from "@/lib/auth";
+import { Capacitor } from "@capacitor/core";
 import { estPremium, estHero, contacterDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import {
@@ -74,6 +75,13 @@ export default function SwipeDeck() {
   const [paywall, setPaywall] = useState(false); // écran "limite atteinte"
   const [detail, setDetail] = useState<Listing | null>(null); // annonce ouverte en grand
   const [filtresOuverts, setFiltresOuverts] = useState(false); // panneau filtres replié par défaut
+
+  // Offre de lancement web (gratuit pour le moment) — pas dans l'app
+  const [estNatif, setEstNatif] = useState(false);
+  useEffect(() => {
+    setEstNatif(Capacitor.isNativePlatform());
+  }, []);
+  const lancement = !estNatif;
 
   // Pass Express actif ? (likes illimités), lu depuis le compte
   const premium = estPremium(profile);
@@ -679,6 +687,11 @@ export default function SwipeDeck() {
               demain… ou passe en{" "}
               <span className="text-signature font-semibold">FlatSwiper+</span> :
             </p>
+            {lancement && (
+              <div className="bg-signature mt-4 rounded-xl px-3 py-2 text-sm font-semibold text-white">
+                🎁 Offre de lancement : c&apos;est GRATUIT en ce moment&nbsp;!
+              </div>
+            )}
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
               <li className="flex items-center gap-2">
                 <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Likes
@@ -697,7 +710,7 @@ export default function SwipeDeck() {
                 onClick={() => router.push("/boutique")}
                 className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
-                Voir les offres FlatSwiper+
+                {lancement ? "J'en profite — c'est gratuit" : "Voir les offres FlatSwiper+"}
               </button>
               {/* Gratuit : inviter des amis pour gagner des swipes */}
               {user && (
