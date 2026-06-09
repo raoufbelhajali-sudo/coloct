@@ -360,19 +360,11 @@ export default function ConnexionPage() {
             <BoutonPrincipal enCours={enCours} label="Se connecter" />
             <button
               type="button"
-              onClick={envoyerCodeEmail}
-              disabled={enCours}
-              className="w-full text-center text-sm text-pink-light hover:underline disabled:opacity-60"
-            >
-              Pas de mot de passe ? Recevoir un code par email
-            </button>
-            <button
-              type="button"
               onClick={() => {
                 reset();
                 setEtape("resetEmail");
               }}
-              className="w-full text-center text-xs text-ink/50 hover:underline"
+              className="w-full text-center text-sm text-pink-light hover:underline"
             >
               Mot de passe oublié ?
             </button>
