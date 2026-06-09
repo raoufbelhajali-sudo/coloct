@@ -355,7 +355,23 @@ export default function ConnexionPage() {
               className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-panel-2 px-4 py-3.5 font-medium text-ink transition-colors hover:border-ink/30"
             >
               <Mail className="h-5 w-5 text-bleu" />
-              Continuer avec un email
+              Se connecter avec un email
+            </button>
+
+            {/* Inscription par email, bien visible */}
+            <div className="flex items-center gap-3 pt-1">
+              <span className="h-px flex-1 bg-ink/10" />
+              <span className="text-xs text-ink/40">nouveau&nbsp;?</span>
+              <span className="h-px flex-1 bg-ink/10" />
+            </div>
+            <button
+              onClick={() => {
+                reset();
+                setEtape("creerCompte");
+              }}
+              className="bg-signature glow-pink w-full rounded-full px-4 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
+            >
+              Créer un compte
             </button>
           </div>
         )}
