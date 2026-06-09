@@ -36,7 +36,9 @@ async function sha256hex(str: string): Promise<string> {
 type Etape =
   | "choix"
   | "email"
-  | "emailCode"
+  | "creerCompte"
+  | "creerCompteCode"
+  | "creerMdp"
   | "resetEmail"
   | "resetCode"
   | "phone"
@@ -150,12 +152,13 @@ export default function ConnexionPage() {
     else window.location.href = "/bienvenue/";
   }
 
-  // --- Email : connexion par CODE (sans mot de passe, reste dans l'app) ---
-  async function envoyerCodeEmail() {
+  // --- INSCRIPTION étape 1 : email seul → envoi d'un code de validation ---
+  // (renvoie true si le code est bien parti)
+  async function envoyerOtpInscription(): Promise<boolean> {
     reset();
     if (!emailValide()) {
-      setErreur("Saisis d'abord ton email.");
-      return;
+      setErreur("Saisis un email valide.");
+      return false;
     }
     setEnCours(true);
     // Pas de emailRedirectTo : on veut un code à 6 chiffres, pas un lien.
@@ -164,20 +167,21 @@ export default function ConnexionPage() {
       options: { shouldCreateUser: true },
     });
     setEnCours(false);
-    if (error) setErreur(traduireErreur(error.message));
-    else {
-      setCode("");
-      setEtape("emailCode");
+    if (error) {
+      setErreur(traduireErreur(error.message));
+      return false;
     }
+    return true;
   }
 
-  async function verifierCodeEmail(e: React.FormEvent) {
+  // --- INSCRIPTION étape 2 : vérifier le code reçu ---
+  async function verifierCodeInscription(e: React.FormEvent) {
     e.preventDefault();
     reset();
     setEnCours(true);
     const mail = email.trim().toLowerCase();
     const jeton = code.trim();
-    // Compte existant → type "email" ; nouveau compte → type "signup".
+    // Nouveau compte → type "signup" ; au cas où → repli "email".
     let { error } = await supabase.auth.verifyOtp({
       email: mail,
       token: jeton,
@@ -192,8 +196,36 @@ export default function ConnexionPage() {
       error = retry.error;
     }
     setEnCours(false);
-    if (error) setErreur(traduireErreur(error.message));
-    else window.location.href = "/bienvenue/";
+    if (error) {
+      setErreur(traduireErreur(error.message));
+      return;
+    }
+    // Code OK → session ouverte → on demande de choisir un mot de passe.
+    setPassword("");
+    setPassword2("");
+    setEtape("creerMdp");
+  }
+
+  // --- INSCRIPTION étape 3 : choisir le mot de passe puis continuer ---
+  async function definirMotDePasse(e: React.FormEvent) {
+    e.preventDefault();
+    reset();
+    if (password.length < 6) {
+      setErreur("Mot de passe : 6 caractères minimum.");
+      return;
+    }
+    if (password !== password2) {
+      setErreur("Les deux mots de passe ne sont pas identiques.");
+      return;
+    }
+    setEnCours(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setEnCours(false);
+    if (error) {
+      setErreur(traduireErreur(error.message));
+      return;
+    }
+    window.location.href = "/bienvenue/";
   }
 
   // --- Mot de passe oublié : envoi d'un CODE de réinitialisation ---
@@ -249,14 +281,14 @@ export default function ConnexionPage() {
     else window.location.href = "/bienvenue/";
   }
 
-  // Renvoyer un code (login ou reset selon l'étape courante)
+  // Renvoyer un code (inscription ou réinitialisation selon l'étape courante)
   async function renvoyerCode() {
     if (etape === "resetCode") {
       await demanderResetCode();
     } else {
-      await envoyerCodeEmail();
+      await envoyerOtpInscription();
     }
-    if (!erreur) setInfo("Nouveau code envoyé ✓");
+    setInfo("Nouveau code envoyé ✓");
   }
 
   // --- Téléphone (code SMS) ---
@@ -368,6 +400,131 @@ export default function ConnexionPage() {
             >
               Mot de passe oublié ?
             </button>
+            <p className="border-t border-ink/10 pt-4 text-center text-sm text-ink/60">
+              Pas encore de compte ?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  reset();
+                  setEtape("creerCompte");
+                }}
+                className="font-semibold text-pink-light hover:underline"
+              >
+                Créer un compte
+              </button>
+            </p>
+          </form>
+        )}
+
+        {/* ----- Inscription 1/3 : saisie de l'email ----- */}
+        {etape === "creerCompte" && (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (await envoyerOtpInscription()) setEtape("creerCompteCode");
+            }}
+            className="space-y-4"
+          >
+            <Retour onClick={() => setEtape("email")} />
+            <div className="text-center">
+              <Mail className="mx-auto h-10 w-10 text-bleu" />
+              <p className="mt-2 font-display text-xl">Créer ton compte</p>
+              <p className="mt-1 text-sm text-ink/70">
+                Indique ton email : on t&apos;envoie un code de validation.
+              </p>
+            </div>
+            <div>
+              <label className="text-sm text-ink/70">Ton email</label>
+              <input
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="toi@email.com"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                className={champClasses}
+              />
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Valider" />
+          </form>
+        )}
+
+        {/* ----- Inscription 2/3 : saisie du code de validation ----- */}
+        {etape === "creerCompteCode" && (
+          <form onSubmit={verifierCodeInscription} className="space-y-4">
+            <Retour onClick={() => setEtape("creerCompte")} />
+            <div className="text-center">
+              <Mail className="mx-auto h-10 w-10 text-bleu" />
+              <p className="mt-2 font-display text-xl">Vérifie ton email</p>
+              <p className="mt-1 text-sm text-ink/70">
+                On a envoyé un code à{" "}
+                <span className="font-semibold text-ink">{email}</span> (pense
+                aux spams).
+              </p>
+            </div>
+            <div>
+              <label className="text-sm text-ink/70">Code reçu par email</label>
+              <input
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                required
+                autoFocus
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="123456"
+                className={champClasses + " text-center text-2xl tracking-[0.4em]"}
+              />
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Valider le code" />
+            <button
+              type="button"
+              onClick={renvoyerCode}
+              disabled={enCours}
+              className="w-full text-center text-sm text-pink-light hover:underline disabled:opacity-60"
+            >
+              Renvoyer un code
+            </button>
+          </form>
+        )}
+
+        {/* ----- Inscription 3/3 : choisir un mot de passe ----- */}
+        {etape === "creerMdp" && (
+          <form onSubmit={definirMotDePasse} className="space-y-4">
+            <div className="text-center">
+              <Mail className="mx-auto h-10 w-10 text-bleu" />
+              <p className="mt-2 font-display text-xl">Choisis un mot de passe</p>
+              <p className="mt-1 text-sm text-ink/70">
+                Email validé ✓ — crée un mot de passe pour sécuriser ton compte.
+              </p>
+            </div>
+            <div>
+              <label className="text-sm text-ink/70">Mot de passe</label>
+              <input
+                type="password"
+                required
+                autoFocus
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Au moins 6 caractères"
+                className={champClasses}
+              />
+            </div>
+            <div>
+              <label className="text-sm text-ink/70">Confirme le mot de passe</label>
+              <input
+                type="password"
+                required
+                value={password2}
+                onChange={(e) => setPassword2(e.target.value)}
+                placeholder="Retape le même"
+                className={champClasses}
+              />
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Continuer" />
           </form>
         )}
 
@@ -405,44 +562,6 @@ export default function ConnexionPage() {
               />
             </div>
             <BoutonPrincipal enCours={enCours} label="Recevoir le code" />
-          </form>
-        )}
-
-        {/* ----- Email : saisie du CODE de connexion ----- */}
-        {etape === "emailCode" && (
-          <form onSubmit={verifierCodeEmail} className="space-y-4">
-            <Retour onClick={() => setEtape("email")} />
-            <div className="text-center">
-              <Mail className="mx-auto h-10 w-10 text-bleu" />
-              <p className="mt-2 text-sm text-ink/70">
-                On a envoyé un code à{" "}
-                <span className="font-semibold text-ink">{email}</span> (pense
-                aux spams).
-              </p>
-            </div>
-            <div>
-              <label className="text-sm text-ink/70">Code reçu par email</label>
-              <input
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                required
-                autoFocus
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                placeholder="123456"
-                className={champClasses + " text-center text-2xl tracking-[0.4em]"}
-              />
-            </div>
-            <BoutonPrincipal enCours={enCours} label="Me connecter" />
-            <button
-              type="button"
-              onClick={renvoyerCode}
-              disabled={enCours}
-              className="w-full text-center text-sm text-pink-light hover:underline disabled:opacity-60"
-            >
-              Renvoyer un code
-            </button>
           </form>
         )}
 
