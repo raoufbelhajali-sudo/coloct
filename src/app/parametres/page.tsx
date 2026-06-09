@@ -32,8 +32,12 @@ export default function ParametresPage() {
   const [email, setEmail] = useState("");
   const [telephone, setTelephone] = useState("");
   const [resetEnvoi, setResetEnvoi] = useState(false);
-  const [resetEnvoye, setResetEnvoye] = useState(false);
+  const [resetEnvoye, setResetEnvoye] = useState(false); // code envoyé → on affiche le formulaire
   const [resetErreur, setResetErreur] = useState("");
+  const [resetOk, setResetOk] = useState(false); // mot de passe changé ✓
+  const [resetCode, setResetCode] = useState("");
+  const [resetMdp, setResetMdp] = useState("");
+  const [resetMdp2, setResetMdp2] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifPerm, setNotifPerm] = useState<string>("default");
   const [idEnCours, setIdEnCours] = useState(false);
@@ -114,17 +118,56 @@ export default function ParametresPage() {
     );
   }
 
-  // Envoie un lien de changement de mot de passe à l'email du compte
+  // Envoie un CODE de changement de mot de passe à l'email du compte (reste dans l'app)
   async function demanderResetMdp() {
     if (!user?.email) return;
     setResetEnvoi(true);
     setResetErreur("");
-    const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
-      redirectTo: `${window.location.origin}/nouveau-mot-de-passe`,
-    });
+    const { error } = await supabase.auth.resetPasswordForEmail(user.email);
     setResetEnvoi(false);
     if (error) setResetErreur("Échec de l'envoi. Réessaie dans un instant.");
-    else setResetEnvoye(true);
+    else {
+      setResetCode("");
+      setResetMdp("");
+      setResetMdp2("");
+      setResetEnvoye(true);
+    }
+  }
+
+  // Vérifie le code reçu puis enregistre le nouveau mot de passe
+  async function validerNouveauMdp(e: React.FormEvent) {
+    e.preventDefault();
+    setResetErreur("");
+    if (resetMdp.length < 6) {
+      setResetErreur("Mot de passe : 6 caractères minimum.");
+      return;
+    }
+    if (resetMdp !== resetMdp2) {
+      setResetErreur("Les deux mots de passe ne sont pas identiques.");
+      return;
+    }
+    if (!user?.email) return;
+    setResetEnvoi(true);
+    const { error: errCode } = await supabase.auth.verifyOtp({
+      email: user.email,
+      token: resetCode.trim(),
+      type: "recovery",
+    });
+    if (errCode) {
+      setResetEnvoi(false);
+      setResetErreur("Code incorrect ou expiré. Renvoie un code et réessaie.");
+      return;
+    }
+    const { error: errPwd } = await supabase.auth.updateUser({
+      password: resetMdp,
+    });
+    setResetEnvoi(false);
+    if (errPwd) {
+      setResetErreur("Impossible d'enregistrer le mot de passe. Réessaie.");
+      return;
+    }
+    setResetOk(true);
+    setResetEnvoye(false);
   }
 
   async function deconnexion() {
@@ -356,30 +399,83 @@ export default function ParametresPage() {
             />
           </Bloc>
 
-          {/* Mot de passe — changement sécurisé par lien email */}
+          {/* Mot de passe — changement sécurisé par code email (reste dans l'app) */}
           <Bloc
             icone={<Lock className="h-5 w-5 text-violet" />}
             titre="Mot de passe"
           >
-            {resetEnvoye ? (
+            {resetOk ? (
               <p className="flex items-start gap-2 text-sm text-ink/70">
                 <Check className="mt-0.5 h-4 w-4 shrink-0 text-bleu" strokeWidth={3} />
-                Lien envoyé à <span className="font-medium text-ink">{user.email}</span>.
-                Ouvre l&apos;email et clique sur le lien pour choisir ton nouveau
-                mot de passe (pense à regarder les spams).
+                Mot de passe modifié ✓
               </p>
+            ) : resetEnvoye ? (
+              <form onSubmit={validerNouveauMdp} className="space-y-3">
+                <p className="text-sm text-ink/70">
+                  Un code a été envoyé à{" "}
+                  <span className="font-medium text-ink">{user.email}</span>{" "}
+                  (pense aux spams). Saisis-le puis choisis ton nouveau mot de
+                  passe.
+                </p>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  required
+                  value={resetCode}
+                  onChange={(e) => setResetCode(e.target.value)}
+                  placeholder="Code à 6 chiffres"
+                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2.5 text-center text-lg tracking-[0.3em] text-ink placeholder:text-ink/30 placeholder:tracking-normal focus:border-pink focus:outline-none"
+                />
+                <input
+                  type="password"
+                  required
+                  value={resetMdp}
+                  onChange={(e) => setResetMdp(e.target.value)}
+                  placeholder="Nouveau mot de passe (6+ caractères)"
+                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2.5 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+                />
+                <input
+                  type="password"
+                  required
+                  value={resetMdp2}
+                  onChange={(e) => setResetMdp2(e.target.value)}
+                  placeholder="Confirme le mot de passe"
+                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2.5 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+                />
+                {resetErreur && (
+                  <p className="text-sm text-pink-light">{resetErreur}</p>
+                )}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={resetEnvoi}
+                    className="bg-signature rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+                  >
+                    {resetEnvoi ? "Un instant…" : "Changer le mot de passe"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={demanderResetMdp}
+                    disabled={resetEnvoi}
+                    className="text-sm text-pink-light hover:underline disabled:opacity-60"
+                  >
+                    Renvoyer un code
+                  </button>
+                </div>
+              </form>
             ) : (
               <>
                 <p className="text-sm text-ink/70">
-                  Pour ta sécurité, le changement de mot de passe se fait via un
-                  lien envoyé à ton email.
+                  Pour ta sécurité, on t&apos;envoie un code par email&nbsp;: tu
+                  le saisis ici, puis tu choisis ton nouveau mot de passe.
                 </p>
                 <button
                   onClick={demanderResetMdp}
                   disabled={resetEnvoi}
                   className="bg-signature mt-3 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
                 >
-                  {resetEnvoi ? "Envoi…" : "Recevoir un lien par email"}
+                  {resetEnvoi ? "Envoi…" : "Recevoir un code par email"}
                 </button>
                 {resetErreur && (
                   <p className="mt-2 text-sm text-pink-light">{resetErreur}</p>
