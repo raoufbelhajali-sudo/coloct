@@ -116,6 +116,9 @@ export default function ParametresPage() {
         ? "Modifications enregistrées. Vérifie ta boîte mail pour confirmer ton nouvel email."
         : "Modifications enregistrées ✓"
     );
+    // Remonter en haut pour voir la confirmation
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => setMessage(""), 4000);
   }
 
   // Envoie un CODE de changement de mot de passe à l'email du compte (reste dans l'app)
@@ -247,6 +250,15 @@ export default function ParametresPage() {
 
   return (
     <main className="flex min-h-dvh flex-col items-center px-4 pb-40 pt-5">
+      {/* Confirmation fixe en haut, visible après l'enregistrement */}
+      {message && (
+        <div
+          className="fixed left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black px-4 py-2 text-center text-sm font-medium text-white shadow-lg"
+          style={{ top: "calc(env(safe-area-inset-top) + 0.75rem)", maxWidth: "90vw" }}
+        >
+          <Check className="h-4 w-4 shrink-0" strokeWidth={3} /> {message}
+        </div>
+      )}
       {/* Barre de navigation du bas (toujours visible) */}
       <AppHeader hideTop />
       <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">

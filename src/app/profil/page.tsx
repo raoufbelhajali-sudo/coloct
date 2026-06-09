@@ -220,10 +220,22 @@ export default function ProfilPage() {
     }
     await refreshProfile();
     setEnregistre(true);
+    // Remonter en haut de la page pour voir la confirmation
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => setEnregistre(false), 3500);
   }
 
   return (
     <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">
+      {/* Confirmation fixe en haut, visible après l'enregistrement */}
+      {enregistre && (
+        <div
+          className="fixed left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white shadow-lg"
+          style={{ top: "calc(env(safe-area-inset-top) + 0.75rem)" }}
+        >
+          <Check className="h-4 w-4" strokeWidth={3} /> Profil enregistré !
+        </div>
+      )}
       <AppHeader hideTop />
       <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
