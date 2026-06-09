@@ -26,7 +26,7 @@ export default function Home() {
       <img
         src="/logo-full.png"
         alt="FlatSwiper"
-        className="mb-2 w-[300px] max-w-[85%] drop-shadow-[0_8px_30px_rgba(250,82,82,0.25)]"
+        className="mb-2 w-[300px] max-w-[85%]"
       />
 
       {/* Accroche */}
