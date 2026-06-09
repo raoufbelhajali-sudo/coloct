@@ -6,7 +6,6 @@ import { Mail, ArrowLeft } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
 import { SocialLogin } from "@capgo/capacitor-social-login";
 import { supabase } from "@/lib/supabase";
-import { LogoMark } from "@/components/Logo";
 
 // IDs Google (Cloud Console, projet "colockt")
 const GOOGLE_IOS_CLIENT_ID =
@@ -287,7 +286,13 @@ export default function ConnexionPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-8">
       <Link href="/" className="mb-3">
-        <LogoMark className="h-12 w-12" />
+        {/* Logo complet (symbole + nom) */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-full.png"
+          alt="FlatSwiper"
+          className="h-12 w-auto max-w-[70vw] object-contain"
+        />
       </Link>
       <p className="mb-8 text-center text-ink/60">
         Connecte-toi ou crée ton compte en un geste.
