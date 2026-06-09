@@ -465,6 +465,22 @@ export default function ConnexionPage() {
               />
             </div>
             <BoutonPrincipal enCours={enCours} label="Valider" />
+
+            {/* Inscription via Google (crée le compte aussi) */}
+            <div className="flex items-center gap-3">
+              <span className="h-px flex-1 bg-ink/10" />
+              <span className="text-xs text-ink/40">ou</span>
+              <span className="h-px flex-1 bg-ink/10" />
+            </div>
+            <button
+              type="button"
+              onClick={estNatif ? handleGoogleNatif : handleGoogle}
+              disabled={enCours}
+              className="flex w-full items-center justify-center gap-3 rounded-full border border-ink/15 bg-white px-4 py-3.5 font-medium text-[#1f1a2b] transition-colors hover:bg-ink/5 disabled:opacity-60"
+            >
+              <GoogleLogo />
+              Continuer avec Google
+            </button>
           </form>
         )}
 
