@@ -9,11 +9,15 @@ import { Capacitor } from "@capacitor/core";
 const MOT_DE_PASSE = "FlatSwiper2026";
 const CLE_ACCES = "flatswiper-acces-anticipe";
 
+// 🔓 Site OUVERT au public : mettre `true` pour réactiver la page "Bientôt disponible".
+const SITE_FERME = false;
+
 export default function ComingSoonGate({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
   const [verifie, setVerifie] = useState(false); // a-t-on fini de décider ?
   const [autorise, setAutorise] = useState(false);
   const [saisie, setSaisie] = useState("");
@@ -50,6 +54,8 @@ export default function ComingSoonGate({
   }
 
   // Évite tout clignotement avant d'avoir décidé
+  // Site ouvert au public : aucune porte.
+  if (!SITE_FERME) return <>{children}</>;
   if (!verifie) return null;
   if (autorise) return <>{children}</>;
 
