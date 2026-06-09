@@ -37,6 +37,7 @@ type Etape =
   | "choix"
   | "email"
   | "emailCode"
+  | "resetEmail"
   | "resetCode"
   | "phone"
   | "phoneCode";
@@ -367,12 +368,51 @@ export default function ConnexionPage() {
             </button>
             <button
               type="button"
-              onClick={demanderResetCode}
-              disabled={enCours}
-              className="w-full text-center text-xs text-ink/50 hover:underline disabled:opacity-60"
+              onClick={() => {
+                reset();
+                setEtape("resetEmail");
+              }}
+              className="w-full text-center text-xs text-ink/50 hover:underline"
             >
               Mot de passe oublié ?
             </button>
+          </form>
+        )}
+
+        {/* ----- Mot de passe oublié : saisie de l'email ----- */}
+        {etape === "resetEmail" && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              demanderResetCode();
+            }}
+            className="space-y-4"
+          >
+            <Retour onClick={() => setEtape("email")} />
+            <div className="text-center">
+              <Mail className="mx-auto h-10 w-10 text-bleu" />
+              <p className="mt-2 font-display text-xl">Mot de passe oublié</p>
+              <p className="mt-1 text-sm text-ink/70">
+                Indique ton email : on t&apos;envoie un code pour en choisir un
+                nouveau.
+              </p>
+            </div>
+            <div>
+              <label className="text-sm text-ink/70">Ton email</label>
+              <input
+                type="email"
+                required
+                autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="toi@email.com"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                className={champClasses}
+              />
+            </div>
+            <BoutonPrincipal enCours={enCours} label="Recevoir le code" />
           </form>
         )}
 
@@ -417,7 +457,7 @@ export default function ConnexionPage() {
         {/* ----- Mot de passe oublié : code + nouveau mot de passe ----- */}
         {etape === "resetCode" && (
           <form onSubmit={verifierResetCode} className="space-y-4">
-            <Retour onClick={() => setEtape("email")} />
+            <Retour onClick={() => setEtape("resetEmail")} />
             <div className="text-center">
               <Mail className="mx-auto h-10 w-10 text-bleu" />
               <p className="mt-2 text-sm text-ink/70">
