@@ -153,12 +153,6 @@ export default function ListingDetail({
                 {listing.typeLogement ? ` · ${listing.typeLogement}` : ""}
                 {listing.salleDeBain ? ` · SdB ${listing.salleDeBain.toLowerCase()}` : ""}
               </p>
-              {listing.nbOccupants ? (
-                <p>
-                  {listing.nbOccupants} personne
-                  {listing.nbOccupants > 1 ? "s" : ""} dans le logement
-                </p>
-              ) : null}
               {listing.nbColocsTotal ? (
                 <p>{listing.nbColocsTotal} colocataires au total</p>
               ) : null}
