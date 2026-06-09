@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { X, Heart, ChevronRight, Share2, MessageSquare } from "lucide-react";
+import {
+  X,
+  Heart,
+  ChevronLeft,
+  ChevronRight,
+  Share2,
+  MessageSquare,
+} from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -28,6 +35,12 @@ export default function ListingDetail({
 }) {
   const { user, profile, refreshProfile } = useAuth();
   const router = useRouter();
+  const galerieRef = useRef<HTMLDivElement>(null);
+  // Fait défiler la galerie d'une photo (sens -1 = gauche, +1 = droite)
+  function defilerGalerie(sens: number) {
+    const el = galerieRef.current;
+    if (el) el.scrollBy({ left: sens * el.clientWidth, behavior: "smooth" });
+  }
   const [annonceurProfil, setAnnonceurProfil] = useState<Profile | null>(null);
   const [voirAnnonceur, setVoirAnnonceur] = useState(false);
   const [contactEnCours, setContactEnCours] = useState(false);
@@ -80,7 +93,10 @@ export default function ListingDetail({
         <div className={"flex-1 overflow-y-auto " + (preview ? "pb-8" : "pb-28")}>
           {/* Galerie de photos (défilement horizontal) */}
           <div className="relative">
-            <div className="flex h-80 snap-x snap-mandatory overflow-x-auto">
+            <div
+              ref={galerieRef}
+              className="flex h-80 snap-x snap-mandatory overflow-x-auto scroll-smooth"
+            >
               {listing.photos.map((p, i) => (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img
@@ -92,6 +108,28 @@ export default function ListingDetail({
                 />
               ))}
             </div>
+
+            {/* Flèches gauche / droite (surtout utiles à la souris) */}
+            {listing.photos.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => defilerGalerie(-1)}
+                  aria-label="Photo précédente"
+                  className="absolute top-1/2 left-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-bg/70 text-ink shadow-md backdrop-blur-sm transition hover:bg-bg"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => defilerGalerie(1)}
+                  aria-label="Photo suivante"
+                  className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-bg/70 text-ink shadow-md backdrop-blur-sm transition hover:bg-bg"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              </>
+            )}
 
             {/* Badge prix */}
             <div className="bg-signature absolute top-4 left-4 rounded-full px-4 py-2 text-sm font-bold text-white shadow-lg">
@@ -114,7 +152,7 @@ export default function ListingDetail({
             {/* Indicateur nombre de photos */}
             {listing.photos.length > 1 && (
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-bg/60 px-3 py-1 text-xs text-ink backdrop-blur-sm">
-                {listing.photos.length} photos · fais glisser →
+                {listing.photos.length} photos
               </div>
             )}
           </div>
