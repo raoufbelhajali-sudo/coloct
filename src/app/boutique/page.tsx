@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Zap, Rocket, Check, Lock, Star, Gift } from "lucide-react";
-import { Capacitor } from "@capacitor/core";
 import AppHeader from "@/components/AppHeader";
 import { useAuth } from "@/lib/auth";
 import {
@@ -49,13 +48,9 @@ export default function BoutiquePage() {
   const premium = estPremium(profile);
   const hero = estHero(profile);
 
-  // Offre de lancement : sur le SITE WEB, tout est gratuit pour l'instant
-  // (« gratuit aujourd'hui, payant demain »). Dans l'app, on garde le mode normal.
-  const [estNatif, setEstNatif] = useState(false);
-  useEffect(() => {
-    setEstNatif(Capacitor.isNativePlatform());
-  }, []);
-  const lancement = !estNatif;
+  // Offre de lancement : tout est gratuit pour l'instant, sur le web ET l'app
+  // (« gratuit aujourd'hui, payant bientôt »).
+  const lancement = true;
 
   function dateFr(iso: string | null) {
     if (!iso) return "";

@@ -17,7 +17,6 @@ import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import InviterAmis from "@/components/InviterAmis";
 import { useAuth } from "@/lib/auth";
-import { Capacitor } from "@capacitor/core";
 import { estPremium, estHero, contacterDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import {
@@ -76,12 +75,8 @@ export default function SwipeDeck() {
   const [detail, setDetail] = useState<Listing | null>(null); // annonce ouverte en grand
   const [filtresOuverts, setFiltresOuverts] = useState(false); // panneau filtres replié par défaut
 
-  // Offre de lancement web (gratuit pour le moment) — pas dans l'app
-  const [estNatif, setEstNatif] = useState(false);
-  useEffect(() => {
-    setEstNatif(Capacitor.isNativePlatform());
-  }, []);
-  const lancement = !estNatif;
+  // Offre de lancement : tout gratuit pour le moment (web + app)
+  const lancement = true;
 
   // Pass Express actif ? (likes illimités), lu depuis le compte
   const premium = estPremium(profile);
