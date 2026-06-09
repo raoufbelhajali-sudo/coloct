@@ -227,14 +227,16 @@ export default function ProfilPage() {
   return (
     <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">
       <AppHeader hideTop />
-      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
+      <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link href={retour}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
-          </Link>
           <PremiumPin />
         </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-full.png"
+          alt="FlatSwiper"
+          className="absolute left-1/2 top-1/2 h-6 w-auto -translate-x-1/2 -translate-y-1/2"
+        />
         <div className="flex items-center gap-1.5">
           <button
             type="button"

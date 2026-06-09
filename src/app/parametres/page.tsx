@@ -206,13 +206,14 @@ export default function ParametresPage() {
     <main className="flex min-h-dvh flex-col items-center px-4 pb-40 pt-5">
       {/* Barre de navigation du bas (toujours visible) */}
       <AppHeader hideTop />
-      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Link href={retour}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
-          </Link>
-        </div>
+      <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
+        <div className="h-9 w-9" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-full.png"
+          alt="FlatSwiper"
+          className="absolute left-1/2 top-1/2 h-6 w-auto -translate-x-1/2 -translate-y-1/2"
+        />
         <Link
           href={retour}
           aria-label="Retour"

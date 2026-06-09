@@ -40,19 +40,9 @@ export default function LocatairePage() {
   return (
     <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-24 pt-5">
       <AppHeader hideTop />
-      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-between">
+      <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
-        {listing && !listing.gelee && (
-          <Link
-            href="/mon-annonce"
-            title="Gérer mon annonce"
-            aria-label="Gérer mon annonce"
-            className="flex h-8 items-center gap-1.5 rounded-full bg-panel px-3 text-xs font-medium text-ink/70 hover:bg-panel-2"
-          >
-            <Home className="h-4 w-4" /> Mon annonce
-          </Link>
-        )}
       </header>
 
       <div className="flex w-full min-h-0 flex-1 flex-col items-center">

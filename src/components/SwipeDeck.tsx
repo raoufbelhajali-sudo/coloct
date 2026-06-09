@@ -32,7 +32,6 @@ import {
   ajouterFavori,
   retirerFavori,
 } from "@/lib/favoris";
-import Link from "next/link";
 import { marquerAnnonce } from "@/lib/matchPopup";
 import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
@@ -348,32 +347,13 @@ export default function SwipeDeck() {
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
       {/* Rôle + compteur de likes restants + bouton filtres (même ligne) */}
-      <div className="mb-4 flex h-9 w-full items-center gap-2">
+      <div className="relative mb-4 flex h-9 w-full items-center justify-end gap-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto shrink-0" />
-        <div className="ml-auto flex items-center gap-2">
-        {!premium && (likesEpuises ? (
-          // Likes épuisés → on retire le compteur et on invite au Pass
-          <Link
-            href="/boutique"
-            className="bg-signature inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold text-white"
-          >
-            <Star className="h-4 w-4" fill="currentColor" /> Passe au Pass
-          </Link>
-        ) : (
-          <span
-            className="inline-flex items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-sm font-semibold"
-            title="Likes gratuits restants aujourd'hui"
-          >
-            <Heart className="h-4 w-4 text-bleu" fill="currentColor" />
-            <span className="text-pink">
-              {Math.max(0, limiteJour - likesAujourdhui)}
-            </span>
-            <span className="text-xs font-normal text-ink/40">
-              / {limiteJour} likes
-            </span>
-          </span>
-        ))}
+        <img
+          src="/logo-full.png"
+          alt="FlatSwiper"
+          className="absolute left-1/2 top-1/2 h-6 w-auto -translate-x-1/2 -translate-y-1/2"
+        />
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
           aria-label="Filtres"
@@ -395,7 +375,6 @@ export default function SwipeDeck() {
             <Share2 className="h-[18px] w-[18px]" />
           </button>
         )}
-        </div>
       </div>
 
       {/* ---------- Filtres (pop-up) ---------- */}

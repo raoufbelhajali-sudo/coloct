@@ -87,7 +87,7 @@ export default function AppHeader({
 
       {/* Haut : pastille de rôle uniquement */}
       {!hideTop && (
-        <header className="mb-4 flex h-9 w-full max-w-md items-center">
+        <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
           {/* Logo complet (symbole + nom), à gauche */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
