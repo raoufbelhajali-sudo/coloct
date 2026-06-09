@@ -99,6 +99,7 @@ export default function Onboarding({
       if (!prenom.trim()) return false;
       if (besoinEmail && !/^\S+@\S+\.\S+$/.test(email.trim())) return false;
     }
+    if (etape === "photo" && !photoUrl) return false;
     if (etape === "toi") {
       if (!age.trim() || Number(age) <= 0) return false;
       if (!genre) return false;
@@ -420,8 +421,8 @@ export default function Onboarding({
             {/* ---------- Photo ---------- */}
             {etape === "photo" && (
               <Etape
-                titre="Ajoute une photo"
-                sous="Les profils avec photo ont beaucoup plus de matchs."
+                titre="Ajoute une vraie photo de toi"
+                sous="Une photo de ton visage est obligatoire : elle inspire confiance et multiplie tes matchs. Pas de logo ni de photo de groupe 🙂"
               >
                 <div className="flex flex-col items-center gap-4 pt-2">
                   <div className="bg-signature h-36 w-36 overflow-hidden rounded-full">
@@ -452,6 +453,11 @@ export default function Onboarding({
                       className="hidden"
                     />
                   </label>
+                  {!photoUrl && (
+                    <p className="text-center text-xs text-pink-light">
+                      Ajoute ta photo pour continuer.
+                    </p>
+                  )}
                 </div>
               </Etape>
             )}
