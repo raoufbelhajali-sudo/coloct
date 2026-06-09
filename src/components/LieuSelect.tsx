@@ -1,6 +1,7 @@
 "use client";
 
-import { GRANDES_VILLES, DEPARTEMENTS_NOMS } from "@/lib/profilOptions";
+import { useEffect, useState } from "react";
+import { DEPARTEMENTS_NOMS } from "@/lib/profilOptions";
 
 // Clé de tri : la Corse (2A/2B) se place entre le 19 et le 21
 function cleDept(num: string): number {
@@ -9,17 +10,14 @@ function cleDept(num: string): number {
   return parseInt(num, 10);
 }
 
-// Liste des départements qui ont au moins une ville (numéro + nom),
-// triés par numéro.
-const DEPTS_DISPO = Array.from(new Set(GRANDES_VILLES.map((v) => v.dept)))
-  .map((num) => ({
-    num,
-    nom: DEPARTEMENTS_NOMS.find((d) => d.num === num)?.nom ?? "",
-  }))
-  .sort((a, b) => cleDept(a.num) - cleDept(b.num));
+// Tous les départements (numéro + nom), triés par numéro.
+const DEPTS_DISPO = [...DEPARTEMENTS_NOMS].sort(
+  (a, b) => cleDept(a.num) - cleDept(b.num)
+);
 
 // Deux menus déroulants : on choisit d'abord le Département,
-// puis la Ville (uniquement les villes de ce département).
+// puis la Ville. Les villes = TOUTES les communes du département,
+// chargées depuis l'API officielle gratuite geo.api.gouv.fr.
 export default function LieuSelect({
   ville,
   departement,
@@ -31,7 +29,42 @@ export default function LieuSelect({
   onChange: (ville: string, departement: string) => void;
   className?: string;
 }) {
-  const villesDuDept = GRANDES_VILLES.filter((v) => v.dept === departement);
+  const [villes, setVilles] = useState<string[]>([]);
+  const [chargement, setChargement] = useState(false);
+
+  // Quand le département change, on récupère toutes ses communes.
+  useEffect(() => {
+    if (!departement) {
+      setVilles([]);
+      return;
+    }
+    let annule = false;
+    setChargement(true);
+    fetch(
+      `https://geo.api.gouv.fr/departements/${departement}/communes?fields=nom&format=json`
+    )
+      .then((r) => r.json())
+      .then((data: { nom: string }[]) => {
+        if (annule) return;
+        const noms = Array.isArray(data)
+          ? data.map((c) => c.nom).sort((a, b) => a.localeCompare(b, "fr"))
+          : [];
+        setVilles(noms);
+      })
+      .catch(() => {
+        if (!annule) setVilles([]);
+      })
+      .finally(() => {
+        if (!annule) setChargement(false);
+      });
+    return () => {
+      annule = true;
+    };
+  }, [departement]);
+
+  // En édition, la ville déjà choisie peut ne pas être (encore) dans la liste.
+  const liste =
+    ville && !villes.includes(ville) ? [ville, ...villes] : villes;
 
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -42,9 +75,8 @@ export default function LieuSelect({
         <select
           value={departement}
           onChange={(e) => {
-            const nouveauDept = e.target.value;
-            // On vide la ville : elle n'appartient plus forcément au département
-            onChange("", nouveauDept);
+            // On vide la ville : elle n'appartient plus au nouveau département
+            onChange("", e.target.value);
           }}
           className={className}
         >
@@ -61,15 +93,19 @@ export default function LieuSelect({
         <select
           value={ville}
           onChange={(e) => onChange(e.target.value, departement)}
-          disabled={!departement}
-          className={className + (!departement ? " opacity-50" : "")}
+          disabled={!departement || chargement}
+          className={className + (!departement || chargement ? " opacity-50" : "")}
         >
           <option value="">
-            {departement ? "Choisir une ville…" : "Choisis d'abord un département"}
+            {!departement
+              ? "Choisis d'abord un département"
+              : chargement
+                ? "Chargement des villes…"
+                : "Choisir une ville…"}
           </option>
-          {villesDuDept.map((c) => (
-            <option key={c.nom} value={c.nom}>
-              {c.nom}
+          {liste.map((nom) => (
+            <option key={nom} value={nom}>
+              {nom}
             </option>
           ))}
         </select>

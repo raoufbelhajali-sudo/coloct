@@ -41,7 +41,6 @@ export default function ListingForm({
   const edition = !!listing;
 
   const [titre, setTitre] = useState(listing?.titre ?? "");
-  const [quartier, setQuartier] = useState(listing?.quartier ?? "");
   const [ville, setVille] = useState(listing?.ville ?? "Paris");
   const [departement, setDepartement] = useState(listing?.departement ?? "75");
   const [loyer, setLoyer] = useState(listing ? String(listing.loyer) : "");
@@ -143,7 +142,7 @@ export default function ListingForm({
       const donnees = {
         titre: titre.trim() || null,
         loyer: Number(loyer),
-        quartier: quartier.trim(),
+        quartier: "",
         ville: ville.trim() || "Paris",
         departement,
         // arrondissement déduit si Paris (75), sinon non utilisé
@@ -207,13 +206,6 @@ export default function ListingForm({
           className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
         />
       </div>
-
-      <Field
-        label="Quartier / secteur (optionnel)"
-        value={quartier}
-        onChange={setQuartier}
-        placeholder="Ex. Le Marais"
-      />
 
       <div className="grid grid-cols-2 gap-4">
         <Field label="Loyer (€ / mois CC)" type="number" value={loyer} onChange={setLoyer} placeholder="Ex. 750" required />
