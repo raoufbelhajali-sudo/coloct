@@ -89,7 +89,13 @@ export async function getMyMatches(
       titre: estAnnonceur
         ? autrePrenom
         : l
-          ? l.titre || lieuComplet(l)
+          ? [
+              l.type_logement || null,
+              l.ville || lieuComplet(l),
+              l.surface ? `${l.surface} m²` : null,
+            ]
+              .filter(Boolean)
+              .join(" · ")
           : "Colocation",
       sousTitre: estAnnonceur
         ? l
