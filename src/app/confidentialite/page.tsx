@@ -88,9 +88,14 @@ export default function ConfidentialitePage() {
         <section>
           <h2 className="font-display text-xl font-semibold">Cookies</h2>
           <p className="mt-2 text-sm leading-relaxed">
-            FlatSwiper utilise uniquement les cookies/stockage nécessaires au
-            fonctionnement (session de connexion, préférences). Aucune publicité
-            ni traçage tiers à ce jour.
+            FlatSwiper utilise des cookies/stockage <strong>nécessaires</strong>{" "}
+            au fonctionnement (session de connexion, préférences), toujours
+            actifs. Avec ton <strong>consentement</strong> (bandeau cookies), un
+            cookie de <strong>mesure publicitaire</strong> de Google
+            (Google&nbsp;Ads) peut être déposé, uniquement sur le site web, afin
+            de mesurer l&apos;efficacité de nos annonces. Tu peux le refuser sans
+            conséquence sur l&apos;utilisation du service, et il n&apos;est jamais
+            chargé dans l&apos;application mobile.
           </p>
         </section>
 

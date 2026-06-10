@@ -8,6 +8,7 @@ import ComingSoonGate from "@/components/ComingSoonGate";
 import NativeSetup from "@/components/NativeSetup";
 import FondAccueil from "@/components/FondAccueil";
 import WebAnalytics from "@/components/WebAnalytics";
+import GoogleTag from "@/components/GoogleTag";
 
 // Police des titres et du logo (serif chic)
 const fraunces = Fraunces({
@@ -91,6 +92,7 @@ export default function RootLayout({
           </AuthProvider>
         </ComingSoonGate>
         <WebAnalytics />
+        <GoogleTag />
       </body>
     </html>
   );
