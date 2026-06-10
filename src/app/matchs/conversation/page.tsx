@@ -12,7 +12,7 @@ import { useAuth, type Profile } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
 import ProfileDetail from "@/components/ProfileDetail";
 import ListingDetail from "@/components/ListingDetail";
-import { getListingById } from "@/lib/listings";
+import { getListingById, lieuComplet } from "@/lib/listings";
 import type { Listing } from "@/data/listings";
 import {
   getMessages,
@@ -415,6 +415,12 @@ function ConversationInner() {
               avec {autrePrenom} ·{" "}
               {estLocataire ? "voir le profil" : "voir l'annonce"}
             </button>
+          )}
+          {/* Annonceur : rappelle quelle annonce concerne cette conversation */}
+          {estLocataire && listingMatch && (
+            <p className="truncate text-xs text-ink/50">
+              Pour : {listingMatch.titre || lieuComplet(listingMatch)}
+            </p>
           )}
         </div>
 

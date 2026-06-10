@@ -92,7 +92,9 @@ export async function getMyMatches(
           ? l.titre || lieuComplet(l)
           : "Colocation",
       sousTitre: estAnnonceur
-        ? "Intéressé·e par ta chambre"
+        ? l
+          ? `Intéressé·e par : ${l.titre || lieuComplet(l)}`
+          : "Intéressé·e par ta chambre"
         : l
           ? `${l.loyer} € · avec ${autrePrenom}`
           : `avec ${autrePrenom}`,
