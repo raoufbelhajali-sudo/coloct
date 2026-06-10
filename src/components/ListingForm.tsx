@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImagePlus, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/lib/supabase";
@@ -77,6 +77,73 @@ export default function ListingForm({
   }
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState("");
+
+  // --- Brouillon auto-sauvegardé (création seulement) ---
+  // Empêche de tout perdre si l'app passe en arrière-plan / se recharge.
+  const brouillonKey = listing
+    ? null
+    : `flatswiper-brouillon-annonce-${user?.id ?? "anon"}`;
+
+  // Restaure le brouillon au montage
+  useEffect(() => {
+    if (!brouillonKey) return;
+    try {
+      const raw = localStorage.getItem(brouillonKey);
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      if (d.titre != null) setTitre(d.titre);
+      if (d.ville != null) setVille(d.ville);
+      if (d.departement != null) setDepartement(d.departement);
+      if (d.loyer != null) setLoyer(d.loyer);
+      if (d.surface != null) setSurface(d.surface);
+      if (d.meuble != null) setMeuble(d.meuble);
+      if (d.statutAnnonceur != null) setStatutAnnonceur(d.statutAnnonceur);
+      if (d.typeLogement != null) setTypeLogement(d.typeLogement);
+      if (d.nbColocsTotal != null) setNbColocsTotal(d.nbColocsTotal);
+      if (d.caution != null) setCaution(d.caution);
+      if (d.salleDeBain != null) setSalleDeBain(d.salleDeBain);
+      if (d.dureeMinBail != null) setDureeMinBail(d.dureeMinBail);
+      if (d.genreColocs != null) setGenreColocs(d.genreColocs);
+      if (d.etage != null) setEtage(d.etage);
+      if (d.dispo != null) setDispo(d.dispo);
+      if (d.description != null) setDescription(d.description);
+      if (Array.isArray(d.photos)) setPhotos(d.photos);
+      if (Array.isArray(d.criteres)) setCriteres(d.criteres);
+      if (Array.isArray(d.services)) setServices(d.services);
+      if (d.autresFrais != null) setAutresFrais(d.autresFrais);
+    } catch {
+      /* brouillon illisible : on ignore */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Sauvegarde le brouillon à chaque modification (en sautant le 1er rendu)
+  const premierRendu = useRef(true);
+  useEffect(() => {
+    if (!brouillonKey) return;
+    if (premierRendu.current) {
+      premierRendu.current = false;
+      return;
+    }
+    try {
+      localStorage.setItem(
+        brouillonKey,
+        JSON.stringify({
+          titre, ville, departement, loyer, surface, meuble, statutAnnonceur,
+          typeLogement, nbColocsTotal, caution, salleDeBain, dureeMinBail,
+          genreColocs, etage, dispo, description, photos, criteres, services,
+          autresFrais,
+        })
+      );
+    } catch {
+      /* quota plein : on ignore */
+    }
+  }, [
+    brouillonKey, titre, ville, departement, loyer, surface, meuble,
+    statutAnnonceur, typeLogement, nbColocsTotal, caution, salleDeBain,
+    dureeMinBail, genreColocs, etage, dispo, description, photos, criteres,
+    services, autresFrais,
+  ]);
 
   // Téléverse une ou plusieurs photos depuis le téléphone (bucket avatars,
   // dossier de l'utilisateur → autorisé par les règles existantes)
@@ -178,6 +245,14 @@ export default function ListingForm({
       };
       if (edition && listing) await updateListing(listing.id, donnees);
       else await createListing(user.id, donnees);
+      // Annonce publiée → on efface le brouillon
+      if (brouillonKey) {
+        try {
+          localStorage.removeItem(brouillonKey);
+        } catch {
+          /* ignore */
+        }
+      }
       onCreated();
     } catch {
       setErreur("Impossible d'enregistrer l'annonce. Réessaie.");
