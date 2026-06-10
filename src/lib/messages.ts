@@ -54,7 +54,7 @@ export async function getMyMatches(
   const listingIds = [...new Set(matches.map((m) => m.listing_id))];
   const { data: listings } = await supabase
     .from("listings")
-    .select("id, titre, quartier, ville, departement, arrondissement, loyer, photos")
+    .select("id, titre, type_logement, surface, quartier, ville, departement, arrondissement, loyer, photos")
     .in("id", listingIds);
   const listingById = new Map((listings ?? []).map((l) => [l.id, l]));
 
@@ -93,8 +93,15 @@ export async function getMyMatches(
           : "Colocation",
       sousTitre: estAnnonceur
         ? l
-          ? `Intéressé·e par : ${l.titre || lieuComplet(l)}`
-          : "Intéressé·e par ta chambre"
+          ? [
+              l.titre || l.type_logement || lieuComplet(l),
+              l.surface ? `${l.surface} m²` : null,
+              l.ville,
+              `${l.loyer} €`,
+            ]
+              .filter(Boolean)
+              .join(" · ")
+          : "Ta chambre"
         : l
           ? `${l.loyer} € · avec ${autrePrenom}`
           : `avec ${autrePrenom}`,
