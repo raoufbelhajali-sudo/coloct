@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { MessageSquare, Zap, Settings, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
-import { LogoMark } from "@/components/Logo";
 
 // Pastille de notification : noire et vibrante
 const badge =
@@ -125,11 +124,17 @@ export default function AppHeader({
             >
               <span
                 className={
-                  "flex h-11 w-11 items-center justify-center rounded-full bg-panel shadow-sm transition-transform active:scale-90 " +
+                  "flex h-11 w-11 items-center justify-center overflow-hidden rounded-full bg-white shadow-sm transition-transform active:scale-90 " +
                   (accueilActif ? "ring-2 ring-bleu" : "ring-1 ring-ink/10")
                 }
               >
-                <LogoMark className="h-7 w-7" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo-symbol.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-cover"
+                />
               </span>
             </Link>
 
