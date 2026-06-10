@@ -94,6 +94,7 @@ export async function getMyMatches(
       sousTitre: estAnnonceur
         ? l
           ? [
+              l.type_logement || null,
               l.ville || lieuComplet(l),
               l.surface ? `${l.surface} m²` : null,
               `${l.loyer} €`,
