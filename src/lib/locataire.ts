@@ -5,6 +5,7 @@ import { mapListingRow, attacherAnnonceurs, type ListingRow } from "./listings";
 import { estBooste } from "./offers";
 
 // L'annonce (le bien) du locataire connecté — ou null s'il n'en a pas encore
+// (renvoie la 1re ; utilisé là où une seule annonce suffit, ex. boutique)
 export async function getMyListing(userId: string): Promise<Listing | null> {
   const { data } = await supabase
     .from("listings")
@@ -16,6 +17,20 @@ export async function getMyListing(userId: string): Promise<Listing | null> {
   if (!data) return null;
   const [l] = await attacherAnnonceurs([data as ListingRow]);
   return l ?? mapListingRow(data as ListingRow);
+}
+
+// TOUTES les annonces du locataire connecté (pour les annonceurs/agences
+// qui publient plusieurs chambres).
+export async function getMyListings(userId: string): Promise<Listing[]> {
+  const { data } = await supabase
+    .from("listings")
+    .select("*")
+    .eq("owner_id", userId)
+    .order("id");
+  if (!data || data.length === 0) return [];
+  const rows = data as ListingRow[];
+  const avec = await attacherAnnonceurs(rows);
+  return avec.length ? avec : rows.map(mapListingRow);
 }
 
 // Données d'une nouvelle annonce à créer
