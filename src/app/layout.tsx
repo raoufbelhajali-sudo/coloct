@@ -23,14 +23,43 @@ const outfit = Outfit({
   display: "swap",
 });
 
+const SITE_URL = "https://flatswiper.com";
+const TITRE = "FlatSwiper — Trouve ta colocation en swipant";
+const DESCRIPTION =
+  "Swipe les colocations près de chez toi, matche, et discute pour organiser ta visite. 100% gratuit.";
+
 export const metadata: Metadata = {
-  title: "FlatSwiper — Trouve ta colocation partout en France",
-  description:
-    "Swipe les colocations disponibles près de chez toi et entre en contact quand il y a un match.",
+  metadataBase: new URL(SITE_URL),
+  title: TITRE,
+  description: DESCRIPTION,
   appleWebApp: {
     capable: true,
     title: "FlatSwiper",
     statusBarStyle: "default",
+  },
+  // Aperçu quand on partage le lien (Facebook, Instagram, WhatsApp, iMessage…)
+  openGraph: {
+    type: "website",
+    siteName: "FlatSwiper",
+    title: TITRE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    locale: "fr_FR",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "FlatSwiper — trouve ta colocation en swipant",
+      },
+    ],
+  },
+  // Aperçu sur X / Twitter
+  twitter: {
+    card: "summary_large_image",
+    title: TITRE,
+    description: DESCRIPTION,
+    images: ["/og.png"],
   },
 };
 
