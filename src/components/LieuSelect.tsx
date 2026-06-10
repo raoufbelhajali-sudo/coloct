@@ -15,9 +15,29 @@ const DEPTS_DISPO = [...DEPARTEMENTS_NOMS].sort(
   (a, b) => cleDept(a.num) - cleDept(b.num)
 );
 
+// Liste des communes EMBARQUÉE dans l'app (public/communes.json), groupée par
+// département : { "69": ["Lyon", ...], ... }. Aucune dépendance à un serveur
+// externe : le fichier est livré avec l'app (marche même hors-ligne).
+// On le charge une seule fois et on le garde en cache.
+type Communes = Record<string, string[]>;
+let cache: Communes | null = null;
+let promesse: Promise<Communes> | null = null;
+function chargerCommunes(): Promise<Communes> {
+  if (cache) return Promise.resolve(cache);
+  if (!promesse) {
+    promesse = fetch("/communes.json")
+      .then((r) => r.json())
+      .then((d: Communes) => {
+        cache = d;
+        return d;
+      })
+      .catch(() => ({}) as Communes);
+  }
+  return promesse;
+}
+
 // Deux menus déroulants : on choisit d'abord le Département,
-// puis la Ville. Les villes = TOUTES les communes du département,
-// chargées depuis l'API officielle gratuite geo.api.gouv.fr.
+// puis la Ville (toutes les communes du département).
 export default function LieuSelect({
   ville,
   departement,
@@ -32,7 +52,6 @@ export default function LieuSelect({
   const [villes, setVilles] = useState<string[]>([]);
   const [chargement, setChargement] = useState(false);
 
-  // Quand le département change, on récupère toutes ses communes.
   useEffect(() => {
     if (!departement) {
       setVilles([]);
@@ -40,29 +59,17 @@ export default function LieuSelect({
     }
     let annule = false;
     setChargement(true);
-    fetch(
-      `https://geo.api.gouv.fr/departements/${departement}/communes?fields=nom&format=json`
-    )
-      .then((r) => r.json())
-      .then((data: { nom: string }[]) => {
-        if (annule) return;
-        const noms = Array.isArray(data)
-          ? data.map((c) => c.nom).sort((a, b) => a.localeCompare(b, "fr"))
-          : [];
-        setVilles(noms);
-      })
-      .catch(() => {
-        if (!annule) setVilles([]);
-      })
-      .finally(() => {
-        if (!annule) setChargement(false);
-      });
+    chargerCommunes().then((map) => {
+      if (annule) return;
+      setVilles(map[departement] ?? []);
+      setChargement(false);
+    });
     return () => {
       annule = true;
     };
   }, [departement]);
 
-  // En édition, la ville déjà choisie peut ne pas être (encore) dans la liste.
+  // En édition, la ville déjà choisie peut ne pas être dans la liste chargée.
   const liste =
     ville && !villes.includes(ville) ? [ville, ...villes] : villes;
 
