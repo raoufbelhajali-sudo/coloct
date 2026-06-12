@@ -82,7 +82,7 @@ export default function ProfilPage() {
 
   const estLocataire = profile?.role === "locataire";
   const estAgence = profile?.est_agence ?? false;
-  const retour = estLocataire ? "/locataire" : "/swipe";
+  const retour = "/parametres"; // on arrive ici depuis les Réglages
 
   useEffect(() => {
     if (!loading && !user) router.replace("/connexion");
