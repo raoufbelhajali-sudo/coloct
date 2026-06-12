@@ -8,6 +8,22 @@ import type { Listing } from "@/data/listings";
 const PHOTO_DEFAUT =
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70";
 
+// Villes avec une page dédiée (SEO)
+const VILLES_SEO = [
+  "Paris",
+  "Lyon",
+  "Marseille",
+  "Toulouse",
+  "Bordeaux",
+  "Lille",
+  "Nantes",
+  "Strasbourg",
+  "Montpellier",
+  "Rennes",
+  "Nice",
+  "Grenoble",
+];
+
 export default function AnnoncesPage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [chargement, setChargement] = useState(true);
@@ -123,6 +139,23 @@ export default function AnnoncesPage() {
             ))}
           </div>
         )}
+        {/* Colocation par ville (liens SEO) */}
+        <section className="mt-14">
+          <h2 className="font-display text-2xl font-bold">
+            Colocation par ville
+          </h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {VILLES_SEO.map((v) => (
+              <Link
+                key={v}
+                href={`/colocation/${v.toLowerCase()}`}
+                className="rounded-full bg-panel px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-panel-2"
+              >
+                Colocation à {v}
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
