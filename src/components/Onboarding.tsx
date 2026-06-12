@@ -20,6 +20,7 @@ import {
   LANGUES,
   NIVEAUX_SONORES,
   GENRES_COLOC_RECHERCHE,
+  STATUTS_ANNONCEUR,
 } from "@/lib/profilOptions";
 import LieuSelect from "@/components/LieuSelect";
 
@@ -29,9 +30,6 @@ const GENRES = ["Femme", "Homme", "Autre"];
 const ETAPES_COLOC = [
   "role", "prenom", "toi", "photo", "bio", "interets", "modevie", "recherche",
 ] as const;
-const ETAPES_LOCA = ["role", "prenom", "photo"] as const;
-
-type EtapeColoc = (typeof ETAPES_COLOC)[number];
 
 export default function Onboarding({
   prenomInitial = "",
@@ -53,6 +51,12 @@ export default function Onboarding({
   // --- Champs du profil ---
   const [role, setRole] = useState<Role>("colocataire");
   const [prenom, setPrenom] = useState(prenomInitial);
+  // Annonceur : statut + (si agence) infos entreprise
+  const [statut, setStatut] = useState("");
+  const [siret, setSiret] = useState("");
+  const [contactTel, setContactTel] = useState("");
+  const [siteWeb, setSiteWeb] = useState("");
+  const estAgence = role === "locataire" && statut === "Agence";
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
   const [genre, setGenre] = useState("");
@@ -82,8 +86,12 @@ export default function Onboarding({
   const [dureeColoc, setDureeColoc] = useState("");
 
   const etapes: readonly string[] =
-    role === "locataire" ? ETAPES_LOCA : ETAPES_COLOC;
-  const etape = etapes[i] as EtapeColoc;
+    role !== "locataire"
+      ? ETAPES_COLOC
+      : estAgence
+        ? (["role", "statut", "prenom", "agence", "photo"] as const)
+        : (["role", "statut", "prenom", "photo"] as const);
+  const etape: string = etapes[i] ?? "";
   const derniere = i === etapes.length - 1;
   const progression = Math.round(((i + 1) / etapes.length) * 100);
 
@@ -93,10 +101,12 @@ export default function Onboarding({
 
   // Valide l'étape courante (sinon on n'avance pas)
   function etapeValide(): boolean {
+    if (etape === "statut" && !statut) return false;
     if (etape === "prenom") {
       if (!prenom.trim()) return false;
       if (besoinEmail && !/^\S+@\S+\.\S+$/.test(email.trim())) return false;
     }
+    if (etape === "agence" && !siret.trim()) return false;
     if (etape === "photo" && !photoUrl) return false;
     if (etape === "toi") {
       if (!age.trim() || Number(age) <= 0) return false;
@@ -162,6 +172,11 @@ export default function Onboarding({
       .update({
         role,
         prenom: prenom.trim() || "Coloc",
+        est_agence: estAgence,
+        statut_annonceur: role === "locataire" ? statut || null : null,
+        siret: estAgence ? siret.trim() || null : null,
+        contact_tel: estAgence ? contactTel.trim() || null : null,
+        site_web: estAgence ? siteWeb.trim() || null : null,
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
@@ -314,17 +329,45 @@ export default function Onboarding({
               </Etape>
             )}
 
-            {/* ---------- Prénom (+ email si tél) ---------- */}
+            {/* ---------- Statut annonceur (Propriétaire / Locataire / Agence) ---------- */}
+            {etape === "statut" && (
+              <Etape
+                titre="Tu es…"
+                sous="On adapte ton profil en conséquence."
+              >
+                <ChoixUnique
+                  options={STATUTS_ANNONCEUR}
+                  value={statut}
+                  onChange={setStatut}
+                  obligatoire
+                />
+                {estAgence && (
+                  <p className="mt-4 rounded-xl bg-bleu-clair px-4 py-3 text-sm text-violet">
+                    En tant qu&apos;agence, tu crées un{" "}
+                    <strong>profil entreprise</strong> (nom de l&apos;agence,
+                    logo, SIRET) — pas un profil personnel.
+                  </p>
+                )}
+              </Etape>
+            )}
+
+            {/* ---------- Prénom / Nom de l'agence (+ email si tél) ---------- */}
             {etape === "prenom" && (
               <Etape
-                titre="Comment tu t'appelles ?"
-                sous="C'est le prénom que les autres verront."
+                titre={
+                  estAgence ? "Nom de l'agence" : "Comment tu t'appelles ?"
+                }
+                sous={
+                  estAgence
+                    ? "Le nom que verront les colocataires."
+                    : "C'est le prénom que les autres verront."
+                }
               >
                 <input
                   autoFocus
                   value={prenom}
                   onChange={(e) => setPrenom(e.target.value)}
-                  placeholder="Ex. Camille"
+                  placeholder={estAgence ? "Ex. Century 21 Paris 11e" : "Ex. Camille"}
                   className={champ}
                 />
                 {besoinEmail && (
@@ -342,6 +385,48 @@ export default function Onboarding({
                     />
                   </div>
                 )}
+              </Etape>
+            )}
+
+            {/* ---------- Infos entreprise (agence) ---------- */}
+            {etape === "agence" && (
+              <Etape
+                titre="Ton agence"
+                sous="Quelques infos pour ton profil entreprise."
+              >
+                <label className="text-sm text-ink/70">
+                  SIRET <span className="text-pink">*</span>
+                </label>
+                <input
+                  autoFocus
+                  value={siret}
+                  onChange={(e) => setSiret(e.target.value)}
+                  placeholder="Ex. 123 456 789 00012"
+                  inputMode="numeric"
+                  className={champ}
+                />
+                <label className="mt-4 block text-sm text-ink/70">
+                  Téléphone de contact{" "}
+                  <span className="text-ink/40">(optionnel)</span>
+                </label>
+                <input
+                  type="tel"
+                  value={contactTel}
+                  onChange={(e) => setContactTel(e.target.value)}
+                  placeholder="Ex. 01 23 45 67 89"
+                  className={champ}
+                />
+                <label className="mt-4 block text-sm text-ink/70">
+                  Site web <span className="text-ink/40">(optionnel)</span>
+                </label>
+                <input
+                  type="url"
+                  value={siteWeb}
+                  onChange={(e) => setSiteWeb(e.target.value)}
+                  placeholder="Ex. www.mon-agence.fr"
+                  autoCapitalize="none"
+                  className={champ}
+                />
               </Etape>
             )}
 
@@ -419,8 +504,16 @@ export default function Onboarding({
             {/* ---------- Photo ---------- */}
             {etape === "photo" && (
               <Etape
-                titre="Ajoute une vraie photo de toi"
-                sous="Une photo de ton visage est obligatoire : elle inspire confiance et multiplie tes matchs. Pas de logo ni de photo de groupe 🙂"
+                titre={
+                  estAgence
+                    ? "Ajoute le logo de ton agence"
+                    : "Ajoute une vraie photo de toi"
+                }
+                sous={
+                  estAgence
+                    ? "Le logo de l'agence (visible sur tes annonces et dans les messages)."
+                    : "Une photo de ton visage est obligatoire : elle inspire confiance et multiplie tes matchs. Pas de logo ni de photo de groupe 🙂"
+                }
               >
                 <div className="flex flex-col items-center gap-4 pt-2">
                   <div className="bg-signature h-36 w-36 overflow-hidden rounded-full">

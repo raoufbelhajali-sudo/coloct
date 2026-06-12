@@ -204,7 +204,11 @@ export const SERVICES = [
 export const PROFESSIONS = ["Étudiant", "CDD", "CDI", "Chômeur", "Retraité"];
 
 // Statut de l'annonceur vis-à-vis du logement
-export const STATUTS_ANNONCEUR = ["Propriétaire", "Locataire (sous-location)"];
+export const STATUTS_ANNONCEUR = [
+  "Propriétaire",
+  "Locataire (sous-location)",
+  "Agence",
+];
 
 // Infos annonce
 export const TYPES_LOGEMENT = ["Appartement", "Maison", "Studio"];

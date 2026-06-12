@@ -50,6 +50,11 @@ export type Profile = {
   credits_messages: number; // crédits de messages directs (contacter sans match)
   premium_until: string | null; // Pass Express actif jusqu'à cette date
   boosted_until: string | null; // Boost actif jusqu'à cette date
+  est_agence: boolean; // l'annonceur est une agence (profil entreprise)
+  statut_annonceur: string | null; // Propriétaire / Locataire / Agence
+  siret: string | null; // agence : numéro SIRET
+  contact_tel: string | null; // agence : téléphone de contact
+  site_web: string | null; // agence : site web
 };
 
 type AuthState = {

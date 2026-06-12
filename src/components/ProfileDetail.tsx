@@ -120,6 +120,14 @@ export default function ProfileDetail({
                   Revenu : {profile.salaire}
                 </p>
               ) : null}
+              {profile.est_agence && (
+                <div className="mt-3 space-y-1 rounded-xl bg-bleu-clair px-4 py-3 text-sm text-violet">
+                  <p className="font-semibold">🏢 Agence immobilière</p>
+                  {profile.siret && <p>SIRET : {profile.siret}</p>}
+                  {profile.contact_tel && <p>Tél : {profile.contact_tel}</p>}
+                  {profile.site_web && <p>Site : {profile.site_web}</p>}
+                </div>
+              )}
             </div>
 
             {profile.bio ? (
