@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: `${BASE}/`, lastModified: now, priority: 1 },
     { url: `${BASE}/annonces`, lastModified: now, priority: 0.9 },
+    { url: `${BASE}/contact`, lastModified: now, priority: 0.4 },
     ...VILLES.map((v) => ({
       url: `${BASE}/colocation/${v}`,
       lastModified: now,
