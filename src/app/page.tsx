@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { Star, Smartphone, Play, Sparkles, Clock } from "lucide-react";
+import { Star, Smartphone, Play, Sparkles, Clock, Globe } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { boostActif } from "@/lib/offers";
@@ -109,7 +109,10 @@ export default function Home() {
             <a href="#telecharger" className="hidden items-center gap-1.5 rounded-full bg-ink px-3 py-2 text-xs font-semibold text-white sm:flex">
               <Play className="h-4 w-4" /> Android
             </a>
-            <Link href="/connexion" className="bg-signature rounded-full px-4 py-2 text-sm font-semibold text-white">
+            <Link href="/connexion" className="bg-signature flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white">
+              <Globe className="h-4 w-4" /> Appli web
+            </Link>
+            <Link href="/connexion" className="hidden rounded-full border border-ink/15 bg-bg px-4 py-2 text-sm font-semibold text-ink hover:border-ink/30 sm:block">
               Publier
             </Link>
           </div>
