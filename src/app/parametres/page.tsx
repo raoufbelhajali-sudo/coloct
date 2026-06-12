@@ -347,7 +347,8 @@ export default function ParametresPage() {
             </Link>
           )}
 
-          {/* Mode (rôle) */}
+          {/* Mode (rôle) — masqué pour les agences (compte annonceur figé) */}
+          {!profile?.est_agence && (
           <Bloc
             icone={<Repeat className="h-5 w-5 text-violet" />}
             titre="Mode"
@@ -369,6 +370,7 @@ export default function ParametresPage() {
               Tes infos des deux côtés sont conservées (ton annonce et ton profil de recherche).
             </p>
           </Bloc>
+          )}
 
           {/* Pseudo */}
           <Bloc icone={<AtSign className="h-5 w-5 text-bleu" />} titre="Pseudo">
