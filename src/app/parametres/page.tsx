@@ -548,7 +548,8 @@ export default function ParametresPage() {
             )}
           </Bloc>
 
-          {/* Vérification d'identité */}
+          {/* Vérification d'identité — masquée pour les agences (entreprise) */}
+          {!profile?.est_agence && (
           <Bloc
             icone={<ShieldCheck className="h-5 w-5 text-violet" />}
             titre="Vérification d'identité"
@@ -595,6 +596,7 @@ export default function ParametresPage() {
               </>
             )}
           </Bloc>
+          )}
 
           {/* Messages */}
           {message && (
