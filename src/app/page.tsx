@@ -1,19 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Capacitor } from "@capacitor/core";
 import { useAuth } from "@/lib/auth";
 
 export default function Home() {
   const router = useRouter();
   const { user, profile, loading } = useAuth();
+  const [estNatif, setEstNatif] = useState(false);
 
-  // Déjà connecté → on va directement dans son espace (pas la page "Commencer")
+  useEffect(() => {
+    setEstNatif(Capacitor.isNativePlatform());
+  }, []);
+
+  // Déjà connecté → on va directement dans son espace (pas la page d'accueil)
   useEffect(() => {
     if (loading || !user || !profile) return;
     router.replace(profile.role === "locataire" ? "/locataire" : "/swipe");
   }, [loading, user, profile, router]);
+
+  // Dans l'app : pas de page "site", on va direct à la connexion / au produit
+  useEffect(() => {
+    if (estNatif && !loading && !user) router.replace("/connexion");
+  }, [estNatif, loading, user, router]);
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
@@ -35,13 +46,21 @@ export default function Home() {
         et la conversation commence.
       </p>
 
-      {/* Bouton principal */}
-      <Link
-        href="/connexion"
-        className="bg-signature glow-pink mt-10 inline-block rounded-full px-8 py-4 text-base font-semibold text-white transition-transform hover:scale-105"
-      >
-        Commencer
-      </Link>
+      {/* Boutons : voir les annonces (catalogue) / publier (annonceur) */}
+      <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">
+        <Link
+          href="/annonces"
+          className="bg-signature glow-pink inline-block rounded-full px-8 py-4 text-base font-semibold text-white transition-transform hover:scale-105"
+        >
+          Voir les annonces
+        </Link>
+        <Link
+          href="/connexion"
+          className="inline-block rounded-full border border-ink/15 bg-bg px-8 py-4 text-base font-semibold text-ink transition-colors hover:border-ink/30"
+        >
+          Publier une annonce
+        </Link>
+      </div>
 
       {/* Petit pied de page */}
       <div className="absolute bottom-6 flex flex-col items-center gap-1 text-center">
