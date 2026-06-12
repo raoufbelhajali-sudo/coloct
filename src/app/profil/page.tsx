@@ -50,6 +50,10 @@ export default function ProfilPage() {
   const [quartiersChoisis, setQuartiersChoisis] = useState<string[]>([]);
   const [dateEmmenagement, setDateEmmenagement] = useState("");
   const [dureeColoc, setDureeColoc] = useState("");
+  // Agence (profil entreprise)
+  const [siret, setSiret] = useState("");
+  const [contactTel, setContactTel] = useState("");
+  const [siteWeb, setSiteWeb] = useState("");
 
   const [photoUrl, setPhotoUrl] = useState("");
   const [photoEnCours, setPhotoEnCours] = useState(false);
@@ -77,6 +81,7 @@ export default function ProfilPage() {
   }
 
   const estLocataire = profile?.role === "locataire";
+  const estAgence = profile?.est_agence ?? false;
   const retour = estLocataire ? "/locataire" : "/swipe";
 
   useEffect(() => {
@@ -163,6 +168,9 @@ export default function ProfilPage() {
     setQuartiersChoisis(profile.quartiers ?? []);
     setDateEmmenagement(profile.date_emmenagement ?? "");
     setDureeColoc(profile.duree_coloc ?? "");
+    setSiret(profile.siret ?? "");
+    setContactTel(profile.contact_tel ?? "");
+    setSiteWeb(profile.site_web ?? "");
   }, [profile]);
 
   function toggle(list: string[], set: (v: string[]) => void, val: string) {
@@ -172,6 +180,36 @@ export default function ProfilPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
+
+    // --- Agence : on enregistre seulement les infos entreprise ---
+    if (estAgence) {
+      setEnCours(true);
+      setEnregistre(false);
+      setErreurSave("");
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          prenom: prenom.trim(),
+          photo_url: photoUrl || null,
+          siret: siret.trim() || null,
+          contact_tel: contactTel.trim() || null,
+          site_web: siteWeb.trim() || null,
+          ville: ville.trim() || null,
+          departement: departement || null,
+        })
+        .eq("id", user.id);
+      setEnCours(false);
+      if (error) {
+        setErreurSave("L'enregistrement a échoué : " + error.message);
+        return;
+      }
+      await refreshProfile();
+      setEnregistre(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => setEnregistre(false), 3500);
+      return;
+    }
+
     if (interets.length < 3 || ambiance.length < 3 || rythme.length < 3) {
       setErreurSave(
         "Choisis au moins 3 centres d'intérêt, 3 ambiances et 3 rythmes."
@@ -353,14 +391,82 @@ export default function ProfilPage() {
                 className="hidden"
               />
             </label>
-            {estLocataire && (
+            {estAgence ? (
+              <p className="max-w-xs text-center text-xs text-ink/40">
+                Le logo de ton agence (visible sur tes annonces et dans les
+                messages).
+              </p>
+            ) : estLocataire ? (
               <p className="max-w-xs text-center text-xs text-ink/40">
                 C&apos;est ta photo de profil (ton visage). Les photos de
                 l&apos;appartement se gèrent dans ton annonce.
               </p>
-            )}
+            ) : null}
           </div>
 
+          {/* ---------- Profil ENTREPRISE (agence) ---------- */}
+          {estAgence && (
+            <Section titre="Mon agence" defautOuvert>
+              <div>
+                <label className="text-sm text-ink/70">Nom de l&apos;agence</label>
+                <input
+                  value={prenom}
+                  onChange={(e) => setPrenom(e.target.value)}
+                  placeholder="Ex. Century 21 Paris 11e"
+                  className={champClasses}
+                />
+              </div>
+              <div className="mt-4">
+                <label className="text-sm text-ink/70">SIRET</label>
+                <input
+                  value={siret}
+                  onChange={(e) => setSiret(e.target.value)}
+                  placeholder="Ex. 123 456 789 00012"
+                  inputMode="numeric"
+                  className={champClasses}
+                />
+              </div>
+              <div className="mt-4">
+                <label className="text-sm text-ink/70">
+                  Téléphone de contact
+                </label>
+                <input
+                  type="tel"
+                  value={contactTel}
+                  onChange={(e) => setContactTel(e.target.value)}
+                  placeholder="Ex. 01 23 45 67 89"
+                  className={champClasses}
+                />
+              </div>
+              <div className="mt-4">
+                <label className="text-sm text-ink/70">Site web</label>
+                <input
+                  type="url"
+                  value={siteWeb}
+                  onChange={(e) => setSiteWeb(e.target.value)}
+                  placeholder="Ex. www.mon-agence.fr"
+                  autoCapitalize="none"
+                  className={champClasses}
+                />
+              </div>
+              <div className="mt-4">
+                <label className="text-sm text-ink/70">Ville / secteur</label>
+                <LieuSelect
+                  ville={ville}
+                  departement={departement}
+                  onChange={(v, d) => {
+                    setVille(v);
+                    setDepartement(d);
+                  }}
+                  className={champClasses}
+                />
+              </div>
+            </Section>
+          )}
+
+          {/* ---------- Sections personnelles (masquées pour les agences) ---------- */}
+          {!estAgence && (
+            <>
           {/* ---------- Identité ---------- */}
           <Section titre="Identité" defautOuvert id="sec-identite" forceOuvert={sectionCible === "sec-identite"}>
             <div className="grid grid-cols-2 gap-4">
@@ -478,6 +584,8 @@ export default function ProfilPage() {
             </div>
             <ChoixMultiple label="Langues parlées" options={LANGUES} values={langues} onToggle={(v) => toggle(langues, setLangues, v)} />
           </Section>
+            </>
+          )}
 
           {/* ---------- Recherche (colocataire uniquement) ---------- */}
           {!estLocataire && (
@@ -560,7 +668,11 @@ export default function ProfilPage() {
 
           <button type="submit" disabled={enCours}
             className="bg-signature glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60">
-            {enCours ? "Enregistrement…" : "Enregistrer mon profil"}
+            {enCours
+              ? "Enregistrement…"
+              : estAgence
+                ? "Enregistrer mon agence"
+                : "Enregistrer mon profil"}
           </button>
         </form>
       </div>
