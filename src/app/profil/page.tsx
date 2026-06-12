@@ -312,8 +312,8 @@ export default function ProfilPage() {
           C&apos;est ce que les colocs verront avant de t&apos;accepter. Soigne-le !
         </p>
 
-        {/* Complétude du profil (jauge toujours visible) + badge Super */}
-        {profile && (
+        {/* Complétude du profil + badge Super (sans objet pour une agence) */}
+        {profile && !estAgence && (
           <div className="mb-6 rounded-2xl bg-panel p-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-ink/70">Profil complété</span>
