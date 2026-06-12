@@ -9,7 +9,6 @@ import type { Listing } from "@/data/listings";
 import LieuSelect from "@/components/LieuSelect";
 import {
   SERVICES,
-  STATUTS_ANNONCEUR,
   TYPES_LOGEMENT,
   SALLES_DE_BAIN,
   DUREES_MIN_BAIL,
@@ -46,9 +45,6 @@ export default function ListingForm({
   const [loyer, setLoyer] = useState(listing ? String(listing.loyer) : "");
   const [surface, setSurface] = useState(listing ? String(listing.surface) : "");
   const [meuble, setMeuble] = useState(listing?.meuble ?? true);
-  const [statutAnnonceur, setStatutAnnonceur] = useState(
-    listing?.statutAnnonceur ?? ""
-  );
   const [typeLogement, setTypeLogement] = useState(listing?.typeLogement ?? "");
   const [nbColocsTotal, setNbColocsTotal] = useState(
     listing?.nbColocsTotal ? String(listing.nbColocsTotal) : ""
@@ -97,7 +93,6 @@ export default function ListingForm({
       if (d.loyer != null) setLoyer(d.loyer);
       if (d.surface != null) setSurface(d.surface);
       if (d.meuble != null) setMeuble(d.meuble);
-      if (d.statutAnnonceur != null) setStatutAnnonceur(d.statutAnnonceur);
       if (d.typeLogement != null) setTypeLogement(d.typeLogement);
       if (d.nbColocsTotal != null) setNbColocsTotal(d.nbColocsTotal);
       if (d.caution != null) setCaution(d.caution);
@@ -129,7 +124,7 @@ export default function ListingForm({
       localStorage.setItem(
         brouillonKey,
         JSON.stringify({
-          titre, ville, departement, loyer, surface, meuble, statutAnnonceur,
+          titre, ville, departement, loyer, surface, meuble,
           typeLogement, nbColocsTotal, caution, salleDeBain, dureeMinBail,
           genreColocs, etage, dispo, description, photos, criteres, services,
           autresFrais,
@@ -140,7 +135,7 @@ export default function ListingForm({
     }
   }, [
     brouillonKey, titre, ville, departement, loyer, surface, meuble,
-    statutAnnonceur, typeLogement, nbColocsTotal, caution, salleDeBain,
+    typeLogement, nbColocsTotal, caution, salleDeBain,
     dureeMinBail, genreColocs, etage, dispo, description, photos, criteres,
     services, autresFrais,
   ]);
@@ -218,7 +213,7 @@ export default function ListingForm({
         lng: coord?.lng ?? null,
         surface: Number(surface),
         meuble,
-        statut_annonceur: statutAnnonceur || null,
+        statut_annonceur: profile?.statut_annonceur ?? null,
         type_logement: typeLogement || null,
         nb_colocs_total: Number(nbColocsTotal) || null,
         caution: Number(caution) || null,
@@ -297,25 +292,6 @@ export default function ListingForm({
           onChange={(e) => setDispo(e.target.value)}
           className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink focus:border-pink focus:outline-none"
         />
-      </div>
-
-      {/* Statut de l'annonceur vis-à-vis du bien */}
-      <div>
-        <label className="text-sm text-ink/70">
-          Tu es, pour ce logement…
-        </label>
-        <select
-          value={statutAnnonceur}
-          onChange={(e) => setStatutAnnonceur(e.target.value)}
-          className={champSelect}
-        >
-          <option value="">Choisir…</option>
-          {STATUTS_ANNONCEUR.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Type de logement + salle de bain */}
