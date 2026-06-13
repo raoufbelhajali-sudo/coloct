@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { SlidersHorizontal } from "lucide-react";
 import { getListings, lieuComplet } from "@/lib/listings";
+import { TYPES_LOGEMENT } from "@/lib/profilOptions";
 import type { Listing } from "@/data/listings";
 
 const PHOTO_DEFAUT =
@@ -28,6 +30,8 @@ export default function AnnoncesPage() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [chargement, setChargement] = useState(true);
   const [ville, setVille] = useState("");
+  const [budgetMax, setBudgetMax] = useState("");
+  const [type, setType] = useState("");
 
   useEffect(() => {
     getListings()
@@ -39,7 +43,13 @@ export default function AnnoncesPage() {
   const villes = Array.from(
     new Set(listings.map((l) => l.ville).filter(Boolean) as string[])
   ).sort();
-  const filtrees = ville ? listings.filter((l) => l.ville === ville) : listings;
+
+  const filtrees = listings.filter((l) => {
+    if (ville && l.ville !== ville) return false;
+    if (budgetMax && l.loyer > Number(budgetMax)) return false;
+    if (type && l.typeLogement !== type) return false;
+    return true;
+  });
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
@@ -68,35 +78,78 @@ export default function AnnoncesPage() {
           télécharge l&apos;application.
         </p>
 
-        {/* Filtre ville */}
-        {villes.length > 1 && (
-          <div className="mt-5 flex flex-wrap gap-2">
-            <button
-              onClick={() => setVille("")}
-              className={
-                "rounded-full px-4 py-1.5 text-sm font-medium transition-colors " +
-                (!ville
-                  ? "bg-signature text-white"
-                  : "bg-panel text-ink/70 hover:bg-panel-2")
-              }
-            >
-              Toutes
-            </button>
-            {villes.map((v) => (
-              <button
-                key={v}
-                onClick={() => setVille(v)}
-                className={
-                  "rounded-full px-4 py-1.5 text-sm font-medium transition-colors " +
-                  (ville === v
-                    ? "bg-signature text-white"
-                    : "bg-panel text-ink/70 hover:bg-panel-2")
-                }
+        {/* Barre de filtres */}
+        <div className="mt-6 rounded-2xl bg-panel p-4 ring-1 ring-ink/5">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-ink/55">
+                Ville
+              </label>
+              <select
+                value={ville}
+                onChange={(e) => setVille(e.target.value)}
+                className="w-full rounded-xl border border-ink/10 bg-bg px-3 py-2.5 text-sm focus:border-pink focus:outline-none"
               >
-                {v}
-              </button>
-            ))}
+                <option value="">Toutes les villes</option>
+                {villes.map((v) => (
+                  <option key={v} value={v}>
+                    {v}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-ink/55">
+                Budget max (€/mois)
+              </label>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={budgetMax}
+                onChange={(e) => setBudgetMax(e.target.value)}
+                placeholder="Ex. 600"
+                className="w-full rounded-xl border border-ink/10 bg-bg px-3 py-2.5 text-sm focus:border-pink focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs font-medium text-ink/55">
+                Type de logement
+              </label>
+              <select
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="w-full rounded-xl border border-ink/10 bg-bg px-3 py-2.5 text-sm focus:border-pink focus:outline-none"
+              >
+                <option value="">Tous les types</option>
+                {TYPES_LOGEMENT.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
+          {(ville || budgetMax || type) && (
+            <button
+              onClick={() => {
+                setVille("");
+                setBudgetMax("");
+                setType("");
+              }}
+              className="mt-3 flex items-center gap-1.5 text-xs font-medium text-pink hover:underline"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" /> Réinitialiser les
+              filtres
+            </button>
+          )}
+        </div>
+
+        {/* Compteur de résultats */}
+        {!chargement && (
+          <p className="mt-4 text-sm text-ink/55">
+            {filtrees.length} annonce{filtrees.length > 1 ? "s" : ""}
+            {ville ? ` à ${ville}` : ""}
+          </p>
         )}
 
         {/* Grille d'annonces */}
@@ -104,7 +157,7 @@ export default function AnnoncesPage() {
           <p className="mt-16 text-center text-ink/50">Chargement…</p>
         ) : filtrees.length === 0 ? (
           <p className="mt-16 text-center text-ink/50">
-            Aucune annonce pour le moment.
+            Aucune annonce ne correspond à ta recherche.
           </p>
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
