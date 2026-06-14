@@ -94,6 +94,20 @@ export async function contacterDirect(
   return (data as number) ?? null;
 }
 
+// Côté ANNONCEUR : ouvre une conversation directe avec un colocataire repéré,
+// pour son annonce (sans attendre un match). Renvoie l'id du match, ou null.
+export async function contacterColocataireDirect(
+  colocataireId: string,
+  listingId: string
+): Promise<number | null> {
+  const { data, error } = await supabase.rpc("creer_message_direct_annonceur", {
+    p_colocataire: colocataireId,
+    p_listing: Number(listingId),
+  });
+  if (error) return null;
+  return (data as number) ?? null;
+}
+
 // Active le Boost pour 48h (démo — sans paiement réel)
 export async function activerBoost(userId: string): Promise<void> {
   const fin = new Date(Date.now() + 48 * 60 * 60 * 1000);

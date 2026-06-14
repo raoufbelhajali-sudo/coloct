@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X } from "lucide-react";
+import { Heart, X, Star } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -18,7 +18,7 @@ import {
   getMatchIdForColocataire,
 } from "@/lib/locataire";
 import { compatProfils, scoreProfilPourAnnonceur } from "@/lib/compat";
-import { estPremium } from "@/lib/offers";
+import { estPremium, contacterColocataireDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import { getIdsBloques } from "@/lib/blocks";
 import { marquerAnnonce } from "@/lib/matchPopup";
@@ -79,6 +79,23 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
   }, [profiles, swipedIds, bloques, profile]);
   const current = remaining[0];
   const next = remaining[1];
+
+  // Message direct à un colocataire SANS attendre un match — réservé au forfait
+  const [contactEnCours, setContactEnCours] = useState(false);
+  async function messageDirectColocataire() {
+    if (!user || !current || contactEnCours) return;
+    if (!estPremium(profile)) {
+      router.push("/boutique"); // débloque le message direct
+      return;
+    }
+    setContactEnCours(true);
+    try {
+      const mid = await contacterColocataireDirect(current.id, listingId);
+      if (mid) router.push(`/matchs/conversation/?id=${mid}`);
+    } finally {
+      setContactEnCours(false);
+    }
+  }
 
   async function fly(dir: Direction) {
     if (animating.current || !current || !user) return;
@@ -200,6 +217,15 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
                 className="bg-signature glow-pink flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
               >
                 <Heart className="h-8 w-8" fill="currentColor" />
+              </button>
+              <button
+                onClick={messageDirectColocataire}
+                disabled={contactEnCours}
+                aria-label="Message direct au colocataire"
+                title="Écrire en direct à ce colocataire (forfait)"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-bleu shadow-lg backdrop-blur transition-transform hover:scale-110 disabled:opacity-60"
+              >
+                <Star className="h-6 w-6" fill="currentColor" />
               </button>
             </div>
           </div>
