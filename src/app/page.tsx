@@ -153,7 +153,7 @@ export default function Home() {
                 transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
                 className="block h-2 w-2 rounded-full bg-pink"
               />
-              Bientôt sur App Store &amp; Android
+              Bientôt sur App Store &amp; Google Play
             </motion.span>
             <Link href="/connexion" className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
               <Globe className="h-4 w-4" /> Commencez ici

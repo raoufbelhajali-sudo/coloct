@@ -124,7 +124,7 @@ function ColocataireContenu() {
             </div>
             <div className="mt-3 flex items-center justify-center gap-4 text-sm text-white/85">
               <a href="#" className="flex items-center gap-1.5 hover:text-white"><Smartphone className="h-4 w-4" /> iPhone</a>
-              <a href="#" className="flex items-center gap-1.5 hover:text-white"><Play className="h-4 w-4" /> Android</a>
+              <a href="#" className="flex items-center gap-1.5 hover:text-white"><Play className="h-4 w-4" /> Google Play</a>
             </div>
           </div>
         </div>

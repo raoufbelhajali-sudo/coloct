@@ -314,7 +314,7 @@ function AnnonceContenu() {
               </a>
               <a href="#telecharger" onClick={() => setPopup(false)}
                 className="flex items-center justify-center gap-2 rounded-full border border-ink/15 px-6 py-3 font-semibold text-ink">
-                <Play className="h-5 w-5" /> Bientôt sur Android
+                <Play className="h-5 w-5" /> Bientôt sur Google Play
               </a>
               <Link href="/connexion" className="mt-1 text-sm font-semibold text-pink hover:underline">
                 ou continuer sur l&apos;app web →

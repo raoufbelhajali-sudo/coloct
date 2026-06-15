@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { MessageSquare, Zap, Settings, Sparkles, Home } from "lucide-react";
+import { MessageSquare, Zap, Settings, Sparkles, Home, Newspaper } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 
@@ -104,11 +104,17 @@ export default function AppHeader({
         </Link>
       )}
 
-      {/* Haut : logo centré */}
+      {/* Haut : accès au Blog (remplace le logo) */}
       {!hideTop && (
         <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
+          <Link
+            href="/blog"
+            aria-label="Blog & Entraide"
+            title="Blog & Entraide"
+            className="flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink/75 transition-colors hover:text-ink"
+          >
+            <Newspaper className="h-5 w-5 text-bleu" /> Blog
+          </Link>
         </header>
       )}
 
