@@ -340,10 +340,10 @@ export default function Home() {
             Télécharge FlatSwiper pour liker, matcher et discuter avec les annonceurs.
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a href="#" className="flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-ink">
+            <a href="/connexion" className="flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-ink">
               <Smartphone className="h-5 w-5" /> App Store <span className="text-xs font-normal text-ink/50">(bientôt)</span>
             </a>
-            <a href="#" className="flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-ink">
+            <a href="/connexion" className="flex items-center gap-2 rounded-full bg-white px-6 py-3.5 font-semibold text-ink">
               <Play className="h-5 w-5" /> Google Play <span className="text-xs font-normal text-ink/50">(bientôt)</span>
             </a>
           </div>

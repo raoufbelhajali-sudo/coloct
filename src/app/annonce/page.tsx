@@ -309,11 +309,11 @@ function AnnonceContenu() {
               FlatSwiper. La colocation à petit budget, en un swipe.
             </p>
             <div className="mt-5 flex flex-col gap-2.5">
-              <a href="#telecharger" onClick={() => setPopup(false)}
+              <a href="/connexion" onClick={() => setPopup(false)}
                 className="flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 font-semibold text-white">
                 <Smartphone className="h-5 w-5" /> Télécharger sur iPhone
               </a>
-              <a href="#telecharger" onClick={() => setPopup(false)}
+              <a href="/connexion" onClick={() => setPopup(false)}
                 className="flex items-center justify-center gap-2 rounded-full border border-ink/15 px-6 py-3 font-semibold text-ink">
                 <Play className="h-5 w-5" /> Bientôt sur Google Play
               </a>
