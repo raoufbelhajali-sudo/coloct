@@ -25,6 +25,7 @@ import {
   annulerSwipeListing,
   getLikesToday,
   getBonusLikes,
+  ajouterBonusLikes,
   getMatchIdForListing,
 } from "@/lib/swipes";
 import {
@@ -311,6 +312,15 @@ export default function SwipeDeck() {
     } catch {
       /* réseau */
     }
+  }
+
+  // Pack "3 swipes" (1,99 €) : ajoute 3 likes pour la journée.
+  // Démo pour l'instant — le vrai paiement passera par Apple In-App Purchase.
+  function acheterPack3Swipes() {
+    if (!user) return;
+    const total = ajouterBonusLikes(user.id, 3);
+    setBonusLikes(total);
+    setPaywall(false);
   }
 
   function handleDragEnd(
@@ -685,6 +695,13 @@ export default function SwipeDeck() {
                 className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
                 {lancement ? "J'en profite — c'est gratuit" : "Voir les offres FlatSwiper+"}
+              </button>
+              {/* Petit pack à l'unité : 3 swipes pour 1,99 € */}
+              <button
+                onClick={acheterPack3Swipes}
+                className="rounded-full border-2 border-bleu px-6 py-3 font-semibold text-bleu transition-colors hover:bg-bleu/5"
+              >
+                Pack 3 swipes — 1,99 €
               </button>
               {/* Gratuit : inviter des amis pour gagner des swipes */}
               {user && (

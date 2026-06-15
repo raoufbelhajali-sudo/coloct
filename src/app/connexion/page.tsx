@@ -32,6 +32,17 @@ async function sha256hex(str: string): Promise<string> {
     .join("");
 }
 
+// Course entre une promesse et un délai max : évite que le bouton reste figé
+// si un appel natif (Google) ne répond jamais (la promesse ne se résout pas).
+function avecDelaiMax<T>(p: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    p,
+    new Promise<T>((_, rejeter) =>
+      setTimeout(() => rejeter(new Error("Délai dépassé")), ms)
+    ),
+  ]);
+}
+
 
 type Etape =
   | "choix"
@@ -86,22 +97,26 @@ export default function ConnexionPage() {
     setEnCours(true);
     try {
       if (!socialLoginPret) {
-        await SocialLogin.initialize({
-          google: {
-            iOSClientId: GOOGLE_IOS_CLIENT_ID,
-            iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
-            webClientId: GOOGLE_WEB_CLIENT_ID,
-            mode: "online",
-          },
-        });
+        await avecDelaiMax(
+          SocialLogin.initialize({
+            google: {
+              iOSClientId: GOOGLE_IOS_CLIENT_ID,
+              iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
+              webClientId: GOOGLE_WEB_CLIENT_ID,
+              mode: "online",
+            },
+          }),
+          15000
+        );
         socialLoginPret = true;
       }
       // IMPORTANT : forcer une connexion fraîche. Sinon le plugin restaure la
       // session Google précédente SANS notre nonce → erreur "nonce mismatch".
+      // Best-effort : ce nettoyage ne doit JAMAIS figer le bouton (délai court).
       try {
-        await SocialLogin.logout({ provider: "google" });
+        await avecDelaiMax(SocialLogin.logout({ provider: "google" }), 4000);
       } catch {
-        /* pas de session précédente : on continue */
+        /* pas de session précédente / délai dépassé : on continue */
       }
 
       // Sécurité "nonce" : on envoie le nonce HACHÉ à Google (il se retrouve
@@ -109,19 +124,23 @@ export default function ConnexionPage() {
       // et compare. Les deux correspondent ainsi.
       const rawNonce = genererNonce();
       const hashedNonce = await sha256hex(rawNonce);
-      const res = await SocialLogin.login({
-        provider: "google",
-        options: {
-          scopes: ["email", "profile"],
-          nonce: hashedNonce,
-          forcePrompt: true,
-        },
-      });
+      const res = await avecDelaiMax(
+        SocialLogin.login({
+          provider: "google",
+          options: {
+            scopes: ["email", "profile"],
+            nonce: hashedNonce,
+            forcePrompt: true,
+          },
+        }),
+        120000
+      );
       const result = res.result as { idToken?: string | null };
       const idToken = result?.idToken;
       if (!idToken) {
-        setErreur("Connexion Google impossible (jeton manquant).");
-        setEnCours(false);
+        setErreur(
+          "Connexion Google impossible (jeton manquant). Réessaie ou connecte-toi avec ton email."
+        );
         return;
       }
       const { error } = await supabase.auth.signInWithIdToken({
@@ -129,12 +148,18 @@ export default function ConnexionPage() {
         token: idToken,
         nonce: rawNonce,
       });
-      setEnCours(false);
-      if (error) setErreur(traduireErreur(error.message));
-      else window.location.href = "/bienvenue/";
+      if (error) {
+        setErreur(traduireErreur(error.message));
+      } else {
+        window.location.href = "/bienvenue/";
+      }
     } catch {
+      setErreur(
+        "Connexion Google impossible. Réessaie, ou connecte-toi avec ton email."
+      );
+    } finally {
+      // Quoi qu'il arrive (succès, erreur, blocage), le bouton se débloque.
       setEnCours(false);
-      setErreur("Connexion Google annulée.");
     }
   }
 
