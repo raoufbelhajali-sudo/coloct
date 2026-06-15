@@ -303,8 +303,9 @@ function AnnonceContenu() {
             </div>
             <h2 className="mt-4 font-display text-2xl font-bold">Cette coloc t&apos;intéresse&nbsp;?</h2>
             <p className="mt-2 text-ink/75">
-              Like cette annonce, <strong>matche</strong> avec l&apos;annonceur et discute —
-              tout se passe dans l&apos;app FlatSwiper. La colocation à petit budget, en un swipe.
+              Like cette annonce, <strong>matche</strong>{" "}
+              avec l&apos;annonceur et discute — tout se passe dans l&apos;app
+              FlatSwiper. La colocation à petit budget, en un swipe.
             </p>
             <div className="mt-5 flex flex-col gap-2.5">
               <a href="#telecharger" onClick={() => setPopup(false)}

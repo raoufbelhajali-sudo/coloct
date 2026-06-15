@@ -261,8 +261,10 @@ export default function Home() {
             </span>
             <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">La coloc, le bon plan pour ton budget</h2>
             <p className="mx-auto mt-2 max-w-xl text-ink/65">
-              Une chambre en colocation coûte en moyenne <strong className="text-ink">≈ 480 €/mois</strong> en
-              France — bien moins qu&apos;un studio (~750 €). Voici les loyers moyens par ville.
+              Une chambre en colocation coûte en moyenne{" "}
+              <strong className="text-ink">≈ 480 €/mois</strong>{" "}
+              en France — bien moins qu&apos;un studio (~750 €). Voici les loyers
+              moyens par ville.
             </p>
           </div>
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
