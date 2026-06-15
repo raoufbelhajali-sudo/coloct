@@ -56,10 +56,6 @@ export default function SiteHeader() {
               <Rocket className="h-4 w-4" /> Commencez ici
             </Link>
           </motion.div>
-
-          <Link href="/connexion" className="hidden rounded-full border border-ink/15 bg-bg px-4 py-2 text-sm font-semibold text-ink hover:border-ink/30 sm:block">
-            Publier
-          </Link>
         </div>
       </div>
     </header>
