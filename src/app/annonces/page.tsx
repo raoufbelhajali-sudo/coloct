@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { TYPES_LOGEMENT } from "@/lib/profilOptions";
@@ -26,11 +27,12 @@ const VILLES_SEO = [
   "Grenoble",
 ];
 
-export default function AnnoncesPage() {
+function AnnoncesContenu() {
+  const sp = useSearchParams();
   const [listings, setListings] = useState<Listing[]>([]);
   const [chargement, setChargement] = useState(true);
-  const [ville, setVille] = useState("");
-  const [budgetMax, setBudgetMax] = useState("");
+  const [ville, setVille] = useState(sp.get("ville") ?? "");
+  const [budgetMax, setBudgetMax] = useState(sp.get("budget") ?? "");
   const [type, setType] = useState("");
 
   useEffect(() => {
@@ -230,5 +232,13 @@ export default function AnnoncesPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function AnnoncesPage() {
+  return (
+    <Suspense fallback={<p className="mt-20 text-center text-ink/50">Chargement…</p>}>
+      <AnnoncesContenu />
+    </Suspense>
   );
 }

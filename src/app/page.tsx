@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users } from "lucide-react";
+import { motion } from "framer-motion";
+import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { getColocatairesPublics } from "@/lib/colocataires";
@@ -81,6 +82,8 @@ export default function Home() {
   const [estNatif, setEstNatif] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
   const [colocataires, setColocataires] = useState<Profile[]>([]);
+  const [sVille, setSVille] = useState("");
+  const [sBudget, setSBudget] = useState("");
 
   useEffect(() => {
     setEstNatif(Capacitor.isNativePlatform());
@@ -108,6 +111,16 @@ export default function Home() {
     .sort((a, b) => (boostActif(b.boosted_until) ? 1 : 0) - (boostActif(a.boosted_until) ? 1 : 0))
     .slice(0, 6);
   const recentes = [...listings].sort((a, b) => Number(b.id) - Number(a.id)).slice(0, 6);
+  const villesDispo = Array.from(
+    new Set(listings.map((l) => l.ville).filter(Boolean) as string[])
+  ).sort();
+  function rechercher() {
+    const params = new URLSearchParams();
+    if (sVille) params.set("ville", sVille);
+    if (sBudget) params.set("budget", sBudget);
+    const q = params.toString();
+    router.push(`/annonces${q ? "?" + q : ""}`);
+  }
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
@@ -143,26 +156,87 @@ export default function Home() {
 
       {/* ===== Hero ===== */}
       <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-cover bg-center opacity-[0.14]" style={{ backgroundImage: "url(/accueil-bg.jpg)" }} />
-        <div className="mx-auto w-full max-w-6xl px-5 py-16 text-center md:py-24">
-          <span className="inline-flex items-center gap-2 rounded-full bg-panel px-4 py-1.5 text-sm font-medium text-pink">
-            <Sparkles className="h-4 w-4" /> 100% gratuit
-          </span>
-          <h1 className="mt-5 font-display text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-            Trouve ta colocation <span className="text-signature">en swipant</span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-ink/70">
-            Parcours les chambres en colocation partout en France. Like, matche et
-            discute — l&apos;expérience complète sur l&apos;application.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/annonces" className="bg-signature glow-pink rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.03]">
-              Voir les annonces
-            </Link>
-            <Link href="/connexion" className="rounded-full border border-ink/15 bg-bg px-8 py-4 font-semibold text-ink hover:border-ink/30">
-              Publier une annonce
-            </Link>
-          </div>
+        <div className="pointer-events-none absolute -right-32 -top-24 -z-10 h-[30rem] w-[30rem] rounded-full bg-pink/10 blur-3xl" />
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-10 px-5 py-12 md:py-16 lg:grid-cols-2">
+          {/* Gauche : texte + recherche */}
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+            <span className="inline-flex items-center gap-2 rounded-full bg-panel px-4 py-1.5 text-sm font-medium text-pink">
+              <Sparkles className="h-4 w-4" /> 100% gratuit · partout en France
+            </span>
+            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] sm:text-5xl">
+              Trouve ta colocation <span className="text-signature">en swipant</span>
+            </h1>
+            <p className="mt-4 max-w-md text-lg text-ink/70">
+              Parcours les chambres, like, matche et discute. La coloc à petit budget,
+              en un swipe.
+            </p>
+
+            {/* Barre de recherche */}
+            <div className="mt-6 flex flex-col gap-2 rounded-2xl bg-panel p-2 ring-1 ring-ink/5 sm:flex-row sm:items-center">
+              <select
+                value={sVille}
+                onChange={(e) => setSVille(e.target.value)}
+                className="flex-1 rounded-xl bg-bg px-4 py-3 text-sm text-ink focus:outline-none"
+              >
+                <option value="">Toutes les villes</option>
+                {villesDispo.map((v) => (
+                  <option key={v} value={v}>{v}</option>
+                ))}
+              </select>
+              <select
+                value={sBudget}
+                onChange={(e) => setSBudget(e.target.value)}
+                className="rounded-xl bg-bg px-4 py-3 text-sm text-ink focus:outline-none"
+              >
+                <option value="">Budget max</option>
+                <option value="500">≤ 500 €</option>
+                <option value="700">≤ 700 €</option>
+                <option value="900">≤ 900 €</option>
+              </select>
+              <button
+                onClick={rechercher}
+                className="bg-signature flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold text-white transition-transform hover:scale-[1.02]"
+              >
+                <Search className="h-4 w-4" /> Rechercher
+              </button>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">
+              <Link href="/annonces" className="font-semibold text-pink hover:underline">
+                Voir toutes les annonces →
+              </Link>
+              <span className="text-ink/25">·</span>
+              <Link href="/connexion" className="font-semibold text-ink/70 hover:text-ink">
+                Publier une annonce
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Droite : image + carte "match" flottante animée */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="relative hidden lg:block"
+          >
+            <div className="overflow-hidden rounded-3xl shadow-xl ring-1 ring-ink/5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/accueil-bg.jpg" alt="Colocataires heureux" className="aspect-[4/3] h-full w-full object-cover" />
+            </div>
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-5 -left-5 flex items-center gap-3 rounded-2xl bg-bg p-3 pr-5 shadow-lg ring-1 ring-ink/5"
+            >
+              <span className="bg-signature glow-pink flex h-11 w-11 items-center justify-center rounded-full text-white">
+                <Heart className="h-5 w-5" fill="currentColor" />
+              </span>
+              <div>
+                <p className="text-sm font-bold leading-tight">C&apos;est un match&nbsp;!</p>
+                <p className="text-xs text-ink/55">Lancez la conversation</p>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
