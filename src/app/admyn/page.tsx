@@ -94,9 +94,10 @@ export default function AdminPage() {
 
   // Connexion back-office par lien magique
   const [emailLog, setEmailLog] = useState("");
+  const [code, setCode] = useState("");
   const [logErreur, setLogErreur] = useState("");
   const [logEnCours, setLogEnCours] = useState(false);
-  const [lienEnvoye, setLienEnvoye] = useState(false);
+  const [codeEnvoye, setCodeEnvoye] = useState(false);
   async function connexion(e: React.FormEvent) {
     e.preventDefault();
     setLogErreur("");
@@ -110,16 +111,25 @@ export default function AdminPage() {
       return;
     }
     setLogEnCours(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email: emailLog.trim(),
-      options: {
-        emailRedirectTo:
-          typeof window !== "undefined" ? `${window.location.origin}/admyn` : undefined,
-      },
-    });
+    const { error } = await supabase.auth.signInWithOtp({ email: emailLog.trim() });
     setLogEnCours(false);
-    if (error) setLogErreur("Impossible d'envoyer le lien. Réessaie.");
-    else setLienEnvoye(true);
+    if (error) setLogErreur("Impossible d'envoyer le code. Réessaie.");
+    else setCodeEnvoye(true);
+  }
+  // Vérifie le code à 6 chiffres reçu par email (login existant ou inscription)
+  async function verifierCode(e: React.FormEvent) {
+    e.preventDefault();
+    setLogErreur("");
+    setLogEnCours(true);
+    const email = emailLog.trim().toLowerCase();
+    let { error } = await supabase.auth.verifyOtp({ email, token: code.trim(), type: "email" });
+    if (error) {
+      const retry = await supabase.auth.verifyOtp({ email, token: code.trim(), type: "signup" });
+      error = retry.error;
+    }
+    setLogEnCours(false);
+    if (error) setLogErreur("Code incorrect ou expiré.");
+    // Succès → user défini → estAdmin → verrou mot de passe back-office.
   }
 
   const charger = useCallback(async () => {
@@ -217,31 +227,40 @@ export default function AdminPage() {
           <ShieldCheck className="h-7 w-7 text-white" />
         </div>
         <h1 className="font-display text-2xl font-bold">Connexion back-office</h1>
-        {lienEnvoye ? (
-          <div className="w-full max-w-xs text-center">
-            <p className="text-sm text-ink/75">
-              📧 Un lien de connexion vient d&apos;être envoyé à <strong>{emailLog}</strong>.
-              Ouvre ton email et clique sur le lien pour accéder au back-office et créer
-              ton mot de passe.
+        {codeEnvoye ? (
+          <form onSubmit={verifierCode} className="w-full max-w-xs space-y-3">
+            <p className="text-center text-sm text-ink/75">
+              📧 Un code à 6 chiffres a été envoyé à <strong>{emailLog}</strong>.
             </p>
+            <input
+              type="text" inputMode="numeric" value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="Code à 6 chiffres" autoFocus
+              className={champ + " text-center text-lg tracking-[0.4em]"}
+            />
+            <button disabled={logEnCours} className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
+              {logEnCours ? "Vérification…" : "Valider le code"}
+            </button>
+            {logErreur && <p className="text-center text-sm font-medium text-pink">{logErreur}</p>}
             <button
-              onClick={() => { setLienEnvoye(false); }}
-              className="mt-4 text-sm text-ink/55 hover:underline"
+              type="button"
+              onClick={() => { setCodeEnvoye(false); setCode(""); setLogErreur(""); }}
+              className="block w-full text-center text-sm text-ink/55 hover:underline"
             >
               Renvoyer / changer d&apos;email
             </button>
-          </div>
+          </form>
         ) : (
           <form onSubmit={connexion} noValidate className="w-full max-w-xs space-y-3">
             <p className="text-center text-sm text-ink/65">
-              Saisis ton adresse admin : tu recevras un lien par email.
+              Saisis ton adresse admin : tu recevras un code par email.
             </p>
             <input
               type="email" value={emailLog} onChange={(e) => setEmailLog(e.target.value)}
               placeholder="Email" autoFocus autoComplete="username" className={champ}
             />
             <button disabled={logEnCours} className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
-              {logEnCours ? "Envoi…" : "Recevoir le lien"}
+              {logEnCours ? "Envoi…" : "Recevoir le code"}
             </button>
             {logErreur && <p className="text-center text-sm font-medium text-pink">{logErreur}</p>}
           </form>
