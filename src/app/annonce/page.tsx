@@ -9,6 +9,7 @@ import {
   Snowflake, Tv, UtensilsCrossed, Check, PiggyBank, Images, Smartphone, Play,
 } from "lucide-react";
 import { getListingById, lieuComplet } from "@/lib/listings";
+import SiteHeader from "@/components/SiteHeader";
 import type { Listing } from "@/data/listings";
 
 const PHOTO_DEFAUT =
@@ -330,6 +331,7 @@ function AnnonceContenu() {
 export default function AnnoncePage() {
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
+      <SiteHeader />
       <Suspense fallback={<p className="mt-20 text-center text-ink/50">Chargement…</p>}>
         <AnnonceContenu />
       </Suspense>

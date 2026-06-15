@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 import { motion } from "framer-motion";
-import { Star, Smartphone, Play, Sparkles, Clock, Rocket, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search, Lock } from "lucide-react";
+import { Star, Smartphone, Play, Sparkles, Clock, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search, Lock } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
 import { useAuth, type Profile } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { getColocatairesPublics } from "@/lib/colocataires";
@@ -124,52 +125,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {/* ===== Barre de navigation ===== */}
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <nav className="hidden items-center gap-6 text-sm font-medium text-ink/70 md:flex">
-            <Link href="/annonces" className="hover:text-ink">Annonces</Link>
-            <Link href="/colocataires" className="hover:text-ink">Colocataires</Link>
-            {/* Blog : ordinateur uniquement (≥ lg) */}
-            <Link href="/blog" className="hidden items-center gap-1.5 hover:text-ink lg:flex">
-              <MessageCircle className="h-4 w-4" /> Blog
-            </Link>
-            <a href="#avis" className="hover:text-ink">Avis</a>
-            <Link href="/contact" className="hover:text-ink">Contact</Link>
-          </nav>
-          <div className="flex items-center gap-2">
-            {/* Bientôt sur les stores — badge animé (pastille qui pulse) */}
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="hidden items-center gap-2 rounded-full bg-panel px-3.5 py-2 text-xs font-semibold text-ink/70 sm:flex"
-            >
-              <motion.span
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-                className="block h-2 w-2 rounded-full bg-pink"
-              />
-              Bientôt sur App Store &amp; Google Play
-            </motion.span>
-            <motion.div
-              animate={{ rotate: [0, -4, 4, -4, 4, 0], scale: [1, 1.06, 1.06, 1.06, 1.06, 1] }}
-              transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.2, ease: "easeInOut" }}
-              className="inline-block"
-            >
-              <Link href="/connexion" className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
-                <Rocket className="h-4 w-4" /> Commencez ici
-              </Link>
-            </motion.div>
-            <Link href="/connexion" className="hidden rounded-full border border-ink/15 bg-bg px-4 py-2 text-sm font-semibold text-ink hover:border-ink/30 sm:block">
-              Publier
-            </Link>
-          </div>
-        </div>
-      </header>
+      <SiteHeader />
 
       {/* ===== Hero ===== */}
       <section className="relative overflow-hidden">

@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { TYPES_LOGEMENT } from "@/lib/profilOptions";
 import type { Listing } from "@/data/listings";
@@ -55,21 +56,7 @@ function AnnoncesContenu() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {/* En-tête */}
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <Link
-            href="/connexion"
-            className="bg-signature rounded-full px-5 py-2.5 text-sm font-semibold text-white"
-          >
-            Publier une annonce
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto w-full max-w-6xl px-5 py-8">
         <h1 className="font-display text-3xl font-bold md:text-4xl">

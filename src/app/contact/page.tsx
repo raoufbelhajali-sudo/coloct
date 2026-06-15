@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail, ArrowLeft } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Contact — FlatSwiper",
@@ -10,17 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <Link href="/annonces" className="text-sm font-medium text-ink/70 hover:text-ink">
-            Annonces
-          </Link>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto w-full max-w-2xl px-5 py-12">
         <Link href="/" className="mb-6 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">

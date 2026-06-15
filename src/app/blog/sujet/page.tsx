@@ -7,6 +7,7 @@ import { ArrowLeft, MessageCircle, Tag, Send } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { getSujet, getReponses, repondre, type Sujet, type Reponse } from "@/lib/forum";
 import { useAccesOrdinateur, BlogSurOrdinateur } from "@/app/blog/page";
+import SiteHeader from "@/components/SiteHeader";
 
 function dateFr(iso: string) {
   return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -133,19 +134,7 @@ export default function SujetPage() {
   }
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between gap-4 px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <nav className="flex items-center gap-5 text-sm font-medium text-ink/70">
-            <Link href="/annonces" className="hover:text-ink">Annonces</Link>
-            <Link href="/colocataires" className="hover:text-ink">Colocataires</Link>
-            <Link href="/blog" className="text-pink">Blog</Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
       <Suspense fallback={<p className="mt-16 text-center text-ink/50">Chargement…</p>}>
         <SujetContenu />
       </Suspense>

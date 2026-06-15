@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Briefcase, ShieldCheck, Lock } from "lucide-react";
+import SiteHeader from "@/components/SiteHeader";
 import { getColocatairesPublics } from "@/lib/colocataires";
 import type { Profile } from "@/lib/auth";
 
@@ -84,20 +85,7 @@ export default function ColocatairesPage() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {/* En-tête */}
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-4 px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <nav className="flex items-center gap-5 text-sm font-medium text-ink/70">
-            <Link href="/annonces" className="hover:text-ink">Annonces</Link>
-            <Link href="/colocataires" className="text-pink">Colocataires</Link>
-            <Link href="/connexion" className="bg-signature rounded-full px-4 py-2 text-white">Publier</Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto w-full max-w-6xl px-5 py-8">
         <Link href="/" className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">

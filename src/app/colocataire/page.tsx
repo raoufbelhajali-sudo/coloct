@@ -8,6 +8,7 @@ import {
   Smartphone, Play,
 } from "lucide-react";
 import { getColocatairePublic } from "@/lib/colocataires";
+import SiteHeader from "@/components/SiteHeader";
 import type { Profile } from "@/lib/auth";
 
 function ColocataireContenu() {
@@ -136,19 +137,7 @@ function ColocataireContenu() {
 export default function ColocatairePage() {
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {/* En-tête */}
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-4xl items-center justify-between px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <nav className="flex items-center gap-5 text-sm font-medium text-ink/70">
-            <Link href="/annonces" className="hover:text-ink">Annonces</Link>
-            <Link href="/colocataires" className="hover:text-ink">Colocataires</Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
       <Suspense fallback={<p className="mt-20 text-center text-ink/50">Chargement…</p>}>
         <ColocataireContenu />
       </Suspense>

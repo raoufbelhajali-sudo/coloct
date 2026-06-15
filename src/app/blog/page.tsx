@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 import { MessageCircle, Plus, X, Tag, ArrowLeft, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import SiteHeader from "@/components/SiteHeader";
 import { getSujets, creerSujet, CATEGORIES_FORUM, type Sujet } from "@/lib/forum";
 
 // Le blog se consulte uniquement sur ORDINATEUR (pas mobile web, pas l'app).
@@ -90,20 +91,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {/* En-tête */}
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between gap-4 px-5">
-          <Link href="/" aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-          <nav className="flex items-center gap-5 text-sm font-medium text-ink/70">
-            <Link href="/annonces" className="hover:text-ink">Annonces</Link>
-            <Link href="/colocataires" className="hover:text-ink">Colocataires</Link>
-            <Link href="/blog" className="text-pink">Blog</Link>
-          </nav>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className="mx-auto w-full max-w-5xl px-5 py-8">
         <Link href="/" className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">
