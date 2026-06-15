@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank } from "lucide-react";
-import { useAuth } from "@/lib/auth";
+import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users } from "lucide-react";
+import { useAuth, type Profile } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
+import { getColocatairesPublics } from "@/lib/colocataires";
 import { boostActif } from "@/lib/offers";
 import type { Listing } from "@/data/listings";
 
@@ -79,6 +80,7 @@ export default function Home() {
   const { user, profile, loading } = useAuth();
   const [estNatif, setEstNatif] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
+  const [colocataires, setColocataires] = useState<Profile[]>([]);
 
   useEffect(() => {
     setEstNatif(Capacitor.isNativePlatform());
@@ -99,6 +101,7 @@ export default function Home() {
 
   useEffect(() => {
     getListings().then(setListings).catch(() => setListings([]));
+    getColocatairesPublics(8).then(setColocataires).catch(() => setColocataires([]));
   }, []);
 
   const aLaUne = [...listings]
@@ -117,6 +120,7 @@ export default function Home() {
           </Link>
           <nav className="hidden items-center gap-6 text-sm font-medium text-ink/70 md:flex">
             <Link href="/annonces" className="hover:text-ink">Annonces</Link>
+            <Link href="/colocataires" className="hover:text-ink">Colocataires</Link>
             <a href="#avis" className="hover:text-ink">Avis</a>
             <Link href="/contact" className="hover:text-ink">Contact</Link>
           </nav>
@@ -201,6 +205,47 @@ export default function Home() {
           </h2>
           <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {recentes.map((l) => <CarteAnnonce key={l.id} l={l} />)}
+          </div>
+        </section>
+      )}
+
+      {/* ===== Colocataires en recherche ===== */}
+      {colocataires.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-5 py-10">
+          <div className="flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-display text-2xl font-bold md:text-3xl">
+              <Users className="h-6 w-6 text-bleu" /> Colocataires en recherche
+            </h2>
+            <Link href="/colocataires" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
+          </div>
+          <p className="mt-1 text-ink/60">Tu as une chambre&nbsp;? Voici qui cherche une coloc.</p>
+          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {colocataires.map((p) => (
+              <Link
+                key={p.id}
+                href="/colocataires"
+                className="group overflow-hidden rounded-2xl bg-panel ring-1 ring-ink/5 transition-shadow hover:shadow-lg"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden bg-panel-2">
+                  {p.photo_url && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={p.photo_url} alt={p.prenom} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                  )}
+                  {p.budget_max ? (
+                    <span className="bg-signature absolute bottom-2 left-2 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow">
+                      ≤ {p.budget_max} €
+                    </span>
+                  ) : null}
+                </div>
+                <div className="p-3">
+                  <p className="font-display text-base font-semibold leading-tight">
+                    {p.prenom}
+                    {p.age ? <span className="font-normal text-ink/55">, {p.age}</span> : null}
+                  </p>
+                  {p.ville && <p className="mt-0.5 truncate text-xs text-ink/55">{p.ville}</p>}
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       )}
