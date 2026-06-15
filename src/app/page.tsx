@@ -134,6 +134,10 @@ export default function Home() {
           <nav className="hidden items-center gap-6 text-sm font-medium text-ink/70 md:flex">
             <Link href="/annonces" className="hover:text-ink">Annonces</Link>
             <Link href="/colocataires" className="hover:text-ink">Colocataires</Link>
+            {/* Blog : ordinateur uniquement (≥ lg) */}
+            <Link href="/blog" className="hidden items-center gap-1.5 hover:text-ink lg:flex">
+              <MessageCircle className="h-4 w-4" /> Blog
+            </Link>
             <a href="#avis" className="hover:text-ink">Avis</a>
             <Link href="/contact" className="hover:text-ink">Contact</Link>
           </nav>
