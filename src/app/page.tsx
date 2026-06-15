@@ -142,14 +142,21 @@ export default function Home() {
             <Link href="/contact" className="hover:text-ink">Contact</Link>
           </nav>
           <div className="flex items-center gap-2">
-            <a href="#telecharger" className="hidden items-center gap-1.5 rounded-full bg-ink px-3 py-2 text-xs font-semibold text-white sm:flex">
-              <Smartphone className="h-4 w-4" /> iOS
-            </a>
-            <a href="#telecharger" className="hidden items-center gap-1.5 rounded-full bg-ink px-3 py-2 text-xs font-semibold text-white sm:flex">
-              <Play className="h-4 w-4" /> Android
-            </a>
-            <Link href="/connexion" className="bg-signature flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-semibold text-white">
-              <Globe className="h-4 w-4" /> Appli web
+            {/* Bientôt sur les stores — badge animé (pastille qui pulse) */}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="hidden items-center gap-2 rounded-full bg-panel px-3.5 py-2 text-xs font-semibold text-ink/70 sm:flex"
+            >
+              <motion.span
+                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.4, 1] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                className="block h-2 w-2 rounded-full bg-pink"
+              />
+              Bientôt sur App Store &amp; Android
+            </motion.span>
+            <Link href="/connexion" className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
+              <Globe className="h-4 w-4" /> Commencez ici
             </Link>
             <Link href="/connexion" className="hidden rounded-full border border-ink/15 bg-bg px-4 py-2 text-sm font-semibold text-ink hover:border-ink/30 sm:block">
               Publier
