@@ -4,9 +4,10 @@
 --  À coller dans Supabase → SQL Editor → Run
 -- ============================================================
 
--- 1) Colonnes admin / suspension sur les profils
+-- 1) Colonnes admin / suspension / mot de passe back-office sur les profils
 alter table profiles add column if not exists is_admin boolean default false;
 alter table profiles add column if not exists suspendu boolean default false;
+alter table profiles add column if not exists bo_hash text;
 
 -- 2) Te désigner admin (⚠️ email de TON compte FlatSwiper)
 update profiles

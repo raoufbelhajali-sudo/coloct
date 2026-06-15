@@ -1,28 +1,31 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Capacitor } from "@capacitor/core";
 import { Monitor } from "lucide-react";
 import {
   ShieldCheck, Users, FileText, Eye, Check, Snowflake, Trash2, ArrowLeft, Lock,
-  LayoutDashboard, Flag, Star, BadgeCheck, Ban,
+  LayoutDashboard, Flag, Star, BadgeCheck, Ban, UserCog, KeyRound,
 } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 import {
   getTousProfils, definirIdentiteVerifiee, getPieceIdentiteUrl, suspendreProfil,
   getToutesAnnonces, gelerAnnonce, supprimerAnnonce,
   getStats, getVerifsEnAttente, getSignalements, supprimerSignalement,
   getAvis, supprimerAvis,
+  sha256, getBoHash, setBoHash,
   type AdminStats, type Signalement, type AvisAdmin,
 } from "@/lib/admin";
 import type { Listing } from "@/data/listings";
 
-type Onglet = "dash" | "users" | "annonces" | "verifs" | "reports" | "avis";
+type Onglet = "dash" | "users" | "annonces" | "verifs" | "reports" | "avis" | "compte";
+
+// Connexion back-office par lien magique — réservée à UNE seule adresse.
+const ADMIN_EMAIL = "raoufbelhajali@gmail.com";
 
 export default function AdminPage() {
-  const router = useRouter();
   const { user, profile, loading } = useAuth();
   const estAdmin = !!profile?.is_admin;
 
@@ -40,9 +43,84 @@ export default function AdminPage() {
     setNative(Capacitor.isNativePlatform());
   }, []);
 
+  // --- Verrou mot de passe back-office ---
+  const [boOk, setBoOk] = useState(false);
+  const [boHash, setBoHashState] = useState<string | null>(null);
+  const [boCharge, setBoCharge] = useState(false);
+  const [mdp, setMdp] = useState("");
+  const [mdp2, setMdp2] = useState("");
+  const [boErreur, setBoErreur] = useState("");
+
   useEffect(() => {
-    if (!loading && !user) router.replace("/connexion");
-  }, [loading, user, router]);
+    if (!estAdmin || !user) return;
+    if (typeof window !== "undefined" && sessionStorage.getItem("flatswiper_bo_ok") === "1") {
+      setBoOk(true);
+      return;
+    }
+    getBoHash(user.id).then((h) => {
+      setBoHashState(h);
+      setBoCharge(true);
+    });
+  }, [estAdmin, user]);
+
+  async function definirMdp(e: React.FormEvent) {
+    e.preventDefault();
+    setBoErreur("");
+    if (mdp.length < 4) return setBoErreur("Au moins 4 caractères.");
+    if (mdp !== mdp2) return setBoErreur("Les mots de passe ne correspondent pas.");
+    if (!user) return;
+    await setBoHash(user.id, await sha256(mdp));
+    sessionStorage.setItem("flatswiper_bo_ok", "1");
+    setBoOk(true);
+  }
+  async function entrerMdp(e: React.FormEvent) {
+    e.preventDefault();
+    setBoErreur("");
+    if ((await sha256(mdp)) === boHash) {
+      sessionStorage.setItem("flatswiper_bo_ok", "1");
+      setBoOk(true);
+    } else {
+      setBoErreur("Mot de passe incorrect.");
+    }
+  }
+  // Mot de passe oublié : l'admin (déjà connecté par lien magique) le réinitialise
+  async function oublierMdp() {
+    if (!user) return;
+    await setBoHash(user.id, ""); // efface → repasse en création
+    setBoHashState(null);
+    setMdp("");
+    setBoErreur("");
+  }
+
+  // Connexion back-office par lien magique
+  const [emailLog, setEmailLog] = useState("");
+  const [logErreur, setLogErreur] = useState("");
+  const [logEnCours, setLogEnCours] = useState(false);
+  const [lienEnvoye, setLienEnvoye] = useState(false);
+  async function connexion(e: React.FormEvent) {
+    e.preventDefault();
+    setLogErreur("");
+    const email = emailLog.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      setLogErreur("Adresse mail non valide.");
+      return;
+    }
+    if (email.toLowerCase() !== ADMIN_EMAIL) {
+      setLogErreur("Accès refusé : cette adresse n'est pas autorisée.");
+      return;
+    }
+    setLogEnCours(true);
+    const { error } = await supabase.auth.signInWithOtp({
+      email: emailLog.trim(),
+      options: {
+        emailRedirectTo:
+          typeof window !== "undefined" ? `${window.location.origin}/admyn` : undefined,
+      },
+    });
+    setLogEnCours(false);
+    if (error) setLogErreur("Impossible d'envoyer le lien. Réessaie.");
+    else setLienEnvoye(true);
+  }
 
   const charger = useCallback(async () => {
     if (!estAdmin) return;
@@ -94,6 +172,22 @@ export default function AdminPage() {
     setAvis((prev) => prev.filter((x) => !(x.reviewerId === a.reviewerId && x.reviewedId === a.reviewedId)));
   }
 
+  // Mon compte : changer le mot de passe back-office
+  const [boNew, setBoNew] = useState("");
+  const [boNew2, setBoNew2] = useState("");
+  const [compteMsg, setCompteMsg] = useState("");
+  async function changerMdpBo(e: React.FormEvent) {
+    e.preventDefault();
+    setCompteMsg("");
+    if (boNew.length < 4) return setCompteMsg("Au moins 4 caractères.");
+    if (boNew !== boNew2) return setCompteMsg("Les mots de passe ne correspondent pas.");
+    if (!user) return;
+    await setBoHash(user.id, await sha256(boNew));
+    setBoNew("");
+    setBoNew2("");
+    setCompteMsg("✅ Mot de passe back-office mis à jour.");
+  }
+
   // --- Garde d'accès ---
   if (loading) {
     return <main className="flex min-h-dvh items-center justify-center text-ink/60">Chargement…</main>;
@@ -113,6 +207,48 @@ export default function AdminPage() {
       </main>
     );
   }
+  // Pas connecté → connexion du back-office par lien magique (email admin)
+  if (!user) {
+    const champ =
+      "w-full rounded-xl border border-ink/10 bg-panel px-4 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none";
+    return (
+      <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6">
+        <div className="bg-signature flex h-14 w-14 items-center justify-center rounded-2xl">
+          <ShieldCheck className="h-7 w-7 text-white" />
+        </div>
+        <h1 className="font-display text-2xl font-bold">Connexion back-office</h1>
+        {lienEnvoye ? (
+          <div className="w-full max-w-xs text-center">
+            <p className="text-sm text-ink/75">
+              📧 Un lien de connexion vient d&apos;être envoyé à <strong>{emailLog}</strong>.
+              Ouvre ton email et clique sur le lien pour accéder au back-office et créer
+              ton mot de passe.
+            </p>
+            <button
+              onClick={() => { setLienEnvoye(false); }}
+              className="mt-4 text-sm text-ink/55 hover:underline"
+            >
+              Renvoyer / changer d&apos;email
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={connexion} noValidate className="w-full max-w-xs space-y-3">
+            <p className="text-center text-sm text-ink/65">
+              Saisis ton adresse admin : tu recevras un lien par email.
+            </p>
+            <input
+              type="email" value={emailLog} onChange={(e) => setEmailLog(e.target.value)}
+              placeholder="Email" autoFocus autoComplete="username" className={champ}
+            />
+            <button disabled={logEnCours} className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
+              {logEnCours ? "Envoi…" : "Recevoir le lien"}
+            </button>
+            {logErreur && <p className="text-center text-sm font-medium text-pink">{logErreur}</p>}
+          </form>
+        )}
+      </main>
+    );
+  }
   if (!estAdmin) {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
@@ -124,6 +260,50 @@ export default function AdminPage() {
         <Link href="/" className="bg-signature rounded-full px-6 py-3 font-semibold text-white">
           Retour à l&apos;accueil
         </Link>
+      </main>
+    );
+  }
+
+  // --- Porte mot de passe back-office ---
+  if (!boOk) {
+    const champ =
+      "w-full rounded-xl border border-ink/10 bg-panel px-4 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none";
+    return (
+      <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6">
+        <div className="bg-signature flex h-14 w-14 items-center justify-center rounded-2xl">
+          <ShieldCheck className="h-7 w-7 text-white" />
+        </div>
+        <h1 className="font-display text-2xl font-bold">Back-office</h1>
+        {!boCharge ? (
+          <p className="text-ink/60">Chargement…</p>
+        ) : boHash ? (
+          <form onSubmit={entrerMdp} className="w-full max-w-xs space-y-3">
+            <p className="text-center text-sm text-ink/65">Entre ton mot de passe back-office.</p>
+            <input type="password" value={mdp} onChange={(e) => setMdp(e.target.value)}
+              placeholder="Mot de passe" autoFocus className={champ} />
+            <button className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white">
+              Se connecter
+            </button>
+            <button type="button" onClick={oublierMdp}
+              className="block w-full text-center text-xs text-ink/55 hover:underline">
+              Mot de passe oublié ? Le réinitialiser
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={definirMdp} className="w-full max-w-xs space-y-3">
+            <p className="text-center text-sm text-ink/65">
+              Première connexion : crée le mot de passe d&apos;accès au back-office.
+            </p>
+            <input type="password" value={mdp} onChange={(e) => setMdp(e.target.value)}
+              placeholder="Nouveau mot de passe" autoFocus className={champ} />
+            <input type="password" value={mdp2} onChange={(e) => setMdp2(e.target.value)}
+              placeholder="Confirme le mot de passe" className={champ} />
+            <button className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white">
+              Créer le mot de passe
+            </button>
+          </form>
+        )}
+        {boErreur && <p className="text-sm font-medium text-pink">{boErreur}</p>}
       </main>
     );
   }
@@ -145,6 +325,7 @@ export default function AdminPage() {
     { id: "verifs", label: "Vérifications", Icon: BadgeCheck, badge: verifs.length },
     { id: "reports", label: "Signalements", Icon: Flag, badge: reports.length },
     { id: "avis", label: "Avis", Icon: Star, badge: avis.length },
+    { id: "compte", label: "Mon compte", Icon: UserCog },
   ];
 
   return (
@@ -285,7 +466,7 @@ export default function AdminPage() {
             ))
           )}
         </div>
-      ) : (
+      ) : onglet === "avis" ? (
         <div className="space-y-2">
           {avis.length === 0 ? (
             <p className="text-ink/60">Aucun avis.</p>
@@ -310,6 +491,49 @@ export default function AdminPage() {
               </div>
             ))
           )}
+        </div>
+      ) : (
+        <div className="max-w-md space-y-4">
+          <div className="rounded-2xl bg-panel p-4">
+            <p className="flex items-center gap-2 text-xs text-ink/50">
+              <UserCog className="h-4 w-4" /> Compte administrateur
+            </p>
+            <p className="mt-1 font-semibold">{user?.email}</p>
+          </div>
+
+          <form onSubmit={changerMdpBo} className="space-y-3 rounded-2xl bg-panel p-4">
+            <p className="flex items-center gap-2 font-medium">
+              <KeyRound className="h-4 w-4 text-violet" /> Mot de passe back-office
+            </p>
+            <input
+              type="password" value={boNew} onChange={(e) => setBoNew(e.target.value)}
+              placeholder="Nouveau mot de passe" autoComplete="new-password"
+              className="w-full rounded-xl border border-ink/10 bg-panel-2 px-4 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+            />
+            <input
+              type="password" value={boNew2} onChange={(e) => setBoNew2(e.target.value)}
+              placeholder="Confirme le nouveau mot de passe" autoComplete="new-password"
+              className="w-full rounded-xl border border-ink/10 bg-panel-2 px-4 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
+            />
+            <button className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white">
+              Enregistrer
+            </button>
+            {compteMsg && (
+              <p className={"text-sm font-medium " + (compteMsg.startsWith("✅") ? "text-violet" : "text-pink")}>
+                {compteMsg}
+              </p>
+            )}
+          </form>
+
+          <button
+            onClick={() => {
+              sessionStorage.removeItem("flatswiper_bo_ok");
+              supabase.auth.signOut();
+            }}
+            className="w-full rounded-full border border-ink/15 bg-panel-2 px-6 py-3 text-sm font-semibold text-ink"
+          >
+            Se déconnecter du back-office
+          </button>
         </div>
       )}
         </div>

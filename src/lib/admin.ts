@@ -168,6 +168,25 @@ export async function supprimerAvis(reviewerId: string, reviewedId: string): Pro
     .eq("reviewed_id", reviewedId);
 }
 
+// --- Mot de passe back-office (verrou en plus de la connexion admin) ---
+export async function sha256(s: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+export async function getBoHash(userId: string): Promise<string | null> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("bo_hash")
+    .eq("id", userId)
+    .maybeSingle();
+  return ((data?.bo_hash as string) ?? null) || null;
+}
+export async function setBoHash(userId: string, hash: string): Promise<void> {
+  await supabase.from("profiles").update({ bo_hash: hash }).eq("id", userId);
+}
+
 // Récupère les prénoms (ou pseudo) pour une liste d'ids.
 async function nomsParId(ids: string[]): Promise<Map<string, string>> {
   const m = new Map<string, string>();

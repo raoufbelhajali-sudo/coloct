@@ -25,12 +25,10 @@ export default function ComingSoonGate({
   const [saisie, setSaisie] = useState("");
   const [erreur, setErreur] = useState(false);
 
-  // Pages toujours accessibles même site en veille : le back-office et la page
-  // de connexion (pour pouvoir se connecter en admin, comme sur PetSwip).
+  // Page toujours accessible même site en veille : le back-office (qui a sa
+  // propre connexion par lien magique, comme sur PetSwip).
   const pathname = usePathname();
-  const exempt =
-    !!pathname &&
-    (pathname.startsWith("/admyn") || pathname.startsWith("/connexion"));
+  const exempt = !!pathname && pathname.startsWith("/admyn");
 
   useEffect(() => {
     // Dans l'app native : accès total, aucune porte.
