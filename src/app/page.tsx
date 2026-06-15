@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { Star, Smartphone, Play, Sparkles, Clock, Globe } from "lucide-react";
+import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { boostActif } from "@/lib/offers";
@@ -28,6 +28,21 @@ const PHOTOS_COLOC = [
   "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&q=70",
   "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=70",
   "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=70",
+];
+
+const ETAPES = [
+  { Icon: Layers, t: "Parcours", d: "Swipe les colocations près de chez toi, comme une appli de rencontre." },
+  { Icon: Heart, t: "Like & matche", d: "« Ça m'intéresse » à droite. Si l'annonceur aussi, c'est un match." },
+  { Icon: MessageCircle, t: "Discute", d: "Échange en direct dans la messagerie, sans donner ton numéro." },
+  { Icon: KeyRound, t: "Emménage", d: "Organise la visite et installe-toi dans ta nouvelle coloc." },
+];
+
+// Loyers indicatifs (charges comprises) d'une chambre en colocation · 2025
+const PRIX_VILLES = [
+  { v: "Paris", p: 750 }, { v: "Lyon", p: 520 }, { v: "Bordeaux", p: 480 },
+  { v: "Toulouse", p: 430 }, { v: "Lille", p: 450 }, { v: "Marseille", p: 420 },
+  { v: "Nantes", p: 440 }, { v: "Montpellier", p: 430 }, { v: "Rennes", p: 440 },
+  { v: "Strasbourg", p: 440 }, { v: "Nice", p: 520 }, { v: "Grenoble", p: 420 },
 ];
 
 function CarteAnnonce({ l }: { l: Listing }) {
@@ -144,6 +159,22 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== Comment ça marche ===== */}
+      <section className="mx-auto w-full max-w-6xl px-5 py-12">
+        <h2 className="text-center font-display text-2xl font-bold md:text-3xl">Comment ça marche&nbsp;?</h2>
+        <p className="mx-auto mt-2 max-w-lg text-center text-ink/60">Trouver une coloc n&apos;a jamais été aussi simple. En 4 étapes.</p>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {ETAPES.map(({ Icon, t, d }, i) => (
+            <div key={t} className="relative rounded-3xl bg-panel p-6 pt-7 text-center">
+              <span className="bg-signature absolute -top-3.5 left-1/2 flex h-7 w-7 -translate-x-1/2 items-center justify-center rounded-full text-sm font-bold text-white">{i + 1}</span>
+              <Icon className="mx-auto h-9 w-9 text-bleu" />
+              <p className="mt-3 font-display text-lg font-bold">{t}</p>
+              <p className="mt-1 text-sm text-ink/65">{d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* ===== Annonces à la une ===== */}
       {aLaUne.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-5 py-10">
@@ -218,6 +249,37 @@ export default function Home() {
               <Play className="h-5 w-5" /> Google Play <span className="text-xs font-normal text-ink/50">(bientôt)</span>
             </a>
           </div>
+        </div>
+      </section>
+
+      {/* ===== Prix moyens : la coloc, le bon plan petit budget ===== */}
+      <section className="bg-panel/60">
+        <div className="mx-auto w-full max-w-6xl px-5 py-14">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-1.5 text-sm font-semibold text-pink">
+              <PiggyBank className="h-4 w-4" /> Petit budget
+            </span>
+            <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">La coloc, le bon plan pour ton budget</h2>
+            <p className="mx-auto mt-2 max-w-xl text-ink/65">
+              Une chambre en colocation coûte en moyenne <strong className="text-ink">≈ 480 €/mois</strong> en
+              France — bien moins qu&apos;un studio (~750 €). Voici les loyers moyens par ville.
+            </p>
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {PRIX_VILLES.map(({ v, p }) => (
+              <Link
+                key={v}
+                href={`/colocation/${v.toLowerCase()}`}
+                className="flex items-center justify-between rounded-2xl bg-bg px-4 py-3 ring-1 ring-ink/5 transition-shadow hover:shadow-md"
+              >
+                <span className="font-medium text-ink/80">{v}</span>
+                <span className="font-display font-bold text-pink">{p} €</span>
+              </Link>
+            ))}
+          </div>
+          <p className="mt-4 text-center text-xs text-ink/45">
+            Loyers indicatifs charges comprises pour une chambre en colocation · 2025.
+          </p>
         </div>
       </section>
 
