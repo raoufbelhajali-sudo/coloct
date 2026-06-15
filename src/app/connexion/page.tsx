@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Mail, ArrowLeft } from "lucide-react";
+import { Mail, ArrowLeft, Search, Home } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
 import { SocialLogin } from "@capgo/capacitor-social-login";
 import { supabase } from "@/lib/supabase";
@@ -69,9 +69,25 @@ export default function ConnexionPage() {
   // un navigateur externe (barre d'adresse). On garde email + mot de passe,
   // qui reste 100% dans l'app. Sur le site web, tout reste disponible.
   const [estNatif, setEstNatif] = useState(false);
+  // A-t-on déjà choisi son rôle (colocataire / annonceur) sur cet appareil ?
+  // Si oui, on saute l'écran de choix et on va direct à la connexion.
+  const [roleVu, setRoleVu] = useState<boolean | null>(null); // null = pas encore décidé
   useEffect(() => {
     setEstNatif(Capacitor.isNativePlatform());
+    try {
+      setRoleVu(!!localStorage.getItem("flatswiper-role-choisi"));
+    } catch {
+      setRoleVu(true);
+    }
   }, []);
+  function choisirRole(r: "colocataire" | "locataire") {
+    try {
+      localStorage.setItem("flatswiper-role-choisi", r);
+    } catch {
+      /* ignore */
+    }
+    setRoleVu(true);
+  }
 
   function reset() {
     setErreur("");
@@ -357,8 +373,39 @@ export default function ConnexionPage() {
       </p>
 
       <div className="w-full max-w-sm rounded-3xl bg-panel p-6">
-        {/* ----- Écran de choix ----- */}
-        {etape === "choix" && (
+        {/* ----- Pré-écran : choix du rôle (1ère fois seulement) ----- */}
+        {etape === "choix" && roleVu === false && (
+          <div className="space-y-3">
+            <p className="text-center font-display text-lg font-bold">Je suis…</p>
+            <button
+              onClick={() => choisirRole("colocataire")}
+              className="flex w-full items-center gap-3 rounded-2xl border border-ink/15 bg-panel-2 px-4 py-4 text-left transition-colors hover:border-pink"
+            >
+              <span className="bg-signature flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white">
+                <Search className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block font-semibold text-ink">Colocataire</span>
+                <span className="block text-sm text-ink/60">Je cherche une colocation</span>
+              </span>
+            </button>
+            <button
+              onClick={() => choisirRole("locataire")}
+              className="flex w-full items-center gap-3 rounded-2xl border border-ink/15 bg-panel-2 px-4 py-4 text-left transition-colors hover:border-pink"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-bleu text-white">
+                <Home className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block font-semibold text-ink">Annonceur</span>
+                <span className="block text-sm text-ink/60">Je propose une chambre / coloc</span>
+              </span>
+            </button>
+          </div>
+        )}
+
+        {/* ----- Écran de connexion (après le choix du rôle) ----- */}
+        {etape === "choix" && roleVu === true && (
           <div className="space-y-3">
             <button
               onClick={estNatif ? handleGoogleNatif : handleGoogle}
@@ -397,6 +444,20 @@ export default function ConnexionPage() {
               className="bg-signature glow-pink w-full rounded-full px-4 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               Créer un compte
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  localStorage.removeItem("flatswiper-role-choisi");
+                } catch {
+                  /* ignore */
+                }
+                setRoleVu(false);
+              }}
+              className="block w-full pt-1 text-center text-xs text-ink/45 hover:text-ink/70"
+            >
+              ← Changer de profil
             </button>
           </div>
         )}
