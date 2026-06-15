@@ -217,16 +217,16 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="relative hidden lg:block"
+            className="relative mt-2 lg:mt-0"
           >
             <div className="overflow-hidden rounded-3xl shadow-xl ring-1 ring-ink/5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/accueil-bg.jpg" alt="Colocataires heureux" className="aspect-[4/3] h-full w-full object-cover" />
+              <img src="/accueil-bg.jpg" alt="Colocataires heureux" className="aspect-[16/10] h-full w-full object-cover sm:aspect-[4/3]" />
             </div>
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-5 -left-5 flex items-center gap-3 rounded-2xl bg-bg p-3 pr-5 shadow-lg ring-1 ring-ink/5"
+              className="absolute bottom-3 left-3 flex items-center gap-3 rounded-2xl bg-bg p-3 pr-5 shadow-lg ring-1 ring-ink/5 lg:-bottom-5 lg:-left-5"
             >
               <span className="bg-signature glow-pink flex h-11 w-11 items-center justify-center rounded-full text-white">
                 <Heart className="h-5 w-5" fill="currentColor" />
