@@ -27,10 +27,11 @@ const AVIS = [
   { n: "Sophie, annonceuse", t: "J'ai loué ma chambre super vite, et surtout j'ai pu choisir la personne. Je recommande à 100%." },
 ];
 
-const PHOTOS_COLOC = [
-  "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=600&q=70",
-  "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=70",
-  "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=70",
+// Aperçus de l'app (captures générées) affichés sur l'accueil
+const APERCUS = [
+  { img: "/app-swipe.png", t: "Swipe", d: "Parcours les colocs près de chez toi." },
+  { img: "/app-match.png", t: "Matche", d: "Quand c'est réciproque, c'est un match." },
+  { img: "/app-chat.png", t: "Discute", d: "Une messagerie intégrée et sécurisée." },
 ];
 
 const ETAPES = [
@@ -318,17 +319,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== La vie en coloc (images) ===== */}
-      <section className="mx-auto w-full max-w-6xl px-5 py-14">
-        <h2 className="text-center font-display text-2xl font-bold md:text-3xl">La vie en colocation</h2>
-        <p className="mx-auto mt-2 max-w-xl text-center text-ink/60">Rencontre des colocataires qui te ressemblent.</p>
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-          {PHOTOS_COLOC.map((p, i) => (
-            <div key={i} className={"overflow-hidden rounded-2xl bg-panel-2 " + (i === 0 ? "col-span-2 sm:col-span-1" : "")}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={p} alt="Colocataires" className="aspect-[4/3] h-full w-full object-cover" />
-            </div>
-          ))}
+      {/* ===== Aperçu de l'app (captures) ===== */}
+      <section className="overflow-hidden bg-panel/60">
+        <div className="mx-auto w-full max-w-6xl px-5 py-14">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-1.5 text-sm font-semibold text-pink">
+              <Smartphone className="h-4 w-4" /> L&apos;app en images
+            </span>
+            <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">À quoi ressemble FlatSwiper&nbsp;?</h2>
+            <p className="mx-auto mt-2 max-w-xl text-ink/65">
+              Swipe, matche, discute — tout se passe dans l&apos;app, simplement.
+            </p>
+          </div>
+          <div className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-8">
+            {APERCUS.map(({ img, t, d }, i) => (
+              <motion.div
+                key={t}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                className={"flex flex-col items-center text-center " + (i === 1 ? "sm:-translate-y-4" : "")}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img} alt={t} className="w-full max-w-[230px] drop-shadow-xl" />
+                <p className="mt-3 font-display text-sm font-bold sm:text-lg">{t}</p>
+                <p className="mt-0.5 hidden max-w-[18ch] text-sm text-ink/60 sm:block">{d}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
