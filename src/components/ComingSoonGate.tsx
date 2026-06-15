@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 
 // Mot de passe d'accès anticipé au SITE web (modifiable ici).
@@ -23,6 +24,13 @@ export default function ComingSoonGate({
   const [autorise, setAutorise] = useState(false);
   const [saisie, setSaisie] = useState("");
   const [erreur, setErreur] = useState(false);
+
+  // Pages toujours accessibles même site en veille : le back-office et la page
+  // de connexion (pour pouvoir se connecter en admin, comme sur PetSwip).
+  const pathname = usePathname();
+  const exempt =
+    !!pathname &&
+    (pathname.startsWith("/admyn") || pathname.startsWith("/connexion"));
 
   useEffect(() => {
     // Dans l'app native : accès total, aucune porte.
@@ -56,7 +64,7 @@ export default function ComingSoonGate({
 
   // Évite tout clignotement avant d'avoir décidé
   // Site ouvert au public : aucune porte.
-  if (!SITE_FERME) return <>{children}</>;
+  if (!SITE_FERME || exempt) return <>{children}</>;
   if (!verifie) return null;
   if (autorise) return <>{children}</>;
 
