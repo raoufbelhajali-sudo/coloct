@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageSquare, Zap, Settings, Sparkles } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
+import { MessageSquare, Zap, Settings, Sparkles, Home } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 
@@ -20,6 +22,12 @@ export default function AppHeader({
   const { count: nbMessages, alerte: alerteMsg } = useMessagesNonLus();
   const nbLikes = useLikesRecus();
   const pathname = usePathname();
+
+  // Bouton "Accueil" (revoir le site d'annonces) → web PC uniquement
+  const [estNatif, setEstNatif] = useState(false);
+  useEffect(() => {
+    setEstNatif(Capacitor.isNativePlatform());
+  }, []);
 
   // Le logo ramène à l'accueil DANS l'app (selon le rôle)
   const accueil = !user
@@ -84,12 +92,21 @@ export default function AppHeader({
         </Link>
       )}
 
-      {/* Haut : pastille de rôle uniquement */}
+      {/* Haut : logo centré + bouton Accueil (web PC seulement) */}
       {!hideTop && (
-        <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
-          {/* Logo complet (symbole + nom), à gauche */}
+        <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
+          {/* Retour au site d'annonces — uniquement sur ordinateur (pas l'app, pas mobile) */}
+          {!estNatif && (
+            <Link
+              href="/"
+              title="Voir le site (mode annonces)"
+              className="absolute right-0 hidden items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-xs font-semibold text-ink/70 ring-1 ring-ink/10 transition-colors hover:text-ink lg:flex"
+            >
+              <Home className="h-4 w-4" /> Accueil
+            </Link>
+          )}
         </header>
       )}
 

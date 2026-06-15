@@ -84,12 +84,15 @@ export default function Home() {
     setEstNatif(Capacitor.isNativePlatform());
   }, []);
 
-  // Déjà connecté → espace ; app native → direct à la connexion
+  // Sur le WEB : on laisse toujours voir l'accueil (site d'annonces), même
+  // connecté → le bouton "Accueil" de l'app y ramène. Dans l'APP native :
+  // connecté → son espace ; sinon → connexion.
   useEffect(() => {
     if (loading) return;
+    if (!estNatif) return; // web : pas de redirection, on affiche le site
     if (user && profile) {
       router.replace(profile.role === "locataire" ? "/locataire" : "/swipe");
-    } else if (estNatif && !user) {
+    } else if (!user) {
       router.replace("/connexion");
     }
   }, [estNatif, loading, user, profile, router]);
