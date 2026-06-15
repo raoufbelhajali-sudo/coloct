@@ -9,7 +9,7 @@ insert into public.listings
   (titre, loyer, quartier, ville, surface, meuble, etage, type_logement,
    date_dispo, dispo, caution, criteres, photos, description, arrondissement)
 select v.titre, v.loyer, v.quartier, v.ville, v.surface, v.meuble, v.etage, v.type_logement,
-   v.date_dispo, v.dispo, v.caution, v.criteres, v.photos, v.description, 0
+   v.date_dispo, v.dispo::date, v.caution, v.criteres, v.photos, v.description, 0
 from (values
  ('Chambre lumineuse — Lyon Croix-Rousse', 480, 'Croix-Rousse', 'Lyon', 13, true, '2e étage avec ascenseur', 'Appartement', '1er juillet 2026', '2026-07-01', 480, ARRAY['Non-fumeur','Télétravail friendly','Calme']::text[], ARRAY['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=70','https://images.unsplash.com/photo-1567767292278-a4f21aa2d36e?auto=format&fit=crop&w=800&q=70']::text[], 'Belle chambre meublée dans une coloc de 3 sur les pentes de la Croix-Rousse. Lumineuse, parquet, à deux pas des commerces et du métro. Ambiance calme et bienveillante.'),
  ('Coloc conviviale — Lyon Guillotière', 450, 'La Guillotière', 'Lyon', 12, true, '3e étage sans ascenseur', 'Appartement', '15 juillet 2026', '2026-07-15', 450, ARRAY['Soirées OK','Végé-friendly','Mixte']::text[], ARRAY['https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=800&q=70']::text[], 'Chambre dispo dans une coloc jeune et dynamique en plein cœur de la Guillot''. Quartier multiculturel et vivant, bars et restos à tous les coins de rue.'),
