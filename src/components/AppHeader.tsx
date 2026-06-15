@@ -92,21 +92,23 @@ export default function AppHeader({
         </Link>
       )}
 
-      {/* Haut : logo centré + bouton Accueil (web PC seulement) */}
+      {/* Bouton "Accueil" (revoir le site d'annonces) — web PC uniquement,
+          flottant en haut à droite, présent sur TOUTES les pages (dont le swipe). */}
+      {user && !estNatif && (
+        <Link
+          href="/"
+          title="Voir le site (mode annonces)"
+          className="fixed right-4 top-4 z-50 hidden items-center gap-1.5 rounded-full bg-panel/95 px-3.5 py-2 text-xs font-semibold text-ink/70 shadow-sm ring-1 ring-ink/10 backdrop-blur transition-colors hover:text-ink lg:flex"
+        >
+          <Home className="h-4 w-4" /> Accueil
+        </Link>
+      )}
+
+      {/* Haut : logo centré */}
       {!hideTop && (
-        <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-center">
+        <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
-          {/* Retour au site d'annonces — uniquement sur ordinateur (pas l'app, pas mobile) */}
-          {!estNatif && (
-            <Link
-              href="/"
-              title="Voir le site (mode annonces)"
-              className="absolute right-0 hidden items-center gap-1.5 rounded-full bg-panel px-3 py-1.5 text-xs font-semibold text-ink/70 ring-1 ring-ink/10 transition-colors hover:text-ink lg:flex"
-            >
-              <Home className="h-4 w-4" /> Accueil
-            </Link>
-          )}
         </header>
       )}
 
