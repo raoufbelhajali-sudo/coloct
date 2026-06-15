@@ -27,8 +27,6 @@ export default function SiteHeader() {
           <Link href="/blog" className={"hidden items-center gap-1.5 lg:flex " + lienCls(actif("/blog"))}>
             <MessageCircle className="h-4 w-4" /> Blog
           </Link>
-          <Link href="/#avis" className="hover:text-ink">Avis</Link>
-          <Link href="/contact" className={lienCls(actif("/contact"))}>Contact</Link>
         </nav>
 
         <div className="flex items-center gap-2">
