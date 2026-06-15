@@ -2,17 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft, MapPin, Wallet, Briefcase, Heart, X, Smartphone, Play, ShieldCheck,
-} from "lucide-react";
+import { ArrowLeft, MapPin, Briefcase, ShieldCheck, Lock } from "lucide-react";
 import { getColocatairesPublics } from "@/lib/colocataires";
 import type { Profile } from "@/lib/auth";
 
-function CarteColocataire({ p, onContact }: { p: Profile; onContact: () => void }) {
+function CarteColocataire({ p }: { p: Profile }) {
   return (
-    <button
-      onClick={onContact}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-panel text-left ring-1 ring-ink/5 transition-shadow hover:shadow-lg"
+    <Link
+      href={`/colocataire/?id=${p.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-panel ring-1 ring-ink/5 transition-shadow hover:shadow-lg"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-panel-2">
         {p.photo_url ? (
@@ -20,23 +18,27 @@ function CarteColocataire({ p, onContact }: { p: Profile; onContact: () => void 
           <img
             src={p.photo_url}
             alt={p.prenom}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full scale-110 object-cover blur-lg"
           />
         ) : (
           <span className="bg-signature flex h-full w-full items-center justify-center text-4xl font-bold text-white">
             {p.prenom?.charAt(0).toUpperCase() || "?"}
           </span>
         )}
-        {p.identite_verifiee && (
-          <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-bg/90 px-2 py-1 text-[11px] font-semibold text-violet shadow">
-            <ShieldCheck className="h-3.5 w-3.5" /> Vérifié
-          </span>
-        )}
+        {/* Cadenas : photo protégée tant qu'on n'a pas swipé */}
+        <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-bg/75 text-ink/70 backdrop-blur">
+          <Lock className="h-3.5 w-3.5" />
+        </span>
         {p.budget_max ? (
           <span className="bg-signature absolute bottom-2 left-2 rounded-full px-3 py-1 text-sm font-bold text-white shadow">
             ≤ {p.budget_max} €
           </span>
         ) : null}
+        {p.identite_verifiee && (
+          <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-bg/90 px-2 py-1 text-[11px] font-semibold text-violet shadow">
+            <ShieldCheck className="h-3.5 w-3.5" /> Vérifié
+          </span>
+        )}
       </div>
       <div className="flex flex-1 flex-col p-3.5">
         <p className="font-display text-lg font-semibold leading-tight">
@@ -65,14 +67,13 @@ function CarteColocataire({ p, onContact }: { p: Profile; onContact: () => void 
           </div>
         )}
       </div>
-    </button>
+    </Link>
   );
 }
 
 export default function ColocatairesPage() {
   const [profils, setProfils] = useState<Profile[]>([]);
   const [chargement, setChargement] = useState(true);
-  const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     getColocatairesPublics()
@@ -108,8 +109,8 @@ export default function ColocatairesPage() {
             Colocataires en recherche
           </h1>
           <p className="mx-auto mt-2 max-w-xl text-ink/65">
-            Découvre les personnes qui cherchent une colocation. Tu as une chambre&nbsp;?
-            Repère ceux qui te correspondent et contacte-les depuis l&apos;app.
+            Découvre les personnes qui cherchent une colocation. Les photos se révèlent
+            quand tu swipes&nbsp;: ouvre l&apos;app pour matcher et discuter.
           </p>
         </div>
 
@@ -129,41 +130,11 @@ export default function ColocatairesPage() {
         ) : (
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {profils.map((p) => (
-              <CarteColocataire key={p.id} p={p} onContact={() => setPopup(true)} />
+              <CarteColocataire key={p.id} p={p} />
             ))}
           </div>
         )}
       </main>
-
-      {/* Pop-up "contacter via l'app" */}
-      {popup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/70 p-5 backdrop-blur-sm" onClick={() => setPopup(false)}>
-          <div className="relative w-full max-w-sm rounded-3xl bg-bg p-7 text-center shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => setPopup(false)} aria-label="Fermer" className="absolute right-4 top-4 text-ink/40 hover:text-ink">
-              <X className="h-5 w-5" />
-            </button>
-            <div className="bg-signature glow-pink mx-auto flex h-16 w-16 items-center justify-center rounded-2xl">
-              <Heart className="h-8 w-8 text-white" fill="currentColor" />
-            </div>
-            <h2 className="mt-4 font-display text-2xl font-bold">Contacte ce colocataire</h2>
-            <p className="mt-2 text-ink/75">
-              Pour proposer ta coloc à ce colocataire et discuter, télécharge l&apos;app
-              FlatSwiper. Tout se passe en un swipe.
-            </p>
-            <div className="mt-5 flex flex-col gap-2.5">
-              <a href="#" className="flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 font-semibold text-white">
-                <Smartphone className="h-5 w-5" /> Télécharger sur iPhone
-              </a>
-              <a href="#" className="flex items-center justify-center gap-2 rounded-full border border-ink/15 px-6 py-3 font-semibold text-ink">
-                <Play className="h-5 w-5" /> Bientôt sur Android
-              </a>
-              <Link href="/connexion" className="mt-1 text-sm font-semibold text-pink hover:underline">
-                ou continuer sur l&apos;app web →
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

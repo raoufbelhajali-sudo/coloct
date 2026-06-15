@@ -14,3 +14,14 @@ export async function getColocatairesPublics(limit = 60): Promise<Profile[]> {
     .limit(limit);
   return (data as Profile[]) ?? [];
 }
+
+// Un profil colocataire public (pour la page profil du site).
+export async function getColocatairePublic(id: string): Promise<Profile | null> {
+  const { data } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id)
+    .eq("role", "colocataire")
+    .maybeSingle();
+  return (data as Profile) ?? null;
+}

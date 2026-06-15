@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 import { motion } from "framer-motion";
-import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search } from "lucide-react";
+import { Star, Smartphone, Play, Sparkles, Clock, Globe, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search, Lock } from "lucide-react";
 import { useAuth, type Profile } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { getColocatairesPublics } from "@/lib/colocataires";
@@ -297,14 +297,17 @@ export default function Home() {
             {colocataires.map((p) => (
               <Link
                 key={p.id}
-                href="/colocataires"
+                href={`/colocataire/?id=${p.id}`}
                 className="group overflow-hidden rounded-2xl bg-panel ring-1 ring-ink/5 transition-shadow hover:shadow-lg"
               >
                 <div className="relative aspect-[4/5] overflow-hidden bg-panel-2">
                   {p.photo_url && (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={p.photo_url} alt={p.prenom} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                    <img src={p.photo_url} alt={p.prenom} className="h-full w-full scale-110 object-cover blur-lg" />
                   )}
+                  <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-bg/75 text-ink/70 backdrop-blur">
+                    <Lock className="h-3.5 w-3.5" />
+                  </span>
                   {p.budget_max ? (
                     <span className="bg-signature absolute bottom-2 left-2 rounded-full px-2.5 py-1 text-xs font-bold text-white shadow">
                       ≤ {p.budget_max} €
