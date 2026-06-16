@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark, AlertCircle } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -17,6 +17,7 @@ import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import { useAuth } from "@/lib/auth";
 import { estHero, contacterDirect } from "@/lib/offers";
+import { champsManquantsSwipe } from "@/lib/completude";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import {
   getSwipedListingIds,
@@ -329,6 +330,37 @@ export default function SwipeDeck() {
           Impossible de charger les annonces depuis le serveur. Vérifie ta
           connexion et réessaie.
         </p>
+      </div>
+    );
+  }
+
+  // Profil incomplet → on bloque le swipe et on liste ce qui manque (en rouge)
+  const manque = profile ? champsManquantsSwipe(profile) : [];
+  if (manque.length > 0) {
+    return (
+      <div className="flex h-full w-full max-w-sm flex-col items-center justify-center gap-4 px-2 text-center">
+        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#dc2626]/10 text-[#dc2626]">
+          <AlertCircle className="h-8 w-8" />
+        </span>
+        <p className="font-display text-2xl font-bold">
+          Complète ton profil pour swiper
+        </p>
+        <p className="max-w-xs text-sm text-ink/70">
+          Pour matcher, ton profil doit être complet. Il te manque&nbsp;:
+        </p>
+        <ul className="space-y-1.5 text-left text-sm font-semibold text-[#dc2626]">
+          {manque.map((c) => (
+            <li key={c.cle} className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#dc2626]" /> {c.label}
+            </li>
+          ))}
+        </ul>
+        <button
+          onClick={() => router.push("/profil")}
+          className="bg-signature mt-2 rounded-full px-6 py-3 font-semibold text-white"
+        >
+          Compléter mon profil
+        </button>
       </div>
     );
   }

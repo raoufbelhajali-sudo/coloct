@@ -28,3 +28,22 @@ export function estSuperProfil(p: Profile | null): boolean {
 export function labelSuper(p: Profile | null): string {
   return p?.role === "locataire" ? "Super annonceur" : "Super colocataire";
 }
+
+// --- Champs OBLIGATOIRES pour qu'un colocataire puisse swiper ---
+export type ChampManquant = { cle: string; label: string };
+
+export function champsManquantsSwipe(p: Profile | null): ChampManquant[] {
+  if (!p) return [{ cle: "profil", label: "Ton profil" }];
+  const m: ChampManquant[] = [];
+  if (!(p.pseudo && p.pseudo.trim())) m.push({ cle: "pseudo", label: "Pseudo" });
+  if (!p.photo_url) m.push({ cle: "photo", label: "Photo de profil" });
+  if (!p.age) m.push({ cle: "age", label: "Âge" });
+  if (!p.ville) m.push({ cle: "ville", label: "Ville recherchée" });
+  if (!(p.bio && p.bio.trim())) m.push({ cle: "bio", label: "Présentation" });
+  return m;
+}
+
+// Le colocataire peut-il swiper ? (tous les champs obligatoires remplis)
+export function profilPretASwiper(p: Profile | null): boolean {
+  return champsManquantsSwipe(p).length === 0;
+}

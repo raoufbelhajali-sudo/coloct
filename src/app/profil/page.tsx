@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Check, Eye, Star, ChevronDown, ArrowLeft } from "lucide-react";
+import { Check, Eye, Star, ChevronDown, ArrowLeft, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Profile } from "@/lib/auth";
 import ProfileDetail from "@/components/ProfileDetail";
@@ -11,7 +11,7 @@ import PremiumPin from "@/components/PremiumPin";
 import AppHeader from "@/components/AppHeader";
 import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
-import { completudeProfil, estSuperProfil, labelSuper } from "@/lib/completude";
+import { completudeProfil, estSuperProfil, labelSuper, champsManquantsSwipe } from "@/lib/completude";
 
 const GENRES = ["Femme", "Homme", "Autre"];
 
@@ -296,6 +296,21 @@ export default function ProfilPage() {
           C&apos;est ce que les colocs verront avant de t&apos;accepter. Soigne-le !
         </p>
 
+        {/* Profil incomplet (colocataire) → liste des champs obligatoires manquants */}
+        {profile && profile.role !== "locataire" && champsManquantsSwipe(profile).length > 0 && (
+          <div className="mb-5 rounded-2xl border border-[#dc2626]/30 bg-[#dc2626]/5 px-4 py-3 text-sm">
+            <p className="flex items-center gap-2 font-semibold text-[#dc2626]">
+              <AlertCircle className="h-4 w-4" /> Profil incomplet — tu ne pourras pas swiper
+            </p>
+            <p className="mt-1 text-ink/70">
+              À compléter (obligatoire)&nbsp;:{" "}
+              <span className="font-semibold text-[#dc2626]">
+                {champsManquantsSwipe(profile).map((c) => c.label).join(", ")}
+              </span>
+            </p>
+          </div>
+        )}
+
         {/* Complétude du profil + badge Super (sans objet pour une agence) */}
         {profile && !estAgence && (
           <div className="mb-6 rounded-2xl bg-panel p-4">
@@ -454,7 +469,7 @@ export default function ProfilPage() {
           <Section titre="Identité" defautOuvert id="sec-identite" forceOuvert={sectionCible === "sec-identite"}>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Prénom" value={prenom} onChange={setPrenom} required placeholder="Camille" />
-              <Champ label="Pseudo" value={pseudo} onChange={setPseudo} placeholder="cam_paris" />
+              <Champ label="Pseudo" value={pseudo} onChange={setPseudo} required placeholder="cam_paris" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Âge" type="number" value={age} onChange={setAge} placeholder="25" />
@@ -717,11 +732,15 @@ function Section({
 function Champ({ label, value, onChange, type = "text", placeholder, required }: {
   label: string; value: string; onChange: (v: string) => void; type?: string; placeholder?: string; required?: boolean;
 }) {
+  const manque = !!required && !value.trim();
   return (
     <div>
-      <label className="text-sm text-ink/70">{label}</label>
+      <label className={"text-sm " + (manque ? "font-semibold text-[#dc2626]" : "text-ink/70")}>
+        {label}{manque ? " · obligatoire" : ""}
+      </label>
       <input type={type} value={value} required={required} placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)} className={champClasses} />
+        onChange={(e) => onChange(e.target.value)}
+        className={champClasses + (manque ? " ring-1 ring-[#dc2626]" : "")} />
     </div>
   );
 }
