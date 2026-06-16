@@ -100,8 +100,9 @@ export default function AppHeader() {
         </Link>
       )}
 
-      {/* Haut : logo (présent sur toutes les pages de l'app) */}
-      {user && (
+      {/* Haut : logo. Sur le swipe, le logo est intégré à la barre filtres/partage
+          (même ligne) → on ne l'affiche pas ici pour ne pas le dédoubler. */}
+      {user && pathname !== "/swipe" && (
         <header className="mb-4 flex h-10 w-full max-w-sm items-center justify-center">
           <Link href={accueil} aria-label="Accueil">
             {/* eslint-disable-next-line @next/next/no-img-element */}

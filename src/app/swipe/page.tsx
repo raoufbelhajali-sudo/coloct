@@ -33,7 +33,7 @@ export default function SwipePage() {
   }, [loading, user, profile, router]);
 
   return (
-    <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-20 pt-5">
+    <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-20 pt-2">
       {surWeb && bandeau && (
         <div className="mb-2 flex w-full max-w-md items-center gap-2 rounded-full bg-panel px-3 py-2 text-xs text-ink/70 ring-1 ring-ink/10">
           <Smartphone className="h-4 w-4 shrink-0 text-bleu" />
