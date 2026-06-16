@@ -44,7 +44,9 @@ export default function AdminPage() {
   }, []);
 
   // --- Verrou mot de passe back-office ---
-  const [boOk, setBoOk] = useState(false);
+  // Désactivé : on entre directement après la connexion email (réservée à
+  // l'adresse admin) + le flag is_admin. Plus de 2e mot de passe.
+  const [boOk, setBoOk] = useState(true);
   const [boHash, setBoHashState] = useState<string | null>(null);
   const [boCharge, setBoCharge] = useState(false);
   const [mdp, setMdp] = useState("");
