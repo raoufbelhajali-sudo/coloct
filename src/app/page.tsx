@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 import { motion } from "framer-motion";
-import { Star, Smartphone, Play, Sparkles, Clock, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search, Lock } from "lucide-react";
+import { Star, Smartphone, Play, Sparkles, Layers, Heart, MessageCircle, KeyRound, PiggyBank, Users, Search, Lock } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import { useAuth, type Profile } from "@/lib/auth";
 import { getListings, lieuComplet } from "@/lib/listings";
@@ -62,15 +62,15 @@ function CarteAnnonce({ l }: { l: Listing }) {
           alt={lieuComplet(l)}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-        <span className="bg-signature absolute left-3 top-3 rounded-full px-3 py-1 text-sm font-bold text-white shadow">
+        <span className="bg-signature absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs font-bold text-white shadow">
           {l.loyer} €
         </span>
       </div>
-      <div className="p-4">
-        <p className="font-display text-lg font-semibold leading-tight">
+      <div className="p-2.5">
+        <p className="truncate font-display text-sm font-semibold leading-tight">
           {l.titre || l.typeLogement || "Colocation"}
         </p>
-        <p className="mt-1 text-sm text-ink/60">
+        <p className="mt-0.5 truncate text-xs text-ink/60">
           {[l.ville, l.surface ? `${l.surface} m²` : null].filter(Boolean).join(" · ")}
         </p>
       </div>
@@ -106,13 +106,13 @@ export default function Home() {
 
   useEffect(() => {
     getListings().then(setListings).catch(() => setListings([]));
-    getColocatairesPublics(8).then(setColocataires).catch(() => setColocataires([]));
+    getColocatairesPublics(10).then(setColocataires).catch(() => setColocataires([]));
   }, []);
 
+  // Page d'accueil : max 10 annonces + 10 profils (cartes compactes)
   const aLaUne = [...listings]
     .sort((a, b) => (boostActif(b.boosted_until) ? 1 : 0) - (boostActif(a.boosted_until) ? 1 : 0))
-    .slice(0, 6);
-  const recentes = [...listings].sort((a, b) => Number(b.id) - Number(a.id)).slice(0, 6);
+    .slice(0, 10);
   const villesDispo = Array.from(
     new Set(listings.map((l) => l.ville).filter(Boolean) as string[])
   ).sort();
@@ -239,20 +239,8 @@ export default function Home() {
             </h2>
             <Link href="/annonces" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
           </div>
-          <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {aLaUne.map((l) => <CarteAnnonce key={l.id} l={l} />)}
-          </div>
-        </section>
-      )}
-
-      {/* ===== Annonces récentes ===== */}
-      {recentes.length > 0 && (
-        <section className="mx-auto w-full max-w-6xl px-5 py-10">
-          <h2 className="flex items-center gap-2 font-display text-2xl font-bold md:text-3xl">
-            <Clock className="h-6 w-6 text-bleu" /> Vient d&apos;arriver
-          </h2>
-          <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {recentes.map((l) => <CarteAnnonce key={l.id} l={l} />)}
           </div>
         </section>
       )}
@@ -267,7 +255,7 @@ export default function Home() {
             <Link href="/colocataires" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
           </div>
           <p className="mt-1 text-ink/60">Tu as une chambre&nbsp;? Voici qui cherche une coloc.</p>
-          <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5">
             {colocataires.map((p) => (
               <Link
                 key={p.id}
@@ -288,8 +276,8 @@ export default function Home() {
                     </span>
                   ) : null}
                 </div>
-                <div className="p-3">
-                  <p className="font-display text-base font-semibold leading-tight">
+                <div className="p-2.5">
+                  <p className="truncate font-display text-sm font-semibold leading-tight">
                     {p.prenom}
                     {p.age ? <span className="font-normal text-ink/55">, {p.age}</span> : null}
                   </p>
