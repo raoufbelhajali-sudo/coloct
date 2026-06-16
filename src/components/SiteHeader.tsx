@@ -3,14 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { MessageCircle, Rocket } from "lucide-react";
+import { MessageCircle, Rocket, Home } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 
 // Header public commun à toutes les pages du site.
 export default function SiteHeader() {
   const pathname = usePathname() || "/";
+  const { user, profile } = useAuth();
   const actif = (prefixe: string) => pathname.startsWith(prefixe);
   const lienCls = (on: boolean) =>
     "transition-colors " + (on ? "text-pink" : "hover:text-ink");
+  // Connecté → on ramène directement dans l'app (espace selon le rôle).
+  const espaceHref = profile
+    ? profile.role === "locataire"
+      ? "/locataire"
+      : "/swipe"
+    : "/bienvenue";
 
   return (
     <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
@@ -53,16 +61,23 @@ export default function SiteHeader() {
             Bientôt sur App Store &amp; Google Play
           </motion.span>
 
-          {/* Commencez ici — bouton qui "vibre" */}
-          <motion.div
-            animate={{ rotate: [0, -4, 4, -4, 4, 0], scale: [1, 1.06, 1.06, 1.06, 1.06, 1] }}
-            transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.2, ease: "easeInOut" }}
-            className="inline-block"
-          >
-            <Link href="/connexion" className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
-              <Rocket className="h-4 w-4" /> Commencez ici
+          {user ? (
+            /* Connecté → retour direct dans l'app */
+            <Link href={espaceHref} className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
+              <Home className="h-4 w-4" /> Mon espace
             </Link>
-          </motion.div>
+          ) : (
+            /* Commencez ici — bouton qui "vibre" */
+            <motion.div
+              animate={{ rotate: [0, -4, 4, -4, 4, 0], scale: [1, 1.06, 1.06, 1.06, 1.06, 1] }}
+              transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.2, ease: "easeInOut" }}
+              className="inline-block"
+            >
+              <Link href="/connexion" className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
+                <Rocket className="h-4 w-4" /> Commencez ici
+              </Link>
+            </motion.div>
+          )}
         </div>
       </div>
     </header>

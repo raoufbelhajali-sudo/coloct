@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Mail, ArrowLeft, Search, Home } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
 import { SocialLogin } from "@capgo/capacitor-social-login";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth";
 
 // IDs Google (Cloud Console, projet "colockt")
 const GOOGLE_IOS_CLIENT_ID =
@@ -56,6 +58,18 @@ type Etape =
   | "phoneCode";
 
 export default function ConnexionPage() {
+  const router = useRouter();
+  // Déjà connecté ? On ne redemande pas de se connecter : on renvoie dans l'app.
+  const { user, loading: authLoading } = useAuth();
+  const [redirige, setRedirige] = useState(false);
+  useEffect(() => {
+    if (authLoading) return;
+    if (user) {
+      setRedirige(true);
+      router.replace("/bienvenue/");
+    }
+  }, [authLoading, user, router]);
+
   const [etape, setEtape] = useState<Etape>("choix");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -355,6 +369,15 @@ export default function ConnexionPage() {
     setEnCours(false);
     if (error) setErreur(traduireErreur(error.message));
     else window.location.href = "/bienvenue/";
+  }
+
+  // Session active (ou redirection en cours) → on n'affiche pas le formulaire.
+  if (authLoading || redirige) {
+    return (
+      <main className="flex min-h-screen items-center justify-center text-ink/60">
+        Un instant…
+      </main>
+    );
   }
 
   return (
