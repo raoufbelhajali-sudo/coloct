@@ -76,27 +76,17 @@ export default function MonAnnoncePage() {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center px-4 pb-28 pt-6">
+    <main className="flex min-h-dvh flex-col items-center px-4 pb-28 pt-5">
       <AppHeader />
 
-      <header className="mb-5 flex w-full max-w-md items-center gap-3">
-        <Link
-          href="/locataire"
-          aria-label="Retour"
-          className="text-ink/60 hover:text-ink"
-        >
-          <ArrowLeft className="h-6 w-6" />
-        </Link>
-        <h1 className="font-display text-3xl font-bold">
+      <div className="w-full max-w-md">
+        <h1 className="mb-5 font-display text-3xl font-bold">
           {mode === "creer"
             ? "Nouvelle annonce"
             : mode === "editer"
               ? "Modifier l'annonce"
               : "Mes annonces"}
         </h1>
-      </header>
-
-      <div className="w-full max-w-md">
         {chargement ? (
           <p className="mt-10 text-center text-ink/60">Chargement…</p>
         ) : mode === "creer" ? (
@@ -261,7 +251,7 @@ export default function MonAnnoncePage() {
                   href="/locataire"
                   className="flex w-full items-center justify-center rounded-full bg-panel px-4 py-3 text-sm font-medium text-ink/70 hover:bg-panel-2"
                 >
-                  Voir les candidats →
+                  Voir les intéressés →
                 </Link>
               </div>
             )}

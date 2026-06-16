@@ -14,7 +14,7 @@ type Onglet = "interesses" | "messagerie";
 function NotifsContenu() {
   const router = useRouter();
   const sp = useSearchParams();
-  const { user, profile, loading } = useAuth();
+  const { user, loading } = useAuth();
   const nbLikes = useLikesRecus();
   const { count: nbMessages } = useMessagesNonLus();
 
@@ -26,8 +26,7 @@ function NotifsContenu() {
     if (!loading && !user) router.replace("/connexion");
   }, [loading, user, router]);
 
-  const labelInteresses =
-    profile?.role === "locataire" ? "Candidats" : "Intéressés";
+  const labelInteresses = "Intéressés";
 
   return (
     <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">

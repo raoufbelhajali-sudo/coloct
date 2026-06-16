@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth";
 import { lieuComplet } from "@/lib/listings";
 import { getLikesRecus, repondreLike, type LikeRecu } from "@/lib/likes";
 
-// Liste « Intéressés par toi / Candidats » — réutilisée par /jaime et /notifs.
+// Liste « Intéressés » (par toi / par ton annonce) — réutilisée par /jaime et /notifs.
 export default function InteressesListe({ titreVisible = true }: { titreVisible?: boolean }) {
   const { user, profile } = useAuth();
 
@@ -49,7 +49,7 @@ export default function InteressesListe({ titreVisible = true }: { titreVisible?
             <h1 className="font-display text-3xl font-bold mb-1 flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-bleu" />
               {profile?.role === "locataire"
-                ? "Candidats intéressés"
+                ? "Intéressés par ton annonce"
                 : "Intéressés par toi"}
             </h1>
             <p className="mb-5 text-ink/60">

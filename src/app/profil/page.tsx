@@ -275,39 +275,23 @@ export default function ProfilPage() {
         </div>
       )}
       <AppHeader />
-      <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
-        <div className="flex items-center gap-2">
-          <PremiumPin />
-        </div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-full.png"
-          alt="FlatSwiper"
-          className="absolute left-1/2 top-1/2 h-6 w-auto -translate-x-1/2 -translate-y-1/2"
-        />
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setApercu(true)}
-            aria-label="Voir mon profil"
-            title="Voir mon profil"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
-          >
-            <Eye className="h-5 w-5" />
-          </button>
-          <Link
-            href={retour}
-            aria-label="Retour"
-            title="Retour"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Link>
-        </div>
-      </header>
 
       <div className="w-full max-w-md">
-        <h1 className="font-display text-3xl font-bold">Mon profil</h1>
+        <div className="mb-1 flex items-center justify-between gap-2">
+          <h1 className="font-display text-3xl font-bold">Mon profil</h1>
+          <div className="flex shrink-0 items-center gap-1.5">
+            <PremiumPin />
+            <button
+              type="button"
+              onClick={() => setApercu(true)}
+              aria-label="Voir mon profil"
+              title="Voir mon profil"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
+            >
+              <Eye className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
         <p className="mt-1 mb-4 text-ink/60">
           C&apos;est ce que les colocs verront avant de t&apos;accepter. Soigne-le !
         </p>

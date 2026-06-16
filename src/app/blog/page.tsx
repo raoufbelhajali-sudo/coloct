@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MessageCircle, Plus, X, Tag, ArrowLeft, Monitor } from "lucide-react";
+import { MessageCircle, Plus, X, Tag, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import SiteHeader from "@/components/SiteHeader";
 import AppHeader from "@/components/AppHeader";
@@ -98,10 +98,6 @@ export default function BlogPage() {
       {dansApp ? <AppHeader /> : <SiteHeader />}
 
       <main className={"mx-auto w-full max-w-5xl px-5 py-8 " + (dansApp ? "pb-28" : "")}>
-        <Link href="/" className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">
-          <ArrowLeft className="h-4 w-4" /> Accueil
-        </Link>
-
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-3xl font-bold flex items-center gap-2">

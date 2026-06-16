@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { MessageSquare, Zap, Settings, Sparkles, Home, Newspaper, Bell } from "lucide-react";
+import { MessageSquare, Settings, Sparkles, Home, Newspaper, Bell, UserRound, FileText } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 
@@ -99,6 +99,16 @@ export default function AppHeader() {
         </Link>
       )}
 
+      {/* Haut : logo (présent sur toutes les pages de l'app) */}
+      {user && (
+        <header className="mb-4 flex h-10 w-full max-w-sm items-center justify-center">
+          <Link href={accueil} aria-label="Accueil">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
+          </Link>
+        </header>
+      )}
+
       {/* Bas : barre de navigation fixe */}
       {user && (
         <nav
@@ -149,12 +159,23 @@ export default function AppHeader() {
               </span>
             </Link>
 
-            <NavItem
-              href="/boutique"
-              label="Boutique"
-              Icon={Zap}
-              actif={pathname.startsWith("/boutique")}
-            />
+            {/* À droite du swipe : éditer son profil (colocataire) ou son
+                annonce (annonceur) */}
+            {profile?.role === "locataire" ? (
+              <NavItem
+                href="/mon-annonce"
+                label="Mon annonce"
+                Icon={FileText}
+                actif={pathname.startsWith("/mon-annonce")}
+              />
+            ) : (
+              <NavItem
+                href="/profil"
+                label="Profil"
+                Icon={UserRound}
+                actif={pathname.startsWith("/profil")}
+              />
+            )}
             <NavItem
               href="/parametres"
               label="Réglages"

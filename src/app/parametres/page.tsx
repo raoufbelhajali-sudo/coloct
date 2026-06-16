@@ -14,11 +14,11 @@ import {
   AlertCircle,
   Repeat,
   ShieldCheck,
-  ArrowLeft,
   UserRound,
   ChevronRight,
   Home,
   Bookmark,
+  Zap,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
@@ -50,7 +50,6 @@ export default function ParametresPage() {
   const [confirmSuppr, setConfirmSuppr] = useState(false);
   const [supprEnCours, setSupprEnCours] = useState(false);
 
-  const retour = profile?.role === "locataire" ? "/locataire" : "/swipe";
   const estAnnonceur = profile?.role === "locataire";
 
   useEffect(() => {
@@ -261,23 +260,6 @@ export default function ParametresPage() {
       )}
       {/* Barre de navigation du bas (toujours visible) */}
       <AppHeader />
-      <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
-        <div className="h-9 w-9" />
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-full.png"
-          alt="FlatSwiper"
-          className="absolute left-1/2 top-1/2 h-6 w-auto -translate-x-1/2 -translate-y-1/2"
-        />
-        <Link
-          href={retour}
-          aria-label="Retour"
-          title="Retour"
-          className="flex h-9 w-9 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-      </header>
 
       <div className="w-full max-w-md">
         <h1 className="font-display text-3xl font-bold">Paramètres</h1>
@@ -300,6 +282,25 @@ export default function ParametresPage() {
               </span>
               <span className="block text-sm text-ink/55">
                 Photo, infos, centres d&apos;intérêt, mode de vie…
+              </span>
+            </span>
+            <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+          </Link>
+
+          {/* Boutique (packs de swipes, boost, premium) */}
+          <Link
+            href="/boutique"
+            className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+          >
+            <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+              <Zap className="h-5 w-5 text-white" />
+            </span>
+            <span className="flex-1">
+              <span className="block font-display text-lg font-semibold">
+                Boutique
+              </span>
+              <span className="block text-sm text-ink/55">
+                Packs de swipes, boost et premium
               </span>
             </span>
             <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
