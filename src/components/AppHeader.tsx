@@ -63,7 +63,8 @@ export default function AppHeader() {
           <Icon
             className="h-[22px] w-[22px] transition-colors"
             fill={actif ? "currentColor" : "none"}
-            strokeWidth={actif ? 1.5 : 2}
+            strokeWidth={2}
+            style={actif ? { fillOpacity: 0.18 } : undefined}
           />
           {!!count && count > 0 && (
             <span className={badge}>{count > 9 ? "9+" : count}</span>
