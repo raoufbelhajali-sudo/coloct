@@ -245,6 +245,38 @@ export default function Home() {
         </section>
       )}
 
+      {/* ===== Aperçu de l'app (captures) ===== */}
+      <section className="overflow-hidden bg-panel/60">
+        <div className="mx-auto w-full max-w-6xl px-5 py-14">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-1.5 text-sm font-semibold text-pink">
+              <Smartphone className="h-4 w-4" /> L&apos;app en images
+            </span>
+            <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">À quoi ressemble FlatSwiper&nbsp;?</h2>
+            <p className="mx-auto mt-2 max-w-xl text-ink/65">
+              Swipe, matche, discute — tout se passe dans l&apos;app, simplement.
+            </p>
+          </div>
+          <div className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-8">
+            {APERCUS.map(({ img, t, d }, i) => (
+              <motion.div
+                key={t}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.12 }}
+                className={"flex flex-col items-center text-center " + (i === 1 ? "sm:-translate-y-4" : "")}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img} alt={t} className="w-full max-w-[230px] drop-shadow-xl" />
+                <p className="mt-3 font-display text-sm font-bold sm:text-lg">{t}</p>
+                <p className="mt-0.5 hidden max-w-[18ch] text-sm text-ink/60 sm:block">{d}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== Colocataires en recherche ===== */}
       {colocataires.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-5 py-10">
@@ -302,38 +334,6 @@ export default function Home() {
                 <p className="mt-3 text-ink/80">“{a.t}”</p>
                 <p className="mt-3 text-sm font-semibold text-ink/60">{a.n}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== Aperçu de l'app (captures) ===== */}
-      <section className="overflow-hidden bg-panel/60">
-        <div className="mx-auto w-full max-w-6xl px-5 py-14">
-          <div className="text-center">
-            <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-1.5 text-sm font-semibold text-pink">
-              <Smartphone className="h-4 w-4" /> L&apos;app en images
-            </span>
-            <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">À quoi ressemble FlatSwiper&nbsp;?</h2>
-            <p className="mx-auto mt-2 max-w-xl text-ink/65">
-              Swipe, matche, discute — tout se passe dans l&apos;app, simplement.
-            </p>
-          </div>
-          <div className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-8">
-            {APERCUS.map(({ img, t, d }, i) => (
-              <motion.div
-                key={t}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.12 }}
-                className={"flex flex-col items-center text-center " + (i === 1 ? "sm:-translate-y-4" : "")}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img} alt={t} className="w-full max-w-[230px] drop-shadow-xl" />
-                <p className="mt-3 font-display text-sm font-bold sm:text-lg">{t}</p>
-                <p className="mt-0.5 hidden max-w-[18ch] text-sm text-ink/60 sm:block">{d}</p>
-              </motion.div>
             ))}
           </div>
         </div>
