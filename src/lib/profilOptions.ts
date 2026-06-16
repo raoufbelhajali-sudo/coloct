@@ -207,7 +207,6 @@ export const PROFESSIONS = ["Étudiant", "CDD", "CDI", "Chômeur", "Retraité"];
 export const STATUTS_ANNONCEUR = [
   "Propriétaire",
   "Locataire (sous-location)",
-  "Agence",
 ];
 
 // Infos annonce

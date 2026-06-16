@@ -9,12 +9,10 @@ import { useAuth } from "@/lib/auth";
 import {
   estPremium,
   estHero,
-  estSuperAnnonceur,
   activerPassExpress,
   activerHero,
   activerBoost,
   activerBoostAnnonceur,
-  activerSuperAnnonceur,
   activerMessagesDirects,
 } from "@/lib/offers";
 import { getMyListing } from "@/lib/locataire";
@@ -33,7 +31,6 @@ export default function BoutiquePage() {
   const [listing, setListing] = useState<Listing | null>(null);
 
   const estAnnonceur = profile?.role === "locataire";
-  const estAgence = !!profile?.est_agence; // entreprise / agence
 
   useEffect(() => {
     if (!loading && !user) router.replace("/connexion");
@@ -64,7 +61,7 @@ export default function BoutiquePage() {
   }
 
   async function activer(
-    offre: "pass" | "swiper" | "boost" | "annonceur" | "messages" | "superannonceur"
+    offre: "pass" | "swiper" | "boost" | "annonceur" | "messages"
   ) {
     if (!user) return;
     setEnCours(offre);
@@ -78,8 +75,6 @@ export default function BoutiquePage() {
       await activerMessagesDirects(user.id);
     } else if (offre === "boost") await activerBoost(user.id);
     else if (offre === "messages") await activerMessagesDirects(user.id);
-    else if (offre === "superannonceur")
-      await activerSuperAnnonceur(user.id); // entreprise : annonces multiples
     else if (offre === "annonceur" && listing)
       await activerBoostAnnonceur(user.id, listing.id);
     await refreshProfile();
@@ -133,46 +128,23 @@ export default function BoutiquePage() {
                 </Link>
               </div>
             ) : (
-              <>
-                <OffreCard
-                  icon={<Rocket className="h-6 w-6 text-white" />}
-                  titre="Boost ton annonce"
-                  duree="7 jours"
-                  prix="5 €"
-                  avantages={[
-                    "Ton appartement mis en avant",
-                    "Accède aux meilleurs profils",
-                    "Classés par poste occupé + compatibilité avec ton profil",
-                  ]}
-                  actif={premium}
-                  actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
-                  enCours={enCours === "annonceur"}
-                  onActiver={() => activer("annonceur")}
-                  grad={GRAD_ANNONCE}
-                  lancement={lancement}
-                />
-
-                {/* Entreprise/agence : publier plusieurs annonces */}
-                {estAgence && (
-                  <OffreCard
-                    icon={<Star className="h-6 w-6 text-white" fill="currentColor" />}
-                    titre="Super Annonceur"
-                    duree="Par semaine · sans engagement"
-                    prix="5,99 €"
-                    avantages={[
-                      "Publie plusieurs annonces (1ʳᵉ gratuite)",
-                      "Toutes tes annonces visibles en même temps",
-                      "Sans engagement — stoppe quand tu veux",
-                    ]}
-                    actif={estSuperAnnonceur(profile)}
-                    actifTexte={`Actif jusqu'au ${dateFr(profile?.super_annonceur_until ?? null)}`}
-                    enCours={enCours === "superannonceur"}
-                    onActiver={() => activer("superannonceur")}
-                    grad={GRAD_HERO}
-                    lancement={lancement}
-                  />
-                )}
-              </>
+              <OffreCard
+                icon={<Rocket className="h-6 w-6 text-white" />}
+                titre="Boost ton annonce"
+                duree="7 jours"
+                prix="5 €"
+                avantages={[
+                  "Ton appartement mis en avant",
+                  "Accède aux meilleurs profils",
+                  "Classés par poste occupé + compatibilité avec ton profil",
+                ]}
+                actif={premium}
+                actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
+                enCours={enCours === "annonceur"}
+                onActiver={() => activer("annonceur")}
+                grad={GRAD_ANNONCE}
+                lancement={lancement}
+              />
             )
           ) : (
             // ----- Colocataire : 2 forfaits -----
