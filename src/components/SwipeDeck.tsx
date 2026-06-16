@@ -356,13 +356,13 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
-      {/* Logo centré + filtres + partage, sur une seule ligne */}
-      <div className="relative mb-2 flex h-9 w-full items-center justify-end gap-2">
+      {/* Logo centré + filtres + partage, sur une seule ligne (même format que les autres pages) */}
+      <div className="relative mb-2 flex h-10 w-full items-center justify-end gap-2">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo-full.png"
           alt="FlatSwiper"
-          className="absolute left-1/2 top-1/2 h-6 w-auto -translate-x-1/2 -translate-y-1/2"
+          className="absolute left-1/2 top-1/2 h-7 w-auto -translate-x-1/2 -translate-y-1/2"
         />
         <button
           onClick={() => setFiltresOuverts((v) => !v)}
