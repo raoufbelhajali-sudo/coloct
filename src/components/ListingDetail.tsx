@@ -344,7 +344,7 @@ function Pill({
     return (
       <span
         className="rounded-full border border-violet/40 px-3 py-1 text-xs font-medium"
-        style={{ color: "#e8590c" }}
+        style={{ color: "#1d4ed8" }}
       >
         {children}
       </span>

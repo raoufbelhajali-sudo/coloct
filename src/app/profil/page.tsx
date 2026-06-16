@@ -310,10 +310,9 @@ export default function ProfilPage() {
                 className="h-full rounded-full transition-all"
                 style={{
                   width: `${completudeProfil(profile)}%`,
-                  // Dégradé orange → vert → bleu, calé sur toute la jauge :
-                  // orange à 0 %, le bleu n'apparaît qu'en approchant des 100 %.
+                  // Dégradé bleu clair → bleu, calé sur toute la jauge.
                   backgroundImage:
-                    "linear-gradient(to right, #fd7e14, #40c057, #228be6)",
+                    "linear-gradient(to right, #93c5fd, #2563eb)",
                   backgroundSize: `${
                     completudeProfil(profile) > 0
                       ? 10000 / completudeProfil(profile)

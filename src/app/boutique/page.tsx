@@ -19,10 +19,10 @@ import { getMyListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import InviterAmis from "@/components/InviterAmis";
 
-// Un dégradé chaud différent par forfait (harmonisé avec la charte corail/orange)
-const GRAD_PASS = "linear-gradient(135deg,#fa5252,#fd7e14)"; // corail → orange
-const GRAD_ANNONCE = "linear-gradient(135deg,#e8590c,#fd7e14)"; // orange brûlé → orange
-const GRAD_HERO = "linear-gradient(135deg,#4dabf7,#228be6)"; // bleu (HeroSwiper)
+// Un dégradé bleu différent par forfait (charte épurée noir & blanc + bleu)
+const GRAD_PASS = "linear-gradient(135deg,#2563eb,#1d4ed8)"; // bleu
+const GRAD_ANNONCE = "linear-gradient(135deg,#4f46e5,#2563eb)"; // indigo → bleu
+const GRAD_HERO = "linear-gradient(135deg,#3b82f6,#2563eb)"; // bleu clair → bleu
 
 export default function BoutiquePage() {
   const router = useRouter();

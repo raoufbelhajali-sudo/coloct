@@ -95,7 +95,7 @@ export default function ProfileCard({
               <span
                 key={i}
                 className="rounded-full px-3 py-1 text-xs font-medium"
-                style={{ backgroundColor: "rgba(250,82,82,0.14)", color: "#fa5252" }}
+                style={{ backgroundColor: "rgba(37,99,235,0.12)", color: "#2563eb" }}
               >
                 {i}
               </span>

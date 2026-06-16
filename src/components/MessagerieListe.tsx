@@ -60,7 +60,7 @@ export default function MessagerieListe({ titreVisible = true }: { titreVisible?
                   className={
                     "flex items-center gap-4 rounded-2xl p-3 transition-colors " +
                     (nonLu
-                      ? "bg-[#ffcdb6] hover:bg-[#ffc0a3]"
+                      ? "bg-[#dbeafe] hover:bg-[#bfdbfe]"
                       : "bg-panel hover:bg-panel-2")
                   }
                 >

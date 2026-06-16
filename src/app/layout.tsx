@@ -65,7 +65,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fa5252",
+  themeColor: "#ffffff",
   // Permet à l'app d'occuper tout l'écran et d'activer les zones de sécurité
   // (env(safe-area-inset-*)) → s'adapte à tous les iPhone (encoche, Dynamic Island…)
   viewportFit: "cover",

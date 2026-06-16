@@ -6,18 +6,19 @@
    =========================================================== */
 @theme {
   /* Couleurs de la charte */
+  /* Charte épurée : noir & blanc + accent BLEU (#2563eb) */
   --color-bg: #ffffff; /* Fond (blanc) */
-  --color-panel: #fff1ea; /* Panneaux (pêche très clair) */
-  --color-panel-2: #ffe3d3; /* Panneaux (variante) */
-  --color-ink: #2b211a; /* Texte (brun foncé) */
-  --color-pink: #fa5252; /* Corail principal (accent 1) */
-  --color-pink-light: #ff8787; /* Corail clair */
-  /* Accent 2 = BLEU CONFIANCE (le nom de token reste "violet" pour éviter de
-     tout renommer ; il pilote les accents secondaires : icônes, pastilles…). */
-  --color-violet: #228be6; /* Bleu confiance (accent 2) */
-  --color-violet-dark: #1c7ed6; /* Bleu foncé */
-  --color-bleu: #228be6; /* Alias clair du bleu */
-  --color-bleu-clair: #e7f5ff; /* Bleu très clair (fonds de pastilles) */
+  --color-panel: #f4f5f7; /* Panneaux (gris très clair) */
+  --color-panel-2: #e7e9ee; /* Panneaux (variante grise) */
+  --color-ink: #111827; /* Texte (noir doux) */
+  --color-pink: #2563eb; /* Accent principal (bleu) */
+  --color-pink-light: #60a5fa; /* Bleu clair */
+  /* Accents secondaires (icônes, pastilles…) — bleu également, pour rester sobre.
+     Les noms de tokens restent "violet"/"bleu" pour éviter de tout renommer. */
+  --color-violet: #2563eb; /* Accent secondaire (bleu) */
+  --color-violet-dark: #1d4ed8; /* Bleu foncé */
+  --color-bleu: #2563eb; /* Alias du bleu */
+  --color-bleu-clair: #eff6ff; /* Bleu très clair (fonds de pastilles) */
 
   /* Polices */
   --font-display: var(--font-fraunces); /* Titres / logo */
@@ -53,14 +54,14 @@ body {
   }
 }
 
-/* Dégradé signature (logo, boutons clés) : corail → orange */
+/* Dégradé signature (boutons clés) : bleu → bleu foncé (sobre) */
 .bg-signature {
-  background-image: linear-gradient(135deg, #fa5252, #fd7e14);
+  background-image: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
 /* Texte rempli avec le dégradé signature */
 .text-signature {
-  background-image: linear-gradient(135deg, #fa5252, #fd7e14);
+  background-image: linear-gradient(135deg, #2563eb, #1d4ed8);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -68,7 +69,7 @@ body {
 
 /* Lueur douce derrière les éléments clés */
 .glow-pink {
-  box-shadow: 0 0 60px -15px rgba(250, 82, 82, 0.5);
+  box-shadow: 0 0 60px -15px rgba(37, 99, 235, 0.45);
 }
 
 /* Pastille de notification : vibration */
