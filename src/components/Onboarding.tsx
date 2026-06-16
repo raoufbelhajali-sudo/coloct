@@ -110,6 +110,7 @@ export default function Onboarding({
     if (etape === "photo" && !photoUrl) return false;
     if (etape === "toi") {
       if (!age.trim() || Number(age) <= 0) return false;
+      if (!contactTel.trim()) return false;
       if (!genre) return false;
     }
     if (etape === "interets" && interets.length < 3) return false;
@@ -175,7 +176,7 @@ export default function Onboarding({
         est_agence: estAgence,
         statut_annonceur: role === "locataire" ? statut || null : null,
         siret: estAgence ? siret.trim() || null : null,
-        contact_tel: estAgence ? contactTel.trim() || null : null,
+        contact_tel: contactTel.trim() || null,
         site_web: estAgence ? siteWeb.trim() || null : null,
         age: Number(age) || null,
         genre: genre || null,
@@ -442,6 +443,16 @@ export default function Onboarding({
                   value={age}
                   onChange={(e) => setAge(e.target.value)}
                   placeholder="25"
+                  className={champ}
+                />
+                <label className="mt-4 block text-sm text-ink/70">
+                  Téléphone <span className="text-pink">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={contactTel}
+                  onChange={(e) => setContactTel(e.target.value)}
+                  placeholder="06 12 34 56 78"
                   className={champ}
                 />
                 <p className="mt-4 text-sm text-ink/70">

@@ -36,6 +36,8 @@ export function champsManquantsSwipe(p: Profile | null): ChampManquant[] {
   if (!p) return [{ cle: "profil", label: "Ton profil" }];
   const m: ChampManquant[] = [];
   if (!(p.pseudo && p.pseudo.trim())) m.push({ cle: "pseudo", label: "Pseudo" });
+  if (!(p.contact_tel && p.contact_tel.trim()))
+    m.push({ cle: "tel", label: "Téléphone" });
   if (!p.photo_url) m.push({ cle: "photo", label: "Photo de profil" });
   if (!p.age) m.push({ cle: "age", label: "Âge" });
   if (!p.genre) m.push({ cle: "genre", label: "Genre" });

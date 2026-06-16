@@ -231,6 +231,7 @@ export default function ProfilPage() {
       .update({
         prenom: prenom.trim(),
         pseudo: pseudo.trim() || null,
+        contact_tel: contactTel.trim() || null,
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
@@ -476,6 +477,7 @@ export default function ProfilPage() {
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Prénom" value={prenom} onChange={setPrenom} required placeholder="Camille" />
               <Champ label="Pseudo" value={pseudo} onChange={setPseudo} required placeholder="cam_paris" />
+              <Champ label="Téléphone" type="tel" value={contactTel} onChange={setContactTel} required placeholder="06 12 34 56 78" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Âge" type="number" value={age} onChange={setAge} placeholder="25" />

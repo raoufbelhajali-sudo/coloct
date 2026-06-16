@@ -37,7 +37,7 @@ begin
   if v_email is null or v_email = '' then return NEW; end if;
 
   -- Fiche du colocataire (le swiper) + titre de l'annonce concernée
-  select prenom, pseudo, age, ville, profession, salaire, bio
+  select prenom, pseudo, age, ville, profession, salaire, bio, contact_tel
     into c from public.profiles where id = NEW.swiper_id;
   select coalesce(nullif(titre, ''), ville) into v_titre
     from public.listings where id = NEW.listing_id;
@@ -50,6 +50,7 @@ begin
     || '<tr><td style="color:#6b7280">Pseudo</td><td><strong>'
         || coalesce(nullif(c.pseudo, ''), c.prenom, '—') || '</strong></td></tr>'
     || '<tr><td style="color:#6b7280">Âge</td><td>' || coalesce(c.age::text, '—') || '</td></tr>'
+    || '<tr><td style="color:#6b7280">Téléphone</td><td><strong>' || coalesce(c.contact_tel, '—') || '</strong></td></tr>'
     || '<tr><td style="color:#6b7280">Ville recherchée</td><td>' || coalesce(c.ville, '—') || '</td></tr>'
     || '<tr><td style="color:#6b7280">Situation pro</td><td>' || coalesce(c.profession, '—') || '</td></tr>'
     || '<tr><td style="color:#6b7280">Tranche de salaire</td><td>' || coalesce(c.salaire, '—') || '</td></tr>'
