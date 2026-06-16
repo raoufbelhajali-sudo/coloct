@@ -136,8 +136,14 @@ export default function SujetPage() {
   }
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {/* Connecté (app/web app) → footer de l'app ; sinon header public */}
-      {user ? <AppHeader /> : <SiteHeader />}
+      {/* Connecté (app/web app) → logo + footer de l'app ; sinon header public */}
+      {user ? (
+        <div className="flex flex-col items-center px-4 pt-5">
+          <AppHeader />
+        </div>
+      ) : (
+        <SiteHeader />
+      )}
       <Suspense fallback={<p className="mt-16 text-center text-ink/50">Chargement…</p>}>
         <SujetContenu />
       </Suspense>

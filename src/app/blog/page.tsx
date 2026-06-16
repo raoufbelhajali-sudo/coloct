@@ -95,7 +95,13 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      {dansApp ? <AppHeader /> : <SiteHeader />}
+      {dansApp ? (
+        <div className="flex flex-col items-center px-4 pt-5">
+          <AppHeader />
+        </div>
+      ) : (
+        <SiteHeader />
+      )}
 
       <main className={"mx-auto w-full max-w-5xl px-5 py-8 " + (dansApp ? "pb-28" : "")}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
