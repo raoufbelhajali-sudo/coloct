@@ -220,7 +220,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
             </motion.div>
 
             {/* Boutons (couleurs codées en dégradé, tous la même taille) */}
-            <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-4">
+            <div className="absolute inset-x-0 bottom-8 z-20 flex items-center justify-center gap-4">
               <button
                 onClick={() => fly("left")}
                 aria-label="Je passe"
