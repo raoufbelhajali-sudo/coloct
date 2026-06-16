@@ -39,7 +39,7 @@ export default function FavorisPage() {
       <AppHeader />
 
       <div className="w-full max-w-sm">
-        <h1 className="mb-5 font-display text-3xl font-semibold">Mes favoris</h1>
+        <h1 className="font-display text-3xl font-bold mb-5">Mes favoris</h1>
 
         {chargement ? (
           <p className="text-ink/60">Chargement…</p>

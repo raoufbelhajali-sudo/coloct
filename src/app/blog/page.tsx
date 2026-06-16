@@ -22,7 +22,7 @@ export function BlogSurOrdinateur() {
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
       <Monitor className="h-12 w-12 text-violet" />
-      <h1 className="font-display text-2xl font-bold">Le blog est sur ordinateur</h1>
+      <h1 className="font-display text-3xl font-bold">Le blog est sur ordinateur</h1>
       <p className="max-w-xs text-sm text-ink/70">
         Le Blog &amp; Entraide FlatSwiper se consulte depuis un ordinateur
         (PC/Mac). Sur mobile, retrouve les colocations directement dans l&apos;app.
@@ -104,7 +104,7 @@ export default function BlogPage() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h1 className="flex items-center gap-2 font-display text-3xl font-bold md:text-4xl">
+            <h1 className="font-display text-3xl font-bold flex items-center gap-2">
               <MessageCircle className="h-8 w-8 text-bleu" /> Blog & Entraide
             </h1>
             <p className="mt-2 max-w-xl text-ink/65">
@@ -170,7 +170,7 @@ export default function BlogPage() {
             <button type="button" onClick={() => setFormOuvert(false)} aria-label="Fermer" className="absolute right-4 top-4 text-ink/40 hover:text-ink">
               <X className="h-5 w-5" />
             </button>
-            <h2 className="font-display text-2xl font-bold">Poser une question</h2>
+            <h2 className="font-display text-xl font-bold">Poser une question</h2>
             <div className="mt-4 space-y-3">
               <select
                 value={categorie}

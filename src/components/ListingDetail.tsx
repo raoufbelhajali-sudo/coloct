@@ -160,7 +160,7 @@ export default function ListingDetail({
           {/* Infos */}
           <div className="space-y-5 p-5">
             <div>
-              <h2 className="font-display text-3xl font-semibold leading-tight">
+              <h2 className="font-display text-xl font-bold leading-tight">
                 {listing.titre || listing.quartier || listing.ville}
               </h2>
               <p className="text-sm font-semibold text-pink">

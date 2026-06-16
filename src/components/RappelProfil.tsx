@@ -50,7 +50,7 @@ export default function RappelProfil() {
           <Sparkles className="h-7 w-7 text-white" />
         </div>
 
-        <h2 className="font-display text-2xl font-semibold">
+        <h2 className="font-display text-xl font-bold">
           Termine ton profil&nbsp;!
         </h2>
         <p className="mt-2 text-ink/70">

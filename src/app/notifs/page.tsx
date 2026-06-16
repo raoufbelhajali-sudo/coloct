@@ -34,7 +34,7 @@ function NotifsContenu() {
       <AppHeader />
 
       <div className="w-full max-w-sm">
-        <h1 className="mb-4 font-display text-3xl font-semibold">Notifs</h1>
+        <h1 className="font-display text-3xl font-bold mb-4">Notifs</h1>
 
         {/* Deux onglets horizontaux : Intéressés / Messagerie */}
         <div className="mb-6 grid grid-cols-2 gap-2 rounded-2xl bg-panel p-1.5">

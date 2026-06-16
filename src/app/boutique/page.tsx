@@ -87,7 +87,7 @@ export default function BoutiquePage() {
       <AppHeader />
 
       <div className="w-full max-w-md">
-        <h1 className="font-display text-3xl font-semibold">
+        <h1 className="font-display text-3xl font-bold">
           {estAnnonceur ? "Booste ton annonce" : "Booste ta recherche"}
         </h1>
         <p className="mt-1 mb-6 text-ink/60">

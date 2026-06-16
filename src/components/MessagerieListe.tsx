@@ -37,7 +37,7 @@ export default function MessagerieListe({ titreVisible = true }: { titreVisible?
   return (
     <div className="w-full max-w-sm">
       {titreVisible && (
-        <h1 className="mb-5 font-display text-3xl font-semibold">Mes matchs</h1>
+        <h1 className="font-display text-3xl font-bold mb-5">Mes matchs</h1>
       )}
 
       {chargement ? (

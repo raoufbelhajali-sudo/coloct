@@ -95,7 +95,7 @@ export default function ProfileDetail({
                   </span>
                 )}
               </div>
-              <h2 className="font-display text-3xl font-semibold leading-tight">
+              <h2 className="font-display text-xl font-bold leading-tight">
                 {profile.prenom}
                 {profile.age ? (
                   <span className="text-ink/60">, {profile.age} ans</span>

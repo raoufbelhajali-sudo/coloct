@@ -280,7 +280,7 @@ export default function ParametresPage() {
       </header>
 
       <div className="w-full max-w-md">
-        <h1 className="font-display text-3xl font-semibold">Paramètres</h1>
+        <h1 className="font-display text-3xl font-bold">Paramètres</h1>
         <p className="mt-1 mb-6 text-ink/60">
           Gère ton compte et tes préférences.
         </p>
@@ -688,7 +688,7 @@ function Bloc({
     <div className="rounded-2xl bg-panel p-4">
       <div className="mb-2 flex items-center gap-2">
         {icone}
-        <h2 className="font-medium">{titre}</h2>
+        <h2 className="font-display text-xl font-bold">{titre}</h2>
       </div>
       {children}
     </div>

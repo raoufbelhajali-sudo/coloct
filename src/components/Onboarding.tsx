@@ -224,7 +224,7 @@ export default function Onboarding({
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
         <LogoMark className="mb-5 h-16 w-16" />
-        <h1 className="font-display text-3xl font-semibold leading-tight">
+        <h1 className="font-display text-3xl font-bold leading-tight">
           Bienvenue sur FlatSwiper !
         </h1>
         <p className="mt-3 max-w-sm text-ink/70">
@@ -248,7 +248,7 @@ export default function Onboarding({
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
         <LogoMark className="animate-logo-vibrate mb-5 h-16 w-16" />
-        <h1 className="font-display text-3xl font-semibold leading-tight">
+        <h1 className="font-display text-3xl font-bold leading-tight">
           Bienvenue{prenom.trim() ? ` ${prenom.trim()}` : ""} !
         </h1>
         <p className="mt-3 max-w-sm text-ink/70">
@@ -826,7 +826,7 @@ function Etape({
 }) {
   return (
     <div className="flex flex-1 flex-col">
-      <h1 className="font-display text-3xl font-semibold leading-tight">
+      <h1 className="font-display text-3xl font-bold leading-tight">
         {titre}
       </h1>
       {sous && <p className="mt-2 mb-6 text-ink/60">{sous}</p>}

@@ -307,7 +307,7 @@ export default function ProfilPage() {
       </header>
 
       <div className="w-full max-w-md">
-        <h1 className="font-display text-3xl font-semibold">Mon profil</h1>
+        <h1 className="font-display text-3xl font-bold">Mon profil</h1>
         <p className="mt-1 mb-4 text-ink/60">
           C&apos;est ce que les colocs verront avant de t&apos;accepter. Soigne-le !
         </p>

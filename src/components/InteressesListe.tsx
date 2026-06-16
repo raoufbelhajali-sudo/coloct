@@ -46,7 +46,7 @@ export default function InteressesListe({ titreVisible = true }: { titreVisible?
       <div className="w-full max-w-sm">
         {titreVisible && (
           <>
-            <h1 className="mb-1 flex items-center gap-2 font-display text-3xl font-semibold">
+            <h1 className="font-display text-3xl font-bold mb-1 flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-bleu" />
               {profile?.role === "locataire"
                 ? "Candidats intéressés"

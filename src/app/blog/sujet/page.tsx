@@ -76,12 +76,12 @@ function SujetContenu() {
           </span>
           <span className="text-xs text-ink/45">par {sujet.auteur} · {dateFr(sujet.created_at)}</span>
         </div>
-        <h1 className="mt-3 font-display text-2xl font-bold md:text-3xl">{sujet.titre}</h1>
+        <h1 className="font-display text-3xl font-bold mt-3">{sujet.titre}</h1>
         <p className="mt-3 whitespace-pre-line text-ink/80">{sujet.contenu}</p>
       </article>
 
       {/* Réponses */}
-      <h2 className="mt-8 flex items-center gap-2 font-display text-xl font-bold">
+      <h2 className="font-display text-xl font-bold mt-8 flex items-center gap-2">
         <MessageCircle className="h-5 w-5 text-bleu" />
         {reponses.length} réponse{reponses.length > 1 ? "s" : ""}
       </h2>

@@ -87,7 +87,7 @@ export default function MonAnnoncePage() {
         >
           <ArrowLeft className="h-6 w-6" />
         </Link>
-        <h1 className="font-display text-2xl font-semibold">
+        <h1 className="font-display text-3xl font-bold">
           {mode === "creer"
             ? "Nouvelle annonce"
             : mode === "editer"
