@@ -23,13 +23,22 @@ export default function SiteHeader() {
         <nav className="hidden items-center gap-6 text-sm font-medium text-ink/70 md:flex">
           <Link href="/annonces" className={lienCls(actif("/annonce"))}>Annonces</Link>
           <Link href="/colocataires" className={lienCls(actif("/colocataire"))}>Colocataires</Link>
-          {/* Blog : ordinateur uniquement (≥ lg) */}
-          <Link href="/blog" className={"hidden items-center gap-1.5 lg:flex " + lienCls(actif("/blog"))}>
+          {/* Blog : visible dans le menu dès la tablette (≥ md) */}
+          <Link href="/blog" className={"flex items-center gap-1.5 " + lienCls(actif("/blog"))}>
             <MessageCircle className="h-4 w-4" /> Blog
           </Link>
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* Blog — icône accessible sur téléphone (le menu est masqué < md) */}
+          <Link
+            href="/blog"
+            aria-label="Blog"
+            className={"flex h-9 w-9 items-center justify-center rounded-full bg-panel md:hidden " + (actif("/blog") ? "text-pink" : "text-ink/70")}
+          >
+            <MessageCircle className="h-4 w-4" />
+          </Link>
+
           {/* Bientôt sur les stores — badge animé */}
           <motion.span
             initial={{ opacity: 0 }}

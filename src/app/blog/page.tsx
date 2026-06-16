@@ -3,17 +3,16 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Capacitor } from "@capacitor/core";
 import { MessageCircle, Plus, X, Tag, ArrowLeft, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import SiteHeader from "@/components/SiteHeader";
 import { getSujets, creerSujet, CATEGORIES_FORUM, type Sujet } from "@/lib/forum";
 
-// Le blog se consulte uniquement sur ORDINATEUR (pas mobile web, pas l'app).
+// Le blog est accessible partout : ordinateur, mobile web et application.
 export function useAccesOrdinateur(): boolean | null {
   const [ok, setOk] = useState<boolean | null>(null);
   useEffect(() => {
-    setOk(!Capacitor.isNativePlatform() && window.innerWidth >= 1024);
+    setOk(true);
   }, []);
   return ok;
 }
