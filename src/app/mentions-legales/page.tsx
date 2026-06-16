@@ -1,16 +1,13 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { LogoMark } from "@/components/Logo";
+import SiteHeader from "@/components/SiteHeader";
 
 export const metadata = { title: "Mentions légales — FlatSwiper" };
 
 export default function MentionsLegalesPage() {
   return (
-    <main className="mx-auto flex min-h-dvh max-w-2xl flex-col px-5 py-8">
-      <Link href="/" className="mb-6 flex items-center gap-2 text-ink/60 hover:text-ink">
-        <ArrowLeft className="h-5 w-5" /> <LogoMark className="h-6 w-6" /> Accueil
-      </Link>
-
+    <div className="min-h-screen w-full bg-bg text-ink">
+      <SiteHeader />
+      <main className="mx-auto flex max-w-2xl flex-col px-5 py-8">
       <h1 className="font-display text-3xl font-semibold">Mentions légales</h1>
       <p className="mt-1 text-sm text-ink/50">Dernière mise à jour : juin 2026</p>
 
@@ -80,6 +77,7 @@ export default function MentionsLegalesPage() {
           .
         </p>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }

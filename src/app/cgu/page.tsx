@@ -1,16 +1,13 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { LogoMark } from "@/components/Logo";
+import SiteHeader from "@/components/SiteHeader";
 
 export const metadata = { title: "Conditions d'utilisation — FlatSwiper" };
 
 export default function CGUPage() {
   return (
-    <main className="mx-auto flex min-h-dvh max-w-2xl flex-col px-5 py-8">
-      <Link href="/" className="mb-6 flex items-center gap-2 text-ink/60 hover:text-ink">
-        <ArrowLeft className="h-5 w-5" /> <LogoMark className="h-6 w-6" /> Accueil
-      </Link>
-
+    <div className="min-h-screen w-full bg-bg text-ink">
+      <SiteHeader />
+      <main className="mx-auto flex max-w-2xl flex-col px-5 py-8">
       <h1 className="font-display text-3xl font-semibold">
         Conditions d&apos;utilisation
       </h1>
@@ -91,6 +88,7 @@ export default function CGUPage() {
           .
         </p>
       </div>
-    </main>
+      </main>
+    </div>
   );
 }

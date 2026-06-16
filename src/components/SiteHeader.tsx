@@ -29,12 +29,9 @@ export default function SiteHeader() {
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-medium text-ink/70 md:flex">
-          <Link href="/annonces" className={lienCls(actif("/annonce"))}>Annonces</Link>
-          <Link href="/location" className={"flex items-center gap-1.5 " + lienCls(actif("/location"))}>
-            <Home className="h-4 w-4" /> Location
+          <Link href="/" className={"flex items-center gap-1.5 " + lienCls(pathname === "/")}>
+            <Home className="h-4 w-4" /> Accueil
           </Link>
-          <Link href="/colocataires" className={lienCls(actif("/colocataire"))}>Colocataires</Link>
-          {/* Blog : visible dans le menu dès la tablette (≥ md) */}
           <Link href="/blog" className={"flex items-center gap-1.5 " + lienCls(actif("/blog"))}>
             <MessageCircle className="h-4 w-4" /> Blog
           </Link>
