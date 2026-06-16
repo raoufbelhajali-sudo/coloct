@@ -53,7 +53,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!estAdmin || !user) return;
-    if (typeof window !== "undefined" && localStorage.getItem("flatswiper_bo_ok") === "1") {
+    if (typeof window !== "undefined" && sessionStorage.getItem("flatswiper_bo_ok") === "1") {
       setBoOk(true);
       return;
     }
@@ -70,14 +70,14 @@ export default function AdminPage() {
     if (mdp !== mdp2) return setBoErreur("Les mots de passe ne correspondent pas.");
     if (!user) return;
     await setBoHash(user.id, await sha256(mdp));
-    localStorage.setItem("flatswiper_bo_ok", "1");
+    sessionStorage.setItem("flatswiper_bo_ok", "1");
     setBoOk(true);
   }
   async function entrerMdp(e: React.FormEvent) {
     e.preventDefault();
     setBoErreur("");
     if ((await sha256(mdp)) === boHash) {
-      localStorage.setItem("flatswiper_bo_ok", "1");
+      sessionStorage.setItem("flatswiper_bo_ok", "1");
       setBoOk(true);
     } else {
       setBoErreur("Mot de passe incorrect.");
@@ -546,7 +546,7 @@ export default function AdminPage() {
 
           <button
             onClick={() => {
-              localStorage.removeItem("flatswiper_bo_ok");
+              sessionStorage.removeItem("flatswiper_bo_ok");
               supabase.auth.signOut();
             }}
             className="w-full rounded-full border border-ink/15 bg-panel-2 px-6 py-3 text-sm font-semibold text-ink"
