@@ -235,7 +235,7 @@ export default function Home() {
         <section className="mx-auto w-full max-w-6xl px-5 py-10">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-2xl font-bold md:text-3xl">
-              <Sparkles className="h-6 w-6 text-pink" /> À la une
+              <Sparkles className="h-6 w-6 text-bleu" /> À la une
             </h2>
             <Link href="/annonces" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
           </div>
@@ -308,7 +308,7 @@ export default function Home() {
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {AVIS.map((a) => (
               <div key={a.n} className="rounded-3xl bg-bg p-6 shadow-sm ring-1 ring-ink/5">
-                <div className="flex gap-0.5 text-pink">
+                <div className="flex gap-0.5 text-bleu">
                   {[0, 1, 2, 3, 4].map((i) => <Star key={i} className="h-4 w-4" fill="currentColor" />)}
                 </div>
                 <p className="mt-3 text-ink/80">“{a.t}”</p>

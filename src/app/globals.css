@@ -6,19 +6,19 @@
    =========================================================== */
 @theme {
   /* Couleurs de la charte */
-  /* Charte épurée : noir & blanc + accent BLEU (#2563eb) */
+  /* Charte épurée : noir & blanc, liens/accents BLEU (#2563eb), icônes CORAIL (#fa5252) */
   --color-bg: #ffffff; /* Fond (blanc) */
   --color-panel: #f4f5f7; /* Panneaux (gris très clair) */
   --color-panel-2: #e7e9ee; /* Panneaux (variante grise) */
   --color-ink: #111827; /* Texte (noir doux) */
-  --color-pink: #2563eb; /* Accent principal (bleu) */
+  --color-pink: #2563eb; /* Accent texte / liens (bleu) */
   --color-pink-light: #60a5fa; /* Bleu clair */
-  /* Accents secondaires (icônes, pastilles…) — bleu également, pour rester sobre.
-     Les noms de tokens restent "violet"/"bleu" pour éviter de tout renommer. */
-  --color-violet: #2563eb; /* Accent secondaire (bleu) */
-  --color-violet-dark: #1d4ed8; /* Bleu foncé */
-  --color-bleu: #2563eb; /* Alias du bleu */
-  --color-bleu-clair: #eff6ff; /* Bleu très clair (fonds de pastilles) */
+  /* "violet"/"bleu" pilotent les ICÔNES et pastilles → corail (noms de tokens
+     conservés pour éviter de tout renommer). */
+  --color-violet: #fa5252; /* Icônes (corail) */
+  --color-violet-dark: #e03131; /* Corail foncé */
+  --color-bleu: #fa5252; /* Icônes (corail) */
+  --color-bleu-clair: #ffecec; /* Corail très clair (fonds de pastilles) */
 
   /* Polices */
   --font-display: var(--font-fraunces); /* Titres / logo */
