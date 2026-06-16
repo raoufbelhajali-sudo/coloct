@@ -18,7 +18,7 @@ import ListingDetail from "@/components/ListingDetail";
 import { useAuth } from "@/lib/auth";
 import { getMyListings, setListingGelee, getStatsAnnonce } from "@/lib/locataire";
 import { lieuComplet } from "@/lib/listings";
-import { boostActif, activerBoostAnnonce } from "@/lib/offers";
+import { boostActif, activerBoostAnnonce, estSuperAnnonceur } from "@/lib/offers";
 import type { Listing } from "@/data/listings";
 
 type Stats = { likes: number; matchs: number; favoris: number };
@@ -35,6 +35,20 @@ export default function MonAnnoncePage() {
   const [selection, setSelection] = useState<Listing | null>(null);
   const [apercu, setApercu] = useState<Listing | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [paywallSuper, setPaywallSuper] = useState(false);
+
+  // Entreprise/agence : 1ʳᵉ annonce gratuite, les suivantes → Super Annonceur.
+  function ajouterAnnonce() {
+    if (
+      profile?.est_agence &&
+      listings.length >= 1 &&
+      !estSuperAnnonceur(profile)
+    ) {
+      setPaywallSuper(true);
+      return;
+    }
+    setMode("creer");
+  }
 
   useEffect(() => {
     if (loading) return;
@@ -133,7 +147,7 @@ export default function MonAnnoncePage() {
           <>
             {/* Bouton ajouter */}
             <button
-              onClick={() => setMode("creer")}
+              onClick={ajouterAnnonce}
               className="bg-signature glow-pink mb-5 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               <Plus className="h-5 w-5" /> Ajouter une annonce
@@ -262,6 +276,43 @@ export default function MonAnnoncePage() {
       {/* Aperçu (comme la voient les colocataires) */}
       {apercu && (
         <ListingDetail listing={apercu} preview onClose={() => setApercu(null)} />
+      )}
+
+      {/* Entreprise : popup pour publier une 2ᵉ annonce (Super Annonceur) */}
+      {paywallSuper && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
+          <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
+            <span className="bg-signature mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full text-white">
+              <Rocket className="h-7 w-7" />
+            </span>
+            <p className="font-display text-2xl font-bold leading-tight">
+              Passe en Super Annonceur
+            </p>
+            <p className="mt-3 text-ink/80">
+              Ta 1ʳᵉ annonce est gratuite. Pour publier{" "}
+              <strong>plusieurs annonces</strong>, passe en{" "}
+              <span className="text-signature font-semibold">Super Annonceur</span>{" "}
+              — <strong>5,99 €/semaine</strong>, sans engagement.
+            </p>
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={() => router.push("/boutique")}
+                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+              >
+                Voir l&apos;offre Super Annonceur
+              </button>
+              <button
+                onClick={() => setPaywallSuper(false)}
+                className="rounded-full px-6 py-3 font-medium text-ink/70 hover:text-ink"
+              >
+                Plus tard
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-ink/40">
+              Paiement à venir — déblocage de démo pour l&apos;instant.
+            </p>
+          </div>
+        </div>
       )}
     </main>
   );

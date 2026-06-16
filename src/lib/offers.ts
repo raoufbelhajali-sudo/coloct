@@ -37,6 +37,23 @@ export async function activerPassExpress(userId: string): Promise<void> {
     .eq("id", userId);
 }
 
+// Super Annonceur actif ? (entreprise : publier plusieurs annonces)
+export function estSuperAnnonceur(profile: Profile | null): boolean {
+  return (
+    !!profile?.super_annonceur_until &&
+    new Date(profile.super_annonceur_until).getTime() > Date.now()
+  );
+}
+
+// Active le Super Annonceur 7 jours (démo — sans paiement réel)
+export async function activerSuperAnnonceur(userId: string): Promise<void> {
+  const fin = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  await supabase
+    .from("profiles")
+    .update({ super_annonceur_until: fin })
+    .eq("id", userId);
+}
+
 // HeroSwiper actif ? (forfait "le max")
 export function estHero(profile: Profile | null): boolean {
   return (

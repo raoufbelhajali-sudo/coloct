@@ -53,6 +53,7 @@ export type Profile = {
   premium_until: string | null; // Pass Express actif jusqu'à cette date
   boosted_until: string | null; // Boost actif jusqu'à cette date
   est_agence: boolean; // l'annonceur est une agence (profil entreprise)
+  super_annonceur_until: string | null; // pack Super Annonceur (annonces multiples)
   statut_annonceur: string | null; // Propriétaire / Locataire / Agence
   siret: string | null; // agence : numéro SIRET
   contact_tel: string | null; // agence : téléphone de contact
