@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark, AlertCircle } from "lucide-react";
+import { Heart, X, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark, AlertCircle, Send } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -615,39 +615,43 @@ export default function SwipeDeck() {
               </button>
             )}
 
-            {/* Boutons posés sur la carte */}
+            {/* Boutons (couleurs codées en dégradé, tous la même taille) */}
             <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-4">
               <button
                 onClick={annulerDernier}
                 disabled={!dernierSwipe}
                 aria-label="Annuler le dernier swipe"
                 title="Annuler"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/50 shadow-lg backdrop-blur transition-transform hover:scale-110 disabled:opacity-40"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110 disabled:opacity-40"
+                style={{ backgroundImage: "linear-gradient(135deg,#9ca3af,#4b5563)" }}
               >
-                <RotateCcw className="h-5 w-5" />
+                <RotateCcw className="h-6 w-6" />
               </button>
               <button
                 onClick={() => fly("left")}
                 aria-label="Je passe"
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
+                style={{ backgroundImage: "linear-gradient(135deg,#f87171,#dc2626)" }}
               >
                 <X className="h-6 w-6" strokeWidth={2.5} />
+              </button>
+              <button
+                onClick={() => fly("right")}
+                aria-label="Ça m'intéresse"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
+                style={{ backgroundImage: "linear-gradient(135deg,#34d399,#059669)" }}
+              >
+                <Heart className="h-7 w-7" fill="currentColor" />
               </button>
               <button
                 onClick={messageDirect}
                 disabled={contactEnCours}
                 aria-label="Message direct (HeroSwiper)"
                 title="Message direct à l'annonceur (HeroSwiper)"
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-bleu shadow-lg backdrop-blur transition-transform hover:scale-110 disabled:opacity-60"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110 disabled:opacity-60"
+                style={{ backgroundImage: "linear-gradient(135deg,#3b82f6,#2563eb)" }}
               >
-                <Star className="h-6 w-6" fill="currentColor" />
-              </button>
-              <button
-                onClick={() => fly("right")}
-                aria-label="Ça m'intéresse"
-                className="bg-signature glow-pink flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
-              >
-                <Heart className="h-8 w-8" fill="currentColor" />
+                <Send className="h-6 w-6" />
               </button>
             </div>
           </div>

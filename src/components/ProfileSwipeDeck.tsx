@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star, Eye, Rocket } from "lucide-react";
+import { Heart, X, Eye, Rocket, Send } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -219,30 +219,33 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
               <ProfileCard profile={current} compat={compatProfils(profile, current)} />
             </motion.div>
 
-            {/* Boutons posés sur la carte */}
-            <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-6">
+            {/* Boutons (couleurs codées en dégradé, tous la même taille) */}
+            <div className="absolute inset-x-0 bottom-4 z-20 flex items-center justify-center gap-4">
               <button
                 onClick={() => fly("left")}
                 aria-label="Je passe"
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-ink/60 shadow-lg backdrop-blur transition-transform hover:scale-110"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
+                style={{ backgroundImage: "linear-gradient(135deg,#f87171,#dc2626)" }}
               >
                 <X className="h-6 w-6" strokeWidth={2.5} />
               </button>
               <button
                 onClick={() => fly("right")}
                 aria-label="Ça m'intéresse"
-                className="bg-signature glow-pink flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
+                style={{ backgroundImage: "linear-gradient(135deg,#34d399,#059669)" }}
               >
-                <Heart className="h-8 w-8" fill="currentColor" />
+                <Heart className="h-7 w-7" fill="currentColor" />
               </button>
               <button
                 onClick={messageDirectColocataire}
                 disabled={contactEnCours}
                 aria-label="Message direct au colocataire"
                 title="Écrire en direct à ce colocataire (forfait)"
-                className="flex h-14 w-14 items-center justify-center rounded-full border border-ink/10 bg-bg/90 text-bleu shadow-lg backdrop-blur transition-transform hover:scale-110 disabled:opacity-60"
+                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110 disabled:opacity-60"
+                style={{ backgroundImage: "linear-gradient(135deg,#3b82f6,#2563eb)" }}
               >
-                <Star className="h-6 w-6" fill="currentColor" />
+                <Send className="h-6 w-6" />
               </button>
             </div>
           </div>
