@@ -103,7 +103,7 @@ export default function BlogPage() {
         <SiteHeader />
       )}
 
-      <main className={"mx-auto w-full max-w-5xl px-5 py-8 " + (dansApp ? "pb-28" : "")}>
+      <main className={"mx-auto w-full max-w-5xl px-5 " + (dansApp ? "pb-28" : "py-8")}>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h1 className="font-display text-3xl font-bold flex items-center gap-2">
