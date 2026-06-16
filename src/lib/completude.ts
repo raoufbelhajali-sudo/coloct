@@ -38,8 +38,17 @@ export function champsManquantsSwipe(p: Profile | null): ChampManquant[] {
   if (!(p.pseudo && p.pseudo.trim())) m.push({ cle: "pseudo", label: "Pseudo" });
   if (!p.photo_url) m.push({ cle: "photo", label: "Photo de profil" });
   if (!p.age) m.push({ cle: "age", label: "Âge" });
+  if (!p.genre) m.push({ cle: "genre", label: "Genre" });
   if (!p.ville) m.push({ cle: "ville", label: "Ville recherchée" });
+  if (!p.profession) m.push({ cle: "profession", label: "Situation pro" });
+  if (!p.salaire) m.push({ cle: "salaire", label: "Tranche de salaire" });
   if (!(p.bio && p.bio.trim())) m.push({ cle: "bio", label: "Présentation" });
+  if (!(p.interets && p.interets.length >= 3))
+    m.push({ cle: "interets", label: "3 centres d'intérêt" });
+  if (!(p.ambiance && p.ambiance.length >= 3))
+    m.push({ cle: "ambiance", label: "3 ambiances" });
+  if (!(p.rythme && p.rythme.length >= 3))
+    m.push({ cle: "rythme", label: "3 rythmes" });
   return m;
 }
 

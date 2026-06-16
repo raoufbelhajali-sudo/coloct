@@ -98,7 +98,7 @@ export default function ProfilPage() {
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
-        salaire: sansSalaire ? null : salaire || null,
+        salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
         prompts,
@@ -147,7 +147,13 @@ export default function ProfilPage() {
     setAge(profile.age ? String(profile.age) : "");
     setGenre(profile.genre ?? "");
     setProfession(profile.profession ?? "");
-    setSalaire(profile.salaire ?? "");
+    // "Non communiqué" = l'utilisateur a choisi de ne pas indiquer son salaire
+    if (profile.salaire === "Non communiqué") {
+      setSansSalaire(true);
+      setSalaire("");
+    } else {
+      setSalaire(profile.salaire ?? "");
+    }
     setBio(profile.bio ?? "");
     setInterets(profile.interets ?? []);
     setPrompts(profile.prompts ?? {});
@@ -228,7 +234,7 @@ export default function ProfilPage() {
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
-        salaire: sansSalaire ? null : salaire || null,
+        salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
         prompts,
@@ -475,7 +481,9 @@ export default function ProfilPage() {
               <Champ label="Âge" type="number" value={age} onChange={setAge} placeholder="25" />
               {!estLocataire && (
                 <div>
-                  <label className="text-sm text-ink/70">Situation pro</label>
+                  <label className={"text-sm " + (!profession ? "font-semibold text-[#dc2626]" : "text-ink/70")}>
+                    Situation pro{!profession ? " · obligatoire" : ""}
+                  </label>
                   <select value={profession} onChange={(e) => setProfession(e.target.value)} className={champClasses}>
                     <option value="">Choisir…</option>
                     {PROFESSIONS.map((p) => (
@@ -485,11 +493,13 @@ export default function ProfilPage() {
                 </div>
               )}
             </div>
-            <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} />
+            <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} required={!estLocataire} />
             {/* Salaire : colocataire (candidat) uniquement */}
             {!estLocataire && (
               <div>
-                <label className="text-sm text-ink/70">Tranche de salaire (net / mois)</label>
+                <label className={"text-sm " + (!salaire && !sansSalaire ? "font-semibold text-[#dc2626]" : "text-ink/70")}>
+                  Tranche de salaire (net / mois){!salaire && !sansSalaire ? " · obligatoire" : ""}
+                </label>
                 {!sansSalaire && (
                   <select value={salaire} onChange={(e) => setSalaire(e.target.value)} className={champClasses}>
                     <option value="">Choisir une tranche…</option>
@@ -518,7 +528,7 @@ export default function ProfilPage() {
                 className={champClasses}
               />
             </div>
-            <ChoixMultiple label="Centres d'intérêt (au moins 3)" options={INTERETS} values={interets} onToggle={(v) => toggle(interets, setInterets, v)} />
+            <ChoixMultiple label="Centres d'intérêt (au moins 3)" options={INTERETS} values={interets} onToggle={(v) => toggle(interets, setInterets, v)} min={3} />
             {interets.length < 3 ? (
               <p className="text-xs text-pink">Choisis au moins 3 centres d&apos;intérêt ({interets.length}/3).</p>
             ) : (
@@ -560,11 +570,11 @@ export default function ProfilPage() {
             <p className="text-xs text-ink/50">
               Plus tu en sélectionnes, plus les colocs proposés te correspondront.
             </p>
-            <ChoixMultiple label="Ambiance (au moins 3)" options={AMBIANCES} values={ambiance} onToggle={(v) => toggle(ambiance, setAmbiance, v)} />
+            <ChoixMultiple label="Ambiance (au moins 3)" options={AMBIANCES} values={ambiance} onToggle={(v) => toggle(ambiance, setAmbiance, v)} min={3} />
             {ambiance.length < 3 && (
               <p className="text-xs text-pink">Choisis au moins 3 ambiances ({ambiance.length}/3).</p>
             )}
-            <ChoixMultiple label="Rythme (au moins 3)" options={RYTHMES} values={rythme} onToggle={(v) => toggle(rythme, setRythme, v)} />
+            <ChoixMultiple label="Rythme (au moins 3)" options={RYTHMES} values={rythme} onToggle={(v) => toggle(rythme, setRythme, v)} min={3} />
             {rythme.length < 3 && (
               <p className="text-xs text-pink">Choisis au moins 3 rythmes ({rythme.length}/3).</p>
             )}
@@ -745,12 +755,15 @@ function Champ({ label, value, onChange, type = "text", placeholder, required }:
   );
 }
 
-function ChoixUnique({ label, options, value, onChange }: {
-  label: string; options: string[]; value: string; onChange: (v: string) => void;
+function ChoixUnique({ label, options, value, onChange, required }: {
+  label: string; options: string[]; value: string; onChange: (v: string) => void; required?: boolean;
 }) {
+  const manque = !!required && !value;
   return (
     <div>
-      <p className="text-sm text-ink/70">{label}</p>
+      <p className={"text-sm " + (manque ? "font-semibold text-[#dc2626]" : "text-ink/70")}>
+        {label}{manque ? " · obligatoire" : ""}
+      </p>
       <div className="mt-2 flex flex-wrap gap-2">
         {options.map((o) => {
           const actif = value === o;
@@ -767,12 +780,15 @@ function ChoixUnique({ label, options, value, onChange }: {
   );
 }
 
-function ChoixMultiple({ label, options, values, onToggle }: {
-  label: string; options: string[]; values: string[]; onToggle: (v: string) => void;
+function ChoixMultiple({ label, options, values, onToggle, min }: {
+  label: string; options: string[]; values: string[]; onToggle: (v: string) => void; min?: number;
 }) {
+  const manque = !!min && values.length < min;
   return (
     <div>
-      <p className="text-sm text-ink/70">{label}</p>
+      <p className={"text-sm " + (manque ? "font-semibold text-[#dc2626]" : "text-ink/70")}>
+        {label}{manque ? " · obligatoire" : ""}
+      </p>
       <div className="mt-2 flex flex-wrap gap-2">
         {options.map((o) => {
           const actif = values.includes(o);
