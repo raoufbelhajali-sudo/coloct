@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { getSujet, getReponses, repondre, type Sujet, type Reponse } from "@/lib/forum";
 import { useAccesOrdinateur, BlogSurOrdinateur } from "@/app/blog/page";
 import SiteHeader from "@/components/SiteHeader";
+import AppHeader from "@/components/AppHeader";
 
 function dateFr(iso: string) {
   return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
@@ -62,7 +63,7 @@ function SujetContenu() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-3xl px-5 py-8">
+    <main className="mx-auto w-full max-w-3xl px-5 py-8 pb-28">
       <Link href="/blog" className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">
         <ArrowLeft className="h-4 w-4" /> Blog &amp; Entraide
       </Link>
@@ -128,13 +129,15 @@ function SujetContenu() {
 
 export default function SujetPage() {
   const accesPC = useAccesOrdinateur();
+  const { user } = useAuth();
   if (accesPC === null) return null;
   if (!accesPC) {
     return <div className="min-h-screen w-full bg-bg text-ink"><BlogSurOrdinateur /></div>;
   }
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      <SiteHeader />
+      {/* Connecté (app/web app) → footer de l'app ; sinon header public */}
+      {user ? <AppHeader /> : <SiteHeader />}
       <Suspense fallback={<p className="mt-16 text-center text-ink/50">Chargement…</p>}>
         <SujetContenu />
       </Suspense>

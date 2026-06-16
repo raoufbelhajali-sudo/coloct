@@ -49,7 +49,7 @@ export default function SwipePage() {
           </button>
         </div>
       )}
-      <AppHeader hideTop />
+      <AppHeader />
 
       {/* Le paquet de cartes à swiper (remplit l'écran restant) */}
       <div className="flex w-full min-h-0 flex-1 justify-center">

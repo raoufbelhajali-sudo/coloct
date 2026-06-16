@@ -77,7 +77,7 @@ export default function MonAnnoncePage() {
 
   return (
     <main className="flex min-h-dvh flex-col items-center px-4 pb-28 pt-6">
-      <AppHeader hideTop />
+      <AppHeader />
 
       <header className="mb-5 flex w-full max-w-md items-center gap-3">
         <Link

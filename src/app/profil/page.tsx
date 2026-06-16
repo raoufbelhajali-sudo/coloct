@@ -274,7 +274,7 @@ export default function ProfilPage() {
           <Check className="h-4 w-4" strokeWidth={3} /> Profil enregistré !
         </div>
       )}
-      <AppHeader hideTop />
+      <AppHeader />
       <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
         <div className="flex items-center gap-2">
           <PremiumPin />

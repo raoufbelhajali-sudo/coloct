@@ -12,12 +12,8 @@ import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 const badge =
   "animate-vibrate absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white";
 
-// En-tête : pastille de rôle en haut, barre de navigation fixe en bas.
-export default function AppHeader({
-  hideTop = false,
-}: {
-  hideTop?: boolean;
-}) {
+// Barre de navigation fixe en bas de l'app (web app + application native).
+export default function AppHeader() {
   const { user, profile } = useAuth();
   const { count: nbMessages, alerte: alerteMsg } = useMessagesNonLus();
   const nbLikes = useLikesRecus();
@@ -103,20 +99,6 @@ export default function AppHeader({
         </Link>
       )}
 
-      {/* Haut : accès au Blog (remplace le logo) */}
-      {!hideTop && (
-        <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
-          <Link
-            href="/blog"
-            aria-label="Blog & Entraide"
-            title="Blog & Entraide"
-            className="flex items-center gap-1.5 rounded-full bg-panel px-3.5 py-1.5 text-sm font-semibold text-ink/75 transition-colors hover:text-ink"
-          >
-            <Newspaper className="h-5 w-5 text-bleu" /> Blog
-          </Link>
-        </header>
-      )}
-
       {/* Bas : barre de navigation fixe */}
       {user && (
         <nav
@@ -135,6 +117,13 @@ export default function AppHeader({
                 pathname.startsWith("/matchs")
               }
               count={nbLikes + nbMessages}
+            />
+            {/* Blog — à gauche de l'icône swipe */}
+            <NavItem
+              href="/blog"
+              label="Blog"
+              Icon={Newspaper}
+              actif={pathname.startsWith("/blog")}
             />
 
             {/* Bouton central : le swipe (sans texte, dans le footer) */}

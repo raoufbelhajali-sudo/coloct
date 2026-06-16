@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { MessageCircle, Plus, X, Tag, ArrowLeft, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import SiteHeader from "@/components/SiteHeader";
+import AppHeader from "@/components/AppHeader";
 import { getSujets, creerSujet, CATEGORIES_FORUM, type Sujet } from "@/lib/forum";
 
 // Le blog est accessible partout : ordinateur, mobile web et application.
@@ -88,11 +89,15 @@ export default function BlogPage() {
   if (accesPC === null) return null;
   if (!accesPC) return <BlogSurOrdinateur />;
 
+  // Connecté (app ou web app) → on garde le footer de l'app visible et on
+  // retire le header public (« Commencez ici »). Visiteur anonyme → header public.
+  const dansApp = !!user;
+
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
-      <SiteHeader />
+      {dansApp ? <AppHeader /> : <SiteHeader />}
 
-      <main className="mx-auto w-full max-w-5xl px-5 py-8">
+      <main className={"mx-auto w-full max-w-5xl px-5 py-8 " + (dansApp ? "pb-28" : "")}>
         <Link href="/" className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">
           <ArrowLeft className="h-4 w-4" /> Accueil
         </Link>

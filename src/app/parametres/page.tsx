@@ -260,7 +260,7 @@ export default function ParametresPage() {
         </div>
       )}
       {/* Barre de navigation du bas (toujours visible) */}
-      <AppHeader hideTop />
+      <AppHeader />
       <header className="relative mb-4 flex h-9 w-full max-w-md items-center justify-between">
         <div className="h-9 w-9" />
         {/* eslint-disable-next-line @next/next/no-img-element */}

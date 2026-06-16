@@ -50,7 +50,7 @@ export default function LocatairePage() {
 
   return (
     <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-24 pt-5">
-      <AppHeader hideTop />
+      <AppHeader />
       <header className="mb-4 flex h-9 w-full max-w-md items-center justify-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
