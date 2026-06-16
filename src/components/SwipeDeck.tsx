@@ -15,17 +15,14 @@ import { compatAnnonce } from "@/lib/compat";
 import { getIdsBloques } from "@/lib/blocks";
 import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
-import InviterAmis from "@/components/InviterAmis";
 import { useAuth } from "@/lib/auth";
-import { estPremium, estHero, contacterDirect } from "@/lib/offers";
+import { estHero, contacterDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import {
   getSwipedListingIds,
   recordListingSwipe,
   annulerSwipeListing,
-  getLikesToday,
-  getBonusLikes,
-  ajouterBonusLikes,
+  getSwipes24h,
   getMatchIdForListing,
 } from "@/lib/swipes";
 import {
@@ -46,8 +43,8 @@ const BUDGET_MAX = 900;
 // Borne du filtre distance (au max = pas de limite, "toute la France")
 const DIST_MAX = 200;
 
-// Nombre de "j'aime" gratuits par jour
-const LIKES_GRATUITS_PAR_JOUR = 10;
+// Nombre de swipes gratuits par 24h (au-delà : HeroSwiper, ou attendre 24h)
+const SWIPES_PAR_JOUR = 20;
 
 export default function SwipeDeck() {
   const router = useRouter();
@@ -61,7 +58,6 @@ export default function SwipeDeck() {
   // Annonces chargées depuis le serveur Supabase
   const [allListings, setAllListings] = useState<Listing[]>([]);
   const [bloques, setBloques] = useState<Set<string>>(new Set());
-  const [bonusLikes, setBonusLikes] = useState(0);
   const [dernierSwipe, setDernierSwipe] = useState<
     { id: string; direction: "like" | "pass"; superLike: boolean } | null
   >(null);
@@ -69,17 +65,11 @@ export default function SwipeDeck() {
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
 
-  // Likes gratuits du jour
-  const [likesAujourdhui, setLikesAujourdhui] = useState(0);
+  // Swipes des dernières 24h (limite gratuite = SWIPES_PAR_JOUR)
+  const [swipesAujourdhui, setSwipesAujourdhui] = useState(0);
   const [paywall, setPaywall] = useState(false); // écran "limite atteinte"
   const [detail, setDetail] = useState<Listing | null>(null); // annonce ouverte en grand
   const [filtresOuverts, setFiltresOuverts] = useState(false); // panneau filtres replié par défaut
-
-  // Offre de lancement : tout gratuit pour le moment (web + app)
-  const lancement = true;
-
-  // Pass Express actif ? (likes illimités), lu depuis le compte
-  const premium = estPremium(profile);
 
   // --- Filtres ---
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
@@ -99,17 +89,16 @@ export default function SwipeDeck() {
     Promise.all([
       getListings(),
       getSwipedListingIds(user.id),
-      getLikesToday(user.id),
+      getSwipes24h(user.id),
       getIdsBloques(user.id),
       getFavorisIds(user.id),
     ])
-      .then(([data, swiped, likes, blocs, favs]) => {
+      .then(([data, swiped, nbSwipes, blocs, favs]) => {
         setAllListings(data);
         setSwipedIds(swiped);
-        setLikesAujourdhui(likes);
+        setSwipesAujourdhui(nbSwipes);
         setBloques(blocs);
         setFavorisIds(favs);
-        setBonusLikes(getBonusLikes(user.id));
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
@@ -195,19 +184,17 @@ export default function SwipeDeck() {
     controls.set({ x: 0, opacity: 1 });
   }
 
-  // Limite du jour = likes gratuits + swipes bonus (parrainage)
-  const limiteJour = LIKES_GRATUITS_PAR_JOUR + bonusLikes;
-  // A-t-on encore des likes gratuits aujourd'hui ?
-  const likesEpuises = !premium && likesAujourdhui >= limiteJour;
-  // Au-delà de la limite (sans Pass) : on masque (floute) les annonces
-  const flou = likesEpuises;
+  // Limite gratuite : 20 swipes / 24h. HeroSwiper = illimité.
+  const swipesEpuises = !estHero(profile) && swipesAujourdhui >= SWIPES_PAR_JOUR;
+  // Au-delà de la limite : on masque (floute) les annonces et on propose le Hero
+  const flou = swipesEpuises;
 
   // Fait voler la carte hors de l'écran puis passe à la suivante
   async function fly(dir: Direction, superLike = false) {
     if (animating.current || !current || !user) return;
 
-    // Limite de likes gratuits : on bloque le "j'aime" et on propose FlatSwiper+
-    if (dir === "right" && likesEpuises) {
+    // Limite des 20 swipes/24h : on bloque TOUT swipe et on propose HeroSwiper
+    if (swipesEpuises) {
       setPaywall(true);
       return;
     }
@@ -226,6 +213,7 @@ export default function SwipeDeck() {
 
     // on retire l'annonce du paquet (la suivante passe devant)
     setSwipedIds((prev) => new Set(prev).add(swiped.id));
+    setSwipesAujourdhui((n) => n + 1); // compte tous les swipes (limite 24h)
     x.set(0);
     controls.set({ x: 0, opacity: 1 });
     animating.current = false;
@@ -237,7 +225,6 @@ export default function SwipeDeck() {
       await recordListingSwipe(user.id, swiped.id, direction, superLike);
       if (direction === "like") {
         setLikes((prev) => [...prev, swiped]);
-        setLikesAujourdhui((n) => n + 1);
         // match seulement si le locataire t'a aussi liké
         const mid = await getMatchIdForListing(user.id, swiped.id);
         if (mid) {
@@ -267,8 +254,8 @@ export default function SwipeDeck() {
     });
     if (direction === "like") {
       setLikes((prev) => prev.filter((l) => l.id !== id));
-      setLikesAujourdhui((n) => Math.max(0, n - 1));
     }
+    setSwipesAujourdhui((n) => Math.max(0, n - 1)); // le swipe annulé ne compte plus
     x.set(0);
     controls.set({ x: 0, opacity: 1 });
     try {
@@ -314,14 +301,6 @@ export default function SwipeDeck() {
     }
   }
 
-  // Pack "3 swipes" (1,99 €) : ajoute 3 likes pour la journée.
-  // Démo pour l'instant — le vrai paiement passera par Apple In-App Purchase.
-  function acheterPack3Swipes() {
-    if (!user) return;
-    const total = ajouterBonusLikes(user.id, 3);
-    setBonusLikes(total);
-    setPaywall(false);
-  }
 
   function handleDragEnd(
     _e: unknown,
@@ -659,34 +638,28 @@ export default function SwipeDeck() {
         />
       )}
 
-      {/* ---------- Écran FlatSwiper+ (limite de likes atteinte) ---------- */}
+      {/* ---------- Limite de 20 swipes / 24h atteinte ---------- */}
       {paywall && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
           <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
             <p className="font-display text-3xl font-bold leading-tight">
-              Plus de likes gratuits aujourd&apos;hui
+              Tes 20 swipes sont utilisés
             </p>
             <p className="mt-3 text-ink/80">
-              Tu as utilisé tes {LIKES_GRATUITS_PAR_JOUR} likes du jour. Reviens
-              demain… ou passe en{" "}
-              <span className="text-signature font-semibold">FlatSwiper+</span> :
+              Reviens dans 24h pour 20 nouveaux swipes gratuits… ou passe en{" "}
+              <span className="text-signature font-semibold">HeroSwiper</span>{" "}
+              pour swiper sans limite.
             </p>
-            {lancement && (
-              <div className="bg-signature mt-4 rounded-xl px-3 py-2 text-sm font-semibold text-white">
-                🎁 Offre de lancement : c&apos;est GRATUIT en ce moment&nbsp;!
-              </div>
-            )}
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
               <li className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Likes
+                <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Swipes
                 illimités
               </li>
               <li className="flex items-center gap-2">
-                <Eye className="h-4 w-4 text-bleu" /> Vois qui t&apos;a déjà liké
+                <Eye className="h-4 w-4 text-bleu" /> Messagerie + qui t&apos;a liké
               </li>
               <li className="flex items-center gap-2">
-                <Rocket className="h-4 w-4 text-bleu" /> Ton profil mis en avant
-                (Boost)
+                <Rocket className="h-4 w-4 text-bleu" /> Toutes les actions débloquées
               </li>
             </ul>
             <div className="mt-6 flex flex-col gap-3">
@@ -694,26 +667,8 @@ export default function SwipeDeck() {
                 onClick={() => router.push("/boutique")}
                 className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
               >
-                {lancement ? "J'en profite — c'est gratuit" : "Voir les offres FlatSwiper+"}
+                Passer HeroSwiper
               </button>
-              {/* Petit pack à l'unité : 3 swipes pour 1,99 € */}
-              <button
-                onClick={acheterPack3Swipes}
-                className="rounded-full border-2 border-bleu px-6 py-3 font-semibold text-bleu transition-colors hover:bg-bleu/5"
-              >
-                Pack 3 swipes — 1,99 €
-              </button>
-              {/* Gratuit : inviter des amis pour gagner des swipes */}
-              {user && (
-                <InviterAmis
-                  onBonus={() => {
-                    const b = getBonusLikes(user.id);
-                    setBonusLikes(b);
-                    if (likesAujourdhui < LIKES_GRATUITS_PAR_JOUR + b)
-                      setPaywall(false);
-                  }}
-                />
-              )}
               <button
                 onClick={() => setPaywall(false)}
                 className="rounded-full px-6 py-3 font-medium text-ink/70 hover:text-ink"

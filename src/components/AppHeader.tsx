@@ -80,7 +80,7 @@ export default function AppHeader() {
       {/* Bandeau d'alerte quand un nouveau message arrive */}
       {alerteMsg && (
         <Link
-          href="/matchs"
+          href="/notifs?tab=messagerie"
           className="fixed left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-medium text-white shadow-lg"
           style={{ top: "calc(env(safe-area-inset-top) + 0.75rem)" }}
         >

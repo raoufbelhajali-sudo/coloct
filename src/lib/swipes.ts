@@ -52,6 +52,18 @@ export async function getLikesToday(userId: string): Promise<number> {
   return count ?? 0;
 }
 
+// Compte TOUS les swipes (gauche + droite, annonces ou profils) faits dans les
+// dernières 24h par cet utilisateur. Sert à la limite des 20 swipes / 24h.
+export async function getSwipes24h(userId: string): Promise<number> {
+  const depuis = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const { count } = await supabase
+    .from("swipes")
+    .select("id", { count: "exact", head: true })
+    .eq("swiper_id", userId)
+    .gte("created_at", depuis.toISOString());
+  return count ?? 0;
+}
+
 // --- Swipes bonus (parrainage) : crédités quand on invite des amis ---
 function cleBonus(userId: string): string {
   const jour = new Date().toISOString().slice(0, 10); // remis à zéro chaque jour

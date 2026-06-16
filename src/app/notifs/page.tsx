@@ -2,11 +2,12 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, MessageSquare } from "lucide-react";
+import { Sparkles, MessageSquare, Lock } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import InteressesListe from "@/components/InteressesListe";
 import MessagerieListe from "@/components/MessagerieListe";
 import { useAuth } from "@/lib/auth";
+import { estPremium, estHero } from "@/lib/offers";
 import { useLikesRecus, useMessagesNonLus } from "@/lib/notifications";
 
 type Onglet = "interesses" | "messagerie";
@@ -14,9 +15,11 @@ type Onglet = "interesses" | "messagerie";
 function NotifsContenu() {
   const router = useRouter();
   const sp = useSearchParams();
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const nbLikes = useLikesRecus();
   const { count: nbMessages } = useMessagesNonLus();
+  // Notifs (messagerie + qui t'a liké) débloquées par le Pack Swiper ou HeroSwiper
+  const debloque = estPremium(profile) || estHero(profile);
 
   const [onglet, setOnglet] = useState<Onglet>(
     sp.get("tab") === "messagerie" ? "messagerie" : "interesses"
@@ -54,10 +57,34 @@ function NotifsContenu() {
         </div>
       </div>
 
-      {onglet === "interesses" ? (
-        <InteressesListe titreVisible={false} />
+      {debloque ? (
+        onglet === "interesses" ? (
+          <InteressesListe titreVisible={false} />
+        ) : (
+          <MessagerieListe titreVisible={false} />
+        )
       ) : (
-        <MessagerieListe titreVisible={false} />
+        <div className="w-full max-w-sm">
+          <div className="bg-panel-2 flex flex-col items-center gap-3 rounded-3xl p-7 text-center">
+            <span className="bg-signature flex h-14 w-14 items-center justify-center rounded-full text-white">
+              <Lock className="h-7 w-7" />
+            </span>
+            <p className="font-display text-xl font-bold">Débloque tes notifs</p>
+            <p className="max-w-xs text-sm text-ink/70">
+              Vois <strong>qui t&apos;a liké</strong> et accède à la{" "}
+              <strong>messagerie</strong> avec le Pack Swiper.
+            </p>
+            <button
+              onClick={() => router.push("/boutique")}
+              className="bg-signature mt-1 rounded-full px-6 py-3 font-semibold text-white"
+            >
+              Pack Swiper — 2,99 €/sem
+            </button>
+            <p className="text-xs text-ink/40">
+              Paiement à venir — déblocage de démo.
+            </p>
+          </div>
+        </div>
       )}
     </main>
   );

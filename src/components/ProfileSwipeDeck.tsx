@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Star } from "lucide-react";
+import { Heart, X, Star, Eye, Rocket } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -18,7 +18,8 @@ import {
   getMatchIdForColocataire,
 } from "@/lib/locataire";
 import { compatProfils, scoreProfilPourAnnonceur } from "@/lib/compat";
-import { estPremium, contacterColocataireDirect } from "@/lib/offers";
+import { getSwipes24h } from "@/lib/swipes";
+import { estPremium, estHero, contacterColocataireDirect } from "@/lib/offers";
 import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import { getIdsBloques } from "@/lib/blocks";
 import { marquerAnnonce } from "@/lib/matchPopup";
@@ -26,6 +27,9 @@ import ProfileCard from "./ProfileCard";
 import ProfileDetail from "./ProfileDetail";
 
 type Direction = "left" | "right";
+
+// Limite gratuite : 20 swipes / 24h (au-delà : HeroSwiper, ou attendre 24h)
+const SWIPES_PAR_JOUR = 20;
 
 // Le locataire swipe sur les profils de colocataires intéressés
 export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
@@ -39,6 +43,8 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
   const [erreur, setErreur] = useState(false);
   const [match, setMatch] = useState<Profile | null>(null);
   const [detail, setDetail] = useState<Profile | null>(null); // profil ouvert en grand
+  const [swipesAujourdhui, setSwipesAujourdhui] = useState(0);
+  const [paywall, setPaywall] = useState(false);
 
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-12, 12]);
@@ -54,10 +60,12 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
         getColocataireProfiles(user.id, swiped)
       ),
       getIdsBloques(user.id),
+      getSwipes24h(user.id),
     ])
-      .then(([data, blocs]) => {
+      .then(([data, blocs, nbSwipes]) => {
         setProfiles(data);
         setBloques(blocs);
+        setSwipesAujourdhui(nbSwipes);
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
@@ -80,6 +88,9 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
   const current = remaining[0];
   const next = remaining[1];
 
+  // Limite gratuite : 20 swipes / 24h. HeroSwiper = illimité.
+  const swipesEpuises = !estHero(profile) && swipesAujourdhui >= SWIPES_PAR_JOUR;
+
   // Message direct à un colocataire SANS attendre un match — réservé au forfait
   const [contactEnCours, setContactEnCours] = useState(false);
   async function messageDirectColocataire() {
@@ -99,6 +110,11 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
 
   async function fly(dir: Direction) {
     if (animating.current || !current || !user) return;
+    // Limite des 20 swipes/24h : on bloque et on propose HeroSwiper
+    if (swipesEpuises) {
+      setPaywall(true);
+      return;
+    }
     animating.current = true;
     const swiped = current;
 
@@ -112,6 +128,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
     });
 
     setSwipedIds((prev) => new Set(prev).add(swiped.id));
+    setSwipesAujourdhui((n) => n + 1); // compte tous les swipes (limite 24h)
     x.set(0);
     controls.set({ x: 0, opacity: 1 });
     animating.current = false;
@@ -246,6 +263,50 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
             fly("left");
           }}
         />
+      )}
+
+      {/* Limite de 20 swipes / 24h atteinte */}
+      {paywall && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
+          <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
+            <p className="font-display text-3xl font-bold leading-tight">
+              Tes 20 swipes sont utilisés
+            </p>
+            <p className="mt-3 text-ink/80">
+              Reviens dans 24h pour 20 nouveaux swipes gratuits… ou passe en{" "}
+              <span className="text-signature font-semibold">HeroSwiper</span>{" "}
+              pour swiper sans limite.
+            </p>
+            <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
+              <li className="flex items-center gap-2">
+                <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Swipes illimités
+              </li>
+              <li className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-bleu" /> Messagerie + qui t&apos;a liké
+              </li>
+              <li className="flex items-center gap-2">
+                <Rocket className="h-4 w-4 text-bleu" /> Toutes les actions débloquées
+              </li>
+            </ul>
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={() => router.push("/boutique")}
+                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+              >
+                Passer HeroSwiper
+              </button>
+              <button
+                onClick={() => setPaywall(false)}
+                className="rounded-full px-6 py-3 font-medium text-ink/70 hover:text-ink"
+              >
+                Plus tard
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-ink/40">
+              Paiement à venir — déblocage de démo pour l&apos;instant.
+            </p>
+          </div>
+        </div>
       )}
 
       {/* Modale de match */}

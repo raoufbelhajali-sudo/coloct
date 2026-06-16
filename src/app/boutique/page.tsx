@@ -50,7 +50,7 @@ export default function BoutiquePage() {
 
   // Offre de lancement : tout est gratuit pour l'instant, sur le web ET l'app
   // (« gratuit aujourd'hui, payant bientôt »).
-  const lancement = true;
+  const lancement = false;
 
   function dateFr(iso: string | null) {
     if (!iso) return "";
@@ -93,7 +93,7 @@ export default function BoutiquePage() {
         <p className="mt-1 mb-6 text-ink/60">
           {estAnnonceur
             ? "Trouve le bon coloc plus vite. Pas d'abonnement : tu paies seulement quand tu en as besoin."
-            : "10 swipes gratuits par jour. Pour aller plus loin, choisis ton pack, sans engagement."}
+            : "20 swipes gratuits par 24h. Pour débloquer les notifs ou swiper sans limite, choisis ton pack."}
         </p>
 
         {lancement && (
@@ -153,10 +153,10 @@ export default function BoutiquePage() {
                 icon={<Zap className="h-6 w-6 text-white" />}
                 titre="Pack Swiper"
                 duree="Par semaine · sans engagement"
-                prix="1,99 €"
+                prix="2,99 €"
                 avantages={[
-                  "Swipes illimités (10 gratuits/jour sans pack)",
-                  "Filtres avancés",
+                  "Vois qui t'a liké",
+                  "Messagerie débloquée",
                   "Sans engagement — stoppe quand tu veux",
                 ]}
                 actif={premium}
@@ -216,9 +216,9 @@ export default function BoutiquePage() {
                 </div>
                 <ul className="mt-4 space-y-1.5 text-sm text-ink/85">
                   {[
-                    "Tout le Pack Swiper",
+                    "Swipes illimités (pas de limite des 20/24h)",
+                    "Tout le Pack Swiper : messagerie + qui t'a liké",
                     "Annuler le dernier swipe (oups !)",
-                    "Vois qui t'a liké",
                     "Ton profil boosté, vu en priorité",
                     "Messages directs : contacte sans attendre un match",
                   ].map((a) => (
