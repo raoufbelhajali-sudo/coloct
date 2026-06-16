@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
-import { MessageSquare, Zap, Settings, Sparkles, Home, Newspaper } from "lucide-react";
+import { MessageSquare, Zap, Settings, Sparkles, Home, Newspaper, Bell } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useMessagesNonLus, useLikesRecus } from "@/lib/notifications";
 
@@ -36,7 +36,6 @@ export default function AppHeader({
       ? "/locataire"
       : "/swipe";
 
-  const estLoca = profile?.role === "locataire";
   const accueilActif =
     pathname === "/" || pathname === "/swipe" || pathname === "/locataire";
 
@@ -125,19 +124,17 @@ export default function AppHeader({
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="mx-auto flex max-w-sm items-end justify-around px-2">
+            {/* Notifs : fusionne « Intéressés » + « Messagerie » (deux onglets) */}
             <NavItem
-              href="/jaime"
-              label={estLoca ? "Candidats" : "J'aime"}
-              Icon={Sparkles}
-              actif={pathname === "/jaime"}
-              count={nbLikes}
-            />
-            <NavItem
-              href="/matchs"
-              label="Messages"
-              Icon={MessageSquare}
-              actif={pathname.startsWith("/matchs")}
-              count={nbMessages}
+              href="/notifs"
+              label="Notifs"
+              Icon={Bell}
+              actif={
+                pathname.startsWith("/notifs") ||
+                pathname === "/jaime" ||
+                pathname.startsWith("/matchs")
+              }
+              count={nbLikes + nbMessages}
             />
 
             {/* Bouton central : le swipe (sans texte, dans le footer) */}
