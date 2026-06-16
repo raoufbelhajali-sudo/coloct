@@ -13,12 +13,12 @@
   --color-ink: #111827; /* Texte (noir doux) */
   --color-pink: #2563eb; /* Accent texte / liens (bleu) */
   --color-pink-light: #60a5fa; /* Bleu clair */
-  /* "violet"/"bleu" pilotent les ICÔNES et pastilles → corail (noms de tokens
+  /* "violet"/"bleu" pilotent les ICÔNES et pastilles → turquoise (noms de tokens
      conservés pour éviter de tout renommer). */
-  --color-violet: #fa5252; /* Icônes (corail) */
-  --color-violet-dark: #e03131; /* Corail foncé */
-  --color-bleu: #fa5252; /* Icônes (corail) */
-  --color-bleu-clair: #ffecec; /* Corail très clair (fonds de pastilles) */
+  --color-violet: #14b8a6; /* Icônes (turquoise) */
+  --color-violet-dark: #0d9488; /* Turquoise foncé */
+  --color-bleu: #14b8a6; /* Icônes (turquoise) */
+  --color-bleu-clair: #ccfbf1; /* Turquoise très clair (fonds de pastilles) */
 
   /* Polices */
   --font-display: var(--font-fraunces); /* Titres / logo */
@@ -54,14 +54,14 @@ body {
   }
 }
 
-/* Dégradé signature (boutons clés) : bleu → corail */
+/* Dégradé signature (boutons clés) : bleu → turquoise */
 .bg-signature {
-  background-image: linear-gradient(135deg, #2563eb, #fa5252);
+  background-image: linear-gradient(135deg, #2563eb, #14b8a6);
 }
 
 /* Texte rempli avec le dégradé signature */
 .text-signature {
-  background-image: linear-gradient(135deg, #2563eb, #fa5252);
+  background-image: linear-gradient(135deg, #2563eb, #14b8a6);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
