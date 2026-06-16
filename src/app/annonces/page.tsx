@@ -35,6 +35,7 @@ function AnnoncesContenu() {
   const [ville, setVille] = useState(sp.get("ville") ?? "");
   const [budgetMax, setBudgetMax] = useState(sp.get("budget") ?? "");
   const [type, setType] = useState("");
+  const [offre, setOffre] = useState(sp.get("offre") ?? "");
 
   useEffect(() => {
     getListings()
@@ -51,6 +52,7 @@ function AnnoncesContenu() {
     if (ville && l.ville !== ville) return false;
     if (budgetMax && l.loyer > Number(budgetMax)) return false;
     if (type && l.typeLogement !== type) return false;
+    if (offre && (l.typeOffre ?? "colocation") !== offre) return false;
     return true;
   });
 
@@ -69,7 +71,21 @@ function AnnoncesContenu() {
 
         {/* Barre de filtres */}
         <div className="mt-6 rounded-2xl bg-panel p-4 ring-1 ring-ink/5">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <label className="mb-1 block text-xs font-medium text-ink/55">
+                Type d&apos;offre
+              </label>
+              <select
+                value={offre}
+                onChange={(e) => setOffre(e.target.value)}
+                className="w-full rounded-xl border border-ink/10 bg-bg px-3 py-2.5 text-sm focus:border-pink focus:outline-none"
+              >
+                <option value="">Tout</option>
+                <option value="colocation">Colocation</option>
+                <option value="location">Location</option>
+              </select>
+            </div>
             <div>
               <label className="mb-1 block text-xs font-medium text-ink/55">
                 Ville

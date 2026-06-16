@@ -40,6 +40,7 @@ export type Listing = {
   gelee?: boolean | null; // annonce gelée (bien loué) → masquée du swipe
   statutAnnonceur?: string | null; // "Propriétaire" / "Locataire (sous-location)"
   typeLogement?: string | null; // Appartement / Maison / Studio
+  typeOffre?: string | null; // "colocation" (chambre en coloc) ou "location" (logement entier)
   nbColocsTotal?: number | null; // nb de colocataires au total
   caution?: number | null; // dépôt de garantie (€)
   salleDeBain?: string | null; // Privée / Partagée

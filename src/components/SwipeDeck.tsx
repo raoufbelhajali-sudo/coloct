@@ -139,6 +139,7 @@ export default function SwipeDeck() {
   // Annonces qui passent les filtres (et pas encore swipées)
   const filtered = useMemo(() => {
     return allListings.filter((l) => {
+      if ((l.typeOffre ?? "colocation") !== "colocation") return false; // pas les locations
       if (swipedIds.has(l.id)) return false;
       if (l.ownerId && bloques.has(l.ownerId)) return false; // annonceur bloqué
       if (l.loyer > budgetMax) return false;

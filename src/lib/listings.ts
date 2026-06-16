@@ -49,6 +49,7 @@ export type ListingRow = {
   gelee: boolean | null;
   statut_annonceur: string | null;
   type_logement: string | null;
+  type_offre: string | null;
   nb_colocs_total: number | null;
   caution: number | null;
   salle_de_bain: string | null;
@@ -84,6 +85,7 @@ export function mapListingRow(r: ListingRow): Listing {
     gelee: r.gelee ?? false,
     statutAnnonceur: r.statut_annonceur ?? null,
     typeLogement: r.type_logement ?? null,
+    typeOffre: r.type_offre ?? "colocation",
     nbColocsTotal: r.nb_colocs_total ?? null,
     caution: r.caution ?? null,
     salleDeBain: r.salle_de_bain ?? null,

@@ -46,6 +46,7 @@ export default function ListingForm({
   const [surface, setSurface] = useState(listing ? String(listing.surface) : "");
   const [meuble, setMeuble] = useState(listing?.meuble ?? true);
   const [typeLogement, setTypeLogement] = useState(listing?.typeLogement ?? "");
+  const [typeOffre, setTypeOffre] = useState(listing?.typeOffre ?? "colocation");
   const [nbColocsTotal, setNbColocsTotal] = useState(
     listing?.nbColocsTotal ? String(listing.nbColocsTotal) : ""
   );
@@ -94,6 +95,7 @@ export default function ListingForm({
       if (d.surface != null) setSurface(d.surface);
       if (d.meuble != null) setMeuble(d.meuble);
       if (d.typeLogement != null) setTypeLogement(d.typeLogement);
+      if (d.typeOffre != null) setTypeOffre(d.typeOffre);
       if (d.nbColocsTotal != null) setNbColocsTotal(d.nbColocsTotal);
       if (d.caution != null) setCaution(d.caution);
       if (d.salleDeBain != null) setSalleDeBain(d.salleDeBain);
@@ -215,6 +217,7 @@ export default function ListingForm({
         meuble,
         statut_annonceur: profile?.statut_annonceur ?? null,
         type_logement: typeLogement || null,
+        type_offre: typeOffre,
         nb_colocs_total: Number(nbColocsTotal) || null,
         caution: Number(caution) || null,
         salle_de_bain: salleDeBain || null,
@@ -257,6 +260,31 @@ export default function ListingForm({
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md space-y-5">
+      <div>
+        <label className="text-sm text-ink/70">Type d&apos;offre</label>
+        <div className="mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel p-1">
+          {([
+            { val: "colocation", titre: "Colocation", sous: "Chambre en coloc" },
+            { val: "location", titre: "Location", sous: "Logement entier" },
+          ] as const).map((o) => (
+            <button
+              key={o.val}
+              type="button"
+              onClick={() => setTypeOffre(o.val)}
+              className={
+                "flex flex-col items-center rounded-lg px-3 py-2 transition-colors " +
+                (typeOffre === o.val ? "bg-signature text-white" : "text-ink/70 hover:text-ink")
+              }
+            >
+              <span className="text-sm font-semibold">{o.titre}</span>
+              <span className={"text-xs " + (typeOffre === o.val ? "text-white/80" : "text-ink/45")}>
+                {o.sous}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <Field
         label="Titre de l'annonce"
         value={titre}
