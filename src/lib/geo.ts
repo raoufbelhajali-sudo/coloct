@@ -35,6 +35,28 @@ export async function geocodeVille(
   }
 }
 
+// Géocodage INVERSE : coordonnées GPS → ville + département (API gratuite gouv).
+export async function reverseGeocode(
+  lat: number,
+  lng: number
+): Promise<{ ville: string; departement: string } | null> {
+  try {
+    const r = await fetch(
+      `https://api-adresse.data.gouv.fr/reverse/?lon=${lng}&lat=${lat}`
+    );
+    const d = await r.json();
+    const p = d.features?.[0]?.properties;
+    if (!p) return null;
+    const ville = p.city || p.name || "";
+    // context = "75, Paris, Île-de-France" → 1er élément = code département
+    const departement = String(p.context || "").split(",")[0].trim();
+    if (!ville || !departement) return null;
+    return { ville, departement };
+  } catch {
+    return null;
+  }
+}
+
 // Distance à vol d'oiseau (km) entre deux points (formule de haversine).
 export function distanceKm(a: Coord, b: Coord): number {
   const R = 6371;

@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { MapPin } from "lucide-react";
+import { Geolocation } from "@capacitor/geolocation";
 import { DEPARTEMENTS_NOMS } from "@/lib/profilOptions";
+import { reverseGeocode } from "@/lib/geo";
 
 // Clé de tri : la Corse (2A/2B) se place entre le 19 et le 21
 function cleDept(num: string): number {
@@ -51,6 +54,36 @@ export default function LieuSelect({
 }) {
   const [villes, setVilles] = useState<string[]>([]);
   const [chargement, setChargement] = useState(false);
+  const [geoEnCours, setGeoEnCours] = useState(false);
+  const [geoErreur, setGeoErreur] = useState("");
+
+  // Détecte la position du téléphone et remplit ville + département tout seul.
+  async function utiliserMaPosition() {
+    setGeoErreur("");
+    setGeoEnCours(true);
+    try {
+      // Demande la permission puis la position (plugin natif sur iPhone, navigateur sur web)
+      const pos = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: false,
+        timeout: 12000,
+      });
+      const res = await reverseGeocode(
+        pos.coords.latitude,
+        pos.coords.longitude
+      );
+      if (res?.ville) {
+        onChange(res.ville, res.departement);
+      } else {
+        setGeoErreur("Impossible de trouver ta ville. Choisis-la à la main.");
+      }
+    } catch {
+      setGeoErreur(
+        "Localisation indisponible. Autorise la position, ou choisis ta ville à la main."
+      );
+    } finally {
+      setGeoEnCours(false);
+    }
+  }
 
   useEffect(() => {
     if (!departement) {
@@ -74,11 +107,23 @@ export default function LieuSelect({
     ville && !villes.includes(ville) ? [ville, ...villes] : villes;
 
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <div>
-        <label className="mb-1 block text-xs font-medium text-ink/60">
-          Département
-        </label>
+    <div className="space-y-2">
+      <button
+        type="button"
+        onClick={utiliserMaPosition}
+        disabled={geoEnCours}
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-bleu/40 bg-bleu-clair px-4 py-2.5 text-sm font-semibold text-violet transition-colors hover:bg-bleu-clair/70 disabled:opacity-60"
+      >
+        <MapPin className="h-4 w-4" />
+        {geoEnCours ? "Localisation…" : "Utiliser ma position"}
+      </button>
+      {geoErreur && <p className="text-xs text-pink-light">{geoErreur}</p>}
+
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-xs font-medium text-ink/60">
+            Département
+          </label>
         <select
           value={departement}
           onChange={(e) => {
@@ -116,6 +161,7 @@ export default function LieuSelect({
             </option>
           ))}
         </select>
+        </div>
       </div>
     </div>
   );
