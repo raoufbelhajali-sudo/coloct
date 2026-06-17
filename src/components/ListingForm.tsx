@@ -218,17 +218,19 @@ export default function ListingForm({
         statut_annonceur: profile?.statut_annonceur ?? null,
         type_logement: typeLogement || null,
         type_offre: typeOffre,
-        nb_colocs_total: Number(nbColocsTotal) || null,
+        // Champs propres à la colocation : ignorés pour une location (logement entier)
+        nb_colocs_total:
+          typeOffre === "colocation" ? Number(nbColocsTotal) || null : null,
         caution: Number(caution) || null,
         salle_de_bain: salleDeBain || null,
         duree_min_bail: dureeMinBail || null,
-        genre_colocs: genreColocs || null,
+        genre_colocs: typeOffre === "colocation" ? genreColocs || null : null,
         etage: etage.trim() || "—",
         dispo: dispo || "2026-01-01",
         date_dispo: dateLisible,
         description: description.trim(),
         photos: photos.length ? photos : [PHOTO_PAR_DEFAUT],
-        criteres,
+        criteres: typeOffre === "colocation" ? criteres : [],
         services,
         autres_frais: autresFrais.trim() || null,
         colocs: profile
@@ -307,7 +309,7 @@ export default function ListingForm({
 
       <div className="grid grid-cols-2 gap-4">
         <Field label="Loyer (€ / mois CC)" type="number" value={loyer} onChange={setLoyer} placeholder="Ex. 750" required />
-        <Field label="Surface chambre (m²)" type="number" value={surface} onChange={setSurface} placeholder="Ex. 14" required />
+        <Field label={typeOffre === "location" ? "Surface (m²)" : "Surface chambre (m²)"} type="number" value={surface} onChange={setSurface} placeholder="Ex. 14" required />
       </div>
 
       <Field label="Étage" value={etage} onChange={setEtage} placeholder="Ex. 3e avec ascenseur" />
@@ -340,14 +342,9 @@ export default function ListingForm({
         </div>
       </div>
 
-      {/* Nb colocs total + caution */}
+      {/* Caution + durée minimale (location & colocation) */}
       <div className="grid grid-cols-2 gap-3">
-        <Field label="Co/locataires au total" type="number" value={nbColocsTotal} onChange={setNbColocsTotal} placeholder="Ex. 3" />
         <Field label="Caution (€)" type="number" value={caution} onChange={setCaution} placeholder="Ex. 800" />
-      </div>
-
-      {/* Durée min de bail + genre des colocs */}
-      <div className="grid grid-cols-2 gap-3">
         <div>
           <label className="text-sm text-ink/70">Durée minimale</label>
           <select value={dureeMinBail} onChange={(e) => setDureeMinBail(e.target.value)} className={champSelect}>
@@ -355,14 +352,21 @@ export default function ListingForm({
             {DUREES_MIN_BAIL.map((d) => (<option key={d} value={d}>{d}</option>))}
           </select>
         </div>
-        <div>
-          <label className="text-sm text-ink/70">Colocs actuels</label>
-          <select value={genreColocs} onChange={(e) => setGenreColocs(e.target.value)} className={champSelect}>
-            <option value="">Choisir…</option>
-            {GENRES_COLOC.map((g) => (<option key={g} value={g}>{g}</option>))}
-          </select>
-        </div>
       </div>
+
+      {/* Propres à la colocation : nb de co/locataires + genre des colocs */}
+      {typeOffre === "colocation" && (
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Co/locataires au total" type="number" value={nbColocsTotal} onChange={setNbColocsTotal} placeholder="Ex. 3" />
+          <div>
+            <label className="text-sm text-ink/70">Colocs actuels</label>
+            <select value={genreColocs} onChange={(e) => setGenreColocs(e.target.value)} className={champSelect}>
+              <option value="">Choisir…</option>
+              {GENRES_COLOC.map((g) => (<option key={g} value={g}>{g}</option>))}
+            </select>
+          </div>
+        </div>
+      )}
 
       {/* Meublé */}
       <label className="flex cursor-pointer items-center gap-3 rounded-lg bg-panel px-3 py-3">
@@ -372,7 +376,7 @@ export default function ListingForm({
           onChange={(e) => setMeuble(e.target.checked)}
           className="accent-pink h-5 w-5"
         />
-        <span className="text-ink/85">Chambre meublée</span>
+        <span className="text-ink/85">{typeOffre === "location" ? "Logement meublé" : "Chambre meublée"}</span>
       </label>
 
       <div>
@@ -381,7 +385,7 @@ export default function ListingForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          placeholder="Décris la chambre, l'ambiance de la coloc…"
+          placeholder={typeOffre === "location" ? "Décris le logement, le quartier, les points forts…" : "Décris la chambre, l'ambiance de la coloc…"}
           className="mt-1 w-full rounded-lg border border-ink/10 bg-panel px-3 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
         />
       </div>
@@ -441,28 +445,30 @@ export default function ListingForm({
         </p>
       </div>
 
-      {/* Critères */}
-      <div>
-        <p className="text-sm text-ink/70">Critères de vie commune</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {CRITERES_POSSIBLES.map((c) => {
-            const actif = criteres.includes(c);
-            return (
-              <button
-                key={c}
-                type="button"
-                onClick={() => toggleCritere(c)}
-                className={
-                  "rounded-full px-3 py-1.5 text-sm transition-colors " +
-                  (actif ? "bg-signature text-white" : "bg-panel text-ink/70 hover:text-ink")
-                }
-              >
-                {c}
-              </button>
-            );
-          })}
+      {/* Critères de vie commune — propres à la colocation */}
+      {typeOffre === "colocation" && (
+        <div>
+          <p className="text-sm text-ink/70">Critères de vie commune</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {CRITERES_POSSIBLES.map((c) => {
+              const actif = criteres.includes(c);
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => toggleCritere(c)}
+                  className={
+                    "rounded-full px-3 py-1.5 text-sm transition-colors " +
+                    (actif ? "bg-signature text-white" : "bg-panel text-ink/70 hover:text-ink")
+                  }
+                >
+                  {c}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Services compris dans la colocation */}
       <div>
