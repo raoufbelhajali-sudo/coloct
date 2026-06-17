@@ -12,6 +12,7 @@ import AppHeader from "@/components/AppHeader";
 import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, METIERS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper, champsManquantsSwipe } from "@/lib/completude";
+import { telFrancaisValide } from "@/lib/tel";
 
 const GENRES = ["Femme", "Homme", "Autre"];
 
@@ -189,6 +190,13 @@ export default function ProfilPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
+
+    // Téléphone : doit être un numéro français (10 chiffres)
+    if (contactTel.trim() && !telFrancaisValide(contactTel)) {
+      setErreurSave("Numéro de téléphone français à 10 chiffres requis (ex. 06 12 34 56 78).");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
 
     // --- Agence : on enregistre seulement les infos entreprise ---
     if (estAgence) {

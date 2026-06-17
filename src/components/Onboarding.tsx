@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Telescope, KeyRound, Check, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Role } from "@/lib/auth";
+import { telFrancaisValide } from "@/lib/tel";
 import { LogoMark } from "@/components/Logo";
 import {
   INTERETS,
@@ -17,6 +18,7 @@ import {
   SALAIRES,
   DUREES_COLOC,
   PROFESSIONS,
+  METIERS,
   LANGUES,
   NIVEAUX_SONORES,
   GENRES_COLOC_RECHERCHE,
@@ -61,6 +63,7 @@ export default function Onboarding({
   const [age, setAge] = useState("");
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
+  const [metier, setMetier] = useState("");
   const [salaire, setSalaire] = useState("");
   const [sansSalaire, setSansSalaire] = useState(false);
   const [photoUrl, setPhotoUrl] = useState("");
@@ -112,9 +115,10 @@ export default function Onboarding({
     if (etape === "photo" && !photoUrl) return false;
     if (etape === "toi") {
       if (!age.trim() || Number(age) <= 0) return false;
-      if (!contactTel.trim()) return false;
+      if (!telFrancaisValide(contactTel)) return false;
       if (!genre) return false;
       if (!profession) return false;
+      if (!metier) return false;
       if (!salaire && !sansSalaire) return false;
     }
     if (etape === "bio" && !bio.trim()) return false;
@@ -186,6 +190,7 @@ export default function Onboarding({
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
+        metier: metier || null,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         photo_url: photoUrl || null,
         bio: bio.trim() || null,
@@ -456,11 +461,17 @@ export default function Onboarding({
                 </label>
                 <input
                   type="tel"
+                  inputMode="tel"
                   value={contactTel}
                   onChange={(e) => setContactTel(e.target.value)}
                   placeholder="06 12 34 56 78"
                   className={champ}
                 />
+                {contactTel.trim() && !telFrancaisValide(contactTel) && (
+                  <p className="mt-1 text-xs text-pink">
+                    Numéro français à 10 chiffres (ex. 06 12 34 56 78).
+                  </p>
+                )}
                 <p className="mt-4 text-sm text-ink/70">
                   Genre <span className="text-pink">*</span>
                 </p>
@@ -483,6 +494,23 @@ export default function Onboarding({
                     {PROFESSIONS.map((p) => (
                       <option key={p} value={p}>
                         {p}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="mt-4">
+                  <label className="text-sm text-ink/70">
+                    Métier <span className="text-pink">*</span>
+                  </label>
+                  <select
+                    value={metier}
+                    onChange={(e) => setMetier(e.target.value)}
+                    className={champ}
+                  >
+                    <option value="">Choisir…</option>
+                    {METIERS.map((m) => (
+                      <option key={m} value={m}>
+                        {m}
                       </option>
                     ))}
                   </select>

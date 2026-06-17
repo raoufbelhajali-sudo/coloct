@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AtSign, Phone, Lock, Check, AlertCircle, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
+import { telFrancaisValide } from "@/lib/tel";
 import AppHeader from "@/components/AppHeader";
 
 // Page « Paramètres du compte » : email, téléphone (toujours enregistré) et
@@ -45,6 +46,11 @@ export default function ComptePage() {
     if (!user) return;
     setErreur("");
     setMessage("");
+    // Téléphone : doit être un numéro français (10 chiffres)
+    if (telephone.trim() && !telFrancaisValide(telephone)) {
+      setErreur("Numéro de téléphone français à 10 chiffres requis (ex. 06 12 34 56 78).");
+      return;
+    }
     setEnCours(true);
 
     // Téléphone : on l'enregistre TOUJOURS, à la fois sur le compte
