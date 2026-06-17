@@ -43,11 +43,15 @@ export default function LieuSelect({
   departement,
   onChange,
   className = "",
+  cacherVilleListe = false,
 }: {
   ville: string;
   departement: string;
   onChange: (ville: string, departement: string) => void;
   className?: string;
+  // Masque le menu déroulant "Ville" dans le mode liste (la ville est déjà
+  // auto-remplie par la recherche / "Autour de moi"). Utilisé pour les annonces.
+  cacherVilleListe?: boolean;
 }) {
   const [query, setQuery] = useState(ville || "");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -246,14 +250,16 @@ export default function LieuSelect({
       </button>
 
       {listeOuverte && (
-        <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className={"mt-2 grid grid-cols-1 gap-3 " + (cacherVilleListe ? "" : "sm:grid-cols-2")}>
           <div>
             <label className="mb-1 block text-xs font-medium text-ink/60">
               Département
             </label>
             <select
               value={departement}
-              onChange={(e) => onChange("", e.target.value)}
+              onChange={(e) =>
+                onChange(cacherVilleListe ? ville : "", e.target.value)
+              }
               className={className}
             >
               <option value="">Choisir un département…</option>
@@ -264,6 +270,7 @@ export default function LieuSelect({
               ))}
             </select>
           </div>
+          {!cacherVilleListe && (
           <div>
             <label className="mb-1 block text-xs font-medium text-ink/60">
               Ville
@@ -290,6 +297,7 @@ export default function LieuSelect({
               ))}
             </select>
           </div>
+          )}
         </div>
       )}
     </div>

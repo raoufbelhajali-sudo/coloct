@@ -295,10 +295,11 @@ export default function ListingForm({
       />
 
       <div>
-        <label className="text-sm text-ink/70">Ville</label>
+        <label className="text-sm text-ink/70">Adresse du bien</label>
         <LieuSelect
           ville={ville}
           departement={departement}
+          cacherVilleListe
           onChange={(v, d) => {
             setVille(v);
             setDepartement(d);
