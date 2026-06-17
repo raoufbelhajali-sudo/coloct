@@ -84,6 +84,8 @@ export default function Onboarding({
   const quartiers: string[] = []; // quartiers retirés : on ne garde que dép. + ville
   const [dateEmm, setDateEmm] = useState("");
   const [dureeColoc, setDureeColoc] = useState("");
+  // Ce que le chercheur veut : "colocation" (chambre) ou "location" (logement entier)
+  const [rechercheOffre, setRechercheOffre] = useState("colocation");
 
   const etapes: readonly string[] =
     role !== "locataire"
@@ -202,6 +204,7 @@ export default function Onboarding({
         quartiers,
         date_emmenagement: dateEmm || null,
         duree_coloc: dureeColoc || null,
+        recherche_offre: role === "locataire" ? null : rechercheOffre,
       })
       .eq("id", user.id);
     if (error) {
@@ -690,8 +693,30 @@ export default function Onboarding({
             {etape === "recherche" && (
               <Etape
                 titre="Ce que tu cherches"
-                sous="On te montrera les colocs qui collent."
+                sous="On te montrera les annonces qui collent."
               >
+                <p className="text-sm text-ink/70">Tu cherches une…</p>
+                <div className="mb-4 mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel p-1">
+                  {([
+                    ["colocation", "Co/location", "Une chambre en coloc"],
+                    ["location", "Location", "Un logement entier"],
+                  ] as const).map(([v, l, s]) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setRechercheOffre(v)}
+                      className={
+                        "flex flex-col items-center rounded-lg px-3 py-2 transition-colors " +
+                        (rechercheOffre === v
+                          ? "bg-signature text-white"
+                          : "text-ink/70 hover:text-ink")
+                      }
+                    >
+                      <span className="text-sm font-semibold">{l}</span>
+                      <span className={"text-xs " + (rechercheOffre === v ? "text-white/80" : "text-ink/45")}>{s}</span>
+                    </button>
+                  ))}
+                </div>
                 <div className="flex items-center justify-between text-sm">
                   <label className="text-ink/70">Budget max</label>
                   <span className="font-semibold text-pink">

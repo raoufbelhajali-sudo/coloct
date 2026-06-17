@@ -111,6 +111,9 @@ export default function ProfileDetail({
                   .filter(Boolean)
                   .join(" · ")}
               </p>
+              <p className="mt-1 text-sm font-medium text-bleu">
+                Cherche : {(profile.recherche_offre ?? "colocation") === "location" ? "Location" : "Co/location"}
+              </p>
               {profile.budget_max ? (
                 <p className="mt-1 text-sm font-semibold text-pink">
                   Budget jusqu&apos;à {profile.budget_max} € / mois

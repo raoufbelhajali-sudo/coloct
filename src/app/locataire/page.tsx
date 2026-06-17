@@ -111,7 +111,11 @@ export default function LocatairePage() {
         ) : selected ? (
           // On swipe les colocataires pour l'annonce sélectionnée
           <div className="flex h-full w-full max-w-sm flex-col">
-            <ProfileSwipeDeck key={selected.id} listingId={selected.id} />
+            <ProfileSwipeDeck
+              key={selected.id}
+              listingId={selected.id}
+              typeOffre={selected.typeOffre ?? "colocation"}
+            />
             <AccrocheAnnonceur />
           </div>
         ) : null}

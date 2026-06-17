@@ -72,11 +72,11 @@ export default function SwipeDeck() {
   const [detail, setDetail] = useState<Listing | null>(null); // annonce ouverte en grand
   const [filtresOuverts, setFiltresOuverts] = useState(false); // panneau filtres replié par défaut
 
+  // Type recherché, fixé à l'inscription : "colocation" ou "location".
+  // Le chercheur ne voit que les annonces de ce type.
+  const rechercheOffre = profile?.recherche_offre ?? "colocation";
+
   // --- Filtres ---
-  // Type d'offre recherché : "tout" (les deux), "colocation" ou "location"
-  const [typeOffre, setTypeOffre] = useState<"tout" | "colocation" | "location">(
-    "tout"
-  );
   const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
   const [quartier, setQuartier] = useState("all");
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
@@ -144,7 +144,8 @@ export default function SwipeDeck() {
   const filtered = useMemo(() => {
     return allListings.filter((l) => {
       const offre = l.typeOffre ?? "colocation";
-      if (typeOffre !== "tout" && offre !== typeOffre) return false; // filtre location / colocation
+      // Le chercheur ne voit que les annonces de son type (choisi à l'inscription)
+      if (offre !== rechercheOffre) return false;
       if (swipedIds.has(l.id)) return false;
       if (l.ownerId && bloques.has(l.ownerId)) return false; // annonceur bloqué
       if (l.loyer > budgetMax) return false;
@@ -166,7 +167,7 @@ export default function SwipeDeck() {
     allListings,
     swipedIds,
     bloques,
-    typeOffre,
+    rechercheOffre,
     budgetMax,
     quartier,
     dispoAvant,
@@ -323,7 +324,7 @@ export default function SwipeDeck() {
   if (chargement) {
     return (
       <div className="flex h-[480px] items-center justify-center text-ink/60">
-        Chargement des co/locations…
+        Chargement des annonces…
       </div>
     );
   }
@@ -389,7 +390,7 @@ export default function SwipeDeck() {
           className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
         >
           <SlidersHorizontal className="h-[18px] w-[18px]" />
-          {(typeOffre !== "tout" || budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX) && (
+          {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX) && (
             <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
           )}
         </button>
@@ -424,34 +425,6 @@ export default function SwipeDeck() {
               >
                 <X className="h-5 w-5" />
               </button>
-            </div>
-
-            {/* Type d'offre : colocation / location / les deux */}
-            <div className="mb-4">
-              <p className="mb-1.5 text-sm text-ink/70">Je cherche</p>
-              <div className="grid grid-cols-3 gap-1.5 rounded-full bg-panel-2 p-1">
-                {([
-                  ["tout", "Les deux"],
-                  ["colocation", "Co/location"],
-                  ["location", "Location"],
-                ] as const).map(([val, label]) => (
-                  <button
-                    key={val}
-                    onClick={() => {
-                      setTypeOffre(val);
-                      resetDeck();
-                    }}
-                    className={
-                      "rounded-full py-2 text-xs font-semibold transition-colors " +
-                      (typeOffre === val
-                        ? "bg-signature text-white shadow"
-                        : "text-ink/60 hover:text-ink")
-                    }
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
             </div>
 
             {/* Budget max */}
@@ -546,14 +519,12 @@ export default function SwipeDeck() {
               </div>
             </div>
 
-            {(typeOffre !== "tout" ||
-              budgetMax !== BUDGET_MAX ||
+            {(budgetMax !== BUDGET_MAX ||
               quartier !== "all" ||
               dispoAvant ||
               maxDistance < DIST_MAX) && (
               <button
                 onClick={() => {
-                  setTypeOffre("tout");
                   setBudgetMax(BUDGET_MAX);
                   setQuartier("all");
                   setDispoAvant("");
@@ -581,7 +552,7 @@ export default function SwipeDeck() {
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
           <p className="font-display text-3xl">C&apos;est tout pour l&apos;instant !</p>
           <p className="max-w-xs text-sm text-ink/70">
-            Tu as parcouru toutes les co/locations disponibles. Ajuste tes filtres
+            Tu as parcouru toutes les annonces disponibles. Ajuste tes filtres
             ou reviens bientôt, de nouvelles annonces arrivent.
           </p>
           {likes.length > 0 && (

@@ -84,6 +84,9 @@ export default function ProfileCard({
           )}
         </span>
         {sousTitre && <p className="mt-0.5 text-sm text-ink/60">{sousTitre}</p>}
+        <p className="mt-0.5 text-sm font-medium text-bleu">
+          Cherche : {(profile.recherche_offre ?? "colocation") === "location" ? "Location" : "Co/location"}
+        </p>
         {profile.budget_max ? (
           <p className="mt-0.5 text-sm font-semibold text-pink">
             Budget jusqu&apos;à {profile.budget_max} € / mois

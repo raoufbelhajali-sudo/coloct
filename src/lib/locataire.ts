@@ -146,14 +146,21 @@ export async function getSwipedProfileIds(
 // Les profils de colocataires à proposer au locataire (hors lui-même et hors déjà swipés)
 export async function getColocataireProfiles(
   excludeUserId: string,
-  swipedIds: Set<string>
+  swipedIds: Set<string>,
+  typeOffre: string = "colocation"
 ): Promise<Profile[]> {
   const { data } = await supabase
     .from("profiles")
     .select("*")
     .eq("role", "colocataire");
   return (data as Profile[] | null ?? [])
-    .filter((p) => p.id !== excludeUserId && !swipedIds.has(p.id))
+    .filter(
+      (p) =>
+        p.id !== excludeUserId &&
+        !swipedIds.has(p.id) &&
+        // L'annonceur ne voit que les chercheurs du même type que son annonce
+        (p.recherche_offre ?? "colocation") === typeOffre
+    )
     // Les profils boostés passent en tête
     .sort((a, b) => (estBooste(b) ? 1 : 0) - (estBooste(a) ? 1 : 0));
 }

@@ -32,7 +32,13 @@ type Direction = "left" | "right";
 const SWIPES_PAR_JOUR = 20;
 
 // Le locataire swipe sur les profils de colocataires intéressés
-export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
+export default function ProfileSwipeDeck({
+  listingId,
+  typeOffre = "colocation",
+}: {
+  listingId: string;
+  typeOffre?: string;
+}) {
   const router = useRouter();
   const { user, profile } = useAuth();
 
@@ -57,7 +63,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
     if (!user) return;
     Promise.all([
       getSwipedProfileIds(user.id, listingId).then((swiped) =>
-        getColocataireProfiles(user.id, swiped)
+        getColocataireProfiles(user.id, swiped, typeOffre)
       ),
       getIdsBloques(user.id),
       getSwipes24h(user.id),
@@ -69,7 +75,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
-  }, [user, listingId]);
+  }, [user, listingId, typeOffre]);
 
   const remaining = useMemo(() => {
     const base = profiles.filter(

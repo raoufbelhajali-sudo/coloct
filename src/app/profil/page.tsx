@@ -26,6 +26,7 @@ export default function ProfilPage() {
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
   const [metier, setMetier] = useState("");
+  const [rechercheOffre, setRechercheOffre] = useState("colocation");
   const [salaire, setSalaire] = useState("");
   const [sansSalaire, setSansSalaire] = useState(false);
   // À propos
@@ -100,6 +101,7 @@ export default function ProfilPage() {
         genre: genre || null,
         profession: profession.trim() || null,
         metier: metier || null,
+        recherche_offre: estLocataire ? null : rechercheOffre,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
@@ -150,6 +152,7 @@ export default function ProfilPage() {
     setGenre(profile.genre ?? "");
     setProfession(profile.profession ?? "");
     setMetier(profile.metier ?? "");
+    setRechercheOffre(profile.recherche_offre ?? "colocation");
     // "Non communiqué" = l'utilisateur a choisi de ne pas indiquer son salaire
     if (profile.salaire === "Non communiqué") {
       setSansSalaire(true);
@@ -239,6 +242,7 @@ export default function ProfilPage() {
         genre: genre || null,
         profession: profession.trim() || null,
         metier: metier || null,
+        recherche_offre: estLocataire ? null : rechercheOffre,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
@@ -508,6 +512,29 @@ export default function ProfilPage() {
                     <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
+              </div>
+            )}
+            {!estLocataire && (
+              <div>
+                <label className="text-sm text-ink/70">Je cherche une…</label>
+                <div className="mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel p-1">
+                  {([
+                    ["colocation", "Co/location"],
+                    ["location", "Location"],
+                  ] as const).map(([v, l]) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setRechercheOffre(v)}
+                      className={
+                        "rounded-lg px-3 py-2 text-sm font-semibold transition-colors " +
+                        (rechercheOffre === v ? "bg-signature text-white" : "text-ink/70 hover:text-ink")
+                      }
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
             <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} required={!estLocataire} />

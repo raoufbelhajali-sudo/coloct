@@ -24,6 +24,7 @@ export type Profile = {
   genre: string | null; // Femme / Homme / Autre
   profession: string | null; // statut pro (Étudiant / CDD / CDI / Chômeur / Retraité)
   metier: string | null; // métier / profession (ex. "Infirmier·ère", "Développeur·se")
+  recherche_offre: string | null; // ce que le chercheur veut : "colocation" ou "location"
   salaire: string | null; // tranche de salaire net/mois
   bio: string | null; // présentation
   interets: string[] | null; // centres d'intérêt
