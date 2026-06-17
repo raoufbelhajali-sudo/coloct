@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Share2,
   MessageSquare,
+  MapPin,
 } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { useAuth, type Profile } from "@/lib/auth";
@@ -243,6 +244,31 @@ export default function ListingDetail({
             {listing.description ? (
               <p className="text-ink/85">{listing.description}</p>
             ) : null}
+
+            {/* Carte de localisation (approximative, au niveau de la ville) */}
+            {listing.lat != null && listing.lng != null && (
+              <div>
+                <p className="flex items-center gap-1.5 text-xs text-ink/50">
+                  <MapPin className="h-3.5 w-3.5 text-violet" /> Localisation
+                </p>
+                <div className="mt-1.5 overflow-hidden rounded-2xl ring-1 ring-ink/10">
+                  <iframe
+                    title="Localisation du bien"
+                    className="block h-48 w-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.openstreetmap.org/export/embed.html?bbox=${
+                      listing.lng - 0.012
+                    }%2C${listing.lat - 0.008}%2C${listing.lng + 0.012}%2C${
+                      listing.lat + 0.008
+                    }&layer=mapnik&marker=${listing.lat}%2C${listing.lng}`}
+                  />
+                </div>
+                <p className="mt-1 text-xs text-ink/45">
+                  Localisation approximative · {lieuSous(listing)}
+                </p>
+              </div>
+            )}
 
             {/* Colocs déjà sur place */}
             {listing.colocs && listing.colocs.length > 0 && (

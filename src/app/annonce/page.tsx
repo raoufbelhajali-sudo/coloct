@@ -228,6 +228,30 @@ function AnnonceContenu() {
               </div>
             </div>
           ) : null}
+
+          {/* Carte de localisation (approximative, au niveau de la ville) */}
+          {listing.lat != null && listing.lng != null && (
+            <div className="mt-6">
+              <h2 className="font-display text-lg font-bold">Localisation</h2>
+              <div className="mt-3 overflow-hidden rounded-2xl ring-1 ring-ink/10">
+                <iframe
+                  title="Localisation du bien"
+                  className="block h-64 w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${
+                    listing.lng - 0.012
+                  }%2C${listing.lat - 0.008}%2C${listing.lng + 0.012}%2C${
+                    listing.lat + 0.008
+                  }&layer=mapnik&marker=${listing.lat}%2C${listing.lng}`}
+                />
+              </div>
+              <p className="mt-1.5 flex items-center gap-1.5 text-xs text-ink/50">
+                <MapPin className="h-3.5 w-3.5 text-violet" /> Localisation
+                approximative · {lieuComplet(listing)}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Colonne droite : prix + CTA (collant sur desktop) */}
