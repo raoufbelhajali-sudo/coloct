@@ -83,8 +83,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .from("profiles")
       .select("*")
       .eq("id", userId)
+      .maybeSingle();
+    if (data) {
+      setProfile(data as Profile);
+      return;
+    }
+    // Filet de sécurité : aucun profil (trigger non exécuté, ou profil supprimé)
+    // → on en (re)crée un par défaut pour ne JAMAIS rester bloqué sur "Un instant…".
+    const { data: cree } = await supabase
+      .from("profiles")
+      .insert({ id: userId, role: "colocataire", prenom: "Anonyme" })
+      .select("*")
       .single();
-    setProfile((data as Profile) ?? null);
+    setProfile((cree as Profile) ?? null);
   }
 
   async function refreshProfile() {
