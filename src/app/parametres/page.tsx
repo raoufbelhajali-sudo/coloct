@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   AtSign,
-  Phone,
   Lock,
   Bell,
   LogOut,
@@ -29,15 +28,6 @@ export default function ParametresPage() {
   const { user, profile, loading, refreshProfile, signOut } = useAuth();
 
   const [pseudo, setPseudo] = useState("");
-  const [email, setEmail] = useState("");
-  const [telephone, setTelephone] = useState("");
-  const [resetEnvoi, setResetEnvoi] = useState(false);
-  const [resetEnvoye, setResetEnvoye] = useState(false); // code envoyé → on affiche le formulaire
-  const [resetErreur, setResetErreur] = useState("");
-  const [resetOk, setResetOk] = useState(false); // mot de passe changé ✓
-  const [resetCode, setResetCode] = useState("");
-  const [resetMdp, setResetMdp] = useState("");
-  const [resetMdp2, setResetMdp2] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifPerm, setNotifPerm] = useState<string>("default");
   const [idEnCours, setIdEnCours] = useState(false);
@@ -60,10 +50,6 @@ export default function ParametresPage() {
     }
     const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
     setPseudo(profile?.pseudo ?? "");
-    setEmail(user.email ?? "");
-    setTelephone(
-      user.phone || (typeof meta.telephone === "string" ? meta.telephone : "")
-    );
     setNotifEmail(meta.notif_email !== false);
     if (typeof window !== "undefined") {
       setIdSoumise(
@@ -85,24 +71,16 @@ export default function ParametresPage() {
 
     setEnCours(true);
 
-    // 1) Pseudo → table profiles
+    // Pseudo → table profiles
     await supabase
       .from("profiles")
       .update({ pseudo: pseudo.trim() || null })
       .eq("id", user.id);
 
-    // 2) Email / mot de passe / téléphone-contact / notifs → compte
-    const emailChange =
-      email.trim().toLowerCase() !== (user.email ?? "").toLowerCase();
-    const updates: {
-      email?: string;
-      data: Record<string, unknown>;
-    } = {
-      data: { telephone: telephone.trim(), notif_email: notifEmail },
-    };
-    if (emailChange && email.trim()) updates.email = email.trim().toLowerCase();
-
-    const { error } = await supabase.auth.updateUser(updates);
+    // Préférence notifs → compte
+    const { error } = await supabase.auth.updateUser({
+      data: { notif_email: notifEmail },
+    });
     await refreshProfile();
     setEnCours(false);
 
@@ -110,66 +88,10 @@ export default function ParametresPage() {
       setErreur(traduire(error.message));
       return;
     }
-    setMessage(
-      emailChange
-        ? "Modifications enregistrées. Vérifie ta boîte mail pour confirmer ton nouvel email."
-        : "Modifications enregistrées ✓"
-    );
+    setMessage("Modifications enregistrées ✓");
     // Remonter en haut pour voir la confirmation
     window.scrollTo({ top: 0, behavior: "smooth" });
     setTimeout(() => setMessage(""), 4000);
-  }
-
-  // Envoie un CODE de changement de mot de passe à l'email du compte (reste dans l'app)
-  async function demanderResetMdp() {
-    if (!user?.email) return;
-    setResetEnvoi(true);
-    setResetErreur("");
-    const { error } = await supabase.auth.resetPasswordForEmail(user.email);
-    setResetEnvoi(false);
-    if (error) setResetErreur("Échec de l'envoi. Réessaie dans un instant.");
-    else {
-      setResetCode("");
-      setResetMdp("");
-      setResetMdp2("");
-      setResetEnvoye(true);
-    }
-  }
-
-  // Vérifie le code reçu puis enregistre le nouveau mot de passe
-  async function validerNouveauMdp(e: React.FormEvent) {
-    e.preventDefault();
-    setResetErreur("");
-    if (resetMdp.length < 6) {
-      setResetErreur("Mot de passe : 6 caractères minimum.");
-      return;
-    }
-    if (resetMdp !== resetMdp2) {
-      setResetErreur("Les deux mots de passe ne sont pas identiques.");
-      return;
-    }
-    if (!user?.email) return;
-    setResetEnvoi(true);
-    const { error: errCode } = await supabase.auth.verifyOtp({
-      email: user.email,
-      token: resetCode.trim(),
-      type: "recovery",
-    });
-    if (errCode) {
-      setResetEnvoi(false);
-      setResetErreur("Code incorrect ou expiré. Renvoie un code et réessaie.");
-      return;
-    }
-    const { error: errPwd } = await supabase.auth.updateUser({
-      password: resetMdp,
-    });
-    setResetEnvoi(false);
-    if (errPwd) {
-      setResetErreur("Impossible d'enregistrer le mot de passe. Réessaie.");
-      return;
-    }
-    setResetOk(true);
-    setResetEnvoye(false);
   }
 
   async function deconnexion() {
@@ -287,6 +209,25 @@ export default function ParametresPage() {
             <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
           </Link>
 
+          {/* Paramètres du compte (email, téléphone, mot de passe) */}
+          <Link
+            href="/compte"
+            className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+          >
+            <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+              <Lock className="h-5 w-5 text-white" />
+            </span>
+            <span className="flex-1">
+              <span className="block font-display text-lg font-semibold">
+                Paramètres du compte
+              </span>
+              <span className="block text-sm text-ink/55">
+                Email, téléphone et mot de passe
+              </span>
+            </span>
+            <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+          </Link>
+
           {/* Boutique (packs de swipes, boost, premium) */}
           <Link
             href="/boutique"
@@ -381,122 +322,6 @@ export default function ParametresPage() {
               placeholder="cam_paris"
               className={champ}
             />
-          </Bloc>
-
-          {/* Email */}
-          <Bloc
-            icone={<AtSign className="h-5 w-5 text-violet" />}
-            titre="Adresse email"
-          >
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="toi@email.com"
-              autoCapitalize="none"
-              autoCorrect="off"
-              spellCheck={false}
-              className={champ}
-            />
-          </Bloc>
-
-          {/* Téléphone */}
-          <Bloc
-            icone={<Phone className="h-5 w-5 text-bleu" />}
-            titre="Numéro de téléphone"
-          >
-            <input
-              type="tel"
-              value={telephone}
-              onChange={(e) => setTelephone(e.target.value)}
-              placeholder="+33 6 12 34 56 78"
-              className={champ}
-            />
-          </Bloc>
-
-          {/* Mot de passe — changement sécurisé par code email (reste dans l'app) */}
-          <Bloc
-            icone={<Lock className="h-5 w-5 text-violet" />}
-            titre="Mot de passe"
-          >
-            {resetOk ? (
-              <p className="flex items-start gap-2 text-sm text-ink/70">
-                <Check className="mt-0.5 h-4 w-4 shrink-0 text-bleu" strokeWidth={3} />
-                Mot de passe modifié ✓
-              </p>
-            ) : resetEnvoye ? (
-              <form onSubmit={validerNouveauMdp} className="space-y-3">
-                <p className="text-sm text-ink/70">
-                  Un code a été envoyé à{" "}
-                  <span className="font-medium text-ink">{user.email}</span>{" "}
-                  (pense aux spams). Saisis-le puis choisis ton nouveau mot de
-                  passe.
-                </p>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  required
-                  value={resetCode}
-                  onChange={(e) => setResetCode(e.target.value)}
-                  placeholder="Code à 6 chiffres"
-                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2.5 text-center text-lg tracking-[0.3em] text-ink placeholder:text-ink/30 placeholder:tracking-normal focus:border-pink focus:outline-none"
-                />
-                <input
-                  type="password"
-                  required
-                  value={resetMdp}
-                  onChange={(e) => setResetMdp(e.target.value)}
-                  placeholder="Nouveau mot de passe (6+ caractères)"
-                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2.5 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
-                />
-                <input
-                  type="password"
-                  required
-                  value={resetMdp2}
-                  onChange={(e) => setResetMdp2(e.target.value)}
-                  placeholder="Confirme le mot de passe"
-                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2.5 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
-                />
-                {resetErreur && (
-                  <p className="text-sm text-pink-light">{resetErreur}</p>
-                )}
-                <div className="flex items-center gap-3">
-                  <button
-                    type="submit"
-                    disabled={resetEnvoi}
-                    className="bg-signature rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-                  >
-                    {resetEnvoi ? "Un instant…" : "Changer le mot de passe"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={demanderResetMdp}
-                    disabled={resetEnvoi}
-                    className="text-sm text-pink-light hover:underline disabled:opacity-60"
-                  >
-                    Renvoyer un code
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <>
-                <p className="text-sm text-ink/70">
-                  Pour ta sécurité, on t&apos;envoie un code par email&nbsp;: tu
-                  le saisis ici, puis tu choisis ton nouveau mot de passe.
-                </p>
-                <button
-                  onClick={demanderResetMdp}
-                  disabled={resetEnvoi}
-                  className="bg-signature mt-3 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-                >
-                  {resetEnvoi ? "Envoi…" : "Recevoir un code par email"}
-                </button>
-                {resetErreur && (
-                  <p className="mt-2 text-sm text-pink-light">{resetErreur}</p>
-                )}
-              </>
-            )}
           </Bloc>
 
           {/* Notifications */}
