@@ -643,7 +643,7 @@ export default function SwipeDeck() {
                 onClick={basculerFavori}
                 aria-label="Mettre en favori"
                 title="Mettre en favori"
-                className="absolute right-4 top-16 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-bg/80 text-violet shadow-md backdrop-blur-sm transition-transform hover:scale-110"
+                className="absolute right-4 top-28 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-bg/80 text-violet shadow-md backdrop-blur-sm transition-transform hover:scale-110"
               >
                 <Bookmark
                   className="h-5 w-5"
