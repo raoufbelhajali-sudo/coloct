@@ -434,6 +434,13 @@ export default function ConnexionPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-8">
+      {/* Bouton retour à l'accueil (toujours accessible, même déconnecté) */}
+      <Link
+        href="/"
+        className="fixed left-4 top-4 z-20 flex items-center gap-1.5 rounded-full bg-panel/90 px-3.5 py-2 text-xs font-semibold text-ink/70 shadow-sm ring-1 ring-ink/10 backdrop-blur transition-colors hover:text-ink"
+      >
+        <Home className="h-4 w-4" /> Accueil
+      </Link>
       <Link href="/" className="mb-3">
         {/* Logo complet (symbole + nom) */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
