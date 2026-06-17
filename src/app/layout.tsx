@@ -82,6 +82,13 @@ export default function RootLayout({
       className={`${fraunces.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* App native uniquement : la page d'accueil web ne doit JAMAIS s'afficher.
+            On redirige vers /connexion AVANT tout rendu (sans effet sur le web). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var p=location.pathname;var app=location.protocol==='capacitor:'||location.protocol==='ionic:'||(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform());if(app&&(p==='/'||p==='/index.html')){location.replace('/connexion/');}}catch(e){}})();`,
+          }}
+        />
         <NativeSetup />
         <FondAccueil />
         <ComingSoonGate>
