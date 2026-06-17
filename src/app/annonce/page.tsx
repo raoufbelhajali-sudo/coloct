@@ -79,7 +79,7 @@ function AnnonceContenu() {
 
   // Caractéristiques principales (icônes)
   const specs = [
-    { Icon: Home, label: listing.typeLogement || "Co/location" },
+    { Icon: Home, label: listing.typeLogement || "Colocation" },
     listing.surface ? { Icon: Ruler, label: `${listing.surface} m²` } : null,
     { Icon: Sofa, label: listing.meuble ? "Meublé" : "Non meublé" },
     listing.ville || listing.quartier
@@ -182,7 +182,7 @@ function AnnonceContenu() {
         {/* Colonne gauche : détails */}
         <div className="lg:col-span-2">
           <h1 className="font-display text-2xl font-bold sm:text-3xl">
-            {listing.titre || listing.typeLogement || "Co/location"}
+            {listing.titre || listing.typeLogement || "Colocation"}
           </h1>
           <p className="mt-1.5 flex items-center gap-1.5 text-ink/70">
             <MapPin className="h-4 w-4 text-bleu" /> {lieuComplet(listing)}

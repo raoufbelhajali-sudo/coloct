@@ -62,7 +62,7 @@ function AnnoncesContenu() {
 
       <main className="mx-auto w-full max-w-6xl px-5 py-8">
         <h1 className="font-display text-3xl font-bold md:text-4xl">
-          Co/locations disponibles
+          Colocations disponibles
         </h1>
         <p className="mt-2 text-ink/60">
           Parcours les chambres en co/location. Pour matcher et discuter,
@@ -82,7 +82,7 @@ function AnnoncesContenu() {
                 className="w-full rounded-xl border border-ink/10 bg-bg px-3 py-2.5 text-sm focus:border-pink focus:outline-none"
               >
                 <option value="">Tout</option>
-                <option value="colocation">Co/location</option>
+                <option value="colocation">Colocation</option>
                 <option value="location">Location</option>
               </select>
             </div>
@@ -185,7 +185,7 @@ function AnnoncesContenu() {
                 </div>
                 <div className="p-4">
                   <p className="font-display text-lg font-semibold leading-tight">
-                    {l.titre || l.typeLogement || "Co/location"}
+                    {l.titre || l.typeLogement || "Colocation"}
                   </p>
                   <p className="mt-1 text-sm text-ink/60">
                     {[l.ville, l.surface ? `${l.surface} m²` : null]
@@ -200,7 +200,7 @@ function AnnoncesContenu() {
         {/* Colocation par ville (liens SEO) */}
         <section className="mt-14">
           <h2 className="font-display text-2xl font-bold">
-            Co/location par ville
+            Colocation par ville
           </h2>
           <div className="mt-4 flex flex-wrap gap-2">
             {VILLES_SEO.map((v) => (
@@ -209,7 +209,7 @@ function AnnoncesContenu() {
                 href={`/colocation/${v.toLowerCase()}`}
                 className="rounded-full bg-panel px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-panel-2"
               >
-                Co/location à {v}
+                Colocation à {v}
               </Link>
             ))}
           </div>

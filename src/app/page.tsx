@@ -68,7 +68,7 @@ function CarteAnnonce({ l }: { l: Listing }) {
       </div>
       <div className="p-2.5">
         <p className="truncate font-display text-sm font-semibold leading-tight">
-          {l.titre || l.typeLogement || "Co/location"}
+          {l.titre || l.typeLogement || "Colocation"}
         </p>
         <p className="mt-0.5 truncate text-xs text-ink/60">
           {[l.ville, l.surface ? `${l.surface} m²` : null].filter(Boolean).join(" · ")}
@@ -404,11 +404,11 @@ export default function Home() {
 
       {/* ===== Colocation par ville (SEO) ===== */}
       <section className="mx-auto w-full max-w-6xl px-5 py-12">
-        <h2 className="font-display text-2xl font-bold">Co/location par ville</h2>
+        <h2 className="font-display text-2xl font-bold">Colocation par ville</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {VILLES_SEO.map((v) => (
             <Link key={v} href={`/colocation/${v.toLowerCase()}`} className="rounded-full bg-panel px-4 py-2 text-sm font-medium text-ink/75 hover:bg-panel-2">
-              Co/location à {v}
+              Colocation à {v}
             </Link>
           ))}
         </div>

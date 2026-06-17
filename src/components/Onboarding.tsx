@@ -51,7 +51,6 @@ export default function Onboarding({
   // --- Champs du profil ---
   const [role, setRole] = useState<Role>("colocataire");
   const [prenom, setPrenom] = useState(prenomInitial);
-  const [pseudo, setPseudo] = useState("");
   // Annonceur : statut + (si agence) infos entreprise
   const [statut, setStatut] = useState("");
   const [siret, setSiret] = useState("");
@@ -112,7 +111,6 @@ export default function Onboarding({
     if (etape === "agence" && !siret.trim()) return false;
     if (etape === "photo" && !photoUrl) return false;
     if (etape === "toi") {
-      if (!pseudo.trim()) return false;
       if (!age.trim() || Number(age) <= 0) return false;
       if (!contactTel.trim()) return false;
       if (!genre) return false;
@@ -180,7 +178,6 @@ export default function Onboarding({
       .update({
         role,
         prenom: prenom.trim() || "Coloc",
-        pseudo: pseudo.trim() || null,
         est_agence: estAgence,
         statut_annonceur: role === "locataire" ? statut || null : null,
         siret: estAgence ? siret.trim() || null : null,
@@ -444,16 +441,6 @@ export default function Onboarding({
             {etape === "toi" && (
               <Etape titre="Parle-nous de toi" sous="Quelques infos rapides.">
                 <label className="text-sm text-ink/70">
-                  Pseudo <span className="text-pink">*</span>
-                </label>
-                <input
-                  value={pseudo}
-                  onChange={(e) => setPseudo(e.target.value)}
-                  placeholder="cam_paris"
-                  autoCapitalize="none"
-                  className={champ}
-                />
-                <label className="mt-4 block text-sm text-ink/70">
                   Âge <span className="text-pink">*</span>
                 </label>
                 <input
@@ -714,7 +701,7 @@ export default function Onboarding({
                 <p className="text-sm text-ink/70">Tu cherches une…</p>
                 <div className="mb-4 mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel p-1">
                   {([
-                    ["colocation", "Co/location", "Une chambre en coloc"],
+                    ["colocation", "Colocation", "Une chambre en coloc"],
                     ["location", "Location", "Un logement entier"],
                   ] as const).map(([v, l, s]) => (
                     <button

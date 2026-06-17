@@ -57,7 +57,7 @@ export default function ListingCard({
               </div>
             ) : (
               <div className="flex items-center gap-1 rounded-full bg-[#14b8a6] px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
-                <Users className="h-3.5 w-3.5" /> Co/location
+                <Users className="h-3.5 w-3.5" /> Colocation
               </div>
             )}
             <div className="rounded-full bg-bg/70 px-3 py-2 text-xs font-medium text-ink backdrop-blur-sm">

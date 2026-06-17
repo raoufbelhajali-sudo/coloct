@@ -44,7 +44,7 @@ export default function VilleContenu({ ville }: { ville: string }) {
 
       <main className="mx-auto w-full max-w-6xl px-5 py-8">
         <h1 className="font-display text-3xl font-bold md:text-4xl">
-          Co/location à {ville}
+          Colocation à {ville}
         </h1>
         <p className="mt-2 max-w-2xl text-ink/60">
           Trouve ta chambre en co/location à {ville} en swipant. Like les annonces
@@ -85,7 +85,7 @@ export default function VilleContenu({ ville }: { ville: string }) {
                 </div>
                 <div className="p-4">
                   <p className="font-display text-lg font-semibold leading-tight">
-                    {l.titre || l.typeLogement || "Co/location"}
+                    {l.titre || l.typeLogement || "Colocation"}
                   </p>
                   <p className="mt-1 text-sm text-ink/60">
                     {[l.ville, l.surface ? `${l.surface} m²` : null]

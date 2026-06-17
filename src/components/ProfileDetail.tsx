@@ -103,7 +103,6 @@ export default function ProfileDetail({
               </h2>
               <p className="text-sm text-ink/60">
                 {[
-                  profile.pseudo ? `@${profile.pseudo}` : null,
                   profile.genre,
                   profile.metier,
                   profile.profession,
@@ -112,7 +111,7 @@ export default function ProfileDetail({
                   .join(" · ")}
               </p>
               <p className="mt-1 text-sm font-medium text-bleu">
-                Cherche : {(profile.recherche_offre ?? "colocation") === "location" ? "Location" : "Co/location"}
+                Cherche : {(profile.recherche_offre ?? "colocation") === "location" ? "Location" : "Colocation"}
               </p>
               {profile.budget_max ? (
                 <p className="mt-1 text-sm font-semibold text-pink">

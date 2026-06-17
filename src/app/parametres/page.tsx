@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  AtSign,
   Lock,
   Bell,
   LogOut,
@@ -27,7 +26,6 @@ export default function ParametresPage() {
   const router = useRouter();
   const { user, profile, loading, refreshProfile, signOut } = useAuth();
 
-  const [pseudo, setPseudo] = useState("");
   const [notifEmail, setNotifEmail] = useState(true);
   const [notifPerm, setNotifPerm] = useState<string>("default");
   const [idEnCours, setIdEnCours] = useState(false);
@@ -49,7 +47,6 @@ export default function ParametresPage() {
       return;
     }
     const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
-    setPseudo(profile?.pseudo ?? "");
     setNotifEmail(meta.notif_email !== false);
     if (typeof window !== "undefined") {
       setIdSoumise(
@@ -70,12 +67,6 @@ export default function ParametresPage() {
     setMessage("");
 
     setEnCours(true);
-
-    // Pseudo → table profiles
-    await supabase
-      .from("profiles")
-      .update({ pseudo: pseudo.trim() || null })
-      .eq("id", user.id);
 
     // Préférence notifs → compte
     const { error } = await supabase.auth.updateUser({
@@ -313,16 +304,6 @@ export default function ParametresPage() {
             </p>
           </Bloc>
           )}
-
-          {/* Pseudo */}
-          <Bloc icone={<AtSign className="h-5 w-5 text-bleu" />} titre="Pseudo">
-            <input
-              value={pseudo}
-              onChange={(e) => setPseudo(e.target.value)}
-              placeholder="cam_paris"
-              className={champ}
-            />
-          </Bloc>
 
           {/* Notifications */}
           <Bloc

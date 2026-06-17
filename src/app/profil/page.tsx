@@ -21,7 +21,6 @@ export default function ProfilPage() {
 
   // Identité
   const [prenom, setPrenom] = useState("");
-  const [pseudo, setPseudo] = useState("");
   const [age, setAge] = useState("");
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
@@ -95,7 +94,6 @@ export default function ProfilPage() {
     ? {
         ...profile,
         prenom: prenom.trim() || profile.prenom,
-        pseudo: pseudo.trim() || null,
         photo_url: photoUrl || null,
         age: Number(age) || null,
         genre: genre || null,
@@ -146,7 +144,6 @@ export default function ProfilPage() {
   useEffect(() => {
     if (!profile) return;
     setPrenom(profile.prenom ?? "");
-    setPseudo(profile.pseudo ?? "");
     setPhotoUrl(profile.photo_url ?? "");
     setAge(profile.age ? String(profile.age) : "");
     setGenre(profile.genre ?? "");
@@ -236,7 +233,6 @@ export default function ProfilPage() {
       .from("profiles")
       .update({
         prenom: prenom.trim(),
-        pseudo: pseudo.trim() || null,
         contact_tel: contactTel.trim() || null,
         age: Number(age) || null,
         genre: genre || null,
@@ -484,7 +480,6 @@ export default function ProfilPage() {
           <Section titre="Identité" defautOuvert id="sec-identite" forceOuvert={sectionCible === "sec-identite"}>
             <div className="grid grid-cols-2 gap-4">
               <Champ label="Prénom" value={prenom} onChange={setPrenom} required placeholder="Camille" />
-              <Champ label="Pseudo" value={pseudo} onChange={setPseudo} required placeholder="cam_paris" />
               <Champ label="Téléphone" type="tel" value={contactTel} onChange={setContactTel} required placeholder="06 12 34 56 78" />
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -519,7 +514,7 @@ export default function ProfilPage() {
                 <label className="text-sm text-ink/70">Je cherche une…</label>
                 <div className="mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel p-1">
                   {([
-                    ["colocation", "Co/location"],
+                    ["colocation", "Colocation"],
                     ["location", "Location"],
                   ] as const).map(([v, l]) => (
                     <button
