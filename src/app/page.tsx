@@ -113,21 +113,32 @@ const ACTIONS = ["like", "nope", "match", "nope"] as const;
 // La pile de cartes qui se "swipe" toute seule (cœur de la vitrine)
 function PileSwipe() {
   const [i, setI] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % HERO_CARDS.length), 2800);
-    return () => clearInterval(t);
-  }, []);
   const action = ACTIONS[i % ACTIONS.length];
   const nope = action === "nope";
+  const isMatch = action === "match";
+  // Le match reste plus longtemps à l'écran pour qu'on voie la conversation défiler.
+  useEffect(() => {
+    const dur = ACTIONS[i % ACTIONS.length] === "match" ? 4600 : 2200;
+    const t = setTimeout(() => setI((v) => (v + 1) % HERO_CARDS.length), dur);
+    return () => clearTimeout(t);
+  }, [i]);
   const top = HERO_CARDS[i];
   const n1 = HERO_CARDS[(i + 1) % HERO_CARDS.length];
   const n2 = HERO_CARDS[(i + 2) % HERO_CARDS.length];
+  // Bulles de la mini-messagerie qui défile pendant le match
+  const BULLES = [
+    { moi: false, t: "Salut 👋 ta chambre est encore dispo ?" },
+    { moi: true, t: "Oui ! Elle te plaît ?" },
+    { moi: false, t: "Carrément 😍 je peux visiter ?" },
+    { moi: true, t: "Demain 18h, ça te va ?" },
+    { moi: false, t: "Parfait, à demain 🙌" },
+  ];
 
   return (
     <div className="mx-auto flex flex-col items-center">
       <div className="relative h-[400px] w-[280px] sm:h-[450px] sm:w-[320px]">
-        <GrandeCarte d={n2} className="absolute inset-0 translate-y-7 scale-[0.9] opacity-50" />
-        <GrandeCarte d={n1} className="absolute inset-0 translate-y-3.5 scale-95 opacity-80" />
+        <GrandeCarte d={n2} className="absolute inset-0 -translate-y-5 scale-[0.92] opacity-50" />
+        <GrandeCarte d={n1} className="absolute inset-0 -translate-y-2.5 scale-[0.96] opacity-80" />
         <AnimatePresence>
           <motion.div
             key={top.id}
@@ -143,7 +154,7 @@ function PileSwipe() {
               <motion.span
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.4, duration: 0.35 }}
+                transition={{ delay: 0.9, duration: 0.35 }}
                 className="absolute left-5 top-16 rotate-12 rounded-xl border-4 border-[#fa5252] px-3 py-1 font-display text-2xl font-bold text-[#fa5252]"
               >
                 NON
@@ -152,7 +163,7 @@ function PileSwipe() {
               <motion.span
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.4, duration: 0.35 }}
+                transition={{ delay: 0.9, duration: 0.35 }}
                 className="absolute right-5 top-16 -rotate-12 rounded-xl border-4 border-[#14b8a6] px-3 py-1 font-display text-2xl font-bold text-[#14b8a6]"
               >
                 LIKE
@@ -163,38 +174,62 @@ function PileSwipe() {
 
         {/* Animation « C'est un match ! » */}
         <AnimatePresence>
-          {action === "match" && (
+          {isMatch && (
             <motion.div
               key={"match" + i}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ delay: 1.1 }}
-              className="absolute inset-0 z-10 flex items-center justify-center rounded-[28px] bg-black/30 backdrop-blur-[2px]"
+              transition={{ delay: 1 }}
+              className="absolute inset-0 z-10 flex items-center justify-center rounded-[28px] bg-black/40 p-4 backdrop-blur-[2px]"
             >
               <motion.div
-                initial={{ scale: 0.5, y: 12 }}
+                initial={{ scale: 0.6, y: 14 }}
                 animate={{ scale: 1, y: 0 }}
-                transition={{ delay: 1.2, type: "spring", stiffness: 260, damping: 16 }}
-                className="bg-signature glow-pink flex flex-col items-center rounded-3xl px-7 py-6 text-center text-white shadow-2xl"
+                transition={{ delay: 1.1, type: "spring", stiffness: 240, damping: 17 }}
+                className="w-full max-w-[230px] overflow-hidden rounded-3xl bg-white shadow-2xl"
               >
-                <motion.span
-                  animate={{ scale: [1, 1.18, 1] }}
-                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-                  className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20"
-                >
-                  <Handshake className="h-8 w-8" />
-                </motion.span>
-                <p className="mt-3 font-display text-2xl font-bold">C&apos;est un match&nbsp;!</p>
-                <p className="text-sm text-white/90">Lancez la conversation</p>
+                {/* En-tête match */}
+                <div className="bg-signature flex items-center gap-2 px-4 py-3 text-white">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
+                    <Handshake className="h-5 w-5" />
+                  </span>
+                  <div className="leading-tight">
+                    <p className="font-display text-base font-bold">C&apos;est un match&nbsp;!</p>
+                    <p className="text-[11px] text-white/90">Camille · en ligne</p>
+                  </div>
+                </div>
+                {/* Conversation qui défile */}
+                <div className="relative h-[150px] overflow-hidden bg-panel/40 px-3">
+                  <motion.div
+                    animate={{ y: ["10%", "-60%"] }}
+                    transition={{ delay: 1.3, duration: 3, ease: "easeInOut" }}
+                    className="flex flex-col gap-2 py-3"
+                  >
+                    {BULLES.map((b, k) => (
+                      <div key={k} className={"flex " + (b.moi ? "justify-end" : "justify-start")}>
+                        <span
+                          className={
+                            "max-w-[82%] rounded-2xl px-3 py-1.5 text-[11px] leading-snug " +
+                            (b.moi ? "bg-signature text-white" : "bg-white text-ink ring-1 ring-ink/10")
+                          }
+                        >
+                          {b.t}
+                        </span>
+                      </div>
+                    ))}
+                  </motion.div>
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-white to-transparent" />
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-5 bg-gradient-to-t from-white to-transparent" />
+                </div>
               </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* Boutons d'action (réagissent au swipe) */}
-      <div className="mt-5 flex items-center gap-5">
+      {/* Boutons d'action (toujours au-dessus, jamais cachés par les cartes) */}
+      <div className="relative z-20 mt-6 flex items-center gap-5">
         <motion.span
           animate={nope ? { scale: [1, 1.25, 1] } : { scale: 1 }}
           transition={{ duration: 0.5 }}
