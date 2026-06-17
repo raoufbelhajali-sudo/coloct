@@ -2,12 +2,12 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, MessageSquare, Lock } from "lucide-react";
+import { Sparkles, MessageSquare, Lock, Check } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import InteressesListe from "@/components/InteressesListe";
 import MessagerieListe from "@/components/MessagerieListe";
 import { useAuth } from "@/lib/auth";
-import { estPremium, estHero } from "@/lib/offers";
+import { estPremium, estHero, activerPassExpress } from "@/lib/offers";
 import { useLikesRecus, useMessagesNonLus } from "@/lib/notifications";
 
 type Onglet = "interesses" | "messagerie";
@@ -15,11 +15,21 @@ type Onglet = "interesses" | "messagerie";
 function NotifsContenu() {
   const router = useRouter();
   const sp = useSearchParams();
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, refreshProfile } = useAuth();
   const nbLikes = useLikesRecus();
   const { count: nbMessages } = useMessagesNonLus();
+  const [enCours, setEnCours] = useState(false);
   // Notifs (messagerie + qui t'a liké) débloquées par le Pack Swiper ou HeroSwiper
   const debloque = estPremium(profile) || estHero(profile);
+
+  // Offre de lancement : on débloque gratuitement, directement ici (comme la boutique).
+  async function debloquerGratuit() {
+    if (!user) return;
+    setEnCours(true);
+    await activerPassExpress(user.id);
+    await refreshProfile();
+    setEnCours(false);
+  }
 
   const [onglet, setOnglet] = useState<Onglet>(
     sp.get("tab") === "messagerie" ? "messagerie" : "interesses"
@@ -66,22 +76,26 @@ function NotifsContenu() {
       ) : (
         <div className="w-full max-w-sm">
           <div className="bg-panel-2 flex flex-col items-center gap-3 rounded-3xl p-7 text-center">
+            <span className="bg-bleu-clair text-violet-dark inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold">
+              <Check className="h-3.5 w-3.5" strokeWidth={3} /> Gratuit pour l&apos;instant
+            </span>
             <span className="bg-signature flex h-14 w-14 items-center justify-center rounded-full text-white">
               <Lock className="h-7 w-7" />
             </span>
             <p className="font-display text-xl font-bold">Débloque tes notifs</p>
             <p className="max-w-xs text-sm text-ink/70">
               Vois <strong>qui t&apos;a liké</strong> et accède à la{" "}
-              <strong>messagerie</strong> avec le Pack Swiper.
+              <strong>messagerie</strong> — gratuit pour l&apos;instant.
             </p>
             <button
-              onClick={() => router.push("/boutique")}
-              className="bg-signature mt-1 rounded-full px-6 py-3 font-semibold text-white"
+              onClick={debloquerGratuit}
+              disabled={enCours}
+              className="bg-signature mt-1 rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
             >
-              Pack Swiper — 2,99 €/sem
+              {enCours ? "Déblocage…" : "Débloquer gratuitement"}
             </button>
             <p className="text-xs text-ink/40">
-              Paiement à venir — déblocage de démo.
+              Offre de lancement — gratuit pour l&apos;instant, payant bientôt.
             </p>
           </div>
         </div>
