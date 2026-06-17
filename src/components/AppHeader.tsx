@@ -114,7 +114,7 @@ export default function AppHeader() {
       {/* Bas : barre de navigation fixe */}
       {user && (
         <nav
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-panel/95 backdrop-blur"
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-panel-2 shadow-[0_-4px_24px_rgba(17,24,39,0.12)]"
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="mx-auto flex max-w-sm items-end justify-around px-2">
