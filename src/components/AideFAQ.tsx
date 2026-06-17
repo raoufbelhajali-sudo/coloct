@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { HelpCircle, X, Search, ChevronDown, ArrowRight } from "lucide-react";
@@ -79,6 +80,8 @@ export default function AideFAQ({
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [exp, setExp] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const q = query.trim().toLowerCase();
   const liste = q
@@ -99,14 +102,16 @@ export default function AideFAQ({
         {label ? <span>{label}</span> : null}
       </button>
 
-      <AnimatePresence>
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
         {open && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/60 p-0 backdrop-blur-sm sm:items-center sm:p-5"
+            className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/60 p-0 backdrop-blur-sm"
           >
             <motion.div
               initial={{ y: 40, opacity: 0 }}
@@ -114,7 +119,7 @@ export default function AideFAQ({
               exit={{ y: 40, opacity: 0 }}
               transition={{ type: "spring", stiffness: 320, damping: 30 }}
               onClick={(e) => e.stopPropagation()}
-              className="flex max-h-[88vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-bg shadow-2xl sm:rounded-3xl"
+              className="flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-t-3xl bg-bg shadow-2xl"
             >
               {/* En-tête */}
               <div className="flex items-center justify-between border-b border-ink/10 px-5 py-4">
@@ -147,7 +152,7 @@ export default function AideFAQ({
               </div>
 
               {/* Liste des questions */}
-              <div className="flex-1 overflow-y-auto px-5 py-4">
+              <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                 {liste.length === 0 ? (
                   <p className="py-8 text-center text-sm text-ink/55">
                     Aucune réponse trouvée.{" "}
@@ -223,7 +228,9 @@ export default function AideFAQ({
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+          </AnimatePresence>,
+          document.body
+        )}
     </>
   );
 }
