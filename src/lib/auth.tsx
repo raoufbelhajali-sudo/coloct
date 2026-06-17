@@ -22,7 +22,8 @@ export type Profile = {
   photo_url: string | null;
   age: number | null;
   genre: string | null; // Femme / Homme / Autre
-  profession: string | null; // statut ou métier (ex. "Étudiante", "Designer")
+  profession: string | null; // statut pro (Étudiant / CDD / CDI / Chômeur / Retraité)
+  metier: string | null; // métier / profession (ex. "Infirmier·ère", "Développeur·se")
   salaire: string | null; // tranche de salaire net/mois
   bio: string | null; // présentation
   interets: string[] | null; // centres d'intérêt

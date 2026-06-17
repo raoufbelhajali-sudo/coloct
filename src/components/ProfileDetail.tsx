@@ -105,6 +105,7 @@ export default function ProfileDetail({
                 {[
                   profile.pseudo ? `@${profile.pseudo}` : null,
                   profile.genre,
+                  profile.metier,
                   profile.profession,
                 ]
                   .filter(Boolean)

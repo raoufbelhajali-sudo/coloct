@@ -14,6 +14,7 @@ export default function ProfileCard({
   const sousTitre = [
     profile.pseudo ? `@${profile.pseudo}` : null,
     profile.genre,
+    profile.metier,
     profile.profession,
   ]
     .filter(Boolean)

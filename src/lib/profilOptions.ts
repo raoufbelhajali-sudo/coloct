@@ -203,6 +203,31 @@ export const SERVICES = [
 // Situation professionnelle (menu déroulant)
 export const PROFESSIONS = ["Étudiant", "CDD", "CDI", "Chômeur", "Retraité"];
 
+// Métier / profession (menu déroulant — les plus courants, + "Autre")
+export const METIERS = [
+  "Étudiant·e",
+  "Enseignant·e",
+  "Infirmier·ère",
+  "Médecin",
+  "Aide-soignant·e",
+  "Ingénieur·e",
+  "Développeur·se",
+  "Commercial·e",
+  "Comptable",
+  "Avocat·e",
+  "Architecte",
+  "Designer",
+  "Cuisinier·ère",
+  "Serveur·se",
+  "Vendeur·se",
+  "Coiffeur·se",
+  "Électricien·ne",
+  "Plombier·ère",
+  "Chauffeur·se",
+  "Consultant·e",
+  "Autre",
+];
+
 // Statut de l'annonceur vis-à-vis du logement
 export const STATUTS_ANNONCEUR = [
   "Propriétaire",

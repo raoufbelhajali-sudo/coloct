@@ -10,7 +10,7 @@ import ProfileDetail from "@/components/ProfileDetail";
 import PremiumPin from "@/components/PremiumPin";
 import AppHeader from "@/components/AppHeader";
 import LieuSelect from "@/components/LieuSelect";
-import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
+import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, METIERS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper, champsManquantsSwipe } from "@/lib/completude";
 
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -25,6 +25,7 @@ export default function ProfilPage() {
   const [age, setAge] = useState("");
   const [genre, setGenre] = useState("");
   const [profession, setProfession] = useState("");
+  const [metier, setMetier] = useState("");
   const [salaire, setSalaire] = useState("");
   const [sansSalaire, setSansSalaire] = useState(false);
   // À propos
@@ -98,6 +99,7 @@ export default function ProfilPage() {
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
+        metier: metier || null,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
@@ -147,6 +149,7 @@ export default function ProfilPage() {
     setAge(profile.age ? String(profile.age) : "");
     setGenre(profile.genre ?? "");
     setProfession(profile.profession ?? "");
+    setMetier(profile.metier ?? "");
     // "Non communiqué" = l'utilisateur a choisi de ne pas indiquer son salaire
     if (profile.salaire === "Non communiqué") {
       setSansSalaire(true);
@@ -235,6 +238,7 @@ export default function ProfilPage() {
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
+        metier: metier || null,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
@@ -495,6 +499,17 @@ export default function ProfilPage() {
                 </div>
               )}
             </div>
+            {!estLocataire && (
+              <div>
+                <label className="text-sm text-ink/70">Métier</label>
+                <select value={metier} onChange={(e) => setMetier(e.target.value)} className={champClasses}>
+                  <option value="">Choisir…</option>
+                  {METIERS.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+            )}
             <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} required={!estLocataire} />
             {/* Salaire : colocataire (candidat) uniquement */}
             {!estLocataire && (
