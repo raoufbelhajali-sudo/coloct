@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   X,
-  Heart,
+  Check,
   ChevronLeft,
   ChevronRight,
   Share2,
@@ -322,7 +322,7 @@ export default function ListingDetail({
               aria-label="Ça m'intéresse"
               className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
             >
-              <Heart className="h-9 w-9" fill="currentColor" />
+              <Check className="h-9 w-9" strokeWidth={3} />
             </button>
           </div>
         )}

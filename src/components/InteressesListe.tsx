@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { Sparkles, ChevronRight, HeartHandshake } from "lucide-react";
+import { Sparkles, ChevronRight, Handshake } from "lucide-react";
 import ListingDetail from "@/components/ListingDetail";
 import ProfileDetail from "@/components/ProfileDetail";
 import { useAuth } from "@/lib/auth";
@@ -114,7 +114,7 @@ export default function InteressesListe({ titreVisible = true }: { titreVisible?
           href="/notifs?tab=messagerie"
           className="bg-signature glow-pink fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-5 py-3 font-semibold text-white shadow-lg"
         >
-          <HeartHandshake className="h-5 w-5" /> C&apos;est un match ! Voir mes messages
+          <Handshake className="h-5 w-5" /> C&apos;est un match ! Voir mes messages
         </Link>
       )}
     </>

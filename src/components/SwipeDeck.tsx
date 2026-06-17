@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark, AlertCircle, Send } from "lucide-react";
+import { Check, X, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark, AlertCircle, Send } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -580,7 +580,7 @@ export default function SwipeDeck() {
           </p>
           {likes.length > 0 && (
             <p className="flex items-center justify-center gap-1.5 text-sm text-pink-light">
-              <Heart className="h-4 w-4" fill="currentColor" />
+              <Check className="h-4 w-4" strokeWidth={3} />
               {likes.length} annonce{likes.length > 1 ? "s" : ""} aimée
               {likes.length > 1 ? "s" : ""}
             </p>
@@ -672,7 +672,7 @@ export default function SwipeDeck() {
                 className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
                 style={{ backgroundImage: "linear-gradient(135deg,#34d399,#059669)" }}
               >
-                <Heart className="h-7 w-7" fill="currentColor" />
+                <Check className="h-7 w-7" strokeWidth={3} />
               </button>
               <button
                 onClick={messageDirect}
@@ -719,7 +719,7 @@ export default function SwipeDeck() {
             </p>
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
               <li className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Swipes
+                <Check className="h-4 w-4 text-bleu" strokeWidth={3} /> Swipes
                 illimités
               </li>
               <li className="flex items-center gap-2">

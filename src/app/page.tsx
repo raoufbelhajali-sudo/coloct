@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Capacitor } from "@capacitor/core";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Sparkles, Heart, X, MessageCircle, KeyRound, Layers,
+  Sparkles, Check, Handshake, House, X, MessageCircle, KeyRound, Layers,
   Star, MapPin, ArrowRight, Quote, Rocket, ShieldCheck, Lock,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
@@ -67,7 +67,7 @@ const AVIS = [
 
 const ETAPES = [
   { Icon: Layers, t: "Parcours", d: "Swipe les colocations et locations près de chez toi, comme une appli de rencontre." },
-  { Icon: Heart, t: "Like & matche", d: "« Ça m'intéresse » à droite. Si l'annonceur aussi, c'est un match." },
+  { Icon: Check, t: "Like & matche", d: "« Ça m'intéresse » à droite. Si l'annonceur aussi, c'est un match." },
   { Icon: MessageCircle, t: "Discute", d: "Échangez en direct dans la messagerie, sans donner ton numéro." },
   { Icon: KeyRound, t: "Emménage", d: "Organise la visite et installe-toi dans ton nouveau chez-toi." },
 ];
@@ -183,7 +183,7 @@ function PileSwipe() {
                   transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
                   className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20"
                 >
-                  <Heart className="h-8 w-8" fill="currentColor" />
+                  <Handshake className="h-8 w-8" />
                 </motion.span>
                 <p className="mt-3 font-display text-2xl font-bold">C&apos;est un match&nbsp;!</p>
                 <p className="text-sm text-white/90">Lancez la conversation</p>
@@ -207,7 +207,7 @@ function PileSwipe() {
           transition={{ duration: 0.5 }}
           className="bg-signature glow-pink flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg"
         >
-          <Heart className="h-7 w-7" fill="currentColor" />
+          <Check className="h-7 w-7" strokeWidth={3} />
         </motion.span>
       </div>
     </div>
@@ -448,7 +448,7 @@ export default function Home() {
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-white/15"
           >
-            <Heart className="h-8 w-8" fill="currentColor" />
+            <House className="h-8 w-8" />
           </motion.span>
           <h2 className="mt-5 font-display text-3xl font-bold md:text-4xl">Prêt à trouver ton chez-toi&nbsp;?</h2>
           <p className="mx-auto mt-3 max-w-md text-white/90">Inscription en 2 minutes. Swipe, matche et discute — 100 % gratuit.</p>

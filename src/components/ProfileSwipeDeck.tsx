@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, X, Eye, Rocket, Send } from "lucide-react";
+import { Check, X, Eye, Rocket, Send } from "lucide-react";
 import {
   motion,
   useMotionValue,
@@ -241,7 +241,7 @@ export default function ProfileSwipeDeck({
                 className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
                 style={{ backgroundImage: "linear-gradient(135deg,#34d399,#059669)" }}
               >
-                <Heart className="h-7 w-7" fill="currentColor" />
+                <Check className="h-7 w-7" strokeWidth={3} />
               </button>
               <button
                 onClick={messageDirectColocataire}
@@ -288,7 +288,7 @@ export default function ProfileSwipeDeck({
             </p>
             <ul className="mx-auto mt-4 max-w-xs space-y-2 text-left text-sm text-ink/85">
               <li className="flex items-center gap-2">
-                <Heart className="h-4 w-4 text-bleu" fill="currentColor" /> Swipes illimités
+                <Check className="h-4 w-4 text-bleu" strokeWidth={3} /> Swipes illimités
               </li>
               <li className="flex items-center gap-2">
                 <Eye className="h-4 w-4 text-bleu" /> Messagerie + qui t&apos;a liké

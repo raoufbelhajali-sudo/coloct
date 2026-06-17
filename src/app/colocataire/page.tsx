@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  ArrowLeft, MapPin, Wallet, Briefcase, Lock, Heart, ShieldCheck,
+  ArrowLeft, MapPin, Wallet, Briefcase, Lock, Check, ShieldCheck,
   Smartphone, Play,
 } from "lucide-react";
 import { getColocatairePublic } from "@/lib/colocataires";
@@ -120,7 +120,7 @@ function ColocataireContenu() {
             </p>
             <div className="mt-4 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
               <Link href="/connexion" className="flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 font-semibold text-pink">
-                <Heart className="h-5 w-5" fill="currentColor" /> Swiper sur l&apos;app web
+                <Check className="h-5 w-5" strokeWidth={3} /> Swiper sur l&apos;app web
               </Link>
             </div>
             <div className="mt-3 flex items-center justify-center gap-4 text-sm text-white/85">

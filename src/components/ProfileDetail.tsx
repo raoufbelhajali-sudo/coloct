@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { X, Heart, Star, ShieldCheck } from "lucide-react";
+import { X, Check, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import { estSuperProfil, labelSuper } from "@/lib/completude";
 import { estActifRecemment } from "@/lib/activite";
@@ -221,7 +221,7 @@ export default function ProfileDetail({
               aria-label="Ça m'intéresse"
               className="bg-signature glow-pink flex h-20 w-20 items-center justify-center rounded-full text-white transition-transform hover:scale-110"
             >
-              <Heart className="h-9 w-9" fill="currentColor" />
+              <Check className="h-9 w-9" strokeWidth={3} />
             </button>
           </div>
         )}

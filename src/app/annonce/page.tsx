@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
-  ArrowLeft, ChevronLeft, ChevronRight, MapPin, X, Heart, Maximize2,
+  ArrowLeft, ChevronLeft, ChevronRight, MapPin, X, Maximize2,
   Ruler, Home, Sofa, Wifi, Car, Dumbbell, WashingMachine, Sparkles,
   Snowflake, Tv, UtensilsCrossed, Check, PiggyBank, Images, Smartphone, Play,
 } from "lucide-react";
@@ -262,7 +262,7 @@ function AnnonceContenu() {
               onClick={() => setPopup(true)}
               className="bg-signature glow-pink mt-4 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
             >
-              <Heart className="h-5 w-5" fill="currentColor" /> Ça m&apos;intéresse
+              <Check className="h-5 w-5" strokeWidth={3} /> Ça m&apos;intéresse
             </button>
             <p className="mt-3 text-center text-xs text-ink/50">
               Like, match et messagerie dans l&apos;app FlatSwiper
@@ -315,7 +315,7 @@ function AnnonceContenu() {
               <X className="h-5 w-5" />
             </button>
             <div className="bg-signature glow-pink mx-auto flex h-16 w-16 items-center justify-center rounded-2xl">
-              <Heart className="h-8 w-8 text-white" fill="currentColor" />
+              <Check className="h-8 w-8 text-white" strokeWidth={3} />
             </div>
             <h2 className="mt-4 font-display text-2xl font-bold">Cette coloc t&apos;intéresse&nbsp;?</h2>
             <p className="mt-2 text-ink/75">
