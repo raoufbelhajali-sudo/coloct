@@ -90,9 +90,9 @@ export default function RootLayout({
           }}
         />
         <NativeSetup />
-        <FondAccueil />
         <ComingSoonGate>
           <AuthProvider>
+            <FondAccueil />
             <MatchPopup />
             {children}
             <CookieBanner />

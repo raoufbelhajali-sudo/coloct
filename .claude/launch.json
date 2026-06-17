@@ -27,6 +27,15 @@
         "export PATH=\"$HOME/.nvm/versions/node/v24.16.0/bin:$PATH\"; cd /Users/raoufbelhajali/Documents/petswip; exec npx next dev -H 0.0.0.0 -p 3002"
       ],
       "port": 3002
+    },
+    {
+      "name": "monrdv",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": [
+        "-c",
+        "export PATH=\"$HOME/.nvm/versions/node/v24.16.0/bin:$PATH\"; cd /Users/raoufbelhajali/Documents/monrdv; exec npx next dev -H 0.0.0.0 -p 3003"
+      ],
+      "port": 3003
     }
   ]
 }
