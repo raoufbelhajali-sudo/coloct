@@ -30,7 +30,7 @@ function analyseRetour() {
 
 export default function BienvenuePage() {
   const router = useRouter();
-  const { user, profile, loading } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
 
   const [pret, setPret] = useState(false); // prêt à montrer le parcours
   const [authErr, setAuthErr] = useState("");
@@ -63,7 +63,15 @@ export default function BienvenuePage() {
       router.replace("/connexion");
       return;
     }
-    if (!profile) return;
+    // Profil pas encore là : on laisse 3 s pour qu'il se charge (cas d'une
+    // connexion récente). S'il reste introuvable (session fantôme / expirée),
+    // on déconnecte et on renvoie à la connexion → jamais bloqué sur "Un instant…".
+    if (!profile) {
+      const t = setTimeout(() => {
+        signOut().finally(() => router.replace("/connexion/"));
+      }, 3000);
+      return () => clearTimeout(t);
+    }
 
     // Déjà passé par le parcours (prénom renseigné) → on file vers son espace.
     // Un compte tout neuf a prenom = "Anonyme" → on montre le parcours.
