@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { getListingById, lieuComplet } from "@/lib/listings";
 import SiteHeader from "@/components/SiteHeader";
+import MiniMap from "@/components/MiniMap";
 import type { Listing } from "@/data/listings";
 
 const PHOTO_DEFAUT =
@@ -234,17 +235,7 @@ function AnnonceContenu() {
             <div className="mt-6">
               <h2 className="font-display text-lg font-bold">Localisation</h2>
               <div className="mt-3 overflow-hidden rounded-2xl ring-1 ring-ink/10">
-                <iframe
-                  title="Localisation du bien"
-                  className="block h-64 w-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src={`https://www.openstreetmap.org/export/embed.html?bbox=${
-                    listing.lng - 0.012
-                  }%2C${listing.lat - 0.008}%2C${listing.lng + 0.012}%2C${
-                    listing.lat + 0.008
-                  }&layer=mapnik&marker=${listing.lat}%2C${listing.lng}`}
-                />
+                <MiniMap lat={listing.lat} lng={listing.lng} className="h-64 w-full" />
               </div>
               <p className="mt-1.5 flex items-center gap-1.5 text-xs text-ink/50">
                 <MapPin className="h-3.5 w-3.5 text-violet" /> Localisation
