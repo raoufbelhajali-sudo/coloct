@@ -23,29 +23,26 @@ export default function ProfileCard({
 
   return (
     <div className="bg-signature relative h-full w-full overflow-hidden rounded-3xl shadow-2xl select-none">
-      {/* Badge Super colocataire (profil complet) — en haut à droite */}
-      {estSuper && (
-        <div className="bg-signature absolute right-3 top-3 z-10 flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white shadow-md">
-          <Star className="h-3.5 w-3.5" fill="currentColor" />
-          {labelSuper(profile)}
-        </div>
-      )}
+      {/* Les deux bannières empilées en haut à gauche (l'une sous l'autre) */}
+      <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-col items-start gap-1.5">
+        {/* Badge Super colocataire (profil complet) */}
+        {estSuper && (
+          <div className="bg-signature flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white shadow-md">
+            <Star className="h-3.5 w-3.5" fill="currentColor" />
+            {labelSuper(profile)}
+          </div>
+        )}
 
-      {/* Bandeau "ça peut coller" si points communs.
-          Si le badge Super est présent, on descend d'une ligne pour ne pas le chevaucher. */}
-      {compat.length > 0 && (
-        <div
-          className={
-            "absolute left-3 z-10 flex max-w-[85%] items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md " +
-            (estSuper ? "top-12" : "top-3")
-          }
-        >
-          <Sparkles className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">
-            Ça peut coller : {compat.slice(0, 3).join(", ")}
-          </span>
-        </div>
-      )}
+        {/* Bandeau "ça peut coller" si points communs */}
+        {compat.length > 0 && (
+          <div className="flex max-w-full items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-pink shadow-md">
+            <Sparkles className="h-3.5 w-3.5 shrink-0" />
+            <span className="truncate">
+              Ça peut coller : {compat.slice(0, 3).join(", ")}
+            </span>
+          </div>
+        )}
+      </div>
 
       {/* Photo (ou initiale sur dégradé) */}
       {profile.photo_url ? (
