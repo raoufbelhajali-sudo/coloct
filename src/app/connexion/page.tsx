@@ -904,7 +904,7 @@ export default function ConnexionPage() {
       </div>
 
       <p className="mt-6 max-w-xs text-center text-xs text-ink/40">
-        Pas de mot de passe à retenir : on te reconnaît automatiquement.
+        Connexion par email et mot de passe. Mot de passe oublié&nbsp;? On t&apos;envoie un code.
       </p>
     </main>
   );
