@@ -69,7 +69,13 @@ const FAQ: QA[] = [
   },
 ];
 
-export default function AideFAQ({ className = "" }: { className?: string }) {
+export default function AideFAQ({
+  className = "",
+  label = "Aide / FAQ",
+}: {
+  className?: string;
+  label?: string;
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [exp, setExp] = useState<number | null>(null);
@@ -89,7 +95,8 @@ export default function AideFAQ({ className = "" }: { className?: string }) {
           "inline-flex items-center gap-2 rounded-full bg-panel px-4 py-2 text-sm font-semibold text-ink/80 transition-colors hover:bg-panel-2"
         }
       >
-        <HelpCircle className="h-4 w-4 text-bleu" /> Aide / FAQ
+        <HelpCircle className="h-4 w-4 text-bleu" />
+        {label ? <span>{label}</span> : null}
       </button>
 
       <AnimatePresence>

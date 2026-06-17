@@ -10,7 +10,6 @@ import {
   Star, MapPin, ArrowRight, Quote, Rocket, ShieldCheck, Lock,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
-import AideFAQ from "@/components/AideFAQ";
 import { useAuth } from "@/lib/auth";
 
 /* ============================================================
@@ -504,9 +503,6 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
             <p className="mt-2 max-w-xs text-sm text-ink/50">Trouve ta colocation ou ta location partout en France, en swipant.</p>
-            <div className="mt-4">
-              <AideFAQ />
-            </div>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/60">
             <Link href="/blog" className="hover:text-ink">Blog</Link>

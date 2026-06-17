@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { MessageCircle, Rocket, Home } from "lucide-react";
 import { useAuth } from "@/lib/auth";
+import AideFAQ from "@/components/AideFAQ";
 
 // Header public commun à toutes les pages du site.
 export default function SiteHeader() {
@@ -35,6 +36,7 @@ export default function SiteHeader() {
           <Link href="/blog" className={"flex items-center gap-1.5 " + lienCls(actif("/blog"))}>
             <MessageCircle className="h-4 w-4" /> Blog
           </Link>
+          <AideFAQ label="FAQ" className="flex items-center gap-1.5 transition-colors hover:text-ink" />
         </nav>
 
         <div className="flex items-center gap-2">
@@ -46,6 +48,9 @@ export default function SiteHeader() {
           >
             <MessageCircle className="h-4 w-4" />
           </Link>
+
+          {/* FAQ — icône accessible sur téléphone */}
+          <AideFAQ label="" className="flex h-9 w-9 items-center justify-center rounded-full bg-panel text-ink/70 md:hidden" />
 
           {/* Bientôt sur les stores — badge animé */}
           <motion.span
