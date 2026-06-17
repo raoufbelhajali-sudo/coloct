@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Capacitor } from "@capacitor/core";
 import { MessageCircle, Plus, X, Tag, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import SiteHeader from "@/components/SiteHeader";
@@ -50,12 +49,8 @@ export default function BlogPage() {
   const [envoi, setEnvoi] = useState(false);
   const [erreur, setErreur] = useState("");
 
-  // Footer de l'app uniquement dans l'app native ; sur le web, on garde
-  // toujours le menu du haut (SiteHeader) comme sur les autres pages.
-  const [estNatif, setEstNatif] = useState(false);
-  useEffect(() => {
-    setEstNatif(Capacitor.isNativePlatform());
-  }, []);
+  // Connecté (app OU web) → on garde la barre du bas (Notifs/Blog/Profil/Réglages)
+  // toujours en bas, comme sur la page swipe. Visiteur déconnecté → menu du haut.
 
   const charger = useCallback(async () => {
     setChargement(true);
@@ -99,7 +94,7 @@ export default function BlogPage() {
 
   // Dans l'app native (et connecté) → footer de l'app. Sinon (web, connecté ou
   // non) → menu du haut (SiteHeader), toujours visible comme sur les autres pages.
-  const dansApp = estNatif && !!user;
+  const dansApp = !!user;
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">

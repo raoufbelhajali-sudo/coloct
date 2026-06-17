@@ -42,10 +42,10 @@ export default function FondAccueil() {
       />
       {/* Illustration de quartier (colocation / immobilier).
           Sur les pages app, on la remonte au-dessus de la barre du bas pour
-          ne pas qu'elle soit coupée. Transparence à 50 %. */}
+          ne pas qu'elle soit coupée. Transparence forte (très discret). */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 -z-10 bg-bottom bg-no-repeat opacity-50"
+        className="pointer-events-none fixed inset-x-0 -z-10 bg-bottom bg-no-repeat opacity-30"
         style={{
           bottom: barreEnBas ? "calc(72px + env(safe-area-inset-bottom))" : 0,
           height: "min(46vh, 460px)",
