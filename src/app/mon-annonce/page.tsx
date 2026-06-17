@@ -93,7 +93,7 @@ export default function MonAnnoncePage() {
           <>
             <p className="mb-6 text-ink/60">
               Publie une chambre pour qu&apos;elle apparaisse auprès des
-              colocataires.
+              co/locataires.
             </p>
             <ListingForm
               onCreated={() => {

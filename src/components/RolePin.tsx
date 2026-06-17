@@ -18,7 +18,7 @@ export default function RolePin() {
       ) : (
         <Search className="h-3 w-3 text-white/80" />
       )}
-      {estLoca ? "Annonceur" : "Colocataire"}
+      {estLoca ? "Annonceur" : "Co/locataire"}
     </span>
   );
 }

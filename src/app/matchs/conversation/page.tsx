@@ -184,7 +184,7 @@ function ConversationInner() {
       d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     const params = new URLSearchParams({
       action: "TEMPLATE",
-      text: "Visite colocation — FlatSwiper",
+      text: "Visite co/location — FlatSwiper",
       dates: `${fmt(debut)}/${fmt(fin)}`,
       details: "Visite organisée via FlatSwiper",
       location: lieu || "",
@@ -724,7 +724,7 @@ function ConversationInner() {
             {estLocataire ? (
               <>
                 <p className="mb-2 px-1 text-xs text-ink/50">
-                  Coche les documents que tu demandes au colocataire :
+                  Coche les documents que tu demandes au co/locataire :
                 </p>
                 <div className="flex flex-col gap-1">
                   {TYPES_DOCUMENTS.map((type) => {

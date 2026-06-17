@@ -35,7 +35,7 @@ const APERCUS = [
 ];
 
 const ETAPES = [
-  { Icon: Layers, t: "Parcours", d: "Swipe les colocations près de chez toi, comme une appli de rencontre." },
+  { Icon: Layers, t: "Parcours", d: "Swipe les co/locations près de chez toi, comme une appli de rencontre." },
   { Icon: Heart, t: "Like & matche", d: "« Ça m'intéresse » à droite. Si l'annonceur aussi, c'est un match." },
   { Icon: MessageCircle, t: "Discute", d: "Échange en direct dans la messagerie, sans donner ton numéro." },
   { Icon: KeyRound, t: "Emménage", d: "Organise la visite et installe-toi dans ta nouvelle coloc." },
@@ -68,7 +68,7 @@ function CarteAnnonce({ l }: { l: Listing }) {
       </div>
       <div className="p-2.5">
         <p className="truncate font-display text-sm font-semibold leading-tight">
-          {l.titre || l.typeLogement || "Colocation"}
+          {l.titre || l.typeLogement || "Co/location"}
         </p>
         <p className="mt-0.5 truncate text-xs text-ink/60">
           {[l.ville, l.surface ? `${l.surface} m²` : null].filter(Boolean).join(" · ")}
@@ -138,7 +138,7 @@ export default function Home() {
               <Sparkles className="h-4 w-4" /> 100% gratuit · partout en France
             </span>
             <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] sm:text-5xl">
-              Trouve ta colocation <span className="text-signature">en swipant</span>
+              Trouve ta co/location <span className="text-signature">en swipant</span>
             </h1>
             <p className="mt-4 max-w-md text-lg text-ink/70">
               Parcours les chambres, like, matche et discute. La coloc à petit budget,
@@ -195,7 +195,7 @@ export default function Home() {
           >
             <div className="overflow-hidden rounded-3xl shadow-xl ring-1 ring-ink/5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/accueil-bg.jpg" alt="Colocataires heureux" className="aspect-[16/10] h-full w-full object-cover sm:aspect-[4/3]" />
+              <img src="/accueil-bg.jpg" alt="Co/locataires heureux" className="aspect-[16/10] h-full w-full object-cover sm:aspect-[4/3]" />
             </div>
             <motion.div
               animate={{ y: [0, -10, 0] }}
@@ -282,7 +282,7 @@ export default function Home() {
         <section className="mx-auto w-full max-w-6xl px-5 py-10">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-2xl font-bold md:text-3xl">
-              <Users className="h-6 w-6 text-bleu" /> Colocataires en recherche
+              <Users className="h-6 w-6 text-bleu" /> Co/locataires en recherche
             </h2>
             <Link href="/colocataires" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
           </div>
@@ -366,7 +366,7 @@ export default function Home() {
             </span>
             <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">La coloc, le bon plan pour ton budget</h2>
             <p className="mx-auto mt-2 max-w-xl text-ink/65">
-              Une chambre en colocation coûte en moyenne{" "}
+              Une chambre en co/location coûte en moyenne{" "}
               <strong className="text-ink">≈ 480 €/mois</strong>{" "}
               en France — bien moins qu&apos;un studio (~750 €). Voici les loyers
               moyens par ville.
@@ -385,18 +385,18 @@ export default function Home() {
             ))}
           </div>
           <p className="mt-4 text-center text-xs text-ink/45">
-            Loyers indicatifs charges comprises pour une chambre en colocation · 2025.
+            Loyers indicatifs charges comprises pour une chambre en co/location · 2025.
           </p>
         </div>
       </section>
 
       {/* ===== Colocation par ville (SEO) ===== */}
       <section className="mx-auto w-full max-w-6xl px-5 py-12">
-        <h2 className="font-display text-2xl font-bold">Colocation par ville</h2>
+        <h2 className="font-display text-2xl font-bold">Co/location par ville</h2>
         <div className="mt-4 flex flex-wrap gap-2">
           {VILLES_SEO.map((v) => (
             <Link key={v} href={`/colocation/${v.toLowerCase()}`} className="rounded-full bg-panel px-4 py-2 text-sm font-medium text-ink/75 hover:bg-panel-2">
-              Colocation à {v}
+              Co/location à {v}
             </Link>
           ))}
         </div>
@@ -408,7 +408,7 @@ export default function Home() {
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-            <p className="mt-2 max-w-xs text-sm text-ink/50">Trouve ta colocation partout en France, en swipant.</p>
+            <p className="mt-2 max-w-xs text-sm text-ink/50">Trouve ta co/location partout en France, en swipant.</p>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/60">
             <Link href="/annonces" className="hover:text-ink">Annonces</Link>

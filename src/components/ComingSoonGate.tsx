@@ -79,7 +79,7 @@ export default function ComingSoonGate({
         className="mb-2 w-[320px] max-w-[85%] drop-shadow-[0_8px_30px_rgba(250,82,82,0.25)]"
       />
       <p className="mt-4 max-w-md text-lg text-ink/70">
-        Bientôt disponible. Trouve ta colocation en swipant, partout en France.
+        Bientôt disponible. Trouve ta co/location en swipant, partout en France.
       </p>
 
       <form

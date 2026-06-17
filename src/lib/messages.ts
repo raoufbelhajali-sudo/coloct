@@ -96,7 +96,7 @@ export async function getMyMatches(
             ]
               .filter(Boolean)
               .join(" · ")
-          : "Colocation",
+          : "Co/location",
       sousTitre: estAnnonceur
         ? l
           ? [

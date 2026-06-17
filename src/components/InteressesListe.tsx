@@ -54,7 +54,7 @@ export default function InteressesListe({ titreVisible = true }: { titreVisible?
             </h1>
             <p className="mb-5 text-ink/60">
               {profile?.role === "locataire"
-                ? "Ces colocataires ont aimé ton annonce. Ouvre leur profil et décide qui pourrait emménager."
+                ? "Ces co/locataires ont aimé ton annonce. Ouvre leur profil et décide qui pourrait emménager."
                 : "Ces annonceurs aimeraient t'avoir en coloc. Découvre leur logement et décide !"}
             </p>
           </>

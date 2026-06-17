@@ -26,7 +26,7 @@ export function estSuperProfil(p: Profile | null): boolean {
 
 // Libellé du badge selon le rôle
 export function labelSuper(p: Profile | null): string {
-  return p?.role === "locataire" ? "Super annonceur" : "Super colocataire";
+  return p?.role === "locataire" ? "Super annonceur" : "Super co/locataire";
 }
 
 // --- Champs OBLIGATOIRES pour qu'un colocataire puisse swiper ---

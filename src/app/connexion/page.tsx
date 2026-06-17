@@ -408,8 +408,8 @@ export default function ConnexionPage() {
                 <Search className="h-5 w-5" />
               </span>
               <span>
-                <span className="block font-semibold text-ink">Colocataire</span>
-                <span className="block text-sm text-ink/60">Je cherche une colocation</span>
+                <span className="block font-semibold text-ink">Co/locataire</span>
+                <span className="block text-sm text-ink/60">Je cherche une co/location</span>
               </span>
             </button>
             <button

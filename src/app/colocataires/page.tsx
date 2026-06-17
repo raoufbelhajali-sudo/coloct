@@ -94,10 +94,10 @@ export default function ColocatairesPage() {
 
         <div className="text-center">
           <h1 className="font-display text-3xl font-bold md:text-4xl">
-            Colocataires en recherche
+            Co/locataires en recherche
           </h1>
           <p className="mx-auto mt-2 max-w-xl text-ink/65">
-            Découvre les personnes qui cherchent une colocation. Les photos se révèlent
+            Découvre les personnes qui cherchent une co/location. Les photos se révèlent
             quand tu swipes&nbsp;: ouvre l&apos;app pour matcher et discuter.
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function ColocatairesPage() {
           <div className="mt-12 text-center">
             <p className="font-display text-2xl">Bientôt des profils ici&nbsp;!</p>
             <p className="mx-auto mt-2 max-w-sm text-ink/60">
-              Les premiers colocataires arrivent. Tu cherches une coloc&nbsp;? Crée ton
+              Les premiers co/locataires arrivent. Tu cherches une coloc&nbsp;? Crée ton
               profil sur l&apos;app pour apparaître ici.
             </p>
             <Link href="/connexion" className="bg-signature mt-5 inline-block rounded-full px-7 py-3.5 font-semibold text-white">

@@ -25,9 +25,9 @@ const outfit = Outfit({
 });
 
 const SITE_URL = "https://flatswiper.com";
-const TITRE = "FlatSwiper — Trouve ta colocation en swipant";
+const TITRE = "FlatSwiper — Trouve ta co/location en swipant";
 const DESCRIPTION =
-  "Swipe les colocations près de chez toi, matche, et discute pour organiser ta visite. 100% gratuit.";
+  "Swipe les co/locations près de chez toi, matche, et discute pour organiser ta visite. 100% gratuit.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "FlatSwiper — trouve ta colocation en swipant",
+        alt: "FlatSwiper — trouve ta co/location en swipant",
       },
     ],
   },

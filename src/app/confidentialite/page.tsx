@@ -38,8 +38,8 @@ export default function ConfidentialitePage() {
         <section>
           <h2 className="font-display text-xl font-semibold">Finalités</h2>
           <p className="mt-2 text-sm leading-relaxed">
-            Tes données servent à : créer ton compte, te proposer des colocations
-            ou colocataires compatibles, permettre les échanges après un match,
+            Tes données servent à : créer ton compte, te proposer des co/locations
+            ou co/locataires compatibles, permettre les échanges après un match,
             assurer la sécurité (signalements, blocages) et, le cas échéant,
             gérer les options payantes.
           </p>

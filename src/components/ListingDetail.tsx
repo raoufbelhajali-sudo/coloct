@@ -192,7 +192,7 @@ export default function ListingDetail({
                 {listing.salleDeBain ? ` · SdB ${listing.salleDeBain.toLowerCase()}` : ""}
               </p>
               {listing.nbColocsTotal ? (
-                <p>{listing.nbColocsTotal} colocataires au total</p>
+                <p>{listing.nbColocsTotal} co/locataires au total</p>
               ) : null}
               {listing.genreColocs ? <p>Colocs : {listing.genreColocs}</p> : null}
               {listing.caution ? <p>Caution : {listing.caution} €</p> : null}

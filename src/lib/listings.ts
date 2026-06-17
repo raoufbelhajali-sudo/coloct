@@ -18,7 +18,7 @@ export function lieuSous(l: Lieu): string {
 export function lieuComplet(l: Lieu): string {
   const sous = lieuSous(l);
   if (l.quartier && sous) return `${l.quartier} · ${sous}`;
-  return l.quartier || sous || "Colocation";
+  return l.quartier || sous || "Co/location";
 }
 
 // Forme brute d'une ligne telle que stockée dans Supabase (colonnes en snake_case)

@@ -44,7 +44,7 @@ export default function ContactPage() {
             .
           </p>
           <p>
-            <strong className="text-ink/80">Colocataires</strong> : le swipe et la
+            <strong className="text-ink/80">Co/locataires</strong> : le swipe et la
             messagerie se font sur l&apos;application FlatSwiper.
           </p>
         </div>

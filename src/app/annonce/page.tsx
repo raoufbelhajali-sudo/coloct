@@ -78,7 +78,7 @@ function AnnonceContenu() {
 
   // Caractéristiques principales (icônes)
   const specs = [
-    { Icon: Home, label: listing.typeLogement || "Colocation" },
+    { Icon: Home, label: listing.typeLogement || "Co/location" },
     listing.surface ? { Icon: Ruler, label: `${listing.surface} m²` } : null,
     { Icon: Sofa, label: listing.meuble ? "Meublé" : "Non meublé" },
     listing.ville || listing.quartier
@@ -181,7 +181,7 @@ function AnnonceContenu() {
         {/* Colonne gauche : détails */}
         <div className="lg:col-span-2">
           <h1 className="font-display text-2xl font-bold sm:text-3xl">
-            {listing.titre || listing.typeLogement || "Colocation"}
+            {listing.titre || listing.typeLogement || "Co/location"}
           </h1>
           <p className="mt-1.5 flex items-center gap-1.5 text-ink/70">
             <MapPin className="h-4 w-4 text-bleu" /> {lieuComplet(listing)}
@@ -306,7 +306,7 @@ function AnnonceContenu() {
             <p className="mt-2 text-ink/75">
               Like cette annonce, <strong>matche</strong>{" "}
               avec l&apos;annonceur et discute — tout se passe dans l&apos;app
-              FlatSwiper. La colocation à petit budget, en un swipe.
+              FlatSwiper. La co/location à petit budget, en un swipe.
             </p>
             <div className="mt-5 flex flex-col gap-2.5">
               <a href="/connexion" onClick={() => setPopup(false)}

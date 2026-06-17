@@ -635,7 +635,7 @@ export default function ProfilPage() {
                 <input type="date" value={dateEmmenagement} onChange={(e) => setDateEmmenagement(e.target.value)} className={champClasses} />
               </div>
               <div>
-                <label className="text-sm text-ink/70">Durée de colocation souhaitée</label>
+                <label className="text-sm text-ink/70">Durée de co/location souhaitée</label>
                 <select value={dureeColoc} onChange={(e) => setDureeColoc(e.target.value)} className={champClasses}>
                   <option value="">Choisir…</option>
                   {DUREES_COLOC.map((d) => (

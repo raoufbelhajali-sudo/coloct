@@ -34,7 +34,7 @@ function ColocataireContenu() {
       <div className="mt-20 text-center">
         <p className="text-ink/60">Profil introuvable.</p>
         <Link href="/colocataires" className="mt-3 inline-block text-pink underline">
-          Voir les colocataires
+          Voir les co/locataires
         </Link>
       </div>
     );
@@ -49,7 +49,7 @@ function ColocataireContenu() {
   return (
     <main className="mx-auto w-full max-w-4xl px-5 py-6">
       <Link href="/colocataires" className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">
-        <ArrowLeft className="h-4 w-4" /> Tous les colocataires
+        <ArrowLeft className="h-4 w-4" /> Tous les co/locataires
       </Link>
 
       <div className="grid gap-7 md:grid-cols-5">
@@ -114,7 +114,7 @@ function ColocataireContenu() {
 
           {/* CTA : swiper dans l'app */}
           <div className="bg-signature glow-pink mt-7 rounded-3xl px-6 py-6 text-center text-white">
-            <p className="font-display text-xl font-bold">Ce colocataire te plaît&nbsp;?</p>
+            <p className="font-display text-xl font-bold">Ce co/locataire te plaît&nbsp;?</p>
             <p className="mx-auto mt-1.5 max-w-sm text-white/90">
               Pour swiper {p.prenom}, matcher et discuter, continue sur l&apos;app FlatSwiper.
             </p>

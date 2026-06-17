@@ -118,7 +118,7 @@ function SujetContenu() {
           </form>
         ) : (
           <div className="rounded-2xl bg-panel px-5 py-4 text-sm text-ink/70">
-            💬 Pour <strong>répondre</strong>, connecte-toi (annonceur, colocataire ou agence).{" "}
+            💬 Pour <strong>répondre</strong>, connecte-toi (annonceur, co/locataire ou agence).{" "}
             <Link href="/connexion" className="font-semibold text-pink hover:underline">Se connecter →</Link>
           </div>
         )}

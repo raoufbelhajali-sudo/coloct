@@ -42,7 +42,7 @@ export default function AccrocheAnnonceur() {
         </div>
 
         <h2 className="font-display text-2xl font-semibold leading-tight">
-          Trouve facilement tes meilleurs colocataires&nbsp;!
+          Trouve facilement tes meilleurs co/locataires&nbsp;!
         </h2>
         <p className="mt-2 text-ink/70">
           Swipe les profils&nbsp;: <span className="font-medium text-pink">à droite</span>{" "}

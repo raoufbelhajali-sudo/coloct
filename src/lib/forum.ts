@@ -21,7 +21,7 @@ export type Reponse = {
 
 export const CATEGORIES_FORUM = [
   "Trouver une coloc",
-  "Vie en colocation",
+  "Vie en co/location",
   "Bail & démarches",
   "Budget & charges",
   "Général",

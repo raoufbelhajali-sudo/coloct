@@ -25,7 +25,7 @@ export function BlogSurOrdinateur() {
       <h1 className="font-display text-3xl font-bold">Le blog est sur ordinateur</h1>
       <p className="max-w-xs text-sm text-ink/70">
         Le Blog &amp; Entraide FlatSwiper se consulte depuis un ordinateur
-        (PC/Mac). Sur mobile, retrouve les colocations directement dans l&apos;app.
+        (PC/Mac). Sur mobile, retrouve les co/locations directement dans l&apos;app.
       </p>
       <Link href="/" className="bg-signature rounded-full px-6 py-3 font-semibold text-white">
         Retour
@@ -110,7 +110,7 @@ export default function BlogPage() {
               <MessageCircle className="h-8 w-8 text-bleu" /> Blog & Entraide
             </h1>
             <p className="mt-2 max-w-xl text-ink/65">
-              Questions, conseils et discussions sur la colocation. Pose tes questions,
+              Questions, conseils et discussions sur la co/location. Pose tes questions,
               partage ton expérience — la communauté FlatSwiper te répond.
             </p>
           </div>
@@ -125,7 +125,7 @@ export default function BlogPage() {
         {!user && (
           <p className="mt-4 rounded-2xl bg-panel px-4 py-3 text-sm text-ink/70">
             💬 Pour <strong>poser une question</strong> ou <strong>répondre</strong>,
-            connecte-toi à l&apos;app (annonceur, colocataire ou agence).{" "}
+            connecte-toi à l&apos;app (annonceur, co/locataire ou agence).{" "}
             <Link href="/connexion" className="font-semibold text-pink hover:underline">Se connecter →</Link>
           </p>
         )}

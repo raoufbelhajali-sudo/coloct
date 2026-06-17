@@ -82,7 +82,7 @@ export default function LocatairePage() {
             <Home className="h-12 w-12 text-bleu" />
             <p className="font-display text-2xl">Crée ton annonce</p>
             <p className="text-sm text-ink/70">
-              Publie ta chambre pour voir les colocataires intéressés et commencer
+              Publie ta chambre pour voir les co/locataires intéressés et commencer
               à matcher.
             </p>
             <Link

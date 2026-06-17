@@ -264,7 +264,7 @@ export default function ListingForm({
         <label className="text-sm text-ink/70">Type d&apos;offre</label>
         <div className="mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel p-1">
           {([
-            { val: "colocation", titre: "Colocation", sous: "Chambre en coloc" },
+            { val: "colocation", titre: "Co/location", sous: "Chambre en coloc" },
             { val: "location", titre: "Location", sous: "Logement entier" },
           ] as const).map((o) => (
             <button
@@ -342,7 +342,7 @@ export default function ListingForm({
 
       {/* Nb colocs total + caution */}
       <div className="grid grid-cols-2 gap-3">
-        <Field label="Colocataires au total" type="number" value={nbColocsTotal} onChange={setNbColocsTotal} placeholder="Ex. 3" />
+        <Field label="Co/locataires au total" type="number" value={nbColocsTotal} onChange={setNbColocsTotal} placeholder="Ex. 3" />
         <Field label="Caution (€)" type="number" value={caution} onChange={setCaution} placeholder="Ex. 800" />
       </div>
 

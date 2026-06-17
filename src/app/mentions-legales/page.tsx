@@ -52,7 +52,7 @@ export default function MentionsLegalesPage() {
           <h2 className="font-display text-xl font-semibold">Responsabilité</h2>
           <p className="mt-2 text-sm leading-relaxed">
             FlatSwiper met en relation des personnes cherchant ou proposant une
-            colocation. L&apos;éditeur n&apos;est pas partie aux échanges, visites
+            co/location. L&apos;éditeur n&apos;est pas partie aux échanges, visites
             ou contrats conclus entre utilisateurs et ne saurait être tenu
             responsable du contenu des annonces ni du comportement des membres.
           </p>

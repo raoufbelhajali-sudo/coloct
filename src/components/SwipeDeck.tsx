@@ -317,7 +317,7 @@ export default function SwipeDeck() {
   if (chargement) {
     return (
       <div className="flex h-[480px] items-center justify-center text-ink/60">
-        Chargement des colocations…
+        Chargement des co/locations…
       </div>
     );
   }
@@ -545,7 +545,7 @@ export default function SwipeDeck() {
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
           <p className="font-display text-3xl">C&apos;est tout pour l&apos;instant !</p>
           <p className="max-w-xs text-sm text-ink/70">
-            Tu as parcouru toutes les colocations disponibles. Ajuste tes filtres
+            Tu as parcouru toutes les co/locations disponibles. Ajuste tes filtres
             ou reviens bientôt, de nouvelles annonces arrivent.
           </p>
           {likes.length > 0 && (

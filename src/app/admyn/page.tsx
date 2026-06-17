@@ -391,7 +391,7 @@ export default function AdminPage() {
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <Stat label="Utilisateurs" valeur={stats?.users} />
           <Stat label="Annonceurs" valeur={stats?.annonceurs} />
-          <Stat label="Colocataires" valeur={stats?.colocataires} />
+          <Stat label="Co/locataires" valeur={stats?.colocataires} />
           <Stat label="Annonces" valeur={stats?.annonces} />
           <Stat label="Matchs" valeur={stats?.matchs} />
           <Stat label="Signalements" valeur={stats?.signalements} accent />
@@ -612,7 +612,7 @@ function LigneUser({
         <p className="truncate font-semibold">
           {p.prenom || "—"}{" "}
           <span className="text-xs font-normal text-ink/50">
-            {p.role === "locataire" ? "· Annonceur" : "· Colocataire"}
+            {p.role === "locataire" ? "· Annonceur" : "· Co/locataire"}
           </span>
           {p.suspendu && <span className="ml-1 text-[11px] font-semibold text-pink">· suspendu</span>}
         </p>

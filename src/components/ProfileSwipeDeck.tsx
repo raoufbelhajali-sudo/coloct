@@ -179,7 +179,7 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
         <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
           <p className="font-display text-2xl">Aucun profil pour l&apos;instant</p>
           <p className="max-w-xs text-sm text-ink/70">
-            Tu as vu tous les colocataires disponibles. Reviens bientôt, de
+            Tu as vu tous les co/locataires disponibles. Reviens bientôt, de
             nouveaux profils arriveront !
           </p>
         </div>
@@ -240,8 +240,8 @@ export default function ProfileSwipeDeck({ listingId }: { listingId: string }) {
               <button
                 onClick={messageDirectColocataire}
                 disabled={contactEnCours}
-                aria-label="Message direct au colocataire"
-                title="Écrire en direct à ce colocataire (forfait)"
+                aria-label="Message direct au co/locataire"
+                title="Écrire en direct à ce co/locataire (forfait)"
                 className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110 disabled:opacity-60"
                 style={{ backgroundImage: "linear-gradient(135deg,#3b82f6,#2563eb)" }}
               >

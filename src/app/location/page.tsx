@@ -41,7 +41,7 @@ export default function LocationPage() {
           <Home className="h-8 w-8 text-bleu" /> Locations disponibles
         </h1>
         <p className="mt-2 text-ink/60">
-          Des logements entiers à louer (pas de colocation). Pour visiter et
+          Des logements entiers à louer (pas de co/location). Pour visiter et
           contacter, télécharge l&apos;application.
         </p>
 

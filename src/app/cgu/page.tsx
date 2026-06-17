@@ -18,8 +18,8 @@ export default function CGUPage() {
           <h2 className="font-display text-xl font-semibold">1. Objet</h2>
           <p className="mt-2 text-sm leading-relaxed">
             FlatSwiper est un service de mise en relation entre personnes
-            cherchant une colocation et personnes proposant une chambre/logement
-            en colocation. L&apos;utilisation du service implique l&apos;acceptation
+            cherchant une co/location et personnes proposant une chambre/logement
+            en co/location. L&apos;utilisation du service implique l&apos;acceptation
             des présentes conditions.
           </p>
         </section>
@@ -63,7 +63,7 @@ export default function CGUPage() {
           <h2 className="font-display text-xl font-semibold">6. Responsabilité</h2>
           <p className="mt-2 text-sm leading-relaxed">
             FlatSwiper fournit un outil de mise en relation mais n&apos;est pas
-            partie aux visites, accords ou contrats de colocation. Vérifie
+            partie aux visites, accords ou contrats de co/location. Vérifie
             toujours l&apos;identité de ton interlocuteur et la réalité du
             logement avant tout engagement ou versement.
           </p>

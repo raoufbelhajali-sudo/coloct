@@ -357,7 +357,7 @@ export default function ParametresPage() {
             <p className="text-sm text-ink/70">
               Tu es actuellement :{" "}
               <span className="font-semibold text-ink">
-                {estAnnonceur ? "Annonceur (je propose un logement)" : "Colocataire (je cherche)"}
+                {estAnnonceur ? "Annonceur (je propose un logement)" : "Co/locataire (je cherche)"}
               </span>
             </p>
             <button
@@ -365,7 +365,7 @@ export default function ParametresPage() {
               className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
             >
               <Repeat className="h-4 w-4" />
-              Passer en mode {estAnnonceur ? "Colocataire" : "Annonceur"}
+              Passer en mode {estAnnonceur ? "Co/locataire" : "Annonceur"}
             </button>
             <p className="mt-2 text-xs text-ink/40">
               Tes infos des deux côtés sont conservées (ton annonce et ton profil de recherche).

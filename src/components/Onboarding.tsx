@@ -254,8 +254,8 @@ export default function Onboarding({
         </h1>
         <p className="mt-3 max-w-sm text-ink/70">
           {role === "locataire"
-            ? "Ton profil est prêt. Complète ton annonce et découvre les colocataires intéressés par ton logement."
-            : "Ton profil est prêt. Swipe les colocations qui te plaisent — un match, et la conversation commence !"}
+            ? "Ton profil est prêt. Complète ton annonce et découvre les co/locataires intéressés par ton logement."
+            : "Ton profil est prêt. Swipe les co/locations qui te plaisent — un match, et la conversation commence !"}
         </p>
         <button
           onClick={entrer}
@@ -314,7 +314,7 @@ export default function Onboarding({
                 <div className="grid grid-cols-1 gap-3">
                   <CarteRole
                     titre="Chercher une chambre"
-                    sous="Je veux trouver une coloc (colocataire)"
+                    sous="Je veux trouver une coloc (co/locataire)"
                     icon={<Telescope className="h-7 w-7 text-bleu" />}
                     actif={role === "colocataire"}
                     onClick={() => setRole("colocataire")}
@@ -360,7 +360,7 @@ export default function Onboarding({
                 }
                 sous={
                   estAgence
-                    ? "Le nom que verront les colocataires."
+                    ? "Le nom que verront les co/locataires."
                     : "C'est le prénom que les autres verront."
                 }
               >
@@ -751,7 +751,7 @@ export default function Onboarding({
                 </div>
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">
-                    Durée de colocation souhaitée
+                    Durée de co/location souhaitée
                   </label>
                   <select
                     value={dureeColoc}
