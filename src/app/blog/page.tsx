@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Capacitor } from "@capacitor/core";
 import { MessageCircle, Plus, X, Tag, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import SiteHeader from "@/components/SiteHeader";
@@ -49,6 +50,13 @@ export default function BlogPage() {
   const [envoi, setEnvoi] = useState(false);
   const [erreur, setErreur] = useState("");
 
+  // Footer de l'app uniquement dans l'app native ; sur le web, on garde
+  // toujours le menu du haut (SiteHeader) comme sur les autres pages.
+  const [estNatif, setEstNatif] = useState(false);
+  useEffect(() => {
+    setEstNatif(Capacitor.isNativePlatform());
+  }, []);
+
   const charger = useCallback(async () => {
     setChargement(true);
     setSujets(await getSujets());
@@ -89,9 +97,9 @@ export default function BlogPage() {
   if (accesPC === null) return null;
   if (!accesPC) return <BlogSurOrdinateur />;
 
-  // Connecté (app ou web app) → on garde le footer de l'app visible et on
-  // retire le header public (« Commencez ici »). Visiteur anonyme → header public.
-  const dansApp = !!user;
+  // Dans l'app native (et connecté) → footer de l'app. Sinon (web, connecté ou
+  // non) → menu du haut (SiteHeader), toujours visible comme sur les autres pages.
+  const dansApp = estNatif && !!user;
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
