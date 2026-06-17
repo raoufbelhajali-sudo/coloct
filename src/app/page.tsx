@@ -29,9 +29,9 @@ const AVIS = [
 
 // Aperçus de l'app (captures générées) affichés sur l'accueil
 const APERCUS = [
-  { img: "/app-swipe.png", t: "Swipe", d: "Parcours les colocs près de chez toi." },
-  { img: "/app-match.png", t: "Matche", d: "Quand c'est réciproque, c'est un match." },
-  { img: "/app-chat.png", t: "Discute", d: "Une messagerie intégrée et sécurisée." },
+  { img: "/app-swipe.png", t: "Swipe", d: "Parcours les annonces près de chez toi." },
+  { img: "/app-match.png", t: "Le logement en détail", d: "Photos, infos et carte — tout y est." },
+  { img: "/app-chat.png", t: "Matche & discute", d: "Un like réciproque, et la conversation s'ouvre." },
 ];
 
 const ETAPES = [
@@ -292,9 +292,11 @@ export default function Home() {
             <span className="inline-flex items-center gap-2 rounded-full bg-bg px-4 py-1.5 text-sm font-semibold text-pink">
               <Smartphone className="h-4 w-4" /> L&apos;app en images
             </span>
-            <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">À quoi ressemble FlatSwiper&nbsp;?</h2>
+            <h2 className="mt-4 font-display text-2xl font-bold md:text-3xl">S&apos;inscrire, swiper, matcher — c&apos;est simple</h2>
             <p className="mx-auto mt-2 max-w-xl text-ink/65">
-              Swipe, matche, discute — tout se passe dans l&apos;app, simplement.
+              L&apos;inscription prend 2 minutes. Ensuite tu swipes les annonces&nbsp;:
+              un like réciproque, c&apos;est un <strong className="text-ink/80">match</strong>, et la messagerie s&apos;ouvre.
+              Simple, rapide et 100&nbsp;% gratuit.
             </p>
           </div>
           <div className="mt-10 grid grid-cols-3 items-end gap-3 sm:gap-8">

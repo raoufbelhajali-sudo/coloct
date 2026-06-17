@@ -30,13 +30,31 @@
 <g fill="#fbd27c"><rect x="492" y="200" width="26" height="34" rx="2"/><rect x="534" y="254" width="26" height="34" rx="2"/><rect x="576" y="308" width="26" height="34" rx="2"/><rect x="492" y="362" width="26" height="34" rx="2"/></g>
 <rect x="496" y="404" width="40" height="56" rx="3" fill="#14b8a6"/>
 </g>
-<g stroke="#d8cfc2" stroke-width="1.5">
-<rect x="624" y="262" width="148" height="198" fill="#f1ece4"/>
-<polygon points="616,262 698,206 780,262" fill="#0d9488"/>
-<g fill="#7fa8d8"><rect x="648" y="290" width="28" height="34" rx="2"/><rect x="720" y="290" width="28" height="34" rx="2"/><rect x="648" y="346" width="28" height="34" rx="2"/><rect x="720" y="346" width="28" height="34" rx="2"/></g>
-<rect x="684" y="290" width="28" height="34" rx="2" fill="#fbd27c"/>
-<rect x="676" y="402" width="44" height="58" rx="3" fill="#2563eb"/>
-<circle cx="710" cy="432" r="3" fill="#fbe2a7"/>
+<g stroke-linejoin="round">
+<rect x="740" y="234" width="15" height="40" fill="#9aa7b8"/>
+<rect x="735" y="229" width="25" height="9" rx="2" fill="#7d8a9c"/>
+<circle cx="747" cy="218" r="4" fill="#eef3f8"/><circle cx="753" cy="208" r="5" fill="#eef3f8"/><circle cx="760" cy="197" r="6" fill="#eef3f8"/>
+<rect x="624" y="288" width="148" height="172" fill="#f4ede1" stroke="#e3d8c6" stroke-width="1.5"/>
+<polygon points="608,290 698,212 788,290" fill="#14b8a6" stroke="#0d9488" stroke-width="2"/>
+<line x1="624" y1="290" x2="772" y2="290" stroke="#0d9488" stroke-width="3"/>
+<circle cx="698" cy="258" r="13" fill="#fbd27c" stroke="#e0b85a" stroke-width="1.5"/>
+<path d="M698 245 v26 M685 258 h26" stroke="#e0b85a" stroke-width="1.5"/>
+<rect x="636" y="316" width="8" height="40" rx="1.5" fill="#14b8a6"/>
+<rect x="674" y="316" width="8" height="40" rx="1.5" fill="#14b8a6"/>
+<rect x="644" y="316" width="30" height="40" rx="2" fill="#bfe6df" stroke="#9fd3c9" stroke-width="1"/>
+<path d="M659 316 v40 M644 336 h30" stroke="#ffffff" stroke-width="2"/>
+<rect x="638" y="356" width="42" height="8" rx="2" fill="#8a6d52"/>
+<circle cx="647" cy="354" r="3.5" fill="#f4a0c0"/><circle cx="659" cy="353" r="3.5" fill="#fbe2a7"/><circle cx="671" cy="354" r="3.5" fill="#f4a0c0"/>
+<rect x="714" y="316" width="8" height="40" rx="1.5" fill="#14b8a6"/>
+<rect x="752" y="316" width="8" height="40" rx="1.5" fill="#14b8a6"/>
+<rect x="722" y="316" width="30" height="40" rx="2" fill="#bfe6df" stroke="#9fd3c9" stroke-width="1"/>
+<path d="M737 316 v40 M722 336 h30" stroke="#ffffff" stroke-width="2"/>
+<rect x="716" y="356" width="42" height="8" rx="2" fill="#8a6d52"/>
+<circle cx="725" cy="354" r="3.5" fill="#f4a0c0"/><circle cx="737" cy="353" r="3.5" fill="#fbe2a7"/><circle cx="749" cy="354" r="3.5" fill="#f4a0c0"/>
+<rect x="672" y="454" width="52" height="8" rx="2" fill="#d8cab2"/>
+<path d="M682 460 V416 a16 16 0 0 1 32 0 V460 Z" fill="#2563eb" stroke="#1d4ed8" stroke-width="1.5"/>
+<path d="M698 404 V452" stroke="#1d4ed8" stroke-width="1.5"/>
+<circle cx="707" cy="436" r="2.5" fill="#fbe2a7"/>
 </g>
 <g stroke="#c4d4e4" stroke-width="1.5">
 <rect x="792" y="160" width="204" height="300" fill="#eef2f8"/>
