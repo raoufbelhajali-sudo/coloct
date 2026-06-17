@@ -7,7 +7,7 @@ import { Capacitor } from "@capacitor/core";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, Heart, X, MessageCircle, KeyRound, Layers,
-  Star, MapPin, ArrowRight, Quote, Rocket, ShieldCheck,
+  Star, MapPin, ArrowRight, Quote, Rocket, ShieldCheck, Lock,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import { useAuth } from "@/lib/auth";
@@ -334,8 +334,11 @@ export default function Home() {
             >
               <div className="relative aspect-[4/5] overflow-hidden bg-panel-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.photo} alt={p.prenom} className="h-full w-full object-cover" />
+                <img src={p.photo} alt={p.prenom} className="h-full w-full scale-110 object-cover blur-lg" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white/80 text-ink/70 backdrop-blur">
+                  <Lock className="h-3.5 w-3.5" />
+                </span>
                 <span className="bg-signature absolute left-2 top-2 rounded-full px-2 py-0.5 text-[11px] font-bold text-white shadow">≤ {p.budget} €</span>
                 <div className="absolute inset-x-0 bottom-0 p-2.5 text-white">
                   <p className="font-display text-sm font-bold leading-tight">{p.prenom}, {p.age}</p>
