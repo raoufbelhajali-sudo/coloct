@@ -285,11 +285,11 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full bg-panel px-4 py-1.5 text-sm font-semibold text-pink">
+            <span className="inline-flex items-center gap-2 rounded-full bg-panel px-4 py-1.5 text-sm font-semibold text-[#fa5252]">
               <Sparkles className="h-4 w-4" /> 100 % gratuit · partout en France
             </span>
             <h1 className="mt-5 font-display text-5xl font-bold leading-[0.98] sm:text-6xl">
-              Swipe.<br />Matche.<br /><span className="text-signature">Emménage.</span>
+              Swipe.<br /><span className="text-[#fa5252]">Matche.</span><br /><span className="text-signature">Emménage.</span>
             </h1>
             <p className="mt-5 max-w-md text-lg text-ink/70">
               Colocation ou location, trouve ton futur chez-toi en swipant.
@@ -449,7 +449,7 @@ export default function Home() {
                 transition={{ duration: 0.45, delay: i * 0.12 }}
                 className="rounded-3xl bg-bg p-6 shadow-sm ring-1 ring-ink/5"
               >
-                <Quote className="h-7 w-7 text-bleu/40" fill="currentColor" />
+                <Quote className="h-7 w-7 text-[#fa5252]/40" fill="currentColor" />
                 <p className="mt-2 text-ink/80">{a.t}</p>
                 <div className="mt-4 flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -458,7 +458,7 @@ export default function Home() {
                     <p className="text-sm font-bold">{a.n}</p>
                     <p className="text-xs text-ink/55">{a.s}</p>
                   </div>
-                  <div className="ml-auto flex gap-0.5 text-bleu">
+                  <div className="ml-auto flex gap-0.5 text-[#fa5252]">
                     {[0, 1, 2, 3, 4].map((s) => <Star key={s} className="h-3.5 w-3.5" fill="currentColor" />)}
                   </div>
                 </div>
