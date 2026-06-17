@@ -15,6 +15,7 @@ const GOOGLE_IOS_CLIENT_ID =
 const GOOGLE_WEB_CLIENT_ID =
   "318002057817-svim0vr5lfa4uo47o1qtos2bhif0mfit.apps.googleusercontent.com";
 let socialLoginPret = false;
+let socialLoginApplePret = false;
 
 // Génère un nonce aléatoire (hexadécimal)
 function genererNonce(): string {
@@ -189,6 +190,67 @@ export default function ConnexionPage() {
       );
     } finally {
       // Quoi qu'il arrive (succès, erreur, blocage), le bouton se débloque.
+      setEnCours(false);
+    }
+  }
+
+  // --- Apple sur le SITE web (redirection navigateur) ---
+  async function handleApple() {
+    reset();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: { redirectTo: `${window.location.origin}/bienvenue` },
+    });
+    if (error) setErreur(traduireErreur(error.message));
+  }
+
+  // --- Apple DANS L'APP (natif, « Se connecter avec Apple ») ---
+  async function handleAppleNatif() {
+    reset();
+    setEnCours(true);
+    try {
+      if (!socialLoginApplePret) {
+        // redirectUrl vide = pas de redirection sur iOS (feuille native)
+        await avecDelaiMax(
+          SocialLogin.initialize({ apple: { redirectUrl: "" } }),
+          15000
+        );
+        socialLoginApplePret = true;
+      }
+      // Même sécurité « nonce » que Google : nonce HACHÉ envoyé à Apple,
+      // nonce BRUT envoyé à Supabase qui le re-hache et compare.
+      const rawNonce = genererNonce();
+      const hashedNonce = await sha256hex(rawNonce);
+      const res = await avecDelaiMax(
+        SocialLogin.login({
+          provider: "apple",
+          options: { scopes: ["name", "email"], nonce: hashedNonce },
+        }),
+        120000
+      );
+      const result = res.result as { idToken?: string | null };
+      const idToken = result?.idToken;
+      if (!idToken) {
+        setErreur(
+          "Connexion Apple impossible (jeton manquant). Réessaie ou connecte-toi avec ton email."
+        );
+        return;
+      }
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: "apple",
+        token: idToken,
+        nonce: rawNonce,
+      });
+      if (error) {
+        setErreur(traduireErreur(error.message));
+      } else {
+        window.location.href = "/bienvenue/";
+      }
+    } catch {
+      setErreur(
+        "Connexion Apple impossible. Réessaie, ou connecte-toi avec ton email."
+      );
+    } finally {
       setEnCours(false);
     }
   }
@@ -439,6 +501,15 @@ export default function ConnexionPage() {
               Continuer avec Google
             </button>
 
+            <button
+              onClick={estNatif ? handleAppleNatif : handleApple}
+              disabled={enCours}
+              className="flex w-full items-center justify-center gap-3 rounded-full bg-black px-4 py-3.5 font-medium text-white transition-colors hover:bg-black/90 disabled:opacity-60"
+            >
+              <AppleLogo />
+              Continuer avec Apple
+            </button>
+
             {/* Connexion par SMS désactivée pour l'instant (fournisseur SMS payant
                 à brancher plus tard). Le code des étapes phone reste en place. */}
 
@@ -589,6 +660,15 @@ export default function ConnexionPage() {
             >
               <GoogleLogo />
               Continuer avec Google
+            </button>
+            <button
+              type="button"
+              onClick={estNatif ? handleAppleNatif : handleApple}
+              disabled={enCours}
+              className="flex w-full items-center justify-center gap-3 rounded-full bg-black px-4 py-3.5 font-medium text-white transition-colors hover:bg-black/90 disabled:opacity-60"
+            >
+              <AppleLogo />
+              Continuer avec Apple
             </button>
           </form>
         )}
@@ -859,6 +939,14 @@ function BoutonPrincipal({
     >
       {enCours ? "Un instant…" : label}
     </button>
+  );
+}
+
+function AppleLogo() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.886 4.45z" />
+    </svg>
   );
 }
 
