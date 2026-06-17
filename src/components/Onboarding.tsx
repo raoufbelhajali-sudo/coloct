@@ -51,6 +51,7 @@ export default function Onboarding({
   // --- Champs du profil ---
   const [role, setRole] = useState<Role>("colocataire");
   const [prenom, setPrenom] = useState(prenomInitial);
+  const [pseudo, setPseudo] = useState("");
   // Annonceur : statut + (si agence) infos entreprise
   const [statut, setStatut] = useState("");
   const [siret, setSiret] = useState("");
@@ -111,10 +112,14 @@ export default function Onboarding({
     if (etape === "agence" && !siret.trim()) return false;
     if (etape === "photo" && !photoUrl) return false;
     if (etape === "toi") {
+      if (!pseudo.trim()) return false;
       if (!age.trim() || Number(age) <= 0) return false;
       if (!contactTel.trim()) return false;
       if (!genre) return false;
+      if (!profession) return false;
+      if (!salaire && !sansSalaire) return false;
     }
+    if (etape === "bio" && !bio.trim()) return false;
     if (etape === "interets" && interets.length < 3) return false;
     if (etape === "modevie") {
       // chaque choix doit être renseigné (au moins 3 ambiances et 3 rythmes)
@@ -175,6 +180,7 @@ export default function Onboarding({
       .update({
         role,
         prenom: prenom.trim() || "Coloc",
+        pseudo: pseudo.trim() || null,
         est_agence: estAgence,
         statut_annonceur: role === "locataire" ? statut || null : null,
         siret: estAgence ? siret.trim() || null : null,
@@ -183,7 +189,7 @@ export default function Onboarding({
         age: Number(age) || null,
         genre: genre || null,
         profession: profession.trim() || null,
-        salaire: sansSalaire ? null : salaire || null,
+        salaire: sansSalaire ? "Non communiqué" : salaire || null,
         photo_url: photoUrl || null,
         bio: bio.trim() || null,
         interets,
@@ -438,6 +444,16 @@ export default function Onboarding({
             {etape === "toi" && (
               <Etape titre="Parle-nous de toi" sous="Quelques infos rapides.">
                 <label className="text-sm text-ink/70">
+                  Pseudo <span className="text-pink">*</span>
+                </label>
+                <input
+                  value={pseudo}
+                  onChange={(e) => setPseudo(e.target.value)}
+                  placeholder="cam_paris"
+                  autoCapitalize="none"
+                  className={champ}
+                />
+                <label className="mt-4 block text-sm text-ink/70">
                   Âge <span className="text-pink">*</span>
                 </label>
                 <input
@@ -469,7 +485,7 @@ export default function Onboarding({
                 />
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">
-                    Situation professionnelle
+                    Situation professionnelle <span className="text-pink">*</span>
                   </label>
                   <select
                     value={profession}
@@ -486,7 +502,7 @@ export default function Onboarding({
                 </div>
                 <div className="mt-4">
                   <label className="text-sm text-ink/70">
-                    Tranche de salaire (net / mois)
+                    Tranche de salaire (net / mois) <span className="text-pink">*</span>
                   </label>
                   {!sansSalaire && (
                     <select

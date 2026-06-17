@@ -65,7 +65,8 @@ export default function BienvenuePage() {
     }
     if (!profile) return;
 
-    // Déjà passé par le parcours (prénom renseigné) → on file vers son espace
+    // Déjà passé par le parcours (prénom renseigné) → on file vers son espace.
+    // Un compte tout neuf a prenom = "Anonyme" → on montre le parcours.
     if (profile.prenom && profile.prenom !== "Anonyme") {
       redirige(profile.role);
       return;

@@ -29,6 +29,12 @@ export default function SwipePage() {
     }
     if (profile && profile.role === "locataire") {
       router.replace("/locataire");
+      return;
+    }
+    // Compte tout neuf (jamais passé par le parcours) arrivé directement ici →
+    // on l'envoie faire son inscription au lieu d'afficher le mur rouge.
+    if (profile && (!profile.prenom || profile.prenom === "Anonyme")) {
+      router.replace("/bienvenue");
     }
   }, [loading, user, profile, router]);
 
