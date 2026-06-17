@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Cookie } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 
 // Bandeau de consentement cookies.
 // - Cookies NÉCESSAIRES : toujours actifs (connexion, préférences).
@@ -14,6 +15,9 @@ export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Dans l'app native iOS/Android : aucune mesure publicitaire, donc PAS de
+    // bandeau cookies (exigence App Store 5.1.2 — pas de tracking sans ATT).
+    if (Capacitor.isNativePlatform()) return;
     if (
       typeof window !== "undefined" &&
       !localStorage.getItem(CONSENT_KEY)
