@@ -88,7 +88,12 @@ export default function Home() {
   const [sBudget, setSBudget] = useState("");
 
   useEffect(() => {
-    setEstNatif(Capacitor.isNativePlatform());
+    // Détection "app native" par 2 moyens (au cas où isNativePlatform serait pris
+    // en défaut) : le plugin Capacitor OU le protocole de l'URL (capacitor://…).
+    setEstNatif(
+      Capacitor.isNativePlatform() ||
+        (typeof location !== "undefined" && location.protocol === "capacitor:")
+    );
   }, []);
 
   // Sur le WEB : on laisse toujours voir l'accueil (site d'annonces), même
@@ -126,6 +131,10 @@ export default function Home() {
     const q = params.toString();
     router.push(`/annonces${q ? "?" + q : ""}`);
   }
+
+  // Dans l'app native : on n'affiche JAMAIS la page d'accueil web (la redirection
+  // ci-dessus envoie vers /connexion ou /bienvenue). Page vide en attendant.
+  if (estNatif) return null;
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
