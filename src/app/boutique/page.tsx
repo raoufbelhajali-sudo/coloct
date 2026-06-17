@@ -53,7 +53,7 @@ export default function BoutiquePage() {
 
   // Offre de lancement : tout est gratuit pour l'instant, sur le web ET l'app
   // (« gratuit aujourd'hui, payant bientôt »).
-  const lancement = false;
+  const lancement = true;
 
   function dateFr(iso: string | null) {
     if (!iso) return "";
@@ -195,6 +195,11 @@ export default function BoutiquePage() {
                 <span className="bg-bleu absolute -top-2 right-4 rounded-full px-2.5 py-0.5 text-[11px] font-bold text-white">
                   LE MAX
                 </span>
+                {lancement && (
+                  <span className="bg-bleu-clair text-violet-dark mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold">
+                    <Check className="h-3.5 w-3.5" strokeWidth={3} /> Gratuit pour l&apos;instant
+                  </span>
+                )}
                 <div className="flex items-center gap-3">
                   <div
                     className="flex h-11 w-11 items-center justify-center rounded-2xl"
@@ -322,6 +327,11 @@ function OffreCard({
 }) {
   return (
     <div className="rounded-3xl bg-panel p-5">
+      {lancement && (
+        <span className="bg-bleu-clair text-violet-dark mb-3 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold">
+          <Check className="h-3.5 w-3.5" strokeWidth={3} /> Gratuit pour l&apos;instant
+        </span>
+      )}
       <div className="flex items-center gap-3">
         <div
           className="flex h-11 w-11 items-center justify-center rounded-2xl"
