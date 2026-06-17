@@ -1,4 +1,4 @@
-import { Sparkles, Lock } from "lucide-react";
+import { Sparkles, Lock, Users, KeyRound } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { lieuSous } from "@/lib/listings";
 
@@ -49,9 +49,20 @@ export default function ListingCard({
             {listing.loyer} €{" "}
             <span className="font-medium opacity-90">/ mois CC</span>
           </div>
-          {/* Badge meublé */}
-          <div className="absolute top-4 right-4 rounded-full bg-bg/70 px-3 py-2 text-xs font-medium text-ink backdrop-blur-sm">
-            {listing.meuble ? "Meublé" : "Non meublé"}
+          {/* Badges haut-droite : type d'offre (pin) + meublé */}
+          <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
+            {(listing.typeOffre ?? "colocation") === "location" ? (
+              <div className="flex items-center gap-1 rounded-full bg-[#2563eb] px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                <KeyRound className="h-3.5 w-3.5" /> Location
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 rounded-full bg-[#14b8a6] px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                <Users className="h-3.5 w-3.5" /> Co/location
+              </div>
+            )}
+            <div className="rounded-full bg-bg/70 px-3 py-2 text-xs font-medium text-ink backdrop-blur-sm">
+              {listing.meuble ? "Meublé" : "Non meublé"}
+            </div>
           </div>
           {/* Bandeau "ça peut coller" — placé sous le prix pour ne pas le cacher */}
           {compat.length > 0 && (
