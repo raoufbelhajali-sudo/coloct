@@ -34,6 +34,7 @@ import {
 import { marquerAnnonce } from "@/lib/matchPopup";
 import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
+import LieuSelect from "./LieuSelect";
 
 type Direction = "left" | "right";
 
@@ -82,6 +83,9 @@ export default function SwipeDeck() {
   const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
   const [maxDistance, setMaxDistance] = useState(DIST_MAX); // DIST_MAX = pas de limite
   const [coordChercheur, setCoordChercheur] = useState<Coord | null>(null);
+  // Centre du filtre distance : modifiable (par défaut, la ville du profil)
+  const [villeFiltre, setVilleFiltre] = useState("");
+  const [deptFiltre, setDeptFiltre] = useState("");
 
   // Pas connecté → direction la page de connexion
   useEffect(() => {
@@ -117,22 +121,24 @@ export default function SwipeDeck() {
       setBudgetMax(v);
     }
     if (profile.date_emmenagement) setDispoAvant(profile.date_emmenagement);
+    setVilleFiltre(profile.ville ?? "");
+    setDeptFiltre(profile.departement ?? "");
   }, [profile]);
 
-  // Coordonnées de la ville recherchée par le chercheur (pour le filtre distance)
+  // Coordonnées du centre du filtre distance (ville du filtre, modifiable)
   useEffect(() => {
-    if (!profile?.ville) {
+    if (!villeFiltre) {
       setCoordChercheur(null);
       return;
     }
     let actif = true;
-    geocodeVille(profile.ville, profile.departement ?? undefined).then((c) => {
+    geocodeVille(villeFiltre, deptFiltre || undefined).then((c) => {
       if (actif) setCoordChercheur(c);
     });
     return () => {
       actif = false;
     };
-  }, [profile?.ville, profile?.departement]);
+  }, [villeFiltre, deptFiltre]);
 
   // Liste des quartiers présents dans les annonces (pour le menu déroulant)
   const quartiers = useMemo(
@@ -448,6 +454,23 @@ export default function SwipeDeck() {
               className="accent-pink mt-2 w-full"
             />
 
+            {/* Localisation (centre du filtre distance) */}
+            <div className="mt-4">
+              <label className="text-sm text-ink/70">Localisation</label>
+              <div className="mt-1">
+                <LieuSelect
+                  ville={villeFiltre}
+                  departement={deptFiltre}
+                  onChange={(v, d) => {
+                    setVilleFiltre(v);
+                    setDeptFiltre(d);
+                    resetDeck();
+                  }}
+                  className="w-full rounded-lg border border-ink/10 bg-panel-2 px-3 py-2 text-ink"
+                />
+              </div>
+            </div>
+
             {/* Distance */}
             <div className="mt-4 flex items-center justify-between text-sm">
               <label htmlFor="distance" className="text-ink/70">
@@ -474,8 +497,8 @@ export default function SwipeDeck() {
             />
             {!coordChercheur && maxDistance < DIST_MAX && (
               <p className="mt-1 text-xs text-ink/40">
-                Renseigne ta ville recherchée (dans ton profil) pour activer le
-                filtre par distance.
+                Choisis une localisation ci-dessus pour activer le filtre par
+                distance.
               </p>
             )}
 
