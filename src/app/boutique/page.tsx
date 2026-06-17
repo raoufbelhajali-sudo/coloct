@@ -9,6 +9,7 @@ import { useAuth } from "@/lib/auth";
 import {
   estPremium,
   estHero,
+  boostActif,
   activerPassExpress,
   activerHero,
   activerBoost,
@@ -47,6 +48,8 @@ export default function BoutiquePage() {
 
   const premium = estPremium(profile);
   const hero = estHero(profile);
+  // Boost annonce : distinct du Pack Swiper → on se base sur l'état de l'annonce.
+  const boostAnnonceurActif = boostActif(listing?.boosted_until);
 
   // Offre de lancement : tout est gratuit pour l'instant, sur le web ET l'app
   // (« gratuit aujourd'hui, payant bientôt »).
@@ -113,39 +116,59 @@ export default function BoutiquePage() {
 
         <div className="space-y-4">
           {estAnnonceur ? (
-            // ----- Annonceur : un seul bloc -----
-            !listing ? (
-              <div className="rounded-3xl bg-panel p-6 text-center text-ink/70">
-                <Rocket className="mx-auto h-10 w-10 text-bleu" />
-                <p className="mt-3">
-                  Publie d&apos;abord ton annonce pour pouvoir la booster.
-                </p>
-                <Link
-                  href="/mon-annonce"
-                  className="bg-signature mt-4 inline-block rounded-full px-6 py-3 font-semibold text-white"
-                >
-                  Créer mon annonce
-                </Link>
-              </div>
-            ) : (
+            // ----- Annonceur : Pack Swiper (notifs) + Boost annonce -----
+            <>
               <OffreCard
-                icon={<Rocket className="h-6 w-6 text-white" />}
-                titre="Boost ton annonce"
-                duree="7 jours"
-                prix="5 €"
+                icon={<Zap className="h-6 w-6 text-white" />}
+                titre="Pack Swiper"
+                duree="Par semaine · sans engagement"
+                prix="2,99 €"
                 avantages={[
-                  "Ton appartement mis en avant",
-                  "Accède aux meilleurs profils",
-                  "Classés par poste occupé + compatibilité avec ton profil",
+                  "Vois qui a liké ton annonce",
+                  "Messagerie débloquée",
+                  "Sans engagement — stoppe quand tu veux",
                 ]}
                 actif={premium}
                 actifTexte={`Actif jusqu'au ${dateFr(profile?.premium_until ?? null)}`}
-                enCours={enCours === "annonceur"}
-                onActiver={() => activer("annonceur")}
-                grad={GRAD_ANNONCE}
+                enCours={enCours === "swiper"}
+                onActiver={() => activer("swiper")}
+                grad={GRAD_PASS}
                 lancement={lancement}
               />
-            )
+
+              {!listing ? (
+                <div className="rounded-3xl bg-panel p-6 text-center text-ink/70">
+                  <Rocket className="mx-auto h-10 w-10 text-bleu" />
+                  <p className="mt-3">
+                    Publie d&apos;abord ton annonce pour pouvoir la booster.
+                  </p>
+                  <Link
+                    href="/mon-annonce"
+                    className="bg-signature mt-4 inline-block rounded-full px-6 py-3 font-semibold text-white"
+                  >
+                    Créer mon annonce
+                  </Link>
+                </div>
+              ) : (
+                <OffreCard
+                  icon={<Rocket className="h-6 w-6 text-white" />}
+                  titre="Boost ton annonce"
+                  duree="7 jours"
+                  prix="5 €"
+                  avantages={[
+                    "Ton appartement mis en avant",
+                    "Accède aux meilleurs profils",
+                    "Classés par poste occupé + compatibilité avec ton profil",
+                  ]}
+                  actif={boostAnnonceurActif}
+                  actifTexte={`Actif jusqu'au ${dateFr(listing?.boosted_until ?? null)}`}
+                  enCours={enCours === "annonceur"}
+                  onActiver={() => activer("annonceur")}
+                  grad={GRAD_ANNONCE}
+                  lancement={lancement}
+                />
+              )}
+            </>
           ) : (
             // ----- Colocataire : 2 forfaits -----
             <>
