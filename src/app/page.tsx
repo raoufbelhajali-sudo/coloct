@@ -80,7 +80,7 @@ function CarteAnnonce({ l }: { l: Listing }) {
 
 export default function Home() {
   const router = useRouter();
-  const { user, profile, loading } = useAuth();
+  const { user, loading } = useAuth();
   const [estNatif, setEstNatif] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
   const [colocataires, setColocataires] = useState<Profile[]>([]);
@@ -97,12 +97,15 @@ export default function Home() {
   useEffect(() => {
     if (loading) return;
     if (!estNatif) return; // web : pas de redirection, on affiche le site
-    if (user && profile) {
-      router.replace(profile.role === "locataire" ? "/locataire" : "/swipe");
-    } else if (!user) {
-      router.replace("/connexion");
+    // Dans l'app native, on ne reste JAMAIS sur la page d'accueil web :
+    // - connecté → /bienvenue (qui route vers l'inscription, le swipe ou l'espace) ;
+    // - non connecté → /connexion.
+    if (user) {
+      router.replace("/bienvenue/");
+    } else {
+      router.replace("/connexion/");
     }
-  }, [estNatif, loading, user, profile, router]);
+  }, [estNatif, loading, user, router]);
 
   useEffect(() => {
     getListings().then(setListings).catch(() => setListings([]));
