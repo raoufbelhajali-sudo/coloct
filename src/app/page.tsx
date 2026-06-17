@@ -72,11 +72,6 @@ const ETAPES = [
   { Icon: KeyRound, t: "Emménage", d: "Organise la visite et installe-toi dans ton nouveau chez-toi." },
 ];
 
-const VILLES_SEO = [
-  "Paris", "Lyon", "Marseille", "Toulouse", "Bordeaux", "Lille",
-  "Nantes", "Strasbourg", "Montpellier", "Rennes", "Nice", "Grenoble",
-];
-
 function TypeBadge({ type }: { type: "colocation" | "location" }) {
   return (
     <span
@@ -112,13 +107,18 @@ function GrandeCarte({ d, className = "" }: { d: Demo; className?: string }) {
   );
 }
 
+// Scénario joué en boucle : like (droite), non (gauche), match, non…
+const ACTIONS = ["like", "nope", "match", "nope"] as const;
+
 // La pile de cartes qui se "swipe" toute seule (cœur de la vitrine)
 function PileSwipe() {
   const [i, setI] = useState(0);
   useEffect(() => {
-    const t = setInterval(() => setI((v) => (v + 1) % HERO_CARDS.length), 2600);
+    const t = setInterval(() => setI((v) => (v + 1) % HERO_CARDS.length), 2800);
     return () => clearInterval(t);
   }, []);
+  const action = ACTIONS[i % ACTIONS.length];
+  const nope = action === "nope";
   const top = HERO_CARDS[i];
   const n1 = HERO_CARDS[(i + 1) % HERO_CARDS.length];
   const n2 = HERO_CARDS[(i + 2) % HERO_CARDS.length];
@@ -133,31 +133,82 @@ function PileSwipe() {
             key={top.id}
             initial={{ opacity: 0, scale: 0.95, y: 14 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ x: 360, rotate: 22, opacity: 0 }}
-            transition={{ duration: 0.55, ease: "easeInOut" }}
+            exit={{ x: nope ? -380 : 380, rotate: nope ? -20 : 20, opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
             className="absolute inset-0"
           >
             <GrandeCarte d={top} />
-            <motion.span
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.7, duration: 0.4 }}
-              className="absolute right-5 top-16 -rotate-12 rounded-xl border-4 border-[#14b8a6] px-3 py-1 font-display text-2xl font-bold text-[#14b8a6]"
-            >
-              LIKE
-            </motion.span>
+            {/* Tampon LIKE (droite) ou NON (gauche) */}
+            {nope ? (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4, duration: 0.35 }}
+                className="absolute left-5 top-16 rotate-12 rounded-xl border-4 border-[#fa5252] px-3 py-1 font-display text-2xl font-bold text-[#fa5252]"
+              >
+                NON
+              </motion.span>
+            ) : (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.4, duration: 0.35 }}
+                className="absolute right-5 top-16 -rotate-12 rounded-xl border-4 border-[#14b8a6] px-3 py-1 font-display text-2xl font-bold text-[#14b8a6]"
+              >
+                LIKE
+              </motion.span>
+            )}
           </motion.div>
+        </AnimatePresence>
+
+        {/* Animation « C'est un match ! » */}
+        <AnimatePresence>
+          {action === "match" && (
+            <motion.div
+              key={"match" + i}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 1.1 }}
+              className="absolute inset-0 z-10 flex items-center justify-center rounded-[28px] bg-black/30 backdrop-blur-[2px]"
+            >
+              <motion.div
+                initial={{ scale: 0.5, y: 12 }}
+                animate={{ scale: 1, y: 0 }}
+                transition={{ delay: 1.2, type: "spring", stiffness: 260, damping: 16 }}
+                className="bg-signature glow-pink flex flex-col items-center rounded-3xl px-7 py-6 text-center text-white shadow-2xl"
+              >
+                <motion.span
+                  animate={{ scale: [1, 1.18, 1] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                  className="flex h-14 w-14 items-center justify-center rounded-full bg-white/20"
+                >
+                  <Heart className="h-8 w-8" fill="currentColor" />
+                </motion.span>
+                <p className="mt-3 font-display text-2xl font-bold">C&apos;est un match&nbsp;!</p>
+                <p className="text-sm text-white/90">Lancez la conversation</p>
+              </motion.div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
-      {/* Boutons d'action décoratifs (comme dans l'app) */}
+      {/* Boutons d'action (réagissent au swipe) */}
       <div className="mt-5 flex items-center gap-5">
-        <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#fa5252] shadow-lg ring-1 ring-ink/5">
+        <motion.span
+          animate={nope ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-[#fa5252] shadow-lg ring-1 ring-ink/5"
+        >
           <X className="h-6 w-6" strokeWidth={3} />
-        </span>
-        <span className="bg-signature glow-pink flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg">
+        </motion.span>
+        <motion.span
+          animate={!nope ? { scale: [1, 1.18, 1] } : { scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="bg-signature glow-pink flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg"
+        >
           <Heart className="h-7 w-7" fill="currentColor" />
-        </span>
+        </motion.span>
       </div>
     </div>
   );
@@ -408,18 +459,6 @@ export default function Home() {
             Commencer maintenant <ArrowRight className="h-5 w-5" />
           </Link>
         </motion.div>
-      </section>
-
-      {/* ===================== Colocation par ville (SEO léger) ===================== */}
-      <section className="mx-auto w-full max-w-6xl px-5 pb-12">
-        <h2 className="font-display text-xl font-bold text-ink/80">Colocation par ville</h2>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {VILLES_SEO.map((v) => (
-            <Link key={v} href={`/colocation/${v.toLowerCase()}`} className="rounded-full bg-panel px-4 py-2 text-sm font-medium text-ink/70 hover:bg-panel-2">
-              Colocation à {v}
-            </Link>
-          ))}
-        </div>
       </section>
 
       {/* ===================== Footer ===================== */}
