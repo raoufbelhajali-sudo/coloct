@@ -442,6 +442,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== Bande illustrée (ambiance colocation / immobilier) ===== */}
+      <div aria-hidden className="relative mt-6 h-36 w-full overflow-hidden sm:h-52">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/accueil-bg.svg"
+          alt=""
+          className="absolute bottom-0 left-1/2 h-full w-auto min-w-[1100px] max-w-none -translate-x-1/2 object-cover object-bottom"
+        />
+      </div>
+
       {/* ===== Footer ===== */}
       <footer className="border-t border-ink/10 bg-panel/60">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-start md:justify-between">

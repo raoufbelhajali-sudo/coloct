@@ -11,13 +11,17 @@ export default function FondAccueil() {
     setNative(Capacitor.isNativePlatform());
   }, []);
 
-  if (native) return null; // pas d'image dans l'app
+  if (native) return null; // pas d'illustration dans l'app
 
   return (
+    // Léger dégradé d'ambiance derrière tout le contenu (web uniquement)
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center opacity-[0.16]"
-      style={{ backgroundImage: "url(/accueil-bg.jpg)" }}
+      className="pointer-events-none fixed inset-0 -z-20"
+      style={{
+        background:
+          "linear-gradient(180deg, #ffffff 0%, #f7fafc 55%, #eef5f3 100%)",
+      }}
     />
   );
 }
