@@ -20,8 +20,10 @@ export type Reponse = {
 };
 
 export const CATEGORIES_FORUM = [
-  "Trouver une coloc",
-  "Vie en co/location",
+  "Trouver une colocation",
+  "Trouver une location",
+  "Vie en colocation",
+  "Vie en location",
   "Bail & démarches",
   "Budget & charges",
   "Général",

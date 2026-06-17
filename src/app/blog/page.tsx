@@ -118,8 +118,8 @@ export default function BlogPage() {
               <MessageCircle className="h-8 w-8 text-bleu" /> Blog & Entraide
             </h1>
             <p className="mt-2 max-w-xl text-ink/65">
-              Questions, conseils et discussions sur la co/location. Pose tes questions,
-              partage ton expérience — la communauté FlatSwiper te répond.
+              Questions, conseils et discussions sur la colocation et la location.
+              Pose tes questions, partage ton expérience — la communauté FlatSwiper te répond.
             </p>
           </div>
           <button

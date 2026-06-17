@@ -65,6 +65,16 @@ function CarteAnnonce({ l }: { l: Listing }) {
         <span className="bg-signature absolute left-2 top-2 rounded-full px-2 py-0.5 text-xs font-bold text-white shadow">
           {l.loyer} €
         </span>
+        <span
+          className={
+            "absolute right-2 top-2 rounded-full px-2 py-0.5 text-[11px] font-semibold text-white shadow " +
+            ((l.typeOffre ?? "colocation") === "location"
+              ? "bg-[#2563eb]"
+              : "bg-[#14b8a6]")
+          }
+        >
+          {(l.typeOffre ?? "colocation") === "location" ? "Location" : "Colocation"}
+        </span>
       </div>
       <div className="p-2.5">
         <p className="truncate font-display text-sm font-semibold leading-tight">
@@ -121,6 +131,9 @@ export default function Home() {
   const aLaUne = [...listings]
     .sort((a, b) => (boostActif(b.boosted_until) ? 1 : 0) - (boostActif(a.boosted_until) ? 1 : 0))
     .slice(0, 10);
+  // Séparé par type pour montrer colocations ET locations
+  const colocations = aLaUne.filter((l) => (l.typeOffre ?? "colocation") !== "location");
+  const locations = aLaUne.filter((l) => (l.typeOffre ?? "colocation") === "location");
   const villesDispo = Array.from(
     new Set(listings.map((l) => l.ville).filter(Boolean) as string[])
   ).sort();
@@ -150,11 +163,11 @@ export default function Home() {
               <Sparkles className="h-4 w-4" /> 100% gratuit · partout en France
             </span>
             <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] sm:text-5xl">
-              Trouve ta co/location <span className="text-signature">en swipant</span>
+              Colocation ou location, <span className="text-signature">trouve en swipant</span>
             </h1>
             <p className="mt-4 max-w-md text-lg text-ink/70">
-              Parcours les chambres, like, matche et discute. La coloc à petit budget,
-              en un swipe.
+              Parcours les colocations et les locations, like, matche et discute.
+              Le logement à petit budget, en un swipe.
             </p>
 
             {/* Barre de recherche */}
@@ -242,17 +255,32 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== Annonces à la une ===== */}
-      {aLaUne.length > 0 && (
+      {/* ===== Colocations à la une ===== */}
+      {colocations.length > 0 && (
         <section className="mx-auto w-full max-w-6xl px-5 py-10">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-2 font-display text-2xl font-bold md:text-3xl">
-              <Sparkles className="h-6 w-6 text-bleu" /> À la une
+              <Sparkles className="h-6 w-6 text-bleu" /> Colocations à la une
             </h2>
             <Link href="/annonces" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
           </div>
           <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {aLaUne.map((l) => <CarteAnnonce key={l.id} l={l} />)}
+            {colocations.map((l) => <CarteAnnonce key={l.id} l={l} />)}
+          </div>
+        </section>
+      )}
+
+      {/* ===== Locations à la une ===== */}
+      {locations.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-5 pb-4">
+          <div className="flex items-center justify-between">
+            <h2 className="flex items-center gap-2 font-display text-2xl font-bold md:text-3xl">
+              <Sparkles className="h-6 w-6 text-pink" /> Locations à la une
+            </h2>
+            <Link href="/location" className="text-sm font-medium text-pink hover:underline">Tout voir →</Link>
+          </div>
+          <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {locations.map((l) => <CarteAnnonce key={l.id} l={l} />)}
           </div>
         </section>
       )}
