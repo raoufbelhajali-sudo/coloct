@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Check, X, Eye, Rocket, SlidersHorizontal, Share2, RotateCcw, Bookmark, AlertCircle, Send } from "lucide-react";
 import {
-  motion,
-  useMotionValue,
-  useTransform,
-  useAnimationControls,
-} from "framer-motion";
+  Check,
+  X,
+  Eye,
+  Rocket,
+  SlidersHorizontal,
+  Share2,
+  Bookmark,
+  AlertCircle,
+  Send,
+  ChevronUp,
+} from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
 import { compatAnnonce } from "@/lib/compat";
@@ -22,7 +28,6 @@ import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
 import {
   getSwipedListingIds,
   recordListingSwipe,
-  annulerSwipeListing,
   getSwipes24h,
   getMatchIdForListing,
 } from "@/lib/swipes";
@@ -36,8 +41,6 @@ import ListingCard from "./ListingCard";
 import ListingDetail from "./ListingDetail";
 import LieuSelect from "./LieuSelect";
 
-type Direction = "left" | "right";
-
 // Bornes de budget pour le curseur
 const BUDGET_MIN = 500;
 const BUDGET_MAX = 900;
@@ -48,6 +51,11 @@ const DIST_MAX = 200;
 // Nombre de swipes gratuits par 24h (au-delà : HeroSwiper, ou attendre 24h)
 const SWIPES_PAR_JOUR = 20;
 
+// On ne monte que les annonces proches de celle affichée (perf : pas 50 images
+// d'un coup). Les autres slides restent des cases vides de même hauteur pour
+// garder le défilement correct.
+const FENETRE = 2;
+
 export default function SwipeDeck() {
   const router = useRouter();
   const { user, profile, loading: authLoading } = useAuth();
@@ -56,13 +64,15 @@ export default function SwipeDeck() {
   const [likes, setLikes] = useState<Listing[]>([]); // annonces aimées
   // Annonces déjà swipées (on les retire du paquet au fur et à mesure)
   const [swipedIds, setSwipedIds] = useState<Set<string>>(new Set());
+  // Annonces déjà swipées AVANT cette session : on les retire du feed.
+  // (Les décisions prises pendant la session restent visibles, marquées.)
+  const dejaSwipe = useRef<Set<string>>(new Set());
+  // Décisions prises pendant cette session (j'aime / passe), par annonce
+  const [decisions, setDecisions] = useState<Record<string, "like" | "pass">>({});
 
   // Annonces chargées depuis le serveur Supabase
   const [allListings, setAllListings] = useState<Listing[]>([]);
   const [bloques, setBloques] = useState<Set<string>>(new Set());
-  const [dernierSwipe, setDernierSwipe] = useState<
-    { id: string; direction: "like" | "pass"; superLike: boolean } | null
-  >(null);
   const [favorisIds, setFavorisIds] = useState<Set<string>>(new Set());
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
@@ -90,6 +100,11 @@ export default function SwipeDeck() {
   const [villeFiltre, setVilleFiltre] = useState("");
   const [deptFiltre, setDeptFiltre] = useState("");
 
+  // --- Feed vertical (style TikTok) ---
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeRef = useRef(0); // évite de setState à chaque pixel de scroll
+
   // Pas connecté → direction la page de connexion
   useEffect(() => {
     if (!authLoading && !user) router.replace("/connexion");
@@ -106,6 +121,7 @@ export default function SwipeDeck() {
       getFavorisIds(user.id),
     ])
       .then(([data, swiped, nbSwipes, blocs, favs]) => {
+        dejaSwipe.current = swiped; // figé pour la stabilité du feed
         setAllListings(data);
         setSwipedIds(swiped);
         setSwipesAujourdhui(nbSwipes);
@@ -149,13 +165,16 @@ export default function SwipeDeck() {
     [allListings]
   );
 
-  // Annonces qui passent les filtres (et pas encore swipées)
-  const filtered = useMemo(() => {
+  // Annonces qui passent les filtres. On exclut seulement celles déjà swipées
+  // AVANT la session (dejaSwipe) : le feed reste stable quand on aime/passe
+  // pendant la session (l'annonce reste, marquée). Recalculé uniquement quand
+  // les filtres changent — pas à chaque décision.
+  const feed = useMemo(() => {
     return allListings.filter((l) => {
       const offre = l.typeOffre ?? "colocation";
       // Le chercheur ne voit que les annonces de son type (choisi à l'inscription)
       if (offre !== offreActive) return false;
-      if (swipedIds.has(l.id)) return false;
+      if (dejaSwipe.current.has(l.id)) return false;
       if (l.ownerId && bloques.has(l.ownerId)) return false; // annonceur bloqué
       if (l.loyer > budgetMax) return false;
       if (quartier !== "all" && l.quartier !== quartier) return false;
@@ -174,7 +193,6 @@ export default function SwipeDeck() {
     });
   }, [
     allListings,
-    swipedIds,
     bloques,
     offreActive,
     budgetMax,
@@ -184,126 +202,100 @@ export default function SwipeDeck() {
     coordChercheur,
   ]);
 
-  // Position horizontale de la carte du dessus (pour le glissement)
-  const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-12, 12]);
-  const likeOpacity = useTransform(x, [40, 130], [0, 1]);
-  const nopeOpacity = useTransform(x, [-130, -40], [1, 0]);
-  const controls = useAnimationControls();
-  const animating = useRef(false);
-
-  // La carte du dessus est toujours la première du paquet filtré
-  const current = filtered[0];
-  const next = filtered[1];
-
-  // Quand on change un filtre : on remet la carte droite
-  function resetDeck() {
-    x.set(0);
-    controls.set({ x: 0, opacity: 1 });
-  }
+  // Annonce actuellement à l'écran (celle sur laquelle agissent les icônes)
+  const active = feed[activeIndex];
 
   // Limite gratuite : 20 swipes / 24h. HeroSwiper = illimité.
   const swipesEpuises = !estHero(profile) && swipesAujourdhui >= SWIPES_PAR_JOUR;
   // Au-delà de la limite : on masque (floute) les annonces et on propose le Hero
   const flou = swipesEpuises;
 
-  // Fait voler la carte hors de l'écran puis passe à la suivante
-  async function fly(dir: Direction, superLike = false) {
-    if (animating.current || !current || !user) return;
+  // Suit l'annonce visible pendant le défilement (snap vertical)
+  function onScroll() {
+    const el = scrollRef.current;
+    if (!el) return;
+    const i = Math.round(el.scrollTop / el.clientHeight);
+    if (i !== activeRef.current) {
+      activeRef.current = i;
+      setActiveIndex(i);
+    }
+  }
 
-    // Limite des 20 swipes/24h : on bloque TOUT swipe et on propose HeroSwiper
+  // Fait défiler en douceur jusqu'à une annonce du feed
+  function allerVers(i: number) {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollTo({ top: i * el.clientHeight, behavior: "smooth" });
+  }
+
+  // Quand on change un filtre : on remonte le feed en haut
+  function resetDeck() {
+    activeRef.current = 0;
+    setActiveIndex(0);
+    scrollRef.current?.scrollTo({ top: 0 });
+  }
+
+  // J'aime / Je passe sur une annonce, puis on enchaîne sur la suivante.
+  // (Le simple défilement, lui, ne décide rien : on peut revenir en arrière.)
+  async function decider(listing: Listing | undefined, dir: "like" | "pass") {
+    if (!user || !listing) return;
+    if (decisions[listing.id]) return; // déjà décidé pendant la session
+
+    // Limite des 20 swipes/24h : on bloque et on propose HeroSwiper
     if (swipesEpuises) {
       setPaywall(true);
       return;
     }
 
-    animating.current = true;
-    const swiped = current; // on retient l'annonce avant d'avancer la pile
-
     // Vibration tactile immédiate (plus marquée pour un like)
-    vibrer(dir === "right" ? ImpactStyle.Medium : ImpactStyle.Light);
+    vibrer(dir === "like" ? ImpactStyle.Medium : ImpactStyle.Light);
 
-    await controls.start({
-      x: dir === "right" ? 700 : -700,
-      opacity: 0,
-      transition: { duration: 0.35 },
-    });
+    setDecisions((d) => ({ ...d, [listing.id]: dir }));
+    setSwipedIds((prev) => new Set(prev).add(listing.id));
+    setSwipesAujourdhui((n) => n + 1);
 
-    // on retire l'annonce du paquet (la suivante passe devant)
-    setSwipedIds((prev) => new Set(prev).add(swiped.id));
-    setSwipesAujourdhui((n) => n + 1); // compte tous les swipes (limite 24h)
-    x.set(0);
-    controls.set({ x: 0, opacity: 1 });
-    animating.current = false;
+    // On enchaîne sur l'annonce suivante du feed
+    const idx = feed.findIndex((l) => l.id === listing.id);
+    if (idx >= 0) allerVers(idx + 1);
 
-    // puis on enregistre le swipe sur le serveur
-    const direction = dir === "right" ? "like" : "pass";
-    setDernierSwipe({ id: swiped.id, direction, superLike });
     try {
-      await recordListingSwipe(user.id, swiped.id, direction, superLike);
-      if (direction === "like") {
-        setLikes((prev) => [...prev, swiped]);
+      await recordListingSwipe(user.id, listing.id, dir, false);
+      if (dir === "like") {
+        setLikes((prev) => [...prev, listing]);
         // match seulement si le locataire t'a aussi liké
-        const mid = await getMatchIdForListing(user.id, swiped.id);
+        const mid = await getMatchIdForListing(user.id, listing.id);
         if (mid) {
           vibrerSucces(); // c'est un match !
-          setMatch(swiped);
+          setMatch(listing);
           marquerAnnonce(user.id, mid); // évite la double pop-up globale
         }
       }
     } catch {
-      // souci réseau : on n'interrompt pas le swipe
-    }
-  }
-
-  // Annule le dernier swipe (revient en arrière) — réservé HeroSwiper
-  async function annulerDernier() {
-    if (!user || !dernierSwipe || animating.current) return;
-    if (!estHero(profile)) {
-      router.push("/boutique"); // fonctionnalité HeroSwiper
-      return;
-    }
-    const { id, direction } = dernierSwipe;
-    setDernierSwipe(null);
-    setSwipedIds((prev) => {
-      const n = new Set(prev);
-      n.delete(id);
-      return n;
-    });
-    if (direction === "like") {
-      setLikes((prev) => prev.filter((l) => l.id !== id));
-    }
-    setSwipesAujourdhui((n) => Math.max(0, n - 1)); // le swipe annulé ne compte plus
-    x.set(0);
-    controls.set({ x: 0, opacity: 1 });
-    try {
-      await annulerSwipeListing(user.id, id);
-    } catch {
-      /* réseau */
+      // souci réseau : on n'interrompt pas la décision
     }
   }
 
   // Message direct à l'annonceur SANS attendre un match — réservé HeroSwiper
   const [contactEnCours, setContactEnCours] = useState(false);
-  async function messageDirect() {
-    if (!user || !current || contactEnCours) return;
+  async function messageDirect(listing: Listing | undefined) {
+    if (!user || !listing || contactEnCours) return;
     if (!estHero(profile)) {
       router.push("/boutique"); // fonctionnalité HeroSwiper
       return;
     }
     setContactEnCours(true);
     try {
-      const mid = await contacterDirect(current.id);
+      const mid = await contacterDirect(listing.id);
       if (mid) router.push(`/matchs/conversation/?id=${mid}`);
     } finally {
       setContactEnCours(false);
     }
   }
 
-  // Ajoute / retire l'annonce courante des favoris
-  async function basculerFavori() {
-    if (!user || !current) return;
-    const id = current.id;
+  // Ajoute / retire une annonce des favoris
+  async function basculerFavori(listing: Listing | undefined) {
+    if (!user || !listing) return;
+    const id = listing.id;
     const estFav = favorisIds.has(id);
     setFavorisIds((prev) => {
       const n = new Set(prev);
@@ -317,16 +309,6 @@ export default function SwipeDeck() {
     } catch {
       /* réseau */
     }
-  }
-
-
-  function handleDragEnd(
-    _e: unknown,
-    info: { offset: { x: number }; velocity: { x: number } }
-  ) {
-    if (info.offset.x > 120 || info.velocity.x > 600) fly("right");
-    else if (info.offset.x < -120 || info.velocity.x < -600) fly("left");
-    else controls.start({ x: 0, transition: { type: "spring", stiffness: 300 } });
   }
 
   // Pendant le chargement des annonces depuis le serveur
@@ -403,9 +385,9 @@ export default function SwipeDeck() {
             <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
           )}
         </button>
-        {current && (
+        {active && (
           <button
-            onClick={() => partagerAnnonce(current)}
+            onClick={() => partagerAnnonce(active)}
             aria-label="Partager"
             title="Partager"
             className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
@@ -595,14 +577,14 @@ export default function SwipeDeck() {
               onClick={() => setFiltresOuverts(false)}
               className="bg-signature glow-pink mt-5 w-full rounded-full px-6 py-3 font-semibold text-white"
             >
-              Voir les {filtered.length} annonce{filtered.length > 1 ? "s" : ""}
+              Voir les {feed.length} annonce{feed.length > 1 ? "s" : ""}
             </button>
           </div>
         </div>
       )}
 
-      {/* ---------- Zone des cartes ---------- */}
-      {filtered.length === 0 ? (
+      {/* ---------- Zone des cartes (feed vertical TikTok) ---------- */}
+      {feed.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
           <p className="font-display text-3xl">C&apos;est tout pour l&apos;instant !</p>
           <p className="max-w-xs text-sm text-ink/70">
@@ -618,106 +600,114 @@ export default function SwipeDeck() {
           )}
         </div>
       ) : (
-        <>
-          {/* Pile de cartes (remplit l'écran) */}
-          <div className="relative w-full flex-1 min-h-0">
-            {next && (
-              <div className="absolute inset-0 scale-95 opacity-60">
-                <ListingCard
-                  listing={next}
-                  compat={compatAnnonce(profile, next)}
-                  flou={flou}
-                />
-              </div>
-            )}
+        <div className="relative w-full flex-1 min-h-0">
+          {/* Le défilement vertical fait passer d'une annonce à l'autre (snap).
+              Défiler ne décide rien : on peut remonter librement. */}
+          <div
+            ref={scrollRef}
+            onScroll={onScroll}
+            className="h-full snap-y snap-mandatory overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {feed.map((l, i) => {
+              const dec = decisions[l.id];
+              const proche = Math.abs(i - activeIndex) <= FENETRE;
+              return (
+                <div
+                  key={l.id}
+                  className="relative h-full w-full snap-start snap-always"
+                >
+                  {proche && (
+                    <>
+                      <div
+                        className="h-full w-full"
+                        onClick={() =>
+                          flou ? setPaywall(true) : setDetail(l)
+                        }
+                      >
+                        <ListingCard
+                          listing={l}
+                          compat={compatAnnonce(profile, l)}
+                          flou={flou}
+                        />
+                      </div>
 
-            <motion.div
-              key={current.id}
-              className="absolute inset-0 cursor-grab active:cursor-grabbing"
-              drag="x"
-              dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-              dragElastic={0.6}
-              onDragEnd={handleDragEnd}
-              onTap={() => (flou ? setPaywall(true) : setDetail(current))}
-              style={{ x, rotate }}
-              animate={controls}
-            >
-              <motion.div
-                style={{ opacity: likeOpacity }}
-                className="bg-signature absolute top-10 left-6 z-10 -rotate-12 rounded-xl px-4 py-2 text-lg font-extrabold text-white"
+                      {/* Marque "Aimé" / "Passé" si on a déjà décidé (revenir en
+                          arrière reste possible, l'annonce reste affichée). */}
+                      {dec && (
+                        <div
+                          className="pointer-events-none absolute left-5 top-20 z-20 -rotate-6 rounded-xl px-3 py-1.5 text-sm font-extrabold text-white shadow-lg"
+                          style={{
+                            backgroundImage:
+                              dec === "like"
+                                ? "linear-gradient(135deg,#34d399,#059669)"
+                                : "linear-gradient(135deg,#9ca3af,#4b5563)",
+                          }}
+                        >
+                          {dec === "like" ? "✓ Aimé" : "✕ Passé"}
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Colonne d'icônes à droite (style TikTok) : agit sur l'annonce visible */}
+          {active && !flou && (
+            <div className="absolute bottom-24 right-3 z-30 flex flex-col items-center gap-3">
+              <ColBtn
+                label="J'aime"
+                onClick={() => decider(active, "like")}
+                bg="linear-gradient(135deg,#34d399,#059669)"
               >
-                ÇA M&apos;INTÉRESSE
-              </motion.div>
-              <motion.div
-                style={{ opacity: nopeOpacity }}
-                className="absolute top-10 right-6 z-10 rotate-12 rounded-xl border-2 border-ink/70 px-4 py-2 text-lg font-extrabold text-ink"
+                <Check className="h-6 w-6" strokeWidth={3} />
+              </ColBtn>
+              <ColBtn
+                label="Passer"
+                onClick={() => decider(active, "pass")}
+                bg="linear-gradient(135deg,#f87171,#dc2626)"
               >
-                JE PASSE
-              </motion.div>
-
-              <ListingCard
-                listing={current}
-                compat={compatAnnonce(profile, current)}
-                flou={flou}
-              />
-            </motion.div>
-
-            {/* Bouton favori (signet) — posé sur la carte, hors zone de swipe */}
-            {!flou && current && (
-              <button
-                onClick={basculerFavori}
-                aria-label="Mettre en favori"
+                <X className="h-6 w-6" strokeWidth={2.5} />
+              </ColBtn>
+              <ColBtn
+                label="Message"
+                title="Message direct à l'annonceur (HeroSwiper)"
+                disabled={contactEnCours}
+                onClick={() => messageDirect(active)}
+                bg="linear-gradient(135deg,#3b82f6,#2563eb)"
+              >
+                <Send className="h-5 w-5" />
+              </ColBtn>
+              <ColBtn
+                label="Garder"
                 title="Mettre en favori"
-                className="absolute right-4 top-28 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-bg/80 text-violet shadow-md backdrop-blur-sm transition-transform hover:scale-110"
+                ghost
+                onClick={() => basculerFavori(active)}
               >
                 <Bookmark
                   className="h-5 w-5"
-                  fill={favorisIds.has(current.id) ? "currentColor" : "none"}
+                  fill={favorisIds.has(active.id) ? "currentColor" : "none"}
                 />
-              </button>
-            )}
-
-            {/* Boutons (couleurs codées en dégradé, tous la même taille) */}
-            <div className="absolute inset-x-0 bottom-8 z-20 flex items-center justify-center gap-4">
-              <button
-                onClick={annulerDernier}
-                disabled={!dernierSwipe}
-                aria-label="Annuler le dernier swipe"
-                title="Annuler"
-                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110 disabled:opacity-40"
-                style={{ backgroundImage: "linear-gradient(135deg,#9ca3af,#4b5563)" }}
+              </ColBtn>
+              <ColBtn
+                label="Partager"
+                ghost
+                onClick={() => partagerAnnonce(active)}
               >
-                <RotateCcw className="h-6 w-6" />
-              </button>
-              <button
-                onClick={() => fly("left")}
-                aria-label="Je passe"
-                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
-                style={{ backgroundImage: "linear-gradient(135deg,#f87171,#dc2626)" }}
-              >
-                <X className="h-6 w-6" strokeWidth={2.5} />
-              </button>
-              <button
-                onClick={() => fly("right")}
-                aria-label="Ça m'intéresse"
-                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110"
-                style={{ backgroundImage: "linear-gradient(135deg,#34d399,#059669)" }}
-              >
-                <Check className="h-7 w-7" strokeWidth={3} />
-              </button>
-              <button
-                onClick={messageDirect}
-                disabled={contactEnCours}
-                aria-label="Message direct (HeroSwiper)"
-                title="Message direct à l'annonceur (HeroSwiper)"
-                className="flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-transform hover:scale-110 disabled:opacity-60"
-                style={{ backgroundImage: "linear-gradient(135deg,#3b82f6,#2563eb)" }}
-              >
-                <Send className="h-6 w-6" />
-              </button>
+                <Share2 className="h-5 w-5" />
+              </ColBtn>
             </div>
-          </div>
-        </>
+          )}
+
+          {/* Indice : glisser vers le haut (seulement sur la 1re annonce) */}
+          {feed.length > 1 && activeIndex === 0 && !flou && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex flex-col items-center gap-0.5 text-ink/60">
+              <ChevronUp className="h-5 w-5 animate-bounce" />
+              <span className="text-xs font-medium">Glisse vers le haut</span>
+            </div>
+          )}
+        </div>
       )}
 
       {/* ---------- Annonce ouverte en grand (photos + détails) ---------- */}
@@ -726,12 +716,14 @@ export default function SwipeDeck() {
           listing={detail}
           onClose={() => setDetail(null)}
           onLike={() => {
+            const l = detail;
             setDetail(null);
-            fly("right");
+            decider(l, "like");
           }}
           onPass={() => {
+            const l = detail;
             setDetail(null);
-            fly("left");
+            decider(l, "pass");
           }}
         />
       )}
@@ -810,6 +802,52 @@ export default function SwipeDeck() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Bouton de la colonne d'actions (icône ronde + petit libellé dessous).
+// `ghost` = style clair (favori / partage) plutôt que dégradé coloré.
+function ColBtn({
+  onClick,
+  label,
+  title,
+  disabled,
+  ghost,
+  bg,
+  children,
+}: {
+  onClick: () => void;
+  label: string;
+  title?: string;
+  disabled?: boolean;
+  ghost?: boolean;
+  bg?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-1">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
+        disabled={disabled}
+        aria-label={label}
+        title={title ?? label}
+        className={
+          "flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+          (ghost
+            ? "bg-bg/90 text-violet ring-1 ring-ink/10 backdrop-blur-sm"
+            : "text-white ring-2 ring-white/40")
+        }
+        style={ghost ? undefined : { backgroundImage: bg }}
+      >
+        {children}
+      </button>
+      <span className="rounded-full bg-bg/70 px-1.5 text-[10px] font-semibold leading-tight text-ink/80 backdrop-blur-sm">
+        {label}
+      </span>
     </div>
   );
 }
