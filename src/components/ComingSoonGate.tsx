@@ -12,7 +12,7 @@ const CLE_ACCES = "flatswiper-acces-anticipe";
 
 // 🔓 Site OUVERT au public : mettre `true` pour réactiver la page "Bientôt disponible".
 // (true = site EN VEILLE — on reconstruit le web en site d'annonces ; l'app n'est jamais bloquée)
-const SITE_FERME = true;
+const SITE_FERME = false;
 
 export default function ComingSoonGate({
   children,
