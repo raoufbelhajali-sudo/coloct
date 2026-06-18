@@ -77,8 +77,9 @@ export default function ListingCard({
           {/* Dégradé bas */}
           <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-bg via-bg/85 to-transparent" />
 
-          {/* Infos clés (en laissant la place aux boutons en bas) */}
-          <div className="absolute inset-x-0 bottom-0 px-5 pb-24">
+          {/* Infos clés. pr-20 = on laisse la colonne d'icônes (à droite) libre
+              pour ne pas recouvrir le texte de l'annonce. */}
+          <div className="absolute inset-x-0 bottom-0 pb-24 pl-5 pr-20">
             <h2 className="font-display text-3xl font-semibold leading-tight">
               {listing.quartier || listing.ville}
             </h2>
