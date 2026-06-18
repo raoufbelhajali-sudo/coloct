@@ -90,12 +90,18 @@ export default function Onboarding({
   // Ce que le chercheur veut : "colocation" (chambre) ou "location" (logement entier)
   const [rechercheOffre, setRechercheOffre] = useState("colocation");
 
+  // Annonceur qui propose une COLOCATION = il vivra avec le coloc → on collecte
+  // son profil (pro + mode de vie). Annonceur LOCATION (ou agence) → parcours court.
+  const annonceurCohabite =
+    role === "locataire" && !estAgence && rechercheOffre === "colocation";
   const etapes: readonly string[] =
     role !== "locataire"
       ? ETAPES_COLOC
       : estAgence
         ? (["role", "statut", "prenom", "agence", "photo"] as const)
-        : (["role", "statut", "prenom", "photo"] as const);
+        : annonceurCohabite
+          ? (["role", "statut", "offre", "prenom", "photo", "toi", "bio", "interets", "modevie"] as const)
+          : (["role", "statut", "offre", "prenom", "photo"] as const);
   const etape: string = etapes[i] ?? "";
   const derniere = i === etapes.length - 1;
   const progression = Math.round(((i + 1) / etapes.length) * 100);
@@ -212,7 +218,7 @@ export default function Onboarding({
         quartiers,
         date_emmenagement: dateEmm || null,
         duree_coloc: dureeColoc || null,
-        recherche_offre: role === "locataire" ? null : rechercheOffre,
+        recherche_offre: rechercheOffre,
       })
       .eq("id", user.id);
     if (error) {
@@ -721,6 +727,35 @@ export default function Onboarding({
             )}
 
             {/* ---------- Recherche ---------- */}
+            {etape === "offre" && (
+              <Etape
+                titre="Que proposes-tu ?"
+                sous="Ça détermine les infos qu'on te demande."
+              >
+                <div className="grid gap-2">
+                  {([
+                    ["colocation", "Une chambre dans ma coloc", "Je vis sur place — on va cohabiter"],
+                    ["location", "Un logement entier", "En location — je n'y vis pas"],
+                  ] as const).map(([v, l, s]) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setRechercheOffre(v)}
+                      className={
+                        "flex flex-col items-start rounded-2xl border px-4 py-3 text-left transition-colors " +
+                        (rechercheOffre === v
+                          ? "border-pink bg-bleu-clair"
+                          : "border-ink/15 bg-panel hover:border-pink")
+                      }
+                    >
+                      <span className="font-semibold text-ink">{l}</span>
+                      <span className="text-sm text-ink/60">{s}</span>
+                    </button>
+                  ))}
+                </div>
+              </Etape>
+            )}
+
             {etape === "recherche" && (
               <Etape
                 titre="Ce que tu cherches"

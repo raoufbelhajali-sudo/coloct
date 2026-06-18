@@ -84,6 +84,10 @@ export default function ProfilPage() {
 
   const estLocataire = profile?.role === "locataire";
   const estAgence = profile?.est_agence ?? false;
+  // Profil "coloc" (pro + intérêts + mode de vie) requis pour les CHERCHEURS et
+  // les annonceurs qui proposent une COLOCATION (ils vont cohabiter).
+  // Annonceur LOCATION (logement entier, ne cohabite pas) → pas besoin.
+  const besoinProfilColoc = !estLocataire || rechercheOffre === "colocation";
   const retour = "/parametres"; // on arrive ici depuis les Réglages
 
   useEffect(() => {
@@ -100,7 +104,7 @@ export default function ProfilPage() {
         genre: genre || null,
         profession: profession.trim() || null,
         metier: metier || null,
-        recherche_offre: estLocataire ? null : rechercheOffre,
+        recherche_offre: rechercheOffre,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
@@ -227,7 +231,7 @@ export default function ProfilPage() {
       return;
     }
 
-    if (interets.length < 3 || ambiance.length < 3 || rythme.length < 3) {
+    if (besoinProfilColoc && (interets.length < 3 || ambiance.length < 3 || rythme.length < 3)) {
       setErreurSave(
         "Choisis au moins 3 centres d'intérêt, 3 ambiances et 3 rythmes."
       );
@@ -246,7 +250,7 @@ export default function ProfilPage() {
         genre: genre || null,
         profession: profession.trim() || null,
         metier: metier || null,
-        recherche_offre: estLocataire ? null : rechercheOffre,
+        recherche_offre: rechercheOffre,
         salaire: sansSalaire ? "Non communiqué" : salaire || null,
         bio: bio.trim() || null,
         interets,
@@ -541,8 +545,8 @@ export default function ProfilPage() {
               </div>
             )}
             <ChoixUnique label="Genre" options={GENRES} value={genre} onChange={setGenre} required={!estLocataire} />
-            {/* Salaire : colocataire (candidat) uniquement */}
-            {!estLocataire && (
+            {/* Salaire : candidats + annonceurs qui cohabitent (colocation) */}
+            {besoinProfilColoc && (
               <div>
                 <label className={"text-sm " + (!salaire && !sansSalaire ? "font-semibold text-[#dc2626]" : "text-ink/70")}>
                   Tranche de salaire (net / mois){!salaire && !sansSalaire ? " · obligatoire" : ""}
@@ -563,6 +567,8 @@ export default function ProfilPage() {
             )}
           </Section>
 
+          {besoinProfilColoc && (
+          <>
           {/* ---------- À propos ---------- */}
           <Section titre="À propos de moi" id="sec-apropos" forceOuvert={sectionCible === "sec-apropos"}>
             <div>
@@ -639,6 +645,8 @@ export default function ProfilPage() {
             </div>
             <ChoixMultiple label="Langues parlées" options={LANGUES} values={langues} onToggle={(v) => toggle(langues, setLangues, v)} />
           </Section>
+          </>
+          )}
             </>
           )}
 
