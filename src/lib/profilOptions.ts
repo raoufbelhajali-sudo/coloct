@@ -231,7 +231,7 @@ export const METIERS = [
 // Statut de l'annonceur vis-à-vis du logement
 export const STATUTS_ANNONCEUR = [
   "Propriétaire",
-  "Locataire (sous-location)",
+  "Colocataire",
 ];
 
 // Infos annonce

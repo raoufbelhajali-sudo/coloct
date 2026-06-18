@@ -100,8 +100,8 @@ export default function Onboarding({
       : estAgence
         ? (["role", "statut", "prenom", "agence", "photo"] as const)
         : annonceurCohabite
-          ? (["role", "statut", "offre", "prenom", "photo", "toi", "bio", "interets", "modevie"] as const)
-          : (["role", "statut", "offre", "prenom", "photo"] as const);
+          ? (["role", "offre", "statut", "prenom", "photo", "toi", "bio", "interets", "modevie"] as const)
+          : (["role", "offre", "prenom", "photo"] as const);
   const etape: string = etapes[i] ?? "";
   const derniere = i === etapes.length - 1;
   const progression = Math.round(((i + 1) / etapes.length) * 100);
@@ -338,7 +338,7 @@ export default function Onboarding({
                   />
                   <CarteRole
                     titre="Proposer mon logement"
-                    sous="J'ai une chambre à partager (annonceur)"
+                    sous="J'ai un logement à louer ou partager (annonceur)"
                     icon={<KeyRound className="h-7 w-7 text-violet" />}
                     actif={role === "locataire"}
                     onClick={() => setRole("locataire")}
@@ -347,11 +347,11 @@ export default function Onboarding({
               </Etape>
             )}
 
-            {/* ---------- Statut annonceur (Propriétaire / Locataire / Agence) ---------- */}
+            {/* ---------- Statut annonceur (colocation) : Propriétaire / Colocataire ---------- */}
             {etape === "statut" && (
               <Etape
                 titre="Tu es…"
-                sous="On adapte ton profil en conséquence."
+                sous="Le proprio du logement, ou un colocataire déjà en place ?"
               >
                 <ChoixUnique
                   options={STATUTS_ANNONCEUR}
