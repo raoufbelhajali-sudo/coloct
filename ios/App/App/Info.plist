@@ -25,6 +25,8 @@
 	<string>FlatSwiper utilise le micro pour enregistrer des messages vocaux dans la messagerie.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>FlatSwiper utilise ta position pour remplir automatiquement ta ville lors de l'inscription.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>FlatSwiper utilise ta position pour remplir automatiquement ta ville lors de l'inscription.</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
