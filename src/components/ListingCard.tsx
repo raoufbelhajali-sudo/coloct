@@ -52,7 +52,7 @@ export default function ListingCard({
           {/* Badges haut-droite : type d'offre (pin) + meublé */}
           <div className="absolute top-4 right-4 flex flex-col items-end gap-2">
             {(listing.typeOffre ?? "colocation") === "location" ? (
-              <div className="flex items-center gap-1 rounded-full bg-[#2563eb] px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+              <div className="flex items-center gap-1 rounded-full bg-ink px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
                 <KeyRound className="h-3.5 w-3.5" /> Location
               </div>
             ) : (
@@ -60,7 +60,7 @@ export default function ListingCard({
                 <Users className="h-3.5 w-3.5" /> Colocation
               </div>
             )}
-            <div className="rounded-full bg-bg/70 px-3 py-2 text-xs font-medium text-ink backdrop-blur-sm">
+            <div className="rounded-full bg-ink px-3 py-2 text-xs font-medium text-white shadow-lg">
               {listing.meuble ? "Meublé" : "Non meublé"}
             </div>
           </div>
