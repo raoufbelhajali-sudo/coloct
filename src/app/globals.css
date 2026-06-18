@@ -45,6 +45,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Champ "date" : sur iPhone, le champ date natif garde une largeur minimale
+   intrinsèque et ignore width:100% → il déborde à droite de l'écran. On force
+   l'appearance + min/max-width pour qu'il reste dans son conteneur. */
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Typographie homogène : les titres en Fraunces (.font-display) sont gras par
    défaut — évite les titres "fins" (poids 400) involontaires à côté des gras.
    Les classes explicites (font-semibold / font-bold) restent prioritaires. */
