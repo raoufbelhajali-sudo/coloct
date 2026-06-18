@@ -653,49 +653,44 @@ export default function SwipeDeck() {
             })}
           </div>
 
-          {/* Colonne d'icônes à droite (style TikTok) : agit sur l'annonce visible */}
+          {/* Colonne d'icônes à droite (style TikTok) : agit sur l'annonce visible.
+              Ordre inversé : le J'aime est tout en bas (sous le pouce). */}
           {active && !flou && (
-            <div className="absolute bottom-24 right-3 z-30 flex flex-col items-center gap-3">
-              <ColBtn
-                label="J'aime"
-                onClick={() => decider(active, "like")}
-                bg="linear-gradient(135deg,#34d399,#059669)"
-              >
-                <Check className="h-6 w-6" strokeWidth={3} />
+            <div className="absolute bottom-24 right-3 z-30 flex flex-col items-center gap-2.5">
+              <ColBtn label="Partager" onClick={() => partagerAnnonce(active)}>
+                <Share2 className="h-[18px] w-[18px]" />
               </ColBtn>
               <ColBtn
-                label="Passer"
-                onClick={() => decider(active, "pass")}
-                bg="linear-gradient(135deg,#f87171,#dc2626)"
+                label="Garder"
+                title="Mettre en favori"
+                onClick={() => basculerFavori(active)}
               >
-                <X className="h-6 w-6" strokeWidth={2.5} />
+                <Bookmark
+                  className="h-[18px] w-[18px]"
+                  fill={favorisIds.has(active.id) ? "currentColor" : "none"}
+                />
               </ColBtn>
               <ColBtn
                 label="Message"
                 title="Message direct à l'annonceur (HeroSwiper)"
                 disabled={contactEnCours}
                 onClick={() => messageDirect(active)}
-                bg="linear-gradient(135deg,#3b82f6,#2563eb)"
               >
-                <Send className="h-5 w-5" />
+                <Send className="h-[18px] w-[18px]" />
               </ColBtn>
               <ColBtn
-                label="Garder"
-                title="Mettre en favori"
-                ghost
-                onClick={() => basculerFavori(active)}
+                label="Passer"
+                symbolClass="text-[#fa5252]"
+                onClick={() => decider(active, "pass")}
               >
-                <Bookmark
-                  className="h-5 w-5"
-                  fill={favorisIds.has(active.id) ? "currentColor" : "none"}
-                />
+                <X className="h-5 w-5" strokeWidth={3} />
               </ColBtn>
               <ColBtn
-                label="Partager"
-                ghost
-                onClick={() => partagerAnnonce(active)}
+                label="J'aime"
+                symbolClass="text-[#14b8a6]"
+                onClick={() => decider(active, "like")}
               >
-                <Share2 className="h-5 w-5" />
+                <Check className="h-5 w-5" strokeWidth={3} />
               </ColBtn>
             </div>
           )}
@@ -806,48 +801,39 @@ export default function SwipeDeck() {
   );
 }
 
-// Bouton de la colonne d'actions (icône ronde + petit libellé dessous).
-// `ghost` = style clair (favori / partage) plutôt que dégradé coloré.
+// Bouton de la colonne d'actions : pastille noire remplie, symbole blanc par
+// défaut. `symbolClass` permet de teinter le symbole (turquoise pour J'aime,
+// corail pour Passer) tout en gardant le remplissage noir.
 function ColBtn({
   onClick,
   label,
   title,
   disabled,
-  ghost,
-  bg,
+  symbolClass = "text-white",
   children,
 }: {
   onClick: () => void;
   label: string;
   title?: string;
   disabled?: boolean;
-  ghost?: boolean;
-  bg?: string;
+  symbolClass?: string;
   children: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-1">
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onClick();
-        }}
-        disabled={disabled}
-        aria-label={label}
-        title={title ?? label}
-        className={
-          "flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
-          (ghost
-            ? "bg-bg/90 text-violet ring-1 ring-ink/10 backdrop-blur-sm"
-            : "text-white ring-2 ring-white/40")
-        }
-        style={ghost ? undefined : { backgroundImage: bg }}
-      >
-        {children}
-      </button>
-      <span className="rounded-full bg-bg/70 px-1.5 text-[10px] font-semibold leading-tight text-ink/80 backdrop-blur-sm">
-        {label}
-      </span>
-    </div>
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      disabled={disabled}
+      aria-label={label}
+      title={title ?? label}
+      className={
+        "flex h-10 w-10 items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+        symbolClass
+      }
+    >
+      {children}
+    </button>
   );
 }
