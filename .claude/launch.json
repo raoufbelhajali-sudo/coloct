@@ -36,6 +36,15 @@
         "export PATH=\"$HOME/.nvm/versions/node/v24.16.0/bin:$PATH\"; cd /Users/raoufbelhajali/Documents/monrdv; exec npx next dev -H 0.0.0.0 -p 3003"
       ],
       "port": 3003
+    },
+    {
+      "name": "pepite",
+      "runtimeExecutable": "/bin/zsh",
+      "runtimeArgs": [
+        "-c",
+        "export PATH=\"$HOME/.nvm/versions/node/v24.16.0/bin:$PATH\"; cd /Users/raoufbelhajali/Documents/pepite; exec npx next dev -H 0.0.0.0 -p 3004"
+      ],
+      "port": 3004
     }
   ]
 }
