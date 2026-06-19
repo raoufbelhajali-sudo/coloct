@@ -6,12 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 /* ============================================================
    Intro d'accueil (onboarding) — site web uniquement.
    Fond noir, le cercle bleu du logo qui "respire" (grandit /
-   diminue), puis le slogan animé « Swipe. / Matche. / Emménage. ».
-   Durée totale : 4 secondes, puis on découvre le site.
+   diminue) à l'infini, le slogan animé « Swipe. / Matche. /
+   Emménage. », puis en bas le logo « FlatSwiper » (texte) avec
+   un message « Rejoins-nous ».
+   L'intro ne s'arrête JAMAIS toute seule : on entre sur le site
+   en cliquant (sur le bouton du bas ou n'importe où).
    S'affiche une fois par session (sessionStorage).
    ============================================================ */
 
-const DUREE_MS = 4000; // 4 secondes
 const CLE = "fs-intro-vu";
 
 export default function IntroAccueil() {
@@ -25,12 +27,13 @@ export default function IntroAccueil() {
       return;
     }
     setVisible(true);
-    const t = setTimeout(() => {
-      sessionStorage.setItem(CLE, "1");
-      setVisible(false);
-    }, DUREE_MS);
-    return () => clearTimeout(t);
+    // Pas de minuterie : l'intro reste affichée tant qu'on n'entre pas.
   }, []);
+
+  function entrer() {
+    sessionStorage.setItem(CLE, "1");
+    setVisible(false);
+  }
 
   // Lignes du slogan : couleur + délai d'apparition
   const lignes = [
@@ -43,15 +46,11 @@ export default function IntroAccueil() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          // on autorise à passer l'intro en cliquant
-          onClick={() => {
-            sessionStorage.setItem(CLE, "1");
-            setVisible(false);
-          }}
+          onClick={entrer}
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center gap-8 bg-black"
+          className="fixed inset-0 z-[100] flex cursor-pointer flex-col items-center justify-center gap-8 bg-black px-6"
         >
           {/* Cercle du logo : anneau dégradé bleu + centre bleu nuit qui pulse */}
           <motion.div
@@ -69,7 +68,7 @@ export default function IntroAccueil() {
               </defs>
               {/* Anneau dégradé (fixe) */}
               <circle cx="50" cy="50" r="50" fill="url(#introRing)" />
-              {/* Centre bleu nuit qui grandit et diminue (respiration) */}
+              {/* Centre bleu nuit qui grandit et diminue (respiration), sans fin */}
               <motion.circle
                 cx="50"
                 cy="50"
@@ -82,20 +81,40 @@ export default function IntroAccueil() {
             </svg>
           </motion.div>
 
-          {/* Slogan animé */}
-          <h1 className="text-center font-display text-5xl font-bold leading-[1.05] sm:text-6xl">
+          {/* Slogan animé — leading + padding pour ne pas couper les jambages (g) */}
+          <h1 className="pb-2 text-center font-display text-5xl font-bold leading-[1.18] sm:text-6xl">
             {lignes.map((l) => (
               <motion.span
                 key={l.mot}
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: l.delai, ease: "easeOut" }}
-                className={"block " + l.cls}
+                className={"block pb-[0.12em] " + l.cls}
               >
                 {l.mot}
               </motion.span>
             ))}
           </h1>
+
+          {/* Bas : logo texte « FlatSwiper » + message « Rejoins-nous » */}
+          <motion.button
+            type="button"
+            onClick={entrer}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: [0, -6, 0] }}
+            transition={{
+              opacity: { duration: 0.6, delay: 2.4 },
+              y: { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 2.4 },
+            }}
+            className="absolute bottom-12 flex flex-col items-center gap-1"
+          >
+            <span className="text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
+              Rejoins-nous
+            </span>
+            <span className="font-display text-3xl font-bold italic text-white">
+              FlatSwiper
+            </span>
+          </motion.button>
         </motion.div>
       )}
     </AnimatePresence>
