@@ -7,6 +7,7 @@ import { MessageCircle, Plus, X, Tag, Monitor } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import SiteHeader from "@/components/SiteHeader";
 import AppHeader from "@/components/AppHeader";
+import AvertissementCoordonnees from "@/components/AvertissementCoordonnees";
 import { getSujets, creerSujet, CATEGORIES_FORUM, type Sujet } from "@/lib/forum";
 
 // Le blog est accessible partout : ordinateur, mobile web et application.
@@ -98,6 +99,8 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
+      {/* Rappel à l'ouverture du blog : pas d'annonces ni de coordonnées */}
+      <AvertissementCoordonnees />
       {dansApp ? (
         <div className="flex flex-col items-center px-4 pt-5">
           <AppHeader />

@@ -20,7 +20,6 @@ import { contacterDirect } from "@/lib/offers";
 import { findMatchForListing } from "@/lib/swipes";
 import ProfileDetail from "@/components/ProfileDetail";
 import MiniMap from "@/components/MiniMap";
-import AvertissementCoordonnees from "@/components/AvertissementCoordonnees";
 
 // Vue détaillée d'une annonce (toutes les photos + infos), plein écran défilable.
 export default function ListingDetail({
@@ -92,7 +91,6 @@ export default function ListingDetail({
     <>
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">
       <div className="relative flex h-full w-full max-w-md flex-col bg-panel">
-        <AvertissementCoordonnees />
         {/* Zone défilable */}
         <div className={"flex-1 overflow-y-auto " + (preview ? "pb-8" : "pb-28")}>
           {/* Galerie de photos (défilement horizontal) */}
