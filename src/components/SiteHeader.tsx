@@ -76,7 +76,7 @@ export default function SiteHeader() {
 
           {user ? (
             /* Connecté → retour direct dans l'app */
-            <Link href={espaceHref} className="bg-metal glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
+            <Link href={espaceHref} className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
               <Home className="h-4 w-4" /> Mon espace
             </Link>
           ) : (
