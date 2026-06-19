@@ -16,9 +16,9 @@ export default function FondAccueil() {
     const body = document.body;
     function appliquer() {
       if (mqPc.matches) {
-        // Voile blanc à 50% par-dessus = image atténuée (~50% d'opacité).
+        // Voile blanc à 70% par-dessus = image atténuée (~30% d'opacité).
         body.style.backgroundImage =
-          "linear-gradient(rgba(255,255,255,0.5), rgba(255,255,255,0.5)), url(/fond-coloc.jpg)";
+          "linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url(/fond-coloc.jpg)";
         body.style.backgroundSize = "cover";
         body.style.backgroundPosition = "center";
         body.style.backgroundAttachment = "fixed";
