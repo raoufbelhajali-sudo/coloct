@@ -352,19 +352,23 @@ export default function SwipeDeck() {
     resetDeck();
   }
 
-  // Quand le feed devient vide ALORS que des filtres sont actifs, on ouvre
-  // automatiquement le panneau de filtres pour proposer de réinitialiser.
+  // Ouverture AUTO du panneau de filtres uniquement quand l'utilisateur a
+  // PARCOURU toutes les annonces correspondant à ses critères (toutes décidées),
+  // pas à l'arrivée / à la connexion. On exige au moins une décision faite.
   const popupVideOuvert = useRef(false);
   useEffect(() => {
-    if (feed.length > 0) {
-      popupVideOuvert.current = false; // réarme pour la prochaine fois
+    if (chargement) return;
+    const restantes = feed.filter((l) => !decisions[l.id]).length;
+    if (restantes > 0) {
+      popupVideOuvert.current = false; // il reste des annonces → on réarme
       return;
     }
-    if (!chargement && filtresActifs && !popupVideOuvert.current) {
+    const aDecide = Object.keys(decisions).length > 0; // a réellement swipé
+    if (aDecide && filtresActifs && !popupVideOuvert.current) {
       popupVideOuvert.current = true;
       setFiltresOuverts(true);
     }
-  }, [feed.length, chargement, filtresActifs]);
+  }, [feed, decisions, chargement, filtresActifs]);
 
   // J'aime / Je passe sur une annonce, puis on enchaîne sur la suivante.
   // (Le simple défilement, lui, ne décide rien : on peut revenir en arrière.)
@@ -507,11 +511,11 @@ export default function SwipeDeck() {
       {/* ---------- Filtres (pop-up) ---------- */}
       {filtresOuverts && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-bg/70 backdrop-blur-sm sm:items-center sm:p-6"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-bg/70 p-4 backdrop-blur-sm sm:p-6"
           onClick={() => setFiltresOuverts(false)}
         >
           <div
-            className="w-full max-w-sm rounded-t-3xl bg-panel p-5 sm:rounded-3xl"
+            className="max-h-[88vh] w-full max-w-sm overflow-y-auto rounded-3xl bg-panel p-5"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-4 flex items-center justify-between">
