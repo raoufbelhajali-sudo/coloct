@@ -530,7 +530,7 @@ export default function SwipeDeck() {
   }
 
   return (
-    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[38rem] lg:overflow-hidden lg:rounded-3xl lg:shadow-2xl">
+    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[38rem]">
 
       {/* ---------- Filtres (pop-up) ---------- */}
       {filtresOuverts && (

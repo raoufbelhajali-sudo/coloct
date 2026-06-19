@@ -14,7 +14,7 @@ export default function ListingCard({
   flou?: boolean;
 }) {
   return (
-    <div className="relative h-full w-full select-none overflow-hidden bg-panel">
+    <div className="relative h-full w-full select-none overflow-hidden rounded-2xl bg-panel lg:shadow-2xl">
       {/* Photo principale */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
