@@ -3,10 +3,10 @@
 import { useEffect } from "react";
 import { Capacitor } from "@capacitor/core";
 
-// Fond des pages de l'app sur PC : dégradé bleu → turquoise posé sur le body
-// (couche de base). Les pages de l'app ont un <main> transparent → le dégradé
-// apparaît autour du contenu centré. Les pages publiques (accueil, blog…) ont
-// un fond blanc opaque → elles restent blanches. Rien sur mobile web ni app
+// Fond des pages de l'app sur PC : illustration « carte » (maisons corail/bleues)
+// posée sur le body (couche de base, fixée au défilement). Les pages de l'app
+// ont un <main> transparent → l'image apparaît autour du contenu centré. Les
+// pages publiques (fond opaque) restent blanches. Rien sur mobile web ni app
 // native.
 export default function FondAccueil() {
   useEffect(() => {
@@ -16,12 +16,13 @@ export default function FondAccueil() {
     const body = document.body;
     function appliquer() {
       if (mqPc.matches) {
-        body.style.backgroundImage =
-          "linear-gradient(135deg, #2563eb, #14b8a6)";
+        body.style.backgroundImage = "url(/fond-map.jpg)";
+        body.style.backgroundSize = "cover";
+        body.style.backgroundPosition = "center";
         body.style.backgroundAttachment = "fixed";
+        body.style.backgroundRepeat = "no-repeat";
       } else {
         body.style.backgroundImage = "";
-        body.style.backgroundAttachment = "";
       }
     }
     appliquer();
@@ -29,7 +30,6 @@ export default function FondAccueil() {
     return () => {
       mqPc.removeEventListener("change", appliquer);
       body.style.backgroundImage = "";
-      body.style.backgroundAttachment = "";
     };
   }, []);
 
