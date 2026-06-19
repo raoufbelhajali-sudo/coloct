@@ -155,7 +155,7 @@ export default function ComptePage() {
       )}
       <AppHeader />
 
-      <div className="w-full max-w-md lg:max-w-[38rem]">
+      <div className="w-full max-w-md lg:max-w-[38rem] lg:rounded-3xl lg:bg-bg lg:p-6 lg:shadow-2xl">
         <button
           onClick={() => router.push("/parametres")}
           className="mb-4 inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink"

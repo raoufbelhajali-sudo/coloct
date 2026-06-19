@@ -38,7 +38,7 @@ export default function FavorisPage() {
     <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">
       <AppHeader />
 
-      <div className="w-full max-w-sm lg:max-w-[38rem]">
+      <div className="w-full max-w-sm lg:max-w-[38rem] lg:rounded-3xl lg:bg-bg lg:p-6 lg:shadow-2xl">
         <h1 className="font-display text-3xl font-bold mb-5">Mes favoris</h1>
 
         {chargement ? (

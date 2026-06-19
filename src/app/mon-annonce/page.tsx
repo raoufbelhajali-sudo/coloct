@@ -79,7 +79,7 @@ export default function MonAnnoncePage() {
     <main className="flex min-h-dvh flex-col items-center px-4 pb-28 pt-5">
       <AppHeader />
 
-      <div className="w-full max-w-md lg:max-w-[38rem]">
+      <div className="w-full max-w-md lg:max-w-[38rem] lg:rounded-3xl lg:bg-bg lg:p-6 lg:shadow-2xl">
         <h1 className="mb-5 font-display text-3xl font-bold">
           {mode === "creer"
             ? "Nouvelle annonce"

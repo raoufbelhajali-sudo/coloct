@@ -299,7 +299,7 @@ export default function ProfilPage() {
       )}
       <AppHeader />
 
-      <div className="w-full max-w-md lg:max-w-[38rem]">
+      <div className="w-full max-w-md lg:max-w-[38rem] lg:rounded-3xl lg:bg-bg lg:p-6 lg:shadow-2xl">
         <div className="mb-1 flex items-center justify-between gap-2">
           <h1 className="font-display text-3xl font-bold">Mon profil</h1>
           <div className="flex shrink-0 items-center gap-1.5">

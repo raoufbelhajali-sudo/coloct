@@ -174,7 +174,7 @@ export default function ParametresPage() {
       {/* Barre de navigation du bas (toujours visible) */}
       <AppHeader />
 
-      <div className="w-full max-w-md lg:max-w-[38rem]">
+      <div className="w-full max-w-md lg:max-w-[38rem] lg:rounded-3xl lg:bg-bg lg:p-6 lg:shadow-2xl">
         <h1 className="font-display text-3xl font-bold">Paramètres</h1>
         <p className="mt-1 mb-6 text-ink/60">
           Gère ton compte et tes préférences.

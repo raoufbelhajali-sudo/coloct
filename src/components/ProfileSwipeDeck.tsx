@@ -241,7 +241,7 @@ export default function ProfileSwipeDeck({
   }
 
   return (
-    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[38rem]">
+    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[38rem] lg:overflow-hidden lg:rounded-3xl lg:shadow-2xl">
       {feed.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
           <p className="font-display text-2xl">Aucun profil pour l&apos;instant</p>
