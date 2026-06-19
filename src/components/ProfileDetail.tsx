@@ -6,6 +6,7 @@ import type { Profile } from "@/lib/auth";
 import { estSuperProfil } from "@/lib/completude";
 import { estActifRecemment } from "@/lib/activite";
 import { getNoteMoyenne } from "@/lib/reviews";
+import AvertissementCoordonnees from "@/components/AvertissementCoordonnees";
 
 // Vue détaillée d'un profil colocataire (plein écran, défilable)
 export default function ProfileDetail({
@@ -42,6 +43,7 @@ export default function ProfileDetail({
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-bg/90 backdrop-blur-sm">
       <div className="relative flex h-full w-full max-w-md flex-col bg-panel">
+        <AvertissementCoordonnees />
         {/* Zone défilable */}
         <div className={"flex-1 overflow-y-auto " + (preview ? "pb-8" : "pb-28")}>
           {/* Photo / dégradé */}
