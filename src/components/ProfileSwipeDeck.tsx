@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Check, X, Eye, Rocket, Send, Hand, ChevronUp } from "lucide-react";
+import { Check, X, Eye, Rocket, Send, Hand, ChevronUp, BellRing } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import type { Profile } from "@/lib/auth";
 import {
@@ -92,6 +92,24 @@ export default function ProfileSwipeDeck({
     return () => clearTimeout(t);
   }, [hintTap]);
 
+  // Petit pop-up « Locataire/Colocataire notifié » sur les 3 premiers likes.
+  const [notifLike, setNotifLike] = useState<string | null>(null);
+  function notifierSi3PremiersLikes(message: string) {
+    try {
+      const n = parseInt(localStorage.getItem("fs-likenotif-annonceur") || "0", 10);
+      if (n >= 3) return;
+      localStorage.setItem("fs-likenotif-annonceur", String(n + 1));
+    } catch {
+      return;
+    }
+    setNotifLike(message);
+  }
+  useEffect(() => {
+    if (!notifLike) return;
+    const t = setTimeout(() => setNotifLike(null), 2600);
+    return () => clearTimeout(t);
+  }, [notifLike]);
+
   useEffect(() => {
     if (!user) return;
     Promise.all([
@@ -155,7 +173,15 @@ export default function ProfileSwipeDeck({
       return;
     }
     vibrer(dir === "like" ? ImpactStyle.Medium : ImpactStyle.Light);
-    if (dir === "like") sonLike();
+    if (dir === "like") {
+      sonLike();
+      // Locataire (cherche une location) ou colocataire (cherche une colocation)
+      const cherche =
+        (p.recherche_offre ?? "colocation") === "location"
+          ? "Locataire"
+          : "Colocataire";
+      notifierSi3PremiersLikes(`${cherche} notifié`);
+    }
 
     setDecisions((d) => ({ ...d, [p.id]: dir }));
     setSwipesAujourdhui((n) => n + 1);
@@ -324,6 +350,16 @@ export default function ProfileSwipeDeck({
               <span className="rounded-full bg-ink/85 px-4 py-2 text-sm font-bold text-white shadow-lg">
                 Touche pour voir
               </span>
+            </div>
+          )}
+
+          {/* Pop-up « Locataire/Colocataire notifié » (3 premiers likes) */}
+          {notifLike && (
+            <div className="pointer-events-none absolute inset-x-0 top-4 z-40 flex justify-center px-4">
+              <div className="flex items-center gap-2 rounded-full bg-ink/90 px-4 py-2 text-sm font-semibold text-white shadow-lg backdrop-blur">
+                <BellRing className="h-4 w-4 text-[#14b8a6]" />
+                {notifLike}
+              </div>
             </div>
           )}
         </div>

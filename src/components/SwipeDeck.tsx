@@ -15,6 +15,7 @@ import {
   Send,
   ChevronUp,
   Hand,
+  BellRing,
 } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
@@ -161,6 +162,24 @@ export default function SwipeDeck() {
     const t = setTimeout(() => fermerHintTap(), 5000);
     return () => clearTimeout(t);
   }, [hintTap]);
+
+  // Petit pop-up « L'annonceur est notifié » sur les 3 premiers likes seulement.
+  const [notifLike, setNotifLike] = useState<string | null>(null);
+  function notifierSi3PremiersLikes(message: string) {
+    try {
+      const n = parseInt(localStorage.getItem("fs-likenotif-chercheur") || "0", 10);
+      if (n >= 3) return;
+      localStorage.setItem("fs-likenotif-chercheur", String(n + 1));
+    } catch {
+      return;
+    }
+    setNotifLike(message);
+  }
+  useEffect(() => {
+    if (!notifLike) return;
+    const t = setTimeout(() => setNotifLike(null), 2600);
+    return () => clearTimeout(t);
+  }, [notifLike]);
 
   // Pas connecté → direction la page de connexion
   useEffect(() => {
@@ -386,7 +405,10 @@ export default function SwipeDeck() {
 
     // Retour immédiat : vibration (mobile) + petit son sur le like (PC)
     vibrer(dir === "like" ? ImpactStyle.Medium : ImpactStyle.Light);
-    if (dir === "like") sonLike();
+    if (dir === "like") {
+      sonLike();
+      notifierSi3PremiersLikes("L'annonceur est notifié");
+    }
 
     setDecisions((d) => ({ ...d, [listing.id]: dir }));
     setSwipedIds((prev) => new Set(prev).add(listing.id));
@@ -864,6 +886,16 @@ export default function SwipeDeck() {
               <span className="rounded-full bg-ink/85 px-4 py-2 text-sm font-bold text-white shadow-lg">
                 Touche pour voir
               </span>
+            </div>
+          )}
+
+          {/* Pop-up « L'annonceur est notifié » (3 premiers likes) */}
+          {notifLike && (
+            <div className="pointer-events-none absolute inset-x-0 top-4 z-40 flex justify-center px-4">
+              <div className="flex items-center gap-2 rounded-full bg-ink/90 px-4 py-2 text-sm font-semibold text-white shadow-lg backdrop-blur">
+                <BellRing className="h-4 w-4 text-[#14b8a6]" />
+                {notifLike}
+              </div>
             </div>
           )}
         </div>
