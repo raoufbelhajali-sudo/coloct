@@ -132,9 +132,15 @@ export default function SwipeDeck() {
       .finally(() => setChargement(false));
   }, [user]);
 
-  // On pré-remplit les filtres depuis le profil du compte connecté
+  // On pré-remplit les filtres depuis le profil — UNE SEULE FOIS, au premier
+  // chargement. Sinon, un rechargement du profil (rafraîchissement de token
+  // Supabase, refocus de l'onglet…) relancerait cet effet et réappliquerait
+  // budget/date, écrasant les filtres réglés par l'utilisateur (ex: après un
+  // « Réinitialiser les filtres », les annonces disparaîtraient à nouveau).
+  const filtresInitialises = useRef(false);
   useEffect(() => {
-    if (!profile) return;
+    if (!profile || filtresInitialises.current) return;
+    filtresInitialises.current = true;
     if (profile.budget_max) {
       const v = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, profile.budget_max));
       setBudgetMax(v);
