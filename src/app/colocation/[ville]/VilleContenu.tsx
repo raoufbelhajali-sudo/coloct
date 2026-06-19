@@ -28,11 +28,7 @@ export default function VilleContenu({ ville }: { ville: string }) {
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
       <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5">
-          <Link href="/annonces" aria-label="Annonces">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
+        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-end px-5">
           <Link
             href="/connexion"
             className="bg-metal rounded-full px-5 py-2.5 text-sm font-semibold text-white"
@@ -100,9 +96,7 @@ export default function VilleContenu({ ville }: { ville: string }) {
       </main>
 
       <footer className="border-t border-ink/10 bg-panel/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-5 py-8 text-center text-sm text-ink/60 md:flex-row md:justify-between md:text-left">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-5 py-8 text-center text-sm text-ink/60 md:flex-row md:justify-center md:text-left">
           <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link href="/annonces" className="hover:text-ink">
               Toutes les annonces

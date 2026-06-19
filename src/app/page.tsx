@@ -500,9 +500,7 @@ export default function Home() {
       <footer className="border-t border-ink/10 bg-panel/50">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-10 md:flex-row md:items-start md:justify-between">
           <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-            <p className="mt-2 max-w-xs text-sm text-ink/50">Trouve ta colocation ou ta location partout en France, en swipant.</p>
+            <p className="max-w-xs text-sm text-ink/50">Trouve ta colocation ou ta location partout en France, en swipant.</p>
           </div>
           <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/60">
             <Link href="/blog" className="hover:text-ink">Blog</Link>

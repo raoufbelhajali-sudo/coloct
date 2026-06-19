@@ -441,16 +441,7 @@ export default function ConnexionPage() {
       >
         <Home className="h-4 w-4" /> Accueil
       </Link>
-      <Link href="/" className="mb-3">
-        {/* Logo complet (symbole + nom) */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-full.png"
-          alt="FlatSwiper"
-          className="h-12 w-auto max-w-[70vw] object-contain"
-        />
-      </Link>
-      <p className="mb-8 text-center text-ink/60">
+      <p className="mb-8 mt-3 text-center text-ink/60">
         Connecte-toi ou crée ton compte en un geste.
       </p>
 

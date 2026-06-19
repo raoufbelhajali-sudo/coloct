@@ -218,9 +218,7 @@ function AnnoncesContenu() {
 
       {/* Footer */}
       <footer className="border-t border-ink/10 bg-panel/60">
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-5 py-8 text-center text-sm text-ink/60 md:flex-row md:justify-between md:text-left">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-full.png" alt="FlatSwiper" className="h-6 w-auto" />
+        <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-5 py-8 text-center text-sm text-ink/60 md:flex-row md:justify-center md:text-left">
           <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link href="/connexion" className="hover:text-ink">
               Se connecter
