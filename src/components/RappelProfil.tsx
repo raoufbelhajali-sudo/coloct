@@ -70,7 +70,7 @@ export default function RappelProfil() {
         <Link
           href="/profil"
           onClick={fermer}
-          className="bg-signature mt-5 flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 font-semibold text-white transition-transform hover:scale-[1.02]"
+          className="bg-metal mt-5 flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 font-semibold text-white transition-transform hover:scale-[1.02]"
         >
           Compléter mon profil
         </Link>

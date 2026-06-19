@@ -112,7 +112,7 @@ export default function InteressesListe({ titreVisible = true }: { titreVisible?
       {matchFait && (
         <Link
           href="/notifs?tab=messagerie"
-          className="bg-signature glow-pink fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-5 py-3 font-semibold text-white shadow-lg"
+          className="bg-metal glow-pink fixed bottom-6 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-full px-5 py-3 font-semibold text-white shadow-lg"
         >
           <Handshake className="h-5 w-5" /> C&apos;est un match ! Voir mes messages
         </Link>

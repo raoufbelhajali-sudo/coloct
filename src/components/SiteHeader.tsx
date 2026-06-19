@@ -68,7 +68,7 @@ export default function SiteHeader() {
 
           {user ? (
             /* Connecté → retour direct dans l'app */
-            <Link href={espaceHref} className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
+            <Link href={espaceHref} className="bg-metal glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
               <Home className="h-4 w-4" /> Mon espace
             </Link>
           ) : (
@@ -78,7 +78,7 @@ export default function SiteHeader() {
               transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 2.2, ease: "easeInOut" }}
               className="inline-block"
             >
-              <Link href="/connexion" className="bg-signature glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
+              <Link href="/connexion" className="bg-metal glow-pink flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white">
                 <Rocket className="h-4 w-4" /> Commencez ici
               </Link>
             </motion.div>

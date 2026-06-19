@@ -260,7 +260,7 @@ function AnnonceContenu() {
             )}
             <button
               onClick={() => setPopup(true)}
-              className="bg-signature glow-pink mt-4 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
+              className="bg-metal glow-pink mt-4 flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               <Check className="h-5 w-5" strokeWidth={3} /> Ça m&apos;intéresse
             </button>

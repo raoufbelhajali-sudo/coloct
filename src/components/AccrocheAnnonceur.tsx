@@ -57,7 +57,7 @@ export default function AccrocheAnnonceur() {
 
         <button
           onClick={fermer}
-          className="bg-signature mt-5 w-full rounded-full px-4 py-3 font-semibold text-white transition-transform hover:scale-[1.02]"
+          className="bg-metal mt-5 w-full rounded-full px-4 py-3 font-semibold text-white transition-transform hover:scale-[1.02]"
         >
           C&apos;est parti !
         </button>

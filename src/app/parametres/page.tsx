@@ -184,7 +184,7 @@ export default function ParametresPage() {
           {/* Modifier mon profil (première ligne) */}
           <Link
             href="/profil"
-            className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+            className="flex items-center gap-3 rounded-2xl bg-metal p-4 text-white transition-transform hover:brightness-110"
           >
             <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
               <UserRound className="h-5 w-5 text-white" />
@@ -193,17 +193,17 @@ export default function ParametresPage() {
               <span className="block font-display text-lg font-semibold">
                 Modifier mon profil
               </span>
-              <span className="block text-sm text-ink/55">
+              <span className="block text-sm text-white/70">
                 Photo, infos, centres d&apos;intérêt, mode de vie…
               </span>
             </span>
-            <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+            <ChevronRight className="h-5 w-5 shrink-0 text-white/60" />
           </Link>
 
           {/* Paramètres du compte (email, téléphone, mot de passe) */}
           <Link
             href="/compte"
-            className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+            className="flex items-center gap-3 rounded-2xl bg-metal p-4 text-white transition-transform hover:brightness-110"
           >
             <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
               <Lock className="h-5 w-5 text-white" />
@@ -212,17 +212,17 @@ export default function ParametresPage() {
               <span className="block font-display text-lg font-semibold">
                 Paramètres du compte
               </span>
-              <span className="block text-sm text-ink/55">
+              <span className="block text-sm text-white/70">
                 Email, téléphone et mot de passe
               </span>
             </span>
-            <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+            <ChevronRight className="h-5 w-5 shrink-0 text-white/60" />
           </Link>
 
           {/* Boutique (packs de swipes, boost, premium) */}
           <Link
             href="/boutique"
-            className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+            className="flex items-center gap-3 rounded-2xl bg-metal p-4 text-white transition-transform hover:brightness-110"
           >
             <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
               <Zap className="h-5 w-5 text-white" />
@@ -231,18 +231,18 @@ export default function ParametresPage() {
               <span className="block font-display text-lg font-semibold">
                 Boutique
               </span>
-              <span className="block text-sm text-ink/55">
+              <span className="block text-sm text-white/70">
                 Packs de swipes, boost et premium
               </span>
             </span>
-            <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+            <ChevronRight className="h-5 w-5 shrink-0 text-white/60" />
           </Link>
 
           {/* Mes favoris (colocataire uniquement) */}
           {!estAnnonceur && (
             <Link
               href="/favoris"
-              className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+              className="flex items-center gap-3 rounded-2xl bg-metal p-4 text-white transition-transform hover:brightness-110"
             >
               <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
                 <Bookmark className="h-5 w-5 text-white" />
@@ -251,11 +251,11 @@ export default function ParametresPage() {
                 <span className="block font-display text-lg font-semibold">
                   Mes favoris
                 </span>
-                <span className="block text-sm text-ink/55">
+                <span className="block text-sm text-white/70">
                   Les annonces que tu as sauvegardées
                 </span>
               </span>
-              <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+              <ChevronRight className="h-5 w-5 shrink-0 text-white/60" />
             </Link>
           )}
 
@@ -263,7 +263,7 @@ export default function ParametresPage() {
           {estAnnonceur && (
             <Link
               href="/mon-annonce"
-              className="flex items-center gap-3 rounded-2xl bg-panel p-4 transition-colors hover:bg-panel-2"
+              className="flex items-center gap-3 rounded-2xl bg-metal p-4 text-white transition-transform hover:brightness-110"
             >
               <span className="bg-signature flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
                 <Home className="h-5 w-5 text-white" />
@@ -272,11 +272,11 @@ export default function ParametresPage() {
                 <span className="block font-display text-lg font-semibold">
                   Mon annonce
                 </span>
-                <span className="block text-sm text-ink/55">
+                <span className="block text-sm text-white/70">
                   Voir, modifier ou booster ton logement
                 </span>
               </span>
-              <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
+              <ChevronRight className="h-5 w-5 shrink-0 text-white/60" />
             </Link>
           )}
 
@@ -294,7 +294,7 @@ export default function ParametresPage() {
             </p>
             <button
               onClick={changerRole}
-              className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
+              className="bg-metal mt-3 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold text-white"
             >
               <Repeat className="h-4 w-4" />
               Passer en mode {estAnnonceur ? "Co/locataire" : "Annonceur"}
@@ -348,7 +348,7 @@ export default function ParametresPage() {
             ) : (
               <button
                 onClick={activerNotifsAppareil}
-                className="bg-signature mt-3 rounded-full px-5 py-2 text-sm font-semibold text-white"
+                className="bg-metal mt-3 rounded-full px-5 py-2 text-sm font-semibold text-white"
               >
                 Activer les notifications
               </button>
@@ -382,7 +382,7 @@ export default function ParametresPage() {
                   Téléverse ta pièce d&apos;identité. Après vérification par notre
                   équipe, tu obtiendras le badge «&nbsp;Identité vérifiée&nbsp;».
                 </p>
-                <label className="bg-signature mt-3 inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white">
+                <label className="bg-metal mt-3 inline-flex cursor-pointer items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white">
                   <ShieldCheck className="h-4 w-4" />
                   {idEnCours ? "Envoi…" : "Téléverser ma pièce d'identité"}
                   <input
@@ -421,7 +421,7 @@ export default function ParametresPage() {
           <button
             onClick={enregistrer}
             disabled={enCours}
-            className="bg-signature glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+            className="bg-metal glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
           >
             {enCours ? "Enregistrement…" : "Enregistrer"}
           </button>

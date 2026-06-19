@@ -35,7 +35,7 @@ export default function VilleContenu({ ville }: { ville: string }) {
           </Link>
           <Link
             href="/connexion"
-            className="bg-signature rounded-full px-5 py-2.5 text-sm font-semibold text-white"
+            className="bg-metal rounded-full px-5 py-2.5 text-sm font-semibold text-white"
           >
             Publier une annonce
           </Link>

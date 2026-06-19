@@ -144,7 +144,7 @@ export default function BoutiquePage() {
                   </p>
                   <Link
                     href="/mon-annonce"
-                    className="bg-signature mt-4 inline-block rounded-full px-6 py-3 font-semibold text-white"
+                    className="bg-metal mt-4 inline-block rounded-full px-6 py-3 font-semibold text-white"
                   >
                     Créer mon annonce
                   </Link>

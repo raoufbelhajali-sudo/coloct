@@ -28,7 +28,7 @@ export default function ContactPage() {
           <p className="text-sm text-ink/60">Écris-nous à</p>
           <a
             href="mailto:contact@flatswiper.com"
-            className="bg-signature mt-3 inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold text-white"
+            className="bg-metal mt-3 inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-semibold text-white"
           >
             <Mail className="h-5 w-5" /> contact@flatswiper.com
           </a>

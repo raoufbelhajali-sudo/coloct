@@ -64,7 +64,7 @@ export default function CookieBanner() {
           </button>
           <button
             onClick={() => choisir("accepte")}
-            className="bg-signature flex-1 rounded-full px-4 py-2.5 text-sm font-semibold text-white"
+            className="bg-metal flex-1 rounded-full px-4 py-2.5 text-sm font-semibold text-white"
           >
             Accepter
           </button>

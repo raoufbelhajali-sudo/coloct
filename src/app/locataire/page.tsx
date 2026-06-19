@@ -87,7 +87,7 @@ export default function LocatairePage() {
             </p>
             <Link
               href="/mon-annonce"
-              className="bg-signature glow-pink rounded-full px-6 py-3 font-semibold text-white"
+              className="bg-metal glow-pink rounded-full px-6 py-3 font-semibold text-white"
             >
               Décrire mon bien
             </Link>
@@ -103,7 +103,7 @@ export default function LocatairePage() {
             </p>
             <Link
               href="/mon-annonce"
-              className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+              className="bg-metal rounded-full px-6 py-3 font-semibold text-white"
             >
               Gérer mes annonces
             </Link>

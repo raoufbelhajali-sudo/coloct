@@ -27,7 +27,7 @@ export function BlogSurOrdinateur() {
         Le Blog &amp; Entraide FlatSwiper se consulte depuis un ordinateur
         (PC/Mac). Sur mobile, retrouve les co/locations directement dans l&apos;app.
       </p>
-      <Link href="/" className="bg-signature rounded-full px-6 py-3 font-semibold text-white">
+      <Link href="/" className="bg-metal rounded-full px-6 py-3 font-semibold text-white">
         Retour
       </Link>
     </main>
@@ -119,7 +119,7 @@ export default function BlogPage() {
           </div>
           <button
             onClick={ouvrirForm}
-            className="bg-signature glow-pink flex shrink-0 items-center justify-center gap-2 rounded-full px-5 py-3 font-semibold text-white"
+            className="bg-metal glow-pink flex shrink-0 items-center justify-center gap-2 rounded-full px-5 py-3 font-semibold text-white"
           >
             <Plus className="h-5 w-5" /> Poser une question
           </button>
@@ -200,7 +200,7 @@ export default function BlogPage() {
               {erreur && <p className="text-sm font-medium text-pink">{erreur}</p>}
               <button
                 disabled={envoi}
-                className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60"
+                className="bg-metal w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60"
               >
                 {envoi ? "Publication…" : "Publier ma question"}
               </button>

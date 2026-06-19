@@ -213,7 +213,7 @@ export default function AdminPage() {
           L&apos;espace d&apos;administration s&apos;utilise depuis un ordinateur, sur
           flatswiper.com/admyn.
         </p>
-        <Link href="/" className="bg-signature rounded-full px-6 py-3 font-semibold text-white">
+        <Link href="/" className="bg-metal rounded-full px-6 py-3 font-semibold text-white">
           Retour
         </Link>
       </main>
@@ -240,7 +240,7 @@ export default function AdminPage() {
               placeholder="Code à 6 chiffres" autoFocus
               className={champ + " text-center text-lg tracking-[0.4em]"}
             />
-            <button disabled={logEnCours} className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
+            <button disabled={logEnCours} className="bg-metal w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
               {logEnCours ? "Vérification…" : "Valider le code"}
             </button>
             {logErreur && <p className="text-center text-sm font-medium text-pink">{logErreur}</p>}
@@ -261,7 +261,7 @@ export default function AdminPage() {
               type="email" value={emailLog} onChange={(e) => setEmailLog(e.target.value)}
               placeholder="Email" autoFocus autoComplete="username" className={champ}
             />
-            <button disabled={logEnCours} className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
+            <button disabled={logEnCours} className="bg-metal w-full rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60">
               {logEnCours ? "Envoi…" : "Recevoir le code"}
             </button>
             {logErreur && <p className="text-center text-sm font-medium text-pink">{logErreur}</p>}
@@ -278,7 +278,7 @@ export default function AdminPage() {
         <p className="max-w-xs text-sm text-ink/70">
           Cette page d&apos;administration est réservée à l&apos;équipe FlatSwiper.
         </p>
-        <Link href="/" className="bg-signature rounded-full px-6 py-3 font-semibold text-white">
+        <Link href="/" className="bg-metal rounded-full px-6 py-3 font-semibold text-white">
           Retour à l&apos;accueil
         </Link>
       </main>
@@ -302,7 +302,7 @@ export default function AdminPage() {
             <p className="text-center text-sm text-ink/65">Entre ton mot de passe back-office.</p>
             <input type="password" value={mdp} onChange={(e) => setMdp(e.target.value)}
               placeholder="Mot de passe" autoFocus className={champ} />
-            <button className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white">
+            <button className="bg-metal w-full rounded-full px-6 py-3 font-semibold text-white">
               Se connecter
             </button>
             <button type="button" onClick={oublierMdp}
@@ -319,7 +319,7 @@ export default function AdminPage() {
               placeholder="Nouveau mot de passe" autoFocus className={champ} />
             <input type="password" value={mdp2} onChange={(e) => setMdp2(e.target.value)}
               placeholder="Confirme le mot de passe" className={champ} />
-            <button className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white">
+            <button className="bg-metal w-full rounded-full px-6 py-3 font-semibold text-white">
               Créer le mot de passe
             </button>
           </form>
@@ -456,7 +456,7 @@ export default function AdminPage() {
                 <button onClick={() => voirPiece(p.id)} className="flex items-center gap-1.5 rounded-full bg-panel-2 px-3 py-2 text-xs font-semibold text-ink/80">
                   <Eye className="h-4 w-4" /> Voir la pièce
                 </button>
-                <button onClick={() => basculerVerif(p)} className="bg-signature rounded-full px-3 py-2 text-xs font-semibold text-white">
+                <button onClick={() => basculerVerif(p)} className="bg-metal rounded-full px-3 py-2 text-xs font-semibold text-white">
                   Valider
                 </button>
               </div>
@@ -536,7 +536,7 @@ export default function AdminPage() {
               placeholder="Confirme le nouveau mot de passe" autoComplete="new-password"
               className="w-full rounded-xl border border-ink/10 bg-panel-2 px-4 py-3 text-ink placeholder:text-ink/30 focus:border-pink focus:outline-none"
             />
-            <button className="bg-signature w-full rounded-full px-6 py-3 font-semibold text-white">
+            <button className="bg-metal w-full rounded-full px-6 py-3 font-semibold text-white">
               Enregistrer
             </button>
             {compteMsg && (

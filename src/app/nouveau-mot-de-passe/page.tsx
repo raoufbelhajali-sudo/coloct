@@ -114,7 +114,7 @@ export default function NouveauMotDePassePage() {
             <button
               type="submit"
               disabled={enCours}
-              className="bg-signature glow-pink w-full rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+              className="bg-metal glow-pink w-full rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
             >
               {enCours ? "Un instant…" : "Changer mon mot de passe"}
             </button>

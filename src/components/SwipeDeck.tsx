@@ -363,7 +363,7 @@ export default function SwipeDeck() {
         </ul>
         <button
           onClick={() => router.push("/profil")}
-          className="bg-signature mt-2 rounded-full px-6 py-3 font-semibold text-white"
+          className="bg-metal mt-2 rounded-full px-6 py-3 font-semibold text-white"
         >
           Compléter mon profil
         </button>
@@ -582,7 +582,7 @@ export default function SwipeDeck() {
 
             <button
               onClick={() => setFiltresOuverts(false)}
-              className="bg-signature glow-pink mt-5 w-full rounded-full px-6 py-3 font-semibold text-white"
+              className="bg-metal glow-pink mt-5 w-full rounded-full px-6 py-3 font-semibold text-white"
             >
               Voir les {feed.length} annonce{feed.length > 1 ? "s" : ""}
             </button>
@@ -758,7 +758,7 @@ export default function SwipeDeck() {
             <div className="mt-6 flex flex-col gap-3">
               <button
                 onClick={() => router.push("/boutique")}
-                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+                className="bg-metal rounded-full px-6 py-3 font-semibold text-white"
               >
                 Passer HeroSwiper
               </button>
@@ -791,7 +791,7 @@ export default function SwipeDeck() {
             <div className="mt-6 flex flex-col gap-3">
               <button
                 onClick={() => router.push("/matchs")}
-                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+                className="bg-metal rounded-full px-6 py-3 font-semibold text-white"
               >
                 Envoyer un message
               </button>
@@ -838,13 +838,8 @@ function ColBtn({
       disabled={disabled}
       aria-label={label}
       title={title ?? label}
-      style={{
-        // Dégradé noir → argent (effet métal). Les symboles gardent leur couleur.
-        backgroundImage:
-          "linear-gradient(145deg,#0c0c0e 0%,#2f3236 45%,#8b9099 80%,#cad0d8 100%)",
-      }}
       className={
-        "flex items-center justify-center rounded-full shadow-lg ring-1 ring-white/25 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+        "flex items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
         (big ? "h-14 w-14 " : "h-10 w-10 ") +
         symbolClass
       }

@@ -299,7 +299,7 @@ export default function Home() {
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
                 href="/connexion"
-                className="bg-signature glow-pink flex items-center gap-2 rounded-full px-7 py-3.5 font-semibold text-white transition-transform hover:scale-[1.03]"
+                className="bg-metal glow-pink flex items-center gap-2 rounded-full px-7 py-3.5 font-semibold text-white transition-transform hover:scale-[1.03]"
               >
                 <Rocket className="h-5 w-5" /> Créer mon compte
               </Link>

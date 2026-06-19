@@ -175,7 +175,7 @@ export default function ListingDetail({
               <button
                 onClick={contacter}
                 disabled={contactEnCours}
-                className="bg-signature glow-pink flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60"
+                className="bg-metal glow-pink flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-semibold text-white disabled:opacity-60"
               >
                 <MessageSquare className="h-4 w-4" />
                 {contactEnCours

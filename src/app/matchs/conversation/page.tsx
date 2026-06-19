@@ -561,7 +561,7 @@ function ConversationInner() {
             </div>
             <button
               type="submit"
-              className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
+              className="bg-metal mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
             >
               Proposer la visite
             </button>
@@ -588,7 +588,7 @@ function ConversationInner() {
                 <p className="mt-1 text-sm text-ink/70">Ton avis a bien été enregistré.</p>
                 <button
                   onClick={() => setAvisOuvert(false)}
-                  className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
+                  className="bg-metal mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
                 >
                   Fermer
                 </button>
@@ -628,7 +628,7 @@ function ConversationInner() {
                 <button
                   onClick={envoyerAvis}
                   disabled={avisNote < 1}
-                  className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white disabled:opacity-60"
+                  className="bg-metal mt-4 w-full rounded-full px-5 py-3 font-semibold text-white disabled:opacity-60"
                 >
                   Envoyer mon avis
                 </button>
@@ -659,7 +659,7 @@ function ConversationInner() {
                 </p>
                 <button
                   onClick={() => setSignalerOuvert(false)}
-                  className="bg-signature mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
+                  className="bg-metal mt-4 w-full rounded-full px-5 py-3 font-semibold text-white"
                 >
                   Fermer
                 </button>
@@ -777,7 +777,7 @@ function ConversationInner() {
                           fourni
                         </span>
                       ) : (
-                        <label className="bg-signature ml-auto cursor-pointer rounded-full px-3 py-1 text-xs font-semibold text-white">
+                        <label className="bg-metal ml-auto cursor-pointer rounded-full px-3 py-1 text-xs font-semibold text-white">
                           Envoyer
                           <input
                             type="file"
@@ -882,7 +882,7 @@ function ConversationInner() {
                   {!estLocataire && !visiteAcceptee && (
                     <button
                       onClick={() => onAccepterVisite(iso, lieu)}
-                      className="bg-signature mt-2 ml-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white"
+                      className="bg-metal mt-2 ml-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold text-white"
                     >
                       <Check className="h-3.5 w-3.5" /> Accepter le rendez-vous
                     </button>

@@ -111,7 +111,7 @@ export default function ColocatairesPage() {
               Les premiers co/locataires arrivent. Tu cherches une coloc&nbsp;? Crée ton
               profil sur l&apos;app pour apparaître ici.
             </p>
-            <Link href="/connexion" className="bg-signature mt-5 inline-block rounded-full px-7 py-3.5 font-semibold text-white">
+            <Link href="/connexion" className="bg-metal mt-5 inline-block rounded-full px-7 py-3.5 font-semibold text-white">
               Créer mon profil
             </Link>
           </div>

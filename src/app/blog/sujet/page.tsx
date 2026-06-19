@@ -111,7 +111,7 @@ function SujetContenu() {
             />
             <button
               disabled={envoi || texte.trim().length < 2}
-              className="bg-signature mt-3 flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white disabled:opacity-50"
+              className="bg-metal mt-3 flex items-center gap-2 rounded-full px-6 py-3 font-semibold text-white disabled:opacity-50"
             >
               <Send className="h-4 w-4" /> {envoi ? "Envoi…" : "Répondre"}
             </button>

@@ -242,7 +242,7 @@ export default function ComptePage() {
                   <button
                     type="submit"
                     disabled={resetEnvoi}
-                    className="bg-signature rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+                    className="bg-metal rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
                   >
                     {resetEnvoi ? "Un instant…" : "Changer le mot de passe"}
                   </button>
@@ -265,7 +265,7 @@ export default function ComptePage() {
                 <button
                   onClick={demanderResetMdp}
                   disabled={resetEnvoi}
-                  className="bg-signature mt-3 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+                  className="bg-metal mt-3 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
                 >
                   {resetEnvoi ? "Envoi…" : "Recevoir un code par email"}
                 </button>
@@ -283,7 +283,7 @@ export default function ComptePage() {
           <button
             onClick={enregistrer}
             disabled={enCours}
-            className="bg-signature glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+            className="bg-metal glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
           >
             {enCours ? "Enregistrement…" : "Enregistrer"}
           </button>

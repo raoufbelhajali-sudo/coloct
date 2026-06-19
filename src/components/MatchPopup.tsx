@@ -63,7 +63,7 @@ export default function MatchPopup() {
           <Link
             href={`/matchs/conversation/?id=${popup.id}`}
             onClick={() => setPopup(null)}
-            className="bg-signature glow-pink rounded-full px-6 py-3 font-semibold text-white"
+            className="bg-metal glow-pink rounded-full px-6 py-3 font-semibold text-white"
           >
             Démarrer la conversation
           </Link>

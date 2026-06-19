@@ -300,7 +300,7 @@ export default function ProfileSwipeDeck({
             <div className="mt-6 flex flex-col gap-3">
               <button
                 onClick={() => router.push("/boutique")}
-                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+                className="bg-metal rounded-full px-6 py-3 font-semibold text-white"
               >
                 Passer HeroSwiper
               </button>
@@ -332,7 +332,7 @@ export default function ProfileSwipeDeck({
             <div className="mt-6 flex flex-col gap-3">
               <button
                 onClick={() => router.push("/matchs")}
-                className="bg-signature rounded-full px-6 py-3 font-semibold text-white"
+                className="bg-metal rounded-full px-6 py-3 font-semibold text-white"
               >
                 Envoyer un message
               </button>

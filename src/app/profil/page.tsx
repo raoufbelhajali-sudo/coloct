@@ -376,7 +376,7 @@ export default function ProfilPage() {
                 <button
                   type="button"
                   onClick={completer}
-                  className="bg-signature mt-3 w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
+                  className="bg-metal mt-3 w-full rounded-full px-4 py-2 text-sm font-semibold text-white"
                 >
                   Compléter mon profil
                 </button>
@@ -730,7 +730,7 @@ export default function ProfilPage() {
           )}
 
           <button type="submit" disabled={enCours}
-            className="bg-signature glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60">
+            className="bg-metal glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60">
             {enCours
               ? "Enregistrement…"
               : estAgence

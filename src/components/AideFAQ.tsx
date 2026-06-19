@@ -197,7 +197,7 @@ export default function AideFAQ({
                                     <Link
                                       href={f.href}
                                       onClick={() => setOpen(false)}
-                                      className="bg-signature mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white"
+                                      className="bg-metal mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold text-white"
                                     >
                                       {f.cta || "M'y emmener"}{" "}
                                       <ArrowRight className="h-3.5 w-3.5" />

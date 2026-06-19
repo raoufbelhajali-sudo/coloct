@@ -134,7 +134,7 @@ export default function MonAnnoncePage() {
             {/* Bouton ajouter */}
             <button
               onClick={() => setMode("creer")}
-              className="bg-signature glow-pink mb-5 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
+              className="bg-metal glow-pink mb-5 flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               <Plus className="h-5 w-5" /> Ajouter une annonce
             </button>
@@ -217,7 +217,7 @@ export default function MonAnnoncePage() {
                         <button
                           onClick={() => basculerGel(l)}
                           disabled={occupe}
-                          className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                          className="bg-metal mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
                         >
                           {occupe ? "…" : "Réactiver cette annonce"}
                         </button>
@@ -227,7 +227,7 @@ export default function MonAnnoncePage() {
                             <button
                               onClick={() => booster(l)}
                               disabled={occupe}
-                              className="bg-signature mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+                              className="bg-metal mt-3 flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
                             >
                               <Rocket className="h-4 w-4" />
                               {occupe ? "Activation…" : "Booster (48h)"}

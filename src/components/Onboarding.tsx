@@ -253,7 +253,7 @@ export default function Onboarding({
         </p>
         <button
           onClick={() => setIntro(false)}
-          className="bg-signature glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
+          className="bg-metal glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
         >
           C&apos;est parti
         </button>
@@ -276,7 +276,7 @@ export default function Onboarding({
         </p>
         <button
           onClick={entrer}
-          className="bg-signature glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
+          className="bg-metal glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
         >
           {role === "locataire" ? "Créer mon annonce" : "Commencer à swiper"}
         </button>
@@ -899,7 +899,7 @@ export default function Onboarding({
         <button
           onClick={suivant}
           disabled={!etapeValide() || enCours}
-          className="bg-signature glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-50"
+          className="bg-metal glow-pink w-full rounded-full px-6 py-4 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-50"
         >
           {enCours
             ? "Un instant…"

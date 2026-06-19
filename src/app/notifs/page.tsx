@@ -90,7 +90,7 @@ function NotifsContenu() {
             <button
               onClick={debloquerGratuit}
               disabled={enCours}
-              className="bg-signature mt-1 rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+              className="bg-metal mt-1 rounded-full px-6 py-3 font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
             >
               {enCours ? "Déblocage…" : "Débloquer gratuitement"}
             </button>

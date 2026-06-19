@@ -511,7 +511,7 @@ export default function ListingForm({
       <button
         type="submit"
         disabled={enCours}
-        className="bg-signature glow-pink w-full rounded-full px-6 py-4 text-base font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
+        className="bg-metal glow-pink w-full rounded-full px-6 py-4 text-base font-semibold text-white transition-transform hover:scale-[1.02] disabled:opacity-60"
       >
         {enCours
           ? "Enregistrement…"

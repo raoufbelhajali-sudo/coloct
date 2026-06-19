@@ -70,6 +70,12 @@ input[type="date"] {
   background-image: linear-gradient(135deg, #2563eb, #14b8a6);
 }
 
+/* Dégradé "métal" : noir → argent (gros boutons d'action de l'app).
+   Reste assez foncé pour que le texte blanc demeure lisible. */
+.bg-metal {
+  background-image: linear-gradient(145deg, #0b0b0d 0%, #33373d 52%, #6b7079 100%);
+}
+
 /* Texte rempli avec le dégradé signature */
 .text-signature {
   background-image: linear-gradient(135deg, #2563eb, #14b8a6);

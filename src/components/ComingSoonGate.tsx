@@ -102,7 +102,7 @@ export default function ComingSoonGate({
         )}
         <button
           type="submit"
-          className="bg-signature glow-pink rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
+          className="bg-metal glow-pink rounded-full px-6 py-3.5 font-semibold text-white transition-transform hover:scale-[1.02]"
         >
           Entrer
         </button>
