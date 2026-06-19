@@ -24,7 +24,7 @@ import { partagerAnnonce } from "@/lib/partage";
 import { useAuth } from "@/lib/auth";
 import { estHero, contacterDirect } from "@/lib/offers";
 import { champsManquantsSwipe } from "@/lib/completude";
-import { vibrer, vibrerSucces, ImpactStyle } from "@/lib/haptics";
+import { vibrer, vibrerSucces, sonLike, ImpactStyle } from "@/lib/haptics";
 import {
   getSwipedListingIds,
   recordListingSwipe,
@@ -253,8 +253,9 @@ export default function SwipeDeck() {
       return;
     }
 
-    // Vibration tactile immédiate (plus marquée pour un like)
+    // Retour immédiat : vibration (mobile) + petit son sur le like (PC)
     vibrer(dir === "like" ? ImpactStyle.Medium : ImpactStyle.Light);
+    if (dir === "like") sonLike();
 
     setDecisions((d) => ({ ...d, [listing.id]: dir }));
     setSwipedIds((prev) => new Set(prev).add(listing.id));
@@ -694,9 +695,10 @@ export default function SwipeDeck() {
               <ColBtn
                 label="J'aime"
                 symbolClass="text-[#14b8a6]"
+                big
                 onClick={() => decider(active, "like")}
               >
-                <Check className="h-5 w-5" strokeWidth={3} />
+                <Check className="h-6 w-6" strokeWidth={3} />
               </ColBtn>
             </div>
           )}
@@ -816,6 +818,7 @@ function ColBtn({
   title,
   disabled,
   symbolClass = "text-white",
+  big,
   children,
 }: {
   onClick: () => void;
@@ -823,6 +826,7 @@ function ColBtn({
   title?: string;
   disabled?: boolean;
   symbolClass?: string;
+  big?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -835,7 +839,8 @@ function ColBtn({
       aria-label={label}
       title={title ?? label}
       className={
-        "flex h-10 w-10 items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+        "flex items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+        (big ? "h-[52px] w-[52px] " : "h-10 w-10 ") +
         symbolClass
       }
     >
