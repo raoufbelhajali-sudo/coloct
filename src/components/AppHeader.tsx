@@ -100,17 +100,6 @@ export default function AppHeader() {
         </Link>
       )}
 
-      {/* Haut : logo. Sur le swipe, le logo est intégré à la barre filtres/partage
-          (même ligne) → on ne l'affiche pas ici pour ne pas le dédoubler. */}
-      {user && !pathname.startsWith("/swipe") && (
-        <header className="mb-4 flex h-10 w-full max-w-sm items-center justify-center">
-          <Link href={accueil} aria-label="Accueil">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
-          </Link>
-        </header>
-      )}
-
       {/* Bas : barre de navigation fixe */}
       {user && (
         <nav
