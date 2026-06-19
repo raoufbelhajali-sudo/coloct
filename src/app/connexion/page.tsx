@@ -8,6 +8,7 @@ import { Capacitor } from "@capacitor/core";
 import { SocialLogin } from "@capgo/capacitor-social-login";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
+import OnboardingDemo from "@/components/OnboardingDemo";
 
 // IDs Google (Cloud Console, projet "colockt")
 const GOOGLE_IOS_CLIENT_ID =
@@ -434,6 +435,8 @@ export default function ConnexionPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4 py-8">
+      {/* Démo d'onboarding (4 écrans) avant l'écran de connexion */}
+      <OnboardingDemo />
       {/* Bouton retour à l'accueil (toujours accessible, même déconnecté) */}
       <Link
         href="/"
