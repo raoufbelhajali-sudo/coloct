@@ -123,6 +123,16 @@ export default function ConnexionPage() {
     if (error) setErreur(traduireErreur(error.message));
   }
 
+  // --- Apple sur le SITE web / web app (redirection navigateur) ---
+  async function handleApple() {
+    reset();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "apple",
+      options: { redirectTo: `${window.location.origin}/bienvenue` },
+    });
+    if (error) setErreur(traduireErreur(error.message));
+  }
+
   // --- Google DANS L'APP (natif, feuille Google, sans navigateur) ---
   async function handleGoogleNatif() {
     reset();
@@ -492,16 +502,14 @@ export default function ConnexionPage() {
               Continuer avec Google
             </button>
 
-            {estNatif && (
-              <button
-                onClick={handleAppleNatif}
-                disabled={enCours}
-                className="flex w-full items-center justify-center gap-3 rounded-full bg-black px-4 py-3.5 font-medium text-white transition-colors hover:bg-black/90 disabled:opacity-60"
-              >
-                <AppleLogo />
-                Continuer avec Apple
-              </button>
-            )}
+            <button
+              onClick={estNatif ? handleAppleNatif : handleApple}
+              disabled={enCours}
+              className="flex w-full items-center justify-center gap-3 rounded-full bg-black px-4 py-3.5 font-medium text-white transition-colors hover:bg-black/90 disabled:opacity-60"
+            >
+              <AppleLogo />
+              Continuer avec Apple
+            </button>
 
             {/* Connexion par SMS désactivée pour l'instant (fournisseur SMS payant
                 à brancher plus tard). Le code des étapes phone reste en place. */}
@@ -654,17 +662,15 @@ export default function ConnexionPage() {
               <GoogleLogo />
               Continuer avec Google
             </button>
-            {estNatif && (
-              <button
-                type="button"
-                onClick={handleAppleNatif}
-                disabled={enCours}
-                className="flex w-full items-center justify-center gap-3 rounded-full bg-black px-4 py-3.5 font-medium text-white transition-colors hover:bg-black/90 disabled:opacity-60"
-              >
-                <AppleLogo />
-                Continuer avec Apple
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={estNatif ? handleAppleNatif : handleApple}
+              disabled={enCours}
+              className="flex w-full items-center justify-center gap-3 rounded-full bg-black px-4 py-3.5 font-medium text-white transition-colors hover:bg-black/90 disabled:opacity-60"
+            >
+              <AppleLogo />
+              Continuer avec Apple
+            </button>
           </form>
         )}
 
