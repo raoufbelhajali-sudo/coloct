@@ -106,13 +106,26 @@ export default function IntroAccueil() {
               opacity: { duration: 0.6, delay: 2.4 },
               y: { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 2.4 },
             }}
-            className="absolute bottom-12 flex flex-col items-center gap-1"
+            className="absolute bottom-12 flex flex-col items-center gap-2"
           >
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
               Rejoins-nous
             </span>
-            <span className="font-display text-3xl font-bold italic text-white">
-              FlatSwiper
+            {/* Logo complet : icône (rond dégradé) + texte « FlatSwiper » */}
+            <span className="flex items-center gap-2.5">
+              <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true">
+                <defs>
+                  <linearGradient id="introRingBas" x1="0%" y1="15%" x2="100%" y2="85%">
+                    <stop offset="0%" stopColor="#36c5e0" />
+                    <stop offset="100%" stopColor="#2456db" />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="50" fill="url(#introRingBas)" />
+                <circle cx="50" cy="50" r="32" fill="#1b1f3c" />
+              </svg>
+              <span className="font-display text-3xl font-bold italic text-white">
+                FlatSwiper
+              </span>
             </span>
           </motion.button>
         </motion.div>
