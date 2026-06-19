@@ -74,7 +74,7 @@ export default function ComingSoonGate({
 
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo-full.png"
+        src="/logo-full.svg"
         alt="FlatSwiper"
         className="mb-2 w-[320px] max-w-[85%] drop-shadow-[0_8px_30px_rgba(250,82,82,0.25)]"
       />
