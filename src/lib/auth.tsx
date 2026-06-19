@@ -10,6 +10,7 @@ import {
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 import { toucherActivite } from "./activite";
+import { capterRefParrain } from "./parrainage";
 
 export type Role = "locataire" | "colocataire";
 
@@ -103,6 +104,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
+    // Capte un éventuel lien de parrainage (?ref=…) dès l'arrivée sur le site.
+    capterRefParrain();
     // Au démarrage : récupère la session existante (si déjà connecté)
     supabase.auth.getSession().then(async ({ data }) => {
       const u = data.session?.user ?? null;

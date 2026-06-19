@@ -25,6 +25,7 @@ import { geocodeVille, distanceKm, type Coord } from "@/lib/geo";
 import { partagerAnnonce } from "@/lib/partage";
 import { useAuth } from "@/lib/auth";
 import { estHero, contacterDirect } from "@/lib/offers";
+import { getNbFilleuls, BONUS_PARRAIN } from "@/lib/parrainage";
 import { champsManquantsSwipe } from "@/lib/completude";
 import { vibrer, vibrerSucces, sonLike, ImpactStyle } from "@/lib/haptics";
 import {
@@ -91,6 +92,7 @@ export default function SwipeDeck() {
   const [allListings, setAllListings] = useState<Listing[]>([]);
   const [bloques, setBloques] = useState<Set<string>>(new Set());
   const [favorisIds, setFavorisIds] = useState<Set<string>>(new Set());
+  const [nbFilleuls, setNbFilleuls] = useState(0); // parrainage : +swipes/jour
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(false);
 
@@ -195,14 +197,16 @@ export default function SwipeDeck() {
       getSwipes24h(user.id),
       getIdsBloques(user.id),
       getFavorisIds(user.id),
+      getNbFilleuls(user.id),
     ])
-      .then(([data, swiped, nbSwipes, blocs, favs]) => {
+      .then(([data, swiped, nbSwipes, blocs, favs, filleuls]) => {
         dejaSwipe.current = swiped; // figé pour la stabilité du feed
         setAllListings(data);
         setSwipedIds(swiped);
         setSwipesAujourdhui(nbSwipes);
         setBloques(blocs);
         setFavorisIds(favs);
+        setNbFilleuls(filleuls);
       })
       .catch(() => setErreur(true))
       .finally(() => setChargement(false));
@@ -323,8 +327,10 @@ export default function SwipeDeck() {
   // Annonce actuellement à l'écran (celle sur laquelle agissent les icônes)
   const active = feed[activeIndex];
 
-  // Limite gratuite : 20 swipes / 24h. HeroSwiper = illimité.
-  const swipesEpuises = !estHero(profile) && swipesAujourdhui >= SWIPES_PAR_JOUR;
+  // Limite gratuite : 20 swipes / 24h, + bonus parrainage (+10/jour par filleul).
+  // HeroSwiper = illimité.
+  const limiteSwipes = SWIPES_PAR_JOUR + nbFilleuls * BONUS_PARRAIN;
+  const swipesEpuises = !estHero(profile) && swipesAujourdhui >= limiteSwipes;
   // Au-delà de la limite : on masque (floute) les annonces et on propose le Hero
   const flou = swipesEpuises;
 
@@ -924,10 +930,12 @@ export default function SwipeDeck() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 p-6 backdrop-blur-sm">
           <div className="bg-panel-2 glow-pink w-full max-w-sm rounded-3xl p-7 text-center">
             <p className="font-display text-3xl font-bold leading-tight">
-              Tes 20 swipes sont utilisés
+              Tes {limiteSwipes} swipes sont utilisés
             </p>
             <p className="mt-3 text-ink/80">
-              Reviens dans 24h pour 20 nouveaux swipes gratuits… ou passe en{" "}
+              Reviens dans 24h pour {limiteSwipes} nouveaux swipes gratuits…{" "}
+              {nbFilleuls === 0 && "Invite des amis pour en gagner plus, ou "}
+              passe en{" "}
               <span className="text-signature font-semibold">HeroSwiper</span>{" "}
               pour swiper sans limite.
             </p>

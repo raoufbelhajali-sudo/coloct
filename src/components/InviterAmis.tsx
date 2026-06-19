@@ -1,23 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { UserPlus, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { UserPlus, Check, Gift } from "lucide-react";
 import { useAuth } from "@/lib/auth";
-import { ajouterBonusLikes } from "@/lib/swipes";
 import { partagerLien } from "@/lib/share";
+import { getNbFilleuls, BONUS_PARRAIN } from "@/lib/parrainage";
 
-const BONUS = 5; // swipes gagnés par invitation
-
-// Bouton "Inviter des amis et gagner des swipes" (partage + bonus).
-export default function InviterAmis({
-  onBonus,
-  className = "",
-}: {
-  onBonus?: () => void;
-  className?: string;
-}) {
+// Parrainage : partage ton lien. Quand un ami s'inscrit via ce lien, tu gagnes
+// +BONUS_PARRAIN swipes/jour (récompense côté serveur, persistante).
+export default function InviterAmis({ className = "" }: { className?: string }) {
   const { user } = useAuth();
+  const [nbFilleuls, setNbFilleuls] = useState(0);
   const [msg, setMsg] = useState("");
+
+  useEffect(() => {
+    if (user) getNbFilleuls(user.id).then(setNbFilleuls);
+  }, [user]);
 
   async function inviter() {
     const lien = `https://flatswiper.com/?ref=${user?.id ?? ""}`;
@@ -26,13 +24,11 @@ export default function InviterAmis({
       text: "Rejoins-moi sur FlatSwiper pour trouver une coloc partout en France !",
       url: lien,
     });
-    if (!ok) return; // partage annulé : pas de bonus
-    if (user) {
-      ajouterBonusLikes(user.id, BONUS);
-      onBonus?.();
-    }
-    setMsg(`Merci ! +${BONUS} swipes ajoutés`);
-    setTimeout(() => setMsg(""), 3000);
+    if (!ok) return; // partage annulé
+    setMsg(
+      `Lien partagé ! Tu gagneras +${BONUS_PARRAIN} swipes/jour dès qu'il s'inscrit.`
+    );
+    setTimeout(() => setMsg(""), 5000);
   }
 
   return (
@@ -45,11 +41,21 @@ export default function InviterAmis({
         }
       >
         <UserPlus className="h-4 w-4" />
-        Inviter des amis · +{BONUS} swipes
+        Inviter des amis · +{BONUS_PARRAIN} swipes/jour par ami
       </button>
+
+      {/* Stats de parrainage */}
+      {nbFilleuls > 0 && (
+        <p className="mt-2 flex items-center justify-center gap-1.5 text-sm font-medium text-violet">
+          <Gift className="h-4 w-4" />
+          {nbFilleuls} ami{nbFilleuls > 1 ? "s" : ""} parrainé
+          {nbFilleuls > 1 ? "s" : ""} · +{nbFilleuls * BONUS_PARRAIN} swipes/jour
+        </p>
+      )}
+
       {msg && (
-        <p className="mt-2 flex items-center justify-center gap-1 text-sm text-pink">
-          <Check className="h-4 w-4" strokeWidth={3} /> {msg}
+        <p className="mt-2 flex items-center justify-center gap-1 text-center text-sm text-pink">
+          <Check className="h-4 w-4 shrink-0" strokeWidth={3} /> {msg}
         </p>
       )}
     </div>

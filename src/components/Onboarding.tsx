@@ -7,6 +7,11 @@ import { Telescope, KeyRound, Check, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth, type Role } from "@/lib/auth";
 import { telFrancaisValide } from "@/lib/tel";
+import {
+  getRefParrain,
+  enregistrerParrainage,
+  effacerRefParrain,
+} from "@/lib/parrainage";
 import { LogoMark } from "@/components/Logo";
 import {
   INTERETS,
@@ -225,6 +230,13 @@ export default function Onboarding({
       setEnCours(false);
       setErreur("L'enregistrement a échoué : " + error.message);
       return;
+    }
+    // Parrainage : si l'utilisateur est arrivé via le lien d'un ami (?ref=…),
+    // on l'enregistre comme filleul (le parrain gagnera des swipes).
+    const ref = getRefParrain();
+    if (ref) {
+      await enregistrerParrainage(user.id, ref);
+      effacerRefParrain();
     }
     // NB : on NE rafraîchit PAS le profil ici, sinon la page parente
     // redirigerait aussitôt et l'écran de bienvenue disparaîtrait.
