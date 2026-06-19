@@ -22,7 +22,7 @@ export default function ProfileCard({
   const estSuper = estSuperProfil(profile);
 
   return (
-    <div className="bg-signature relative h-full w-full select-none overflow-hidden">
+    <div className="relative h-full w-full select-none overflow-hidden bg-panel">
       {/* Les deux bannières empilées en haut à gauche (l'une sous l'autre) */}
       <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-col items-start gap-1.5">
         {/* Badge Super co/locataire (profil complet). On force le libellé
@@ -57,7 +57,7 @@ export default function ProfileCard({
           draggable={false}
         />
       ) : (
-        <div className="absolute inset-x-0 top-0 flex h-1/2 items-center justify-center">
+        <div className="bg-signature absolute inset-0 flex items-center justify-center">
           <span className="font-display text-8xl font-bold text-white/90">
             {profile.prenom?.charAt(0).toUpperCase() || "?"}
           </span>
