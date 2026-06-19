@@ -215,7 +215,7 @@ export default function ProfileSwipeDeck({
   }
 
   return (
-    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm">
+    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[540px]">
       {feed.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
           <p className="font-display text-2xl">Aucun profil pour l&apos;instant</p>
@@ -277,7 +277,7 @@ export default function ProfileSwipeDeck({
 
           {/* Colonne d'icônes à droite (style TikTok) */}
           {active && (
-            <div className="absolute bottom-10 right-3 z-30 flex flex-col items-center gap-2.5">
+            <div className="absolute bottom-10 right-3 z-30 flex flex-col items-center gap-2.5 lg:origin-bottom-right lg:scale-125">
               <ColBtn
                 label="Message"
                 title="Écrire en direct à ce co/locataire (forfait)"

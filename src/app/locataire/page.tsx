@@ -110,7 +110,7 @@ export default function LocatairePage() {
           </div>
         ) : selected ? (
           // On swipe les colocataires pour l'annonce sélectionnée
-          <div className="flex min-h-0 w-full max-w-none flex-1 flex-col sm:max-w-sm">
+          <div className="flex min-h-0 w-full max-w-none flex-1 flex-col sm:max-w-sm lg:max-w-[540px]">
             <ProfileSwipeDeck
               key={selected.id}
               listingId={selected.id}

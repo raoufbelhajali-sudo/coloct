@@ -508,7 +508,7 @@ export default function SwipeDeck() {
   }
 
   return (
-    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm">
+    <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[540px]">
 
       {/* ---------- Filtres (pop-up) ---------- */}
       {filtresOuverts && (
@@ -796,7 +796,7 @@ export default function SwipeDeck() {
           {/* Colonne d'icônes à droite (style TikTok) : agit sur l'annonce visible.
               Ordre inversé : le J'aime est tout en bas (sous le pouce). */}
           {active && !flou && (
-            <div className="absolute bottom-10 right-3 z-30 flex flex-col items-center gap-2.5">
+            <div className="absolute bottom-10 right-3 z-30 flex flex-col items-center gap-2.5 lg:origin-bottom-right lg:scale-125">
               <ColBtn label="Filtres" onClick={() => setFiltresOuverts(true)}>
                 <SlidersHorizontal className="h-[18px] w-[18px]" />
                 {filtresActifs && (
