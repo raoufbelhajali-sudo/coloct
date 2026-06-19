@@ -78,7 +78,7 @@ export default function LocatairePage() {
           <p className="mt-20 text-ink/60">Chargement…</p>
         ) : listings.length === 0 ? (
           // Aucune annonce → invite à en créer une
-          <div className="m-auto flex max-w-xs flex-col items-center gap-4 text-center">
+          <div className="m-auto flex max-w-xs flex-col items-center gap-4 text-center lg:max-w-md lg:rounded-3xl lg:bg-bg lg:px-10 lg:py-12 lg:shadow-2xl">
             <Home className="h-12 w-12 text-bleu" />
             <p className="font-display text-2xl">Crée ton annonce</p>
             <p className="text-sm text-ink/70">
@@ -94,7 +94,7 @@ export default function LocatairePage() {
           </div>
         ) : selected && selected.gelee ? (
           // L'annonce sélectionnée est gelée
-          <div className="m-auto flex max-w-xs flex-col items-center gap-4 text-center">
+          <div className="m-auto flex max-w-xs flex-col items-center gap-4 text-center lg:max-w-md lg:rounded-3xl lg:bg-bg lg:px-10 lg:py-12 lg:shadow-2xl">
             <Snowflake className="h-12 w-12 text-violet" />
             <p className="font-display text-2xl">Annonce gelée</p>
             <p className="text-sm text-ink/70">
