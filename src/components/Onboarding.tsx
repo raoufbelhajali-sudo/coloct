@@ -253,22 +253,24 @@ export default function Onboarding({
   if (intro) {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
-        <LogoMark className="mb-5 h-16 w-16" />
-        <h1 className="font-display text-3xl font-bold leading-tight">
-          Bienvenue sur FlatSwiper !
-        </h1>
-        <p className="mt-3 max-w-sm text-ink/70">
-          Prends quelques minutes pour <strong>bien remplir ton profil</strong>.
-          Plus tu donnes d&apos;infos (mode de vie, centres d&apos;intérêt, ce que
-          tu cherches…), plus tu trouveras <strong>facilement</strong> le
-          logement ou le coloc idéal.
-        </p>
-        <button
-          onClick={() => setIntro(false)}
-          className="bg-metal glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
-        >
-          C&apos;est parti
-        </button>
+        <div className="flex flex-col items-center lg:max-w-xl lg:rounded-3xl lg:bg-bg lg:px-12 lg:py-14 lg:shadow-2xl">
+          <LogoMark className="mb-5 h-16 w-16" />
+          <h1 className="font-display text-3xl font-bold leading-tight">
+            Bienvenue sur FlatSwiper !
+          </h1>
+          <p className="mt-3 max-w-sm text-ink/70">
+            Prends quelques minutes pour <strong>bien remplir ton profil</strong>.
+            Plus tu donnes d&apos;infos (mode de vie, centres d&apos;intérêt, ce que
+            tu cherches…), plus tu trouveras <strong>facilement</strong> le
+            logement ou le coloc idéal.
+          </p>
+          <button
+            onClick={() => setIntro(false)}
+            className="bg-metal glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
+          >
+            C&apos;est parti
+          </button>
+        </div>
       </main>
     );
   }
@@ -277,21 +279,23 @@ export default function Onboarding({
   if (bienvenue) {
     return (
       <main className="flex min-h-dvh flex-col items-center justify-center px-6 text-center">
-        <LogoMark className="animate-logo-vibrate mb-5 h-16 w-16" />
-        <h1 className="font-display text-3xl font-bold leading-tight">
-          Bienvenue{prenom.trim() ? ` ${prenom.trim()}` : ""} !
-        </h1>
-        <p className="mt-3 max-w-sm text-ink/70">
-          {role === "locataire"
-            ? "Ton profil est prêt. Complète ton annonce et découvre les co/locataires intéressés par ton logement."
-            : "Ton profil est prêt. Swipe les co/locations qui te plaisent — un match, et la conversation commence !"}
-        </p>
-        <button
-          onClick={entrer}
-          className="bg-metal glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
-        >
-          {role === "locataire" ? "Créer mon annonce" : "Commencer à swiper"}
-        </button>
+        <div className="flex flex-col items-center lg:max-w-xl lg:rounded-3xl lg:bg-bg lg:px-12 lg:py-14 lg:shadow-2xl">
+          <LogoMark className="animate-logo-vibrate mb-5 h-16 w-16" />
+          <h1 className="font-display text-3xl font-bold leading-tight">
+            Bienvenue{prenom.trim() ? ` ${prenom.trim()}` : ""} !
+          </h1>
+          <p className="mt-3 max-w-sm text-ink/70">
+            {role === "locataire"
+              ? "Ton profil est prêt. Complète ton annonce et découvre les co/locataires intéressés par ton logement."
+              : "Ton profil est prêt. Swipe les co/locations qui te plaisent — un match, et la conversation commence !"}
+          </p>
+          <button
+            onClick={entrer}
+            className="bg-metal glow-pink mt-8 rounded-full px-8 py-4 font-semibold text-white transition-transform hover:scale-[1.02]"
+          >
+            {role === "locataire" ? "Créer mon annonce" : "Commencer à swiper"}
+          </button>
+        </div>
       </main>
     );
   }
