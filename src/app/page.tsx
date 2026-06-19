@@ -10,6 +10,7 @@ import {
   Star, MapPin, ArrowRight, Quote, Rocket, ShieldCheck, Lock,
 } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
+import IntroAccueil from "@/components/IntroAccueil";
 import { useAuth } from "@/lib/auth";
 
 /* ============================================================
@@ -271,6 +272,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full bg-bg text-ink">
+      <IntroAccueil />
       <SiteHeader />
 
       {/* ===================== HERO ===================== */}
