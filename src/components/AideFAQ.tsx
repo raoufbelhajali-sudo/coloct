@@ -42,7 +42,7 @@ const FAQ: QA[] = [
   },
   {
     q: "Comment fonctionne un match ?",
-    a: "Quand toi et l'annonceur vous êtes likés mutuellement, c'est un match : la messagerie s'ouvre pour discuter, sans donner ton numéro.",
+    a: "Quand toi et l'annonceur vous êtes likés mutuellement, c'est un match : la messagerie de l'app s'ouvre pour discuter directement.",
     href: "/notifs",
     cta: "Mes matchs & messages",
   },

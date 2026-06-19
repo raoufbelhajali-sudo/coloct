@@ -69,7 +69,7 @@ const AVIS = [
 const ETAPES = [
   { Icon: Layers, t: "Parcours", d: "Swipe les colocations et locations près de chez toi, comme une appli de rencontre." },
   { Icon: Check, t: "Like & matche", d: "« Ça m'intéresse » à droite. Si l'annonceur aussi, c'est un match." },
-  { Icon: MessageCircle, t: "Discute", d: "Échangez en direct dans la messagerie, sans donner ton numéro." },
+  { Icon: MessageCircle, t: "Discute", d: "Échangez en direct dans la messagerie sécurisée de l'app." },
   { Icon: KeyRound, t: "Emménage", d: "Organise la visite et installe-toi dans ton nouveau chez-toi." },
 ];
 
