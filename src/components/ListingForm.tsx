@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { createListing, updateListing } from "@/lib/locataire";
 import type { Listing } from "@/data/listings";
 import LieuSelect from "@/components/LieuSelect";
+import AssistantIA from "@/components/AssistantIA";
 import {
   SERVICES,
   TYPES_LOGEMENT,
@@ -381,7 +382,15 @@ export default function ListingForm({
       </label>
 
       <div>
-        <label className="text-sm text-ink/70">Description</label>
+        <div className="flex items-center justify-between gap-2">
+          <label className="text-sm text-ink/70">Description</label>
+          <AssistantIA
+            contexte="annonce"
+            contenu={description}
+            infos={{ titre, ville, loyer, surface, meuble, etage, typeOffre }}
+            onApply={setDescription}
+          />
+        </div>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}

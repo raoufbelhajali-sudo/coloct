@@ -12,6 +12,7 @@ import AppHeader from "@/components/AppHeader";
 import LieuSelect from "@/components/LieuSelect";
 import { INTERETS, AMBIANCES, RYTHMES, SALAIRES, PROMPTS, DUREES_COLOC, PROFESSIONS, METIERS, LANGUES, NIVEAUX_SONORES, GENRES_COLOC_RECHERCHE } from "@/lib/profilOptions";
 import { completudeProfil, estSuperProfil, labelSuper, champsManquantsSwipe } from "@/lib/completude";
+import AssistantIA from "@/components/AssistantIA";
 import { telFrancaisValide } from "@/lib/tel";
 
 const GENRES = ["Femme", "Homme", "Autre"];
@@ -572,7 +573,15 @@ export default function ProfilPage() {
           {/* ---------- À propos ---------- */}
           <Section titre="À propos de moi" id="sec-apropos" forceOuvert={sectionCible === "sec-apropos"}>
             <div>
-              <label className="text-sm text-ink/70">Présentation</label>
+              <div className="flex items-center justify-between gap-2">
+                <label className="text-sm text-ink/70">Présentation</label>
+                <AssistantIA
+                  contexte="profil"
+                  contenu={bio}
+                  infos={{ interets }}
+                  onApply={setBio}
+                />
+              </div>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
