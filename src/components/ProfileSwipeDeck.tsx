@@ -353,11 +353,11 @@ export default function ProfileSwipeDeck({
             </div>
           )}
 
-          {/* Pop-up « Locataire/Colocataire notifié » (3 premiers likes) */}
+          {/* Pop-up « Locataire/Colocataire notifié » (3 premiers likes), au centre */}
           {notifLike && (
-            <div className="pointer-events-none absolute inset-x-0 top-4 z-40 flex justify-center px-4">
-              <div className="flex items-center gap-2 rounded-full bg-ink/90 px-4 py-2 text-sm font-semibold text-white shadow-lg backdrop-blur">
-                <BellRing className="h-4 w-4 text-[#14b8a6]" />
+            <div className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center px-4">
+              <div className="flex items-center gap-2 rounded-full bg-ink/90 px-5 py-3 text-sm font-semibold text-white shadow-xl backdrop-blur">
+                <BellRing className="h-5 w-5 text-[#14b8a6]" />
                 {notifLike}
               </div>
             </div>
