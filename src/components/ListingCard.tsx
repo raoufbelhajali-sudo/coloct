@@ -74,12 +74,13 @@ export default function ListingCard({
             </div>
           )}
 
-          {/* Dégradé bas */}
-          <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-bg via-bg/85 to-transparent" />
+          {/* Dégradé bas (confiné au bas de la carte pour ne pas laisser une
+              grande zone fade et vide en haut) */}
+          <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-bg via-bg/85 to-transparent" />
 
-          {/* Infos clés. pr-20 = on laisse la colonne d'icônes (à droite) libre
-              pour ne pas recouvrir le texte de l'annonce. */}
-          <div className="absolute inset-x-0 bottom-0 pb-24 pl-5 pr-20">
+          {/* Infos clés, posées en bas de la carte. pr-20 = on laisse la colonne
+              d'icônes (à droite) libre pour ne pas recouvrir le texte. */}
+          <div className="absolute inset-x-0 bottom-0 pb-8 pl-5 pr-20">
             <h2 className="font-display text-3xl font-semibold leading-tight">
               {listing.quartier || listing.ville}
             </h2>

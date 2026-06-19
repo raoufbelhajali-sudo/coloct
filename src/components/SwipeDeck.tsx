@@ -688,7 +688,7 @@ export default function SwipeDeck() {
           {/* Colonne d'icônes à droite (style TikTok) : agit sur l'annonce visible.
               Ordre inversé : le J'aime est tout en bas (sous le pouce). */}
           {active && !flou && (
-            <div className="absolute bottom-24 right-3 z-30 flex flex-col items-center gap-2.5">
+            <div className="absolute bottom-10 right-3 z-30 flex flex-col items-center gap-2.5">
               <ColBtn label="Partager" onClick={() => partagerAnnonce(active)}>
                 <Share2 className="h-[18px] w-[18px]" />
               </ColBtn>
