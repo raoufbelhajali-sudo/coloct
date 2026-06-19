@@ -698,7 +698,7 @@ export default function SwipeDeck() {
                 big
                 onClick={() => decider(active, "like")}
               >
-                <Check className="h-6 w-6" strokeWidth={3} />
+                <Check className="h-5 w-5" strokeWidth={3} />
               </ColBtn>
             </div>
           )}
@@ -840,7 +840,7 @@ function ColBtn({
       title={title ?? label}
       className={
         "flex items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
-        (big ? "h-[52px] w-[52px] " : "h-10 w-10 ") +
+        (big ? "h-14 w-14 " : "h-10 w-10 ") +
         symbolClass
       }
     >
