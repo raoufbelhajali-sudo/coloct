@@ -33,7 +33,7 @@ export default function SiteHeader() {
         {pathname === "/" && (
           <Link href="/" aria-label="Accueil">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-full.svg" alt="FlatSwiper" className="h-9 w-auto" />
+            <img src="/logo-full.svg" alt="FlatSwiper" className="h-11 w-auto" />
           </Link>
         )}
 
