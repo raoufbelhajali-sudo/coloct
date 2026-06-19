@@ -721,7 +721,7 @@ export default function SwipeDeck() {
 
       {/* ---------- Zone des cartes (feed vertical TikTok) ---------- */}
       {feed.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 rounded-2xl border border-pink/25 bg-pink/10 px-6 text-center backdrop-blur-md">
           <p className="font-display text-3xl">C&apos;est tout pour l&apos;instant !</p>
           <p className="max-w-xs text-sm text-ink/70">
             {filtresActifs

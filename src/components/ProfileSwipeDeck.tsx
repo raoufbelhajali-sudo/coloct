@@ -243,7 +243,7 @@ export default function ProfileSwipeDeck({
   return (
     <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm lg:max-w-[38rem]">
       {feed.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-2xl border border-pink/25 bg-pink/10 px-6 text-center backdrop-blur-md">
           <p className="font-display text-2xl">Aucun profil pour l&apos;instant</p>
           <p className="max-w-xs text-sm text-ink/70">
             Tu as vu tous les co/locataires disponibles. Reviens bientôt, de
