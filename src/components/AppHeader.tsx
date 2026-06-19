@@ -88,6 +88,18 @@ export default function AppHeader() {
         </Link>
       )}
 
+      {/* Logo FlatSwiper — pages de l'app, PC web uniquement, en haut à gauche */}
+      {user && !estNatif && (
+        <Link
+          href={accueil}
+          aria-label="Accueil"
+          className="fixed left-4 top-3 z-50 hidden lg:block"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
+        </Link>
+      )}
+
       {/* Bouton "Accueil" (revoir le site d'annonces) — web PC uniquement,
           flottant en haut à droite, présent sur TOUTES les pages (dont le swipe). */}
       {user && !estNatif && (

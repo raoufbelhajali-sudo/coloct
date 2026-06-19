@@ -23,7 +23,20 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-ink/10 bg-bg/90 backdrop-blur">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-end gap-4 px-5 md:justify-between">
+      <div
+        className={
+          "mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-5 " +
+          (pathname === "/" ? "justify-between" : "justify-end md:justify-between")
+        }
+      >
+        {/* Logo : uniquement sur la page d'accueil, en haut à gauche */}
+        {pathname === "/" && (
+          <Link href="/" aria-label="Accueil">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-full.png" alt="FlatSwiper" className="h-7 w-auto" />
+          </Link>
+        )}
+
         <nav className="hidden items-center gap-6 text-sm font-medium text-ink/70 md:flex">
           <Link href="/" className={"flex items-center gap-1.5 " + lienCls(pathname === "/")}>
             <Home className="h-4 w-4" /> Accueil
