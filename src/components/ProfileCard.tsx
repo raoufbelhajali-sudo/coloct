@@ -22,7 +22,7 @@ export default function ProfileCard({
   const estSuper = estSuperProfil(profile);
 
   return (
-    <div className="bg-signature relative h-full w-full overflow-hidden rounded-3xl shadow-2xl select-none">
+    <div className="bg-signature relative h-full w-full select-none overflow-hidden">
       {/* Les deux bannières empilées en haut à gauche (l'une sous l'autre) */}
       <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-col items-start gap-1.5">
         {/* Badge Super colocataire (profil complet) */}
@@ -61,11 +61,11 @@ export default function ProfileCard({
         </div>
       )}
 
-      {/* Dégradé bas */}
-      <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-bg via-bg/85 to-transparent" />
+      {/* Dégradé bas (confiné en bas pour éviter une grande zone fade vide) */}
+      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-bg via-bg/85 to-transparent" />
 
-      {/* Infos clés (place laissée aux boutons) */}
-      <div className="absolute inset-x-0 bottom-0 px-5 pb-24">
+      {/* Infos clés. pr-20 = on laisse la colonne d'icônes (à droite) libre. */}
+      <div className="absolute inset-x-0 bottom-0 pb-8 pl-5 pr-20">
         <h2 className="font-display text-3xl font-semibold leading-tight">
           {profile.prenom}
           {profile.age ? <span className="text-ink/60">, {profile.age} ans</span> : null}

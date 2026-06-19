@@ -49,12 +49,12 @@ export default function LocatairePage() {
     listings.find((l) => l.id === selectedId) ?? listings[0] ?? null;
 
   return (
-    <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-24 pt-5">
+    <main className="relative flex h-dvh flex-col items-center overflow-hidden px-0 pb-24 pt-5 sm:px-4">
       <AppHeader />
 
       {/* Sélecteur d'annonce (visible seulement si plusieurs annonces) */}
       {!chargement && listings.length > 1 && (
-        <div className="mb-3 w-full max-w-sm">
+        <div className="mb-3 w-full max-w-sm px-4 sm:px-0">
           <label className="mb-1 block text-xs font-medium text-ink/55">
             Tu recrutes pour&nbsp;:
           </label>
@@ -110,7 +110,7 @@ export default function LocatairePage() {
           </div>
         ) : selected ? (
           // On swipe les colocataires pour l'annonce sélectionnée
-          <div className="flex h-full w-full max-w-sm flex-col">
+          <div className="flex h-full w-full max-w-none flex-col sm:max-w-sm">
             <ProfileSwipeDeck
               key={selected.id}
               listingId={selected.id}
