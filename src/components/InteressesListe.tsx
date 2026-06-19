@@ -43,7 +43,7 @@ export default function InteressesListe({ titreVisible = true }: { titreVisible?
 
   return (
     <>
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm lg:max-w-[38rem]">
         {titreVisible && (
           <>
             <h1 className="font-display text-3xl font-bold mb-1 flex items-center gap-2">

@@ -89,7 +89,7 @@ export default function BoutiquePage() {
     <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">
       <AppHeader />
 
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md lg:max-w-[38rem]">
         <h1 className="font-display text-3xl font-bold">
           {estAnnonceur ? "Booste ton annonce" : "Booste ta recherche"}
         </h1>

@@ -45,7 +45,7 @@ function NotifsContenu() {
     <main className="flex min-h-screen flex-col items-center px-4 pb-28 pt-5">
       <AppHeader />
 
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm lg:max-w-[38rem]">
         <h1 className="font-display text-3xl font-bold mb-4">Notifs</h1>
 
         {/* Deux onglets horizontaux : Intéressés / Messagerie */}
@@ -74,7 +74,7 @@ function NotifsContenu() {
           <MessagerieListe titreVisible={false} />
         )
       ) : (
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm lg:max-w-[38rem]">
           <div className="bg-panel-2 flex flex-col items-center gap-3 rounded-3xl p-7 text-center">
             <span className="bg-bleu-clair text-violet-dark inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold">
               <Check className="h-3.5 w-3.5" strokeWidth={3} /> Gratuit pour l&apos;instant
