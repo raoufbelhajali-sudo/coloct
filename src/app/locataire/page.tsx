@@ -121,7 +121,9 @@ export default function LocatairePage() {
         ) : null}
       </div>
 
-      <RappelProfil />
+      {/* Rappel "complète ton profil" : seulement une fois l'annonce déposée et
+          qu'on est sur le swipe — ne pas interrompre la création d'annonce. */}
+      {!chargement && selected && !selected.gelee && <RappelProfil />}
     </main>
   );
 }
