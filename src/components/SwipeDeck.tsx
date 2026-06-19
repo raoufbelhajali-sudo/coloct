@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Send,
   ChevronUp,
+  Hand,
 } from "lucide-react";
 import type { Listing } from "@/data/listings";
 import { getListings, lieuComplet } from "@/lib/listings";
@@ -117,6 +118,34 @@ export default function SwipeDeck() {
         window.matchMedia("(pointer: coarse)").matches
     );
   }, []);
+
+  // Indice « Touche pour voir » : main animée au tout 1er passage sur le swipe
+  // (affiché une seule fois, mémorisé dans le navigateur).
+  const [hintTap, setHintTap] = useState(false);
+  function fermerHintTap() {
+    setHintTap(false);
+    try {
+      localStorage.setItem("fs-hint-tap", "1");
+    } catch {
+      /* stockage indisponible */
+    }
+  }
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (localStorage.getItem("fs-hint-tap") === "1") return;
+    } catch {
+      return;
+    }
+    const t = setTimeout(() => setHintTap(true), 700);
+    return () => clearTimeout(t);
+  }, []);
+  // Disparaît tout seul après quelques secondes
+  useEffect(() => {
+    if (!hintTap) return;
+    const t = setTimeout(() => fermerHintTap(), 5000);
+    return () => clearTimeout(t);
+  }, [hintTap]);
 
   // Pas connecté → direction la page de connexion
   useEffect(() => {
@@ -233,6 +262,7 @@ export default function SwipeDeck() {
   function onScroll() {
     const el = scrollRef.current;
     if (!el) return;
+    if (hintTap) fermerHintTap(); // le 1er défilement masque l'indice
     const i = Math.round(el.scrollTop / el.clientHeight);
     if (i !== activeRef.current) {
       activeRef.current = i;
@@ -671,9 +701,11 @@ export default function SwipeDeck() {
                               : "translate-y-full opacity-0"
                             : "")
                         }
-                        onClick={() =>
-                          flou ? setPaywall(true) : setDetail(l)
-                        }
+                        onClick={() => {
+                          fermerHintTap();
+                          if (flou) setPaywall(true);
+                          else setDetail(l);
+                        }}
                       >
                         <ListingCard
                           listing={l}
@@ -759,6 +791,22 @@ export default function SwipeDeck() {
             <div className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex flex-col items-center gap-0.5 text-ink/60">
               <ChevronUp className="h-5 w-5 animate-bounce" />
               <span className="text-xs font-medium">Glisse vers le haut</span>
+            </div>
+          )}
+
+          {/* Indice 1er passage : main animée « Touche pour voir » (s'efface au
+              1er tap/défilement ou après quelques secondes, une seule fois). */}
+          {hintTap && active && !flou && (
+            <div className="pointer-events-none absolute inset-0 z-40 flex flex-col items-center justify-center gap-3">
+              <div className="relative flex h-20 w-20 items-center justify-center">
+                <span className="absolute h-16 w-16 animate-ping rounded-full bg-white/40" />
+                <span className="animate-tap-hand relative flex h-16 w-16 items-center justify-center rounded-full bg-ink/85 text-white shadow-xl">
+                  <Hand className="h-8 w-8" />
+                </span>
+              </div>
+              <span className="rounded-full bg-ink/85 px-4 py-2 text-sm font-bold text-white shadow-lg">
+                Touche pour voir
+              </span>
             </div>
           )}
         </div>

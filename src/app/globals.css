@@ -113,3 +113,12 @@ input[type="date"] {
 .animate-logo-vibrate {
   animation: logo-vibrate 4.5s ease-in-out infinite;
 }
+
+/* Main d'onboarding : petit geste de "tap" répété (appuie puis relâche) */
+@keyframes tap-hand {
+  0%, 100% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(5px) scale(0.88); }
+}
+.animate-tap-hand {
+  animation: tap-hand 1.15s ease-in-out infinite;
+}
