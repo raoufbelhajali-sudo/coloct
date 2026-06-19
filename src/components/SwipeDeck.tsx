@@ -57,6 +57,21 @@ const SWIPES_PAR_JOUR = 20;
 // garder le défilement correct.
 const FENETRE = 2;
 
+// Mémoire des filtres choisis pendant la session : survit aux navigations entre
+// pages (tant qu'on ne recharge pas entièrement la page). Évite que les filtres
+// — notamment après un « Réinitialiser » — soient écrasés par les valeurs du
+// profil à chaque retour sur le swipe (sinon les annonces redisparaissent).
+type FiltresMemo = {
+  budgetMax: number;
+  quartier: string;
+  dispoAvant: string;
+  maxDistance: number;
+  offreFiltre: string;
+  villeFiltre: string;
+  deptFiltre: string;
+};
+let filtresMemo: FiltresMemo | null = null;
+
 export default function SwipeDeck() {
   const router = useRouter();
   const { user, profile, loading: authLoading } = useAuth();
@@ -88,18 +103,18 @@ export default function SwipeDeck() {
   // Par défaut le chercheur voit ce type, mais il peut basculer sur l'autre
   // depuis les filtres (offreFiltre). offreActive = type réellement affiché.
   const rechercheOffre = profile?.recherche_offre ?? "colocation";
-  const [offreFiltre, setOffreFiltre] = useState("");
+  const [offreFiltre, setOffreFiltre] = useState(() => filtresMemo?.offreFiltre ?? "");
   const offreActive = offreFiltre || rechercheOffre;
 
-  // --- Filtres ---
-  const [budgetMax, setBudgetMax] = useState(BUDGET_MAX);
-  const [quartier, setQuartier] = useState("all");
-  const [dispoAvant, setDispoAvant] = useState(""); // "" = pas de filtre date
-  const [maxDistance, setMaxDistance] = useState(DIST_MAX); // DIST_MAX = pas de limite
+  // --- Filtres --- (valeurs initiales reprises de la mémoire de session si dispo)
+  const [budgetMax, setBudgetMax] = useState(() => filtresMemo?.budgetMax ?? BUDGET_MAX);
+  const [quartier, setQuartier] = useState(() => filtresMemo?.quartier ?? "all");
+  const [dispoAvant, setDispoAvant] = useState(() => filtresMemo?.dispoAvant ?? ""); // "" = pas de filtre date
+  const [maxDistance, setMaxDistance] = useState(() => filtresMemo?.maxDistance ?? DIST_MAX); // DIST_MAX = pas de limite
   const [coordChercheur, setCoordChercheur] = useState<Coord | null>(null);
   // Centre du filtre distance : modifiable (par défaut, la ville du profil)
-  const [villeFiltre, setVilleFiltre] = useState("");
-  const [deptFiltre, setDeptFiltre] = useState("");
+  const [villeFiltre, setVilleFiltre] = useState(() => filtresMemo?.villeFiltre ?? "");
+  const [deptFiltre, setDeptFiltre] = useState(() => filtresMemo?.deptFiltre ?? "");
 
   // --- Feed vertical (style TikTok) ---
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -183,14 +198,49 @@ export default function SwipeDeck() {
   useEffect(() => {
     if (!profile || filtresInitialises.current) return;
     filtresInitialises.current = true;
+    // Déjà des filtres en mémoire de session (ex: l'utilisateur a navigué) →
+    // on les garde, on n'écrase PAS avec les valeurs du profil.
+    if (filtresMemo) return;
+    let bud = BUDGET_MAX;
+    let dat = "";
     if (profile.budget_max) {
-      const v = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, profile.budget_max));
-      setBudgetMax(v);
+      bud = Math.min(BUDGET_MAX, Math.max(BUDGET_MIN, profile.budget_max));
+      setBudgetMax(bud);
     }
-    if (profile.date_emmenagement) setDispoAvant(profile.date_emmenagement);
-    setVilleFiltre(profile.ville ?? "");
-    setDeptFiltre(profile.departement ?? "");
+    if (profile.date_emmenagement) {
+      dat = profile.date_emmenagement;
+      setDispoAvant(dat);
+    }
+    const ville = profile.ville ?? "";
+    const dept = profile.departement ?? "";
+    setVilleFiltre(ville);
+    setDeptFiltre(dept);
+    // On fige ces valeurs en mémoire de session (point de départ).
+    filtresMemo = {
+      budgetMax: bud,
+      quartier: "all",
+      dispoAvant: dat,
+      maxDistance: DIST_MAX,
+      offreFiltre: "",
+      villeFiltre: ville,
+      deptFiltre: dept,
+    };
   }, [profile]);
+
+  // Mémorise les filtres à chaque changement (pour survivre aux navigations).
+  // On n'écrit qu'une fois la 1re initialisation faite (filtresMemo non nul).
+  useEffect(() => {
+    if (filtresMemo === null) return;
+    filtresMemo = {
+      budgetMax,
+      quartier,
+      dispoAvant,
+      maxDistance,
+      offreFiltre,
+      villeFiltre,
+      deptFiltre,
+    };
+  }, [budgetMax, quartier, dispoAvant, maxDistance, offreFiltre, villeFiltre, deptFiltre]);
 
   // Coordonnées du centre du filtre distance (ville du filtre, modifiable)
   useEffect(() => {
