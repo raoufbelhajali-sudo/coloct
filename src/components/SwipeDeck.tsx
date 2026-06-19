@@ -254,6 +254,38 @@ export default function SwipeDeck() {
     scrollRef.current?.scrollTo({ top: 0 });
   }
 
+  // Y a-t-il au moins un filtre actif (différent du réglage par défaut) ?
+  const filtresActifs =
+    budgetMax !== BUDGET_MAX ||
+    quartier !== "all" ||
+    !!dispoAvant ||
+    maxDistance < DIST_MAX ||
+    (!!offreFiltre && offreFiltre !== rechercheOffre);
+
+  // Remet tous les filtres à zéro (budget, quartier, date, distance, type)
+  function reinitialiserFiltres() {
+    setBudgetMax(BUDGET_MAX);
+    setQuartier("all");
+    setDispoAvant("");
+    setMaxDistance(DIST_MAX);
+    setOffreFiltre("");
+    resetDeck();
+  }
+
+  // Quand le feed devient vide ALORS que des filtres sont actifs, on ouvre
+  // automatiquement le panneau de filtres pour proposer de réinitialiser.
+  const popupVideOuvert = useRef(false);
+  useEffect(() => {
+    if (feed.length > 0) {
+      popupVideOuvert.current = false; // réarme pour la prochaine fois
+      return;
+    }
+    if (!chargement && filtresActifs && !popupVideOuvert.current) {
+      popupVideOuvert.current = true;
+      setFiltresOuverts(true);
+    }
+  }, [feed.length, chargement, filtresActifs]);
+
   // J'aime / Je passe sur une annonce, puis on enchaîne sur la suivante.
   // (Le simple défilement, lui, ne décide rien : on peut revenir en arrière.)
   async function decider(listing: Listing | undefined, dir: "like" | "pass") {
@@ -580,11 +612,12 @@ export default function SwipeDeck() {
 
       {/* ---------- Zone des cartes (feed vertical TikTok) ---------- */}
       {feed.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
           <p className="font-display text-3xl">C&apos;est tout pour l&apos;instant !</p>
           <p className="max-w-xs text-sm text-ink/70">
-            Tu as parcouru toutes les annonces disponibles. Ajuste tes filtres
-            ou reviens bientôt, de nouvelles annonces arrivent.
+            {filtresActifs
+              ? "Aucune annonce ne correspond à tes filtres. Réinitialise ta recherche pour voir plus d'annonces."
+              : "Tu as parcouru toutes les annonces disponibles. Reviens bientôt, de nouvelles annonces arrivent."}
           </p>
           {likes.length > 0 && (
             <p className="flex items-center justify-center gap-1.5 text-sm text-pink-light">
@@ -593,6 +626,22 @@ export default function SwipeDeck() {
               {likes.length > 1 ? "s" : ""}
             </p>
           )}
+          <div className="mt-2 flex w-full max-w-xs flex-col gap-2">
+            {filtresActifs && (
+              <button
+                onClick={reinitialiserFiltres}
+                className="bg-metal rounded-full px-6 py-3 font-semibold text-white"
+              >
+                Réinitialiser ma recherche
+              </button>
+            )}
+            <button
+              onClick={() => setFiltresOuverts(true)}
+              className="flex items-center justify-center gap-2 rounded-full border border-ink/15 bg-panel px-6 py-3 font-medium text-ink/80 hover:border-ink/30"
+            >
+              <SlidersHorizontal className="h-[18px] w-[18px]" /> Ajuster mes filtres
+            </button>
+          </div>
         </div>
       ) : (
         <div className="relative w-full flex-1 min-h-0">
