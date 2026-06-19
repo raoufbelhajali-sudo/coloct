@@ -104,6 +104,19 @@ export default function SwipeDeck() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const activeRef = useRef(0); // évite de setState à chaque pixel de scroll
+  // Animation de sortie au like/pass : la carte s'envole vers le haut (like)
+  // ou vers le bas (pass) avant de passer à la suivante.
+  const [sortie, setSortie] = useState<{ id: string; dir: "up" | "down" } | null>(
+    null
+  );
+  // Appareil tactile ? (sur PC/souris on cache l'indice « Glisse vers le haut »)
+  const [tactile, setTactile] = useState(false);
+  useEffect(() => {
+    setTactile(
+      typeof window !== "undefined" &&
+        window.matchMedia("(pointer: coarse)").matches
+    );
+  }, []);
 
   // Pas connecté → direction la page de connexion
   useEffect(() => {
@@ -227,11 +240,11 @@ export default function SwipeDeck() {
     }
   }
 
-  // Fait défiler en douceur jusqu'à une annonce du feed
-  function allerVers(i: number) {
+  // Fait défiler jusqu'à une annonce du feed (instant = sans animation de scroll)
+  function allerVers(i: number, instant = false) {
     const el = scrollRef.current;
     if (!el) return;
-    el.scrollTo({ top: i * el.clientHeight, behavior: "smooth" });
+    el.scrollTo({ top: i * el.clientHeight, behavior: instant ? "auto" : "smooth" });
   }
 
   // Quand on change un filtre : on remonte le feed en haut
@@ -261,9 +274,14 @@ export default function SwipeDeck() {
     setSwipedIds((prev) => new Set(prev).add(listing.id));
     setSwipesAujourdhui((n) => n + 1);
 
-    // On enchaîne sur l'annonce suivante du feed
+    // La carte s'envole : vers le HAUT pour un like, vers le BAS pour un pass,
+    // puis on enchaîne (instantanément) sur l'annonce suivante du feed.
     const idx = feed.findIndex((l) => l.id === listing.id);
-    if (idx >= 0) allerVers(idx + 1);
+    setSortie({ id: listing.id, dir: dir === "like" ? "up" : "down" });
+    window.setTimeout(() => {
+      if (idx >= 0) allerVers(idx + 1, true);
+      setSortie(null);
+    }, 280);
 
     try {
       await recordListingSwipe(user.id, listing.id, dir, false);
@@ -626,7 +644,14 @@ export default function SwipeDeck() {
                   {proche && (
                     <>
                       <div
-                        className="h-full w-full"
+                        className={
+                          "h-full w-full transition-[transform,opacity] duration-300 " +
+                          (sortie?.id === l.id
+                            ? sortie.dir === "up"
+                              ? "-translate-y-full opacity-0"
+                              : "translate-y-full opacity-0"
+                            : "")
+                        }
                         onClick={() =>
                           flou ? setPaywall(true) : setDetail(l)
                         }
@@ -703,8 +728,9 @@ export default function SwipeDeck() {
             </div>
           )}
 
-          {/* Indice : glisser vers le haut (seulement sur la 1re annonce) */}
-          {feed.length > 1 && activeIndex === 0 && !flou && (
+          {/* Indice : glisser vers le haut — seulement sur la 1re annonce ET sur
+              appareil tactile (sur PC/souris on ne peut pas glisser, on le cache). */}
+          {feed.length > 1 && activeIndex === 0 && !flou && tactile && (
             <div className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex flex-col items-center gap-0.5 text-ink/60">
               <ChevronUp className="h-5 w-5 animate-bounce" />
               <span className="text-xs font-medium">Glisse vers le haut</span>
