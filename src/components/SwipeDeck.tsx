@@ -838,8 +838,13 @@ function ColBtn({
       disabled={disabled}
       aria-label={label}
       title={title ?? label}
+      style={{
+        // Dégradé noir → argent (effet métal). Les symboles gardent leur couleur.
+        backgroundImage:
+          "linear-gradient(145deg,#0c0c0e 0%,#2f3236 45%,#8b9099 80%,#cad0d8 100%)",
+      }}
       className={
-        "flex items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+        "flex items-center justify-center rounded-full shadow-lg ring-1 ring-white/25 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
         (big ? "h-14 w-14 " : "h-10 w-10 ") +
         symbolClass
       }
