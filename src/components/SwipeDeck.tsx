@@ -270,8 +270,9 @@ export default function SwipeDeck() {
   const feed = useMemo(() => {
     return allListings.filter((l) => {
       const offre = l.typeOffre ?? "colocation";
-      // Le chercheur ne voit que les annonces de son type (choisi à l'inscription)
-      if (offre !== offreActive) return false;
+      // Le chercheur voit son type (choisi à l'inscription), ou les deux si
+      // « tous » est sélectionné dans les filtres.
+      if (offreActive !== "tous" && offre !== offreActive) return false;
       if (dejaSwipe.current.has(l.id)) return false;
       if (l.ownerId && bloques.has(l.ownerId)) return false; // annonceur bloqué
       if (l.loyer > budgetMax) return false;
@@ -342,13 +343,14 @@ export default function SwipeDeck() {
     maxDistance < DIST_MAX ||
     (!!offreFiltre && offreFiltre !== rechercheOffre);
 
-  // Remet tous les filtres à zéro (budget, quartier, date, distance, type)
+  // Remet les filtres à zéro et bascule sur « Les deux » (colocation + location)
+  // pour montrer aussi les locations après un reset.
   function reinitialiserFiltres() {
     setBudgetMax(BUDGET_MAX);
     setQuartier("all");
     setDispoAvant("");
     setMaxDistance(DIST_MAX);
-    setOffreFiltre("");
+    setOffreFiltre("tous");
     resetDeck();
   }
 
@@ -532,10 +534,11 @@ export default function SwipeDeck() {
             {/* Type d'offre : colocation / location (le chercheur peut basculer) */}
             <div className="mb-4">
               <label className="text-sm text-ink/70">Type</label>
-              <div className="mt-1 grid grid-cols-2 gap-2 rounded-xl bg-panel-2 p-1">
+              <div className="mt-1 grid grid-cols-3 gap-2 rounded-xl bg-panel-2 p-1">
                 {([
                   ["colocation", "Colocation"],
                   ["location", "Location"],
+                  ["tous", "Les deux"],
                 ] as const).map(([v, l]) => (
                   <button
                     key={v}
@@ -545,7 +548,7 @@ export default function SwipeDeck() {
                       resetDeck();
                     }}
                     className={
-                      "rounded-lg px-3 py-2 text-sm font-semibold transition-colors " +
+                      "rounded-lg px-2 py-2 text-sm font-semibold transition-colors " +
                       (offreActive === v
                         ? "bg-signature text-white"
                         : "text-ink/70 hover:text-ink")
