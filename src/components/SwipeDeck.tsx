@@ -391,36 +391,6 @@ export default function SwipeDeck() {
 
   return (
     <div className="flex h-full w-full max-w-sm flex-col">
-      {/* Logo centré + filtres + partage, sur une seule ligne (même format que les autres pages) */}
-      <div className="relative mb-2 flex h-10 w-full items-center justify-end gap-2">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-full.png"
-          alt="FlatSwiper"
-          className="absolute left-1/2 top-1/2 h-7 w-auto -translate-x-1/2 -translate-y-1/2"
-        />
-        <button
-          onClick={() => setFiltresOuverts((v) => !v)}
-          aria-label="Filtres"
-          title="Filtres"
-          className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
-        >
-          <SlidersHorizontal className="h-[18px] w-[18px]" />
-          {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX || (!!offreFiltre && offreFiltre !== rechercheOffre)) && (
-            <span className="bg-signature absolute right-1.5 top-1.5 h-2 w-2 rounded-full" />
-          )}
-        </button>
-        {active && (
-          <button
-            onClick={() => partagerAnnonce(active)}
-            aria-label="Partager"
-            title="Partager"
-            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink/60 transition-colors hover:bg-panel hover:text-bleu"
-          >
-            <Share2 className="h-[18px] w-[18px]" />
-          </button>
-        )}
-      </div>
 
       {/* ---------- Filtres (pop-up) ---------- */}
       {filtresOuverts && (
@@ -626,6 +596,20 @@ export default function SwipeDeck() {
         </div>
       ) : (
         <div className="relative w-full flex-1 min-h-0">
+          {/* Bouton Filtres flottant (en haut à gauche) — l'en-tête a été retiré
+              pour laisser l'annonce remonter en plein écran. */}
+          <button
+            onClick={() => setFiltresOuverts((v) => !v)}
+            aria-label="Filtres"
+            title="Filtres"
+            className="absolute left-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-ink/70 text-white shadow-lg backdrop-blur-sm transition-transform hover:scale-110"
+          >
+            <SlidersHorizontal className="h-[18px] w-[18px]" />
+            {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX || (!!offreFiltre && offreFiltre !== rechercheOffre)) && (
+              <span className="bg-signature absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-white" />
+            )}
+          </button>
+
           {/* Le défilement vertical fait passer d'une annonce à l'autre (snap).
               Défiler ne décide rien : on peut remonter librement. */}
           <div
