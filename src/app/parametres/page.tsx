@@ -17,10 +17,12 @@ import {
   Home,
   Bookmark,
   Zap,
+  Gift,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth";
 import AppHeader from "@/components/AppHeader";
+import InviterAmis from "@/components/InviterAmis";
 
 export default function ParametresPage() {
   const router = useRouter();
@@ -279,6 +281,21 @@ export default function ParametresPage() {
               <ChevronRight className="h-5 w-5 shrink-0 text-ink/40" />
             </Link>
           )}
+
+          {/* Parrainage : inviter des amis pour gagner des swipes */}
+          <Bloc
+            icone={<Gift className="h-5 w-5 text-violet" />}
+            titre="Parrainage"
+          >
+            <p className="text-sm text-ink/70">
+              Invite tes amis : tu gagnes{" "}
+              <span className="font-semibold text-ink">+10 swipes/jour</span> par
+              ami qui s&apos;inscrit avec ton lien.
+            </p>
+            <div className="mt-3">
+              <InviterAmis />
+            </div>
+          </Bloc>
 
           {/* Mode (rôle) — masqué pour les agences (compte annonceur figé) */}
           {!profile?.est_agence && (
