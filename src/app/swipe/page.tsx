@@ -31,7 +31,7 @@ export default function SwipePage() {
   }, [loading, user, profile, router]);
 
   return (
-    <main className="relative flex h-dvh flex-col items-center overflow-hidden px-4 pb-16 pt-2">
+    <main className="relative flex h-dvh flex-col items-center overflow-hidden px-0 pb-16 pt-2 sm:px-4">
       <AppHeader />
 
       {/* Le paquet de cartes à swiper (remplit l'écran restant) */}
