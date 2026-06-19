@@ -96,7 +96,7 @@ export default function AppHeader() {
           className="fixed left-4 top-3 z-50 hidden lg:block"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-full.svg" alt="FlatSwiper" className="h-7 w-auto" />
+          <img src="/logo-full.svg" alt="FlatSwiper" className="h-9 w-auto" />
         </Link>
       )}
 
