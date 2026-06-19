@@ -98,7 +98,14 @@ export default function BlogPage() {
   const dansApp = !!user;
 
   return (
-    <div className="min-h-screen w-full bg-bg text-ink">
+    <div
+      className={
+        "min-h-screen w-full text-ink " +
+        // Dans l'app sur PC : fond transparent pour laisser voir l'image de fond
+        // (comme les autres pages app). Mobile/app/site public : fond blanc.
+        (dansApp ? "bg-bg lg:bg-transparent" : "bg-bg")
+      }
+    >
       {/* Rappel à l'ouverture du blog : pas d'annonces ni de coordonnées */}
       <AvertissementCoordonnees />
       {dansApp ? (
