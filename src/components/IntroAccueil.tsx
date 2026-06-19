@@ -111,11 +111,9 @@ export default function IntroAccueil() {
             <span className="text-xs font-semibold uppercase tracking-[0.25em] text-white/60">
               Rejoins-nous
             </span>
-            {/* Logo original (logo-full.svg) sur badge blanc pour ressortir sur le noir */}
-            <span className="rounded-2xl bg-white px-5 py-3 shadow-[0_0_24px_rgba(54,197,224,0.35)]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-full.svg" alt="FlatSwiper" className="h-9 w-auto" />
-            </span>
+            {/* Logo original en version blanche (texte blanc + anneau bleu) sur le noir */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-blanc.svg" alt="FlatSwiper" className="h-10 w-auto" />
           </motion.button>
         </motion.div>
       )}
