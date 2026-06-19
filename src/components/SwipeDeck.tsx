@@ -645,20 +645,6 @@ export default function SwipeDeck() {
         </div>
       ) : (
         <div className="relative w-full flex-1 min-h-0">
-          {/* Bouton Filtres flottant (en haut à gauche) — l'en-tête a été retiré
-              pour laisser l'annonce remonter en plein écran. */}
-          <button
-            onClick={() => setFiltresOuverts((v) => !v)}
-            aria-label="Filtres"
-            title="Filtres"
-            className="absolute left-3 top-3 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-ink/70 text-white shadow-lg backdrop-blur-sm transition-transform hover:scale-110"
-          >
-            <SlidersHorizontal className="h-[18px] w-[18px]" />
-            {(budgetMax !== BUDGET_MAX || quartier !== "all" || !!dispoAvant || maxDistance < DIST_MAX || (!!offreFiltre && offreFiltre !== rechercheOffre)) && (
-              <span className="bg-signature absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full ring-2 ring-white" />
-            )}
-          </button>
-
           {/* Le défilement vertical fait passer d'une annonce à l'autre (snap).
               Défiler ne décide rien : on peut remonter librement. */}
           <div
@@ -722,6 +708,12 @@ export default function SwipeDeck() {
               Ordre inversé : le J'aime est tout en bas (sous le pouce). */}
           {active && !flou && (
             <div className="absolute bottom-10 right-3 z-30 flex flex-col items-center gap-2.5">
+              <ColBtn label="Filtres" onClick={() => setFiltresOuverts(true)}>
+                <SlidersHorizontal className="h-[18px] w-[18px]" />
+                {filtresActifs && (
+                  <span className="bg-signature absolute right-1 top-1 h-2.5 w-2.5 rounded-full ring-2 ring-white" />
+                )}
+              </ColBtn>
               <ColBtn label="Partager" onClick={() => partagerAnnonce(active)}>
                 <Share2 className="h-[18px] w-[18px]" />
               </ColBtn>
@@ -898,7 +890,7 @@ function ColBtn({
       aria-label={label}
       title={title ?? label}
       className={
-        "flex items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
+        "relative flex items-center justify-center rounded-full bg-ink shadow-lg ring-1 ring-white/15 transition-transform hover:scale-110 active:scale-95 disabled:opacity-50 " +
         (big ? "h-14 w-14 " : "h-10 w-10 ") +
         symbolClass
       }
