@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { X, Check, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
-import { estSuperProfil, labelSuper } from "@/lib/completude";
+import { estSuperProfil } from "@/lib/completude";
 import { estActifRecemment } from "@/lib/activite";
 import { getNoteMoyenne } from "@/lib/reviews";
 
@@ -73,7 +73,7 @@ export default function ProfileDetail({
                 {estSuperProfil(profile) && (
                   <span className="bg-signature inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white">
                     <Star className="h-3.5 w-3.5" fill="currentColor" />
-                    {labelSuper(profile)}
+                    Super co/locataire
                   </span>
                 )}
                 {profile.identite_verifiee && (

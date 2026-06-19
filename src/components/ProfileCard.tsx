@@ -1,6 +1,6 @@
 import { Sparkles, Star, ShieldCheck } from "lucide-react";
 import type { Profile } from "@/lib/auth";
-import { estSuperProfil, labelSuper } from "@/lib/completude";
+import { estSuperProfil } from "@/lib/completude";
 import { estActifRecemment } from "@/lib/activite";
 
 // Carte d'un profil colocataire (photo + infos clés). Détail complet au tap.
@@ -25,11 +25,14 @@ export default function ProfileCard({
     <div className="bg-signature relative h-full w-full select-none overflow-hidden">
       {/* Les deux bannières empilées en haut à gauche (l'une sous l'autre) */}
       <div className="absolute left-3 top-3 z-10 flex max-w-[85%] flex-col items-start gap-1.5">
-        {/* Badge Super colocataire (profil complet) */}
+        {/* Badge Super co/locataire (profil complet). On force le libellé
+            « co/locataire » : cette carte montre TOUJOURS un chercheur, jamais
+            un annonceur (évite un « Super annonceur » erroné si un profil a un
+            rôle incohérent suite à un changement de mode). */}
         {estSuper && (
           <div className="bg-signature flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold text-white shadow-md">
             <Star className="h-3.5 w-3.5" fill="currentColor" />
-            {labelSuper(profile)}
+            Super co/locataire
           </div>
         )}
 
